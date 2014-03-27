@@ -75,7 +75,7 @@ Channel.prototype.renderEvents = function (result) {
         endTime = helper.getTimeString(stop);
         if (now.getDate() != start.getDate()) {
             dateIndicator = helper.getWeekDay(start)+', '+helper.getDateString(start);
-            this.itemList.append('<li data-date="'+dateIndicator+'" class="date">'+dateIndicator+'</li>');
+            this.itemList.append($('<li>').attr('data-date', dateIndicator).addClass('date').text(dateIndicator));
             now = start;
         }
         classNames = event.timer_exists ? (event.timer_active ? ' active-timer' : ' timer') : '';
@@ -110,7 +110,7 @@ Channel.prototype.scrollFinish = function (ev) {
 		}, this));
 		$('#menubar .channel-wrapper .date').text(date);
 	}, 20, ev);
-}
+};
 
 Channel.prototype.addDomEvents = function () {
 	$(window).on('orientationchange', $.proxy(this.scrollFinish, this));

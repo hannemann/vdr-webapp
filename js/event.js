@@ -1,12 +1,12 @@
 Event = function (event) {
 	var start = helper.getTimeString(new Date(event.start_time*1000)),
 	    stop = helper.getTimeString(new Date(event.start_time*1000 + event.duration*1000)),
-        tabs, tabContents, details, tools, web, details, components = [];
+        details, components = [];
 	this.event = event;
 	this.dom = $(this.template);
 	this.header = this.dom.find('.header');
 	this.body = this.dom.find('.body');
-	this.header.append('<h2>'+event.title+'</h2>')
+	this.header.append('<h2>'+event.title+'</h2>');
 	if (event.images > 0) {
 		this.header.append('<img class="event-img right" src="http://'+this.host+':'+this.port+'/events/image/'+event.id+'/0">');
 	}
@@ -82,9 +82,9 @@ Event.prototype.tabConfig = {
 Event.prototype.webConfig = {
     "imdb":{
         "dom":function () {
-            var dom = $('<dl class="web-button imdb"></dl>'), button, text;
-            button = $('<dt><img src="assets/imdb-logo.png" alt="">')
-            text = $('<dd>')
+            var dom = $('<dl class="web-button imdb"></dl>'),
+                button = $('<dt><img src="assets/imdb-logo.png" alt="">'),
+                text = $('<dd>');
 
             text.text('IMDB Suche');
 
@@ -100,9 +100,10 @@ Event.prototype.webConfig = {
 Event.prototype.toolsConfig = {
     "record":{
         "dom":function () {
-            var dom = $('<dl class="record-button"></dl>'), button, text;
-            button = $('<dt>')
-            text = $('<dd>')
+            var dom = $('<dl class="record-button"></dl>'),
+                button = $('<dt>'),
+                text = $('<dd>');
+
             if (this.event.timer_exists) {
                 text.text('Timer löschen');
                 button.removeClass('activate-timer');
@@ -130,8 +131,10 @@ Event.prototype.renderTools = function () {
     dom = $('<ul></ul>');
 
     for (i in this.toolsConfig) {
-        button = this.getToolButton(this.toolsConfig[i]);
-        dom.append(button);
+        if (this.toolsConfig.hasOwnProperty(i)) {
+            button = this.getToolButton(this.toolsConfig[i]);
+            dom.append(button);
+        }
     }
 
     return dom;
@@ -144,8 +147,10 @@ Event.prototype.renderWeb = function () {
     dom = $('<ul></ul>');
 
     for (i in this.webConfig) {
-        button = this.getToolButton(this.webConfig[i]);
-        dom.append(button);
+        if (this.webConfig.hasOwnProperty(i)) {
+            button = this.getToolButton(this.webConfig[i]);
+            dom.append(button);
+        }
     }
 
     return dom;
@@ -183,6 +188,7 @@ Event.prototype.addDomEvents = function () {
 	this.dom.find('.close').on('click', $.proxy(function () {
 		this.dom.animate(this.getOptionsDom(), 'fast', function () {
 			me.dom.remove();
+            window.history.back();
 		});
 	}, this));
 	this.dom.find('img').on('click', function () {
