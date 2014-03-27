@@ -1,5 +1,7 @@
 DrawerList = function () {};
 
+DrawerList.prototype.name = 'drawer';
+
 DrawerList.prototype.dom = $('<ul>').attr('id', 'drawer');
 
 DrawerList.prototype.header = $('<li>').text('Seiten').addClass('header').append($('<div>').addClass('close').html('&#10006;'));
@@ -55,10 +57,16 @@ DrawerList.prototype.open = function () {
     });
     this.opened = true;
 };
+
 DrawerList.prototype.close = function () {
     if (!this.opened) return;
     this.dom.animate({"width":"0"}, 'fast');
     this.opened = false;
+};
+
+DrawerList.prototype.setCurrent = function (module) {
+    this.dom.find('.navi-button').removeClass('current');
+    this.dom.find('.navi-button.'+module).addClass('current');
 };
 
 main.registerModule('DrawerList');

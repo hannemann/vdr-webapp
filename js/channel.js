@@ -2,6 +2,8 @@ Channel = function () {
     this.itemList = null;
 };
 
+Channel.prototype.name = 'channel';
+
 Channel.prototype.init = function () {
 	this.current = null;
 	this.next = null;
@@ -9,10 +11,12 @@ Channel.prototype.init = function () {
 	this.isDispatched = false;
 	this.host = config.getItem('host');
 	this.port = config.getItem('port');
+    this.wrapper = $('.item-list-wrapper');
+    this.itemList = $('.item-list-wrapper').find('ul');
 };
 
 Channel.prototype.dispatch = function () {
-    this.itemList = $('.item-list-wrapper').addClass('channel-wrapper').find('ul');
+    this.wrapper.addClass('channel-wrapper');
 	if (this.next != this.current) {
 		this.current = this.next;
 		this.events = {};
@@ -72,6 +76,8 @@ Channel.prototype.loadEvents = function () {
 	});
 };
 
+Channel.prototype.renderEvents = function () {};
+
 
 Channel.prototype.scrollFinish = function (ev) {
 	var me = this, bodyOffset = $('body').offset();
@@ -99,7 +105,9 @@ Channel.prototype.addDomEvents = function () {
 };
 
 Channel.prototype.destruct = function () {
-    this.itemList.removeClass('channel-wrapper');
+    console.log('Destruct');
+    this.wrapper.removeClass('channel-wrapper');
+    console.log('Destroyed');
 };
 
 main.registerModule('Channel');

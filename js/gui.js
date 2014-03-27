@@ -4,14 +4,11 @@ Gui = function () {
     this.noConfig = true;
 };
 
+Gui.prototype.name = 'gui';
+
 Gui.prototype.init = function () {
 	var me = this;
 	this.throbber = $('#throbber');
-};
-
-Gui.prototype.setCurrent = function (module) {
-	$('.navi-button').removeClass('current');
-	$('.navi-button.'+module).addClass('current');
 };
 
 Gui.prototype.showThrobber = function () {
