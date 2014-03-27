@@ -1,29 +1,35 @@
 Channel = function () {
     this.itemList = null;
+    this.isDispatched = false;
+    this.current = null;
+    this.next = null;
 };
+
+Channel.prototype = new Rest();
 
 Channel.prototype.name = 'channel';
 
+Channel.prototype.cache = {};
+
+Channel.prototype.urls = {
+    "load":null
+};
+
 Channel.prototype.init = function () {
-	this.current = null;
-	this.next = null;
-	this.body = $('body');
-	this.isDispatched = false;
 	this.host = config.getItem('host');
 	this.port = config.getItem('port');
+    this.body = $('body');
     this.wrapper = $('.item-list-wrapper');
     this.itemList = $('.item-list-wrapper').find('ul');
 };
 
 Channel.prototype.dispatch = function () {
     this.wrapper.addClass('channel-wrapper');
-	if (this.next != this.current) {
-		this.current = this.next;
-		this.events = {};
-        this.decorateHeader();
-		this.loadEvents();
-		this.addDomEvents();
-	}
+    this.current = this.next;
+    this.events = {};
+    this.decorateHeader();
+    this.loadEvents();
+    this.addDomEvents();
     $('.channel-wrapper').show(); // zeige alle channel-wrapper (menu)
 };
 
@@ -38,45 +44,54 @@ Channel.prototype.decorateHeader = function () {
 };
 
 Channel.prototype.loadEvents = function () {
-	var list = this.itemList.empty(), now = new Date();
-	main.getModule('gui').showThrobber();
-	$.ajax({
-		"url":"http://"+this.host+":"+this.port+"/events/"+this.current.channel_id+".json?start=0",
-		"success":$.proxy(function (result) {
-			var i=0, l=result.events.length, event, start, stop, startTime, endTime, classNames, duration, dom, me=this, dateIndicator;
-			for (i;i<l;i++) {
-				event = result.events[i];
-				start = new Date(event.start_time*1000);
-				stop = new Date(event.start_time*1000 + event.duration*1000);
-				duration = helper.getDurationAsString(event.duration);
-				startTime = helper.getTimeString(start);
-				endTime = helper.getTimeString(stop);
-				if (now.getDate() != start.getDate()) {
-					dateIndicator = helper.getWeekDay(start)+', '+helper.getDateString(start);
-					list.append('<li data-date="'+dateIndicator+'" class="date">'+dateIndicator+'</li>');
-					now = start;
-				}
-				classNames = event.timer_exists ? (event.timer_active ? ' active-timer' : ' timer') : '';
-				dom = $('<li class="clearfix"'+(i==0?' data-date="'+helper.getWeekDay(now)+', '+helper.getDateString(now)+'"':'')+' id="'+event.id+'"><div class="event clearfix'+classNames+'"><h2><div class="start">'+startTime+'</div>'+event.title+'</h2><div class="short-text italic">'+event.short_text+'</div><div class="duration">'+duration+'</div></div></li>');
-				event.dom = dom;
-				dom.on('click', function () {
-					var event = me.events[this.id];
-					if (typeof event.show === 'undefined') {
-						event.show = new Event(event);
-					}
-					event.show.render();
-				});
-				this.events[event.id] = event;
-				list.append(dom);
-			}
-		}, this),
-		"complete":function () {
-			main.getModule('gui').hideThrobber();
-		}
-	});
+
+    if ("undefined" === typeof this.cache[this.current.channel_id]) {
+
+        this.urls.load = "events/"+this.current.channel_id+".json?start=0";
+        this.load();
+
+    } else {
+
+        this.renderEvents(this.cache[this.current.channel_id]);
+    }
+
 };
 
-Channel.prototype.renderEvents = function () {};
+Channel.prototype.onSuccess = function (result) {
+
+    this.cache[this.current.channel_id] = result;
+    this.renderEvents(result);
+};
+
+Channel.prototype.renderEvents = function (result) {
+
+    var i=0, l=result.events.length, now = new Date(), event, start, stop, startTime, endTime, classNames, duration, dom, me=this, dateIndicator;
+    for (i;i<l;i++) {
+        event = result.events[i];
+        start = new Date(event.start_time*1000);
+        stop = new Date(event.start_time*1000 + event.duration*1000);
+        duration = helper.getDurationAsString(event.duration);
+        startTime = helper.getTimeString(start);
+        endTime = helper.getTimeString(stop);
+        if (now.getDate() != start.getDate()) {
+            dateIndicator = helper.getWeekDay(start)+', '+helper.getDateString(start);
+            this.itemList.append('<li data-date="'+dateIndicator+'" class="date">'+dateIndicator+'</li>');
+            now = start;
+        }
+        classNames = event.timer_exists ? (event.timer_active ? ' active-timer' : ' timer') : '';
+        dom = $('<li class="clearfix"'+(i==0?' data-date="'+helper.getWeekDay(now)+', '+helper.getDateString(now)+'"':'')+' id="'+event.id+'"><div class="event clearfix'+classNames+'"><h2><div class="start">'+startTime+'</div>'+event.title+'</h2><div class="short-text italic">'+event.short_text+'</div><div class="duration">'+duration+'</div></div></li>');
+        event.dom = dom;
+        dom.on('click', function () {
+            var event = me.events[this.id];
+            if (typeof event.show === 'undefined') {
+                event.show = new Event(event);
+            }
+            event.show.render();
+        });
+        this.events[event.id] = event;
+        this.itemList.append(dom);
+    }
+};
 
 
 Channel.prototype.scrollFinish = function (ev) {
@@ -105,9 +120,8 @@ Channel.prototype.addDomEvents = function () {
 };
 
 Channel.prototype.destruct = function () {
-    console.log('Destruct');
+    this.itemList.empty();
     this.wrapper.removeClass('channel-wrapper');
-    console.log('Destroyed');
 };
 
 main.registerModule('Channel');
