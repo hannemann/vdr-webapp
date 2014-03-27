@@ -79,13 +79,13 @@ Main.prototype.run = function () {
  * poll location hash and dispatch changes
  */
 Main.prototype.pollLocation = function () {
-    var start = config.getItem('start');
+    var start = config.getItem('start'), hash;
 
     setInterval($.proxy(function () {
 
-        var hash = window.location.hash.replace('#', '');
+        hash = window.location.hash.replace('#', '');
 
-        if (hash === '') {
+        if ("" === hash) {
 
             hash = start;
         }
@@ -156,7 +156,10 @@ Main.prototype.dispatch = function (module, callback) {
 
         $('.content').hide();
         $('body').scrollTop();
-        window.location.hash = '#'+module;
+        if ('#'+module !== window.location.hash) {
+
+            window.location.hash = '#'+module;
+        }
 		this.modules[module].dispatch(callback);
 		this.current = module;
 	}

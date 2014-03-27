@@ -11,8 +11,11 @@ DrawerListItem.prototype.dispatch = function () {
 };
 
 DrawerListItem.prototype.addDomEvents = function () {
-    this.dom.on('click', $.proxy(function () {
-        window.history.back();
-        window.location.hash = '#' + this.module.name;
-    }, this));
+    var moduleName = this.module.name;
+    this.dom.on('click', function () {
+        window.history.go(-1);
+        setTimeout(function () {
+            window.location.hash = '#' + moduleName;
+        }, 100)
+    });
 };
