@@ -31,6 +31,8 @@
     <script type="text/javascript" src="js/Recording.js"></script>
     <script type="text/javascript" src="js/Timers.js"></script>
     <script type="text/javascript" src="js/Timer.js"></script>
+    <script type="text/javascript" src="js/Drawer/List.js"></script>
+    <script type="text/javascript" src="js/Drawer/ListItem.js"></script>
     <link rel="shortcut icon" sizes="196x196" href="assets/icon-highres.png">
     <link rel="shortcut icon" sizes="128x128" href="assets/icon.png">
     <link rel="apple-touch-icon" sizes="128x128" href="assets/icon.png">
@@ -40,7 +42,7 @@
 <body>
 <ul id="menubar">
 	<li>
-		<div onclick="main.modules.gui.openDrawer()" id="drawer-button">&nbsp;</div>
+		<div id="drawer-button">&nbsp;</div>
 	</li>
 	<li>
 		<div class="content epg-wrapper">
@@ -54,23 +56,6 @@
 	<li class="content channel-wrapper"><div class="logo"></div><div class="info-wrapper"><div class="number"></div><div class="channel"></div><div class="date"></div></div></li>
 	<li id="refresh" class="right"><img src="assets/refresh.png" alt="" title=""></li>
     <li id="throbber"><img src="assets/ajax-loader.gif" alt="" title=""></li>
-</ul>
-<ul id="drawer">
-	<li>
-		<div class="header">Seiten<div class="close">&#10006;</div></div>
-	</li>
-    <li>
-        <div class="navi-button epg" onclick="main.dispatch('epg')">EPG</div>
-    </li>
-    <li>
-        <div class="navi-button timers" onclick="main.dispatch('timers')">Timer</div>
-    </li>
-    <li>
-        <div class="navi-button recordings" onclick="main.dispatch('recordings')">Aufnahmen</div>
-    </li>
-	<li>
-		<div class="navi-button settings" onclick="main.dispatch('settings')">Einstellungen</div>
-	</li>
 </ul>
 <div class="content settings-wrapper">
 	<form id="settings" name="settings" action="#">

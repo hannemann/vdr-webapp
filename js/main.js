@@ -28,37 +28,50 @@ Main.prototype.run = function () {
     }
 	if (this.checkConfig()) {
 		for (i in this.modules) {
-			this.modules[i].init();
+            this.initModule(i);
 		}
 		this.dispatch(start);
-        setInterval(function () {
-            var hash = window.location.hash.replace('#', '');
-            if (hash === '') {
-                hash = start;
-            }
-            if (hash !== me.current && me.isRegistered(hash)) {
-                me.dispatch(hash);
-            } else if (hash === me.current && typeof me.destroy === 'function') {
-                me.destroy();
-                me.destroy = undefined;
-            }
-        }, 500);
+        this.pollLocation();
 	} else {
 		this.getConfig();
 	}
 };
 
+Main.prototype.pollLocation = function () {
+    var me = this;
+    setInterval(function () {
+        var hash = window.location.hash.replace('#', '');
+        if (hash === '') {
+            hash = start;
+        }
+        if (hash !== me.current && me.isRegistered(hash)) {
+            me.dispatch(hash);
+        } else if (hash === me.current && typeof me.destroy === 'function') {
+            me.destroy();
+            me.destroy = undefined;
+        }
+    }, 100);
+};
+
+Main.prototype.initModule = function (module) {
+    if ("undefined" === typeof this.modules[module].initialized) {
+        this.modules[module].name = module;
+        this.modules[module].init();
+        this.modules[module].initialized = true;
+    }
+};
+
 Main.prototype.initNoConfig = function () {
     for (var i in this.modules) {
         if (typeof this.modules[i].noConfig !== 'undefined') {
-            this.modules[i].init();
+            this.initModule(i);
         }
     }
     this.initWithoutConfig = true;
 };
 
 Main.prototype.dispatch = function (module, callback) {
-    if (this.isRegistered('gui')) this.modules.gui.closeDrawer();
+    if (this.isRegistered('drawer')) this.modules.drawer.close();
 	if (this.current != module) {
         if (this.current && typeof this.modules[this.current].destruct == 'function') {
             this.modules[this.current].destruct();

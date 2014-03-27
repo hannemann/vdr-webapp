@@ -4,6 +4,8 @@ Timers.prototype = new GuiList();
 
 Timers.prototype.optionName = "Timer";
 
+Timers.prototype.name = "timers";
+
 Timers.prototype.wrapperClass = "timers-wrapper";
 
 Timers.prototype.urls = {

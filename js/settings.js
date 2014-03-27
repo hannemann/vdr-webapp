@@ -1,7 +1,10 @@
 Settings = function () {
-	this.optionName = 'Einstellungen';
 	this.isDispatched = false;
 };
+
+Settings.prototype.optionName = 'Einstellungen';
+
+Settings.prototype.name = 'settings';
 
 Settings.prototype.init = function () {
 	this.dom = $('.settings-wrapper');

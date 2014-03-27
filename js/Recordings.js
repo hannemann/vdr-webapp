@@ -4,6 +4,8 @@ Recordings.prototype = new GuiList();
 
 Recordings.prototype.optionName = "Aufnahmen";
 
+Recordings.prototype.name = "recordings";
+
 Recordings.prototype.wrapperClass = "recordings-wrapper";
 
 Recordings.prototype.urls = {

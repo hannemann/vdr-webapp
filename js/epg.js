@@ -3,6 +3,8 @@ var Epg = function () {
     this.isDispatched = false;
 };
 
+Epg.prototype.name = "epg";
+
 Epg.prototype.init = function () {
     $('#timeSelector .' + config.getItem('lastEpg')).hide();
     this.now = new Date();
