@@ -1,0 +1,26 @@
+.settings-wrapper,
+#settings {
+	height: 100%;
+}
+#settings {
+	background: none repeat scroll 0 0 #404040;
+	color: #FFFFFF;
+	padding: 20px;
+}
+#settings fieldset {
+	border: 1px solid #FFFFFF;
+	margin-bottom: 20px;
+	padding: 20px;
+}
+#settings legend {
+	margin-left: 15px;
+}
+#settings label {
+	display: block;
+	width: 100%;
+}
+#settings label input,
+#settings label select {
+	float: right;
+	text-align: right;
+}

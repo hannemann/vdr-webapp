@@ -1,0 +1,71 @@
+.channel-wrapper li {
+	background: linear-gradient(330deg, #696969 15%, #404040 85%);
+}
+
+.channel-wrapper li:nth-child(odd) {
+	background: linear-gradient(30deg, #696969 15%, #404040 85%);
+}
+
+.channel-wrapper div.event {
+	padding: 5px 10px;
+}
+.channel-wrapper div.event.active-timer {
+	background-image: linear-gradient(90deg, #696969 30%, #930000 70%);
+	background-size: 5px 5px;
+	background-position: right top;
+	background-repeat: repeat-y;
+}
+.channel-wrapper li:nth-child(odd) div.event.active-timer {
+	background-image: linear-gradient(90deg, #404040 30%, #930000 70%);
+}
+.channel-wrapper li h2 {
+	font-size: 15px;
+	font-weight: normal;
+}
+.channel-wrapper li h2 div {
+	float: left;
+	font-size: 15px;
+	margin-right: 10px;
+}
+.channel-wrapper li div {
+	font-size: 12px;
+}
+.channel-wrapper li div.short-text {
+	float: left;
+}
+.channel-wrapper li div.duration {
+	float: right;
+}
+#menubar .channel-wrapper {
+	min-width: 210px;
+}
+#menubar .channel-wrapper div {
+	float: left;
+	margin-right: 10px;
+}
+#menubar .channel-wrapper .info-wrapper {
+	max-width: 100%;
+}
+#menubar .channel-wrapper .number {
+	font-size: 15px;
+	font-weight: bold;
+}
+#menubar .channel-wrapper .logo img {
+	background: white;
+	width: 36px;
+}
+#menubar .channel-wrapper .channel {
+    font-size: 15px;
+    font-weight: bold;
+}
+#menubar .channel-wrapper .date {
+    clear:both;
+}
+.channel-wrapper li.date {
+	background: #404040;
+	border-bottom: 2px solid #696969;
+	border-top: 2px solid #696969;
+	font-weight: bold;
+	padding-left: 20px;
+	text-align: right;
+}

@@ -1,0 +1,65 @@
+ul#menubar #refresh,
+ul#menubar li#throbber {
+    float: right;
+    margin: 3px 5px;
+    display: none;
+}
+ul#menubar #refresh {
+    margin: 5px;
+}
+.right {
+    float: right;
+}
+.left {
+    float: left;
+}
+.italic {
+    font-style: italic;
+}
+#drawer-button {
+	height: 38px;
+	width: 38px;
+	background-image: linear-gradient(0deg, dimgrey 50%, white 50%);
+	background-size: 30px 12px;
+	background-position: center 3px;
+	background-repeat: repeat-y;
+	margin-right: 15px;
+}
+
+#drawer {
+	width:0;
+	overflow: hidden;
+	height:100%;
+	position:fixed;
+	top: 0;
+	left: 0;
+	background: linear-gradient(90deg, #404040 50%, #707070 100%);
+	z-index: 1;
+	color: white;
+	box-shadow: 0 0 20px 0 black;
+}
+#drawer .header {
+	background: dimgrey;
+	font-weight: bold;
+	font-family: serif;
+	padding:10px;
+	font-size: 25px;
+	position: relative;
+}
+#drawer .header .close {
+	position: absolute;
+}
+#drawer .navi-button {
+	padding:5px 10px;
+	font-size: 20px;
+}
+#drawer .navi-button.current {
+	background:  linear-gradient(90deg, #707070 50%, #404040 100%);
+}
+.list-item,
+.collapsible {
+    padding-left: 10px;
+}
+.collapsible.collapsed {
+    display: none;
+}

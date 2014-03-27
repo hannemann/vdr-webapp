@@ -1,0 +1,21 @@
+
+
+.tabs {
+    width: 100%;
+    background:#a9a9a9;
+}
+div.show-event .tab-content {
+    display: none;
+}
+
+div.show-event .tab-content.current {
+    display: block;
+}
+.tabs li {
+    float: left;
+    padding: 10px 20px;
+}
+.tabs li.current {
+    background: #696969;
+    color: #FFFFFF;
+}
