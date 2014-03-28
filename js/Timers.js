@@ -18,6 +18,8 @@ Timers.prototype.onSuccess = function (result) {
         i = 0,
         l = timers.length;
 
+    this.index = {};
+
     for (i;i<l;i++) {
         timer = new Timer(timers[i]);
 

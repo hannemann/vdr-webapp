@@ -13,10 +13,11 @@ Recordings.prototype.urls = {
 };
 
 Recordings.prototype.onSuccess = function (result) {
-    var  now = new Date(),
-        recordings = result.recordings, recording,
+    var recordings = result.recordings,
         i = 0,
         l = recordings.length;
+
+    this.index = {};
 
     for (i;i<l;i++) {
         recordings[i] = new Recording(recordings[i]);

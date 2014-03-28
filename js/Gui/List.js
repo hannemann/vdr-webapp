@@ -1,8 +1,10 @@
 GuiList = function () {
     this.itemList = null;
+    this.wrapper = null;
     this.isDispatched = false;
     this.index = {};
     this.body = $('body');
+    this.cache = {};
 };
 
 GuiList.prototype = new Rest();
@@ -11,15 +13,18 @@ GuiList.prototype.init = function () {};
 
 GuiList.prototype.dispatch = function () {
     if (!this.isDispatched) {
-        this.itemList = $('.item-list-wrapper').addClass(this.wrapperClass).find('ul');
-        this.load();
+        this.wrapper = $('.item-list-wrapper');
+        this.itemList = this.wrapper.find('ul');
         this.isDispatched = true;
     }
+    this.wrapper.addClass(this.wrapperClass);
+    this.load();
     $('.'+this.wrapperClass).show();
 };
 
 GuiList.prototype.destruct = function () {
-    this.itemList.removeClass(this.wrapperClass);
+    this.wrapper.removeClass(this.wrapperClass);
+    this.itemList.empty();
 };
 
 /**
