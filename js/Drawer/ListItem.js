@@ -1,5 +1,6 @@
-DrawerListItem = function (options) {
+DrawerListItem = function (options, drawer) {
     this.module = options;
+    this.drawer = drawer;
     this.dom = $('<li>').addClass('navi-button');
 };
 
@@ -12,10 +13,16 @@ DrawerListItem.prototype.dispatch = function () {
 
 DrawerListItem.prototype.addDomEvents = function () {
     var moduleName = this.module.name;
-    this.dom.on('click', function () {
-        window.history.go(-1);
-        setTimeout(function () {
-            window.location.hash = '#' + moduleName;
-        }, 100)
-    });
+    this.dom.on('click', $.proxy(function () {
+
+        this.drawer.onIsClosed = function () {
+            window.history.go(-1);
+            setTimeout(function () {
+                window.location.hash = '#' + moduleName;
+                this.drawer.onIsClosed = false;
+            }, 100);
+        };
+
+        this.drawer.close();
+    }, this));
 };

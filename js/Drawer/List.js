@@ -12,13 +12,17 @@ DrawerList.prototype.noConfig = true;
 
 DrawerList.prototype.opened = false;
 
+DrawerList.prototype.onIsClosed = false;
+
+DrawerList.prototype.onIsOpen = false;
+
 DrawerList.prototype.init = function () {
     var i;
     for (i in main.modules) {
         if ("undefined" !== typeof main.modules[i].optionName) {
             this.items[i] = {
                 "module":main.modules[i],
-                "listItem":new DrawerListItem(main.modules[i])
+                "listItem":new DrawerListItem(main.modules[i], this)
             };
         }
     }
@@ -47,21 +51,28 @@ DrawerList.prototype.addDomEvents = function () {
 };
 
 DrawerList.prototype.open = function () {
-    var me = this;
+
     if (this.opened) return;
-    this.dom.animate({"width":"50%"}, 'fast', 'swing', function () {
+    this.dom.animate({"width":"50%"}, 'fast', 'swing', $.proxy(function () {
         main.destroy = function () {
-            me.close();
+            this.close();
         };
         window.location.hash = '#show-drawer';
-    });
-    this.opened = true;
+        this.opened = true;
+        if ("function" === typeof this.onIsOpen) {
+            this.onIsOpen();
+        }
+    }, this));
 };
 
 DrawerList.prototype.close = function () {
     if (!this.opened) return;
-    this.dom.animate({"width":"0"}, 'fast');
-    this.opened = false;
+    this.dom.animate({"width":"0"}, 'fast', $.proxy(function () {
+        this.opened = false;
+        if ("function" === typeof this.onIsClosed) {
+            this.onIsClosed();
+        }
+    }, this));
 };
 
 DrawerList.prototype.setCurrent = function (module) {
