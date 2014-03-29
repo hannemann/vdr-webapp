@@ -1,28 +1,29 @@
 /**
- *
  * @param options
  * @constructor
  */
 GuiItem = function (options) {
-    var i= 0;
+    var i;
     this.data = {};
 
     for (i in options) {
-        this.data[i] = options[i];
+        if (options.hasOwnProperty(i)) {
+            this.data[i] = options[i];
+        }
     }
 };
 
 /**
  * retrieve HTMLElement
- * @return {jQuery}
+ * @return {*}
  */
 GuiItem.prototype.dom = function () {
     return this.element;
-}
+};
 
 /**
  * retrieve option
- * @param field
+ * @param option
  * @param defaultValue
  * @return {*}
  */
@@ -33,7 +34,7 @@ GuiItem.prototype.get = function (option, defaultValue) {
         return defaultValue;
     }
     return null;
-}
+};
 
 /**
  *
@@ -44,4 +45,4 @@ GuiItem.prototype.get = function (option, defaultValue) {
 GuiItem.prototype.set = function (option, value) {
     this.data[option] = value;
     return this;
-}
+};
