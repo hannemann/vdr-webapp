@@ -3,17 +3,13 @@
  * @param options
  * @constructor
  */
-GuiItem = function (options, element) {
+GuiItem = function (options) {
     var i= 0;
     this.data = {};
 
     for (i in options) {
         this.data[i] = options[i];
     }
-//
-//    if ('undefined' !== this.mainClassName) {
-//        element.addClass(this.mainClassName);
-//    }
 };
 
 /**
