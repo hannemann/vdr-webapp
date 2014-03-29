@@ -28,7 +28,7 @@ GuiTreeView.prototype.render = function () {
     $(this.items).sort(this.sortByName).each($.proxy(function () {
 
         this.renderRecursive(arguments[1], this.root);
-        
+
     }, this));
 
     this.moveFoldersToTop();
@@ -138,7 +138,7 @@ GuiTreeView.prototype.getPathName = function (pathNames) {
 };
 
 /**
- * create new directoy dom
+ * create new directory dom
  * @param currentNode
  * @param pathName
  * @return {*}
