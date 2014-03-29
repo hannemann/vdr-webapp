@@ -40,15 +40,23 @@ GuiTreeView.prototype.render = function () {
  */
 GuiTreeView.prototype.moveFoldersToTop = function () {
 
-    this.root.children('li.folder')
+    this.root.children('li.root-directory-item')
         .sort(this.sortByDataNameAttribute)
         .detach().prependTo(this.root);
 };
 
+/**
+ * unhide root items
+ */
 GuiTreeView.prototype.showRootItems = function () {
 
-    this.root.children('li.list-item').removeClass('collapsed collapsible');
-    this.root.children('li.folder').children('.collapsible').removeClass('collapsed collapsible');
+    this.root.children('li.root-list-item').removeClass('collapsed collapsible').addClass('expanded gui-tree-view-visible-item');
+    this.root.children('li.root-directory-item')
+        .children('.collapsible')
+        .removeClass('collapsed collapsible')
+        .addClass('expanded')
+        .children('.directory-label')
+        .addClass('gui-tree-view-visible-item');
 };
 
 /**
@@ -60,7 +68,8 @@ GuiTreeView.prototype.showRootItems = function () {
 GuiTreeView.prototype.renderRecursive = function (item, currentNode, pathNames) {
 
     var pathName,
-        nextNode;
+        nextNode,
+        depth;
 
     if (!item instanceof GuiListItem) {
         throw 'Argument item not of type GuiListItem in GuiTreeView.renderRecursive';
@@ -68,18 +77,46 @@ GuiTreeView.prototype.renderRecursive = function (item, currentNode, pathNames) 
 
     pathNames = pathNames || item.pathNames();
     pathName = this.getPathName(pathNames);
+    depth = this.getDepth(item, pathNames);
 
     if (pathName) {
 
-        nextNode = this.getDirectory(currentNode, pathName);
+        nextNode = this.getDirectory(currentNode, pathName, depth);
 
         this.renderRecursive(item, nextNode, pathNames);
 
     } else {
 
-        item.renderIn(currentNode);
+        this.decorateItem(item, currentNode)
+            .renderIn(currentNode);
 
     }
+};
+
+/**
+ * @param item
+ * @param currentNode
+ * @return {*}
+ */
+GuiTreeView.prototype.decorateItem = function (item, currentNode) {
+    var dom = item.dom();
+
+    if (this.isRoot(currentNode)) {
+        dom.addClass('gui-tree-view-root-item root-list-item');
+    }
+    dom.addClass('list-item gui-tree-view-list-item');
+
+    return item;
+};
+
+/**
+ * get depth of directory
+ * @param item
+ * @param pathNames
+ * @return {*}
+ */
+GuiTreeView.prototype.getDepth = function (item, pathNames) {
+    return item.pathNames().length - pathNames.length;
 };
 
 /**
@@ -88,7 +125,7 @@ GuiTreeView.prototype.renderRecursive = function (item, currentNode, pathNames) 
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectory = function (currentNode, pathName) {
+GuiTreeView.prototype.getDirectory = function (currentNode, pathName, depth) {
 
     var directory,
         selector = [],
@@ -96,13 +133,13 @@ GuiTreeView.prototype.getDirectory = function (currentNode, pathName) {
 
     if (isRoot) {
 
-        selector.push('li.folder[data-name="'+pathName+'"]');
-        selector.push('li.folder-content[data-name="'+pathName+'"]');
+        selector.push('li.root-directory-item[data-name="'+pathName+'"]');
+        selector.push('li.directory-content[data-name="'+pathName+'"]');
 
     } else {
 
         selector.push('ul[data-name="'+pathName+'"]');
-        selector.push('li.folder-content[data-name="'+pathName+'"]');
+        selector.push('li.directory-content[data-name="'+pathName+'"]');
 
     }
 
@@ -110,7 +147,7 @@ GuiTreeView.prototype.getDirectory = function (currentNode, pathName) {
 
     if (0 === directory.length) {
 
-        directory = this.createDirectory(currentNode, pathName);
+        directory = this.createDirectory(currentNode, pathName, depth);
 
     }
 
@@ -143,13 +180,13 @@ GuiTreeView.prototype.getPathName = function (pathNames) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.createDirectory = function (currentNode, pathName) {
+GuiTreeView.prototype.createDirectory = function (currentNode, pathName, depth) {
 
     var directoryContent = this.getDirectoryContent(pathName);
 
-    this.getDirectoryWrapper(currentNode, pathName)
-        .append(this.getDirectoryNode(pathName)
-        .append(this.getDirectoryHeader(pathName))
+    this.getWrapperNode(currentNode, pathName)
+        .append(this.getDirectoryWrapper(pathName, depth)
+        .append(this.getDirectoryLabel(pathName))
         .append(directoryContent));
 
     return directoryContent;
@@ -160,14 +197,14 @@ GuiTreeView.prototype.createDirectory = function (currentNode, pathName) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectoryWrapper = function (currentNode, pathName) {
+GuiTreeView.prototype.getWrapperNode = function (currentNode, pathName) {
 
     var wrapper;
 
     if (this.isRoot(currentNode)) {
 
         wrapper = $('<li>')
-            .addClass('folder')
+            .addClass('gui-tree-view-root-item root-directory-item')
             .attr('data-name', pathName);
 
         currentNode.append(wrapper);
@@ -186,10 +223,11 @@ GuiTreeView.prototype.getDirectoryWrapper = function (currentNode, pathName) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectoryNode = function (pathName) {
+GuiTreeView.prototype.getDirectoryWrapper = function (pathName, depth) {
 
     return $('<ul>')
-        .addClass('collapsible collapsed')
+        .addClass('directory-wrapper collapsible collapsed')
+        .attr('data-depth', depth.toString())
         .attr('data-name', pathName);
 };
 
@@ -198,24 +236,24 @@ GuiTreeView.prototype.getDirectoryNode = function (pathName) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectoryHeader = function (pathName) {
+GuiTreeView.prototype.getDirectoryLabel = function (pathName) {
 
     return this.addToggle(
         $('<li>')
             .text(pathName)
             .attr('data-name', pathName)
-            .addClass('folder-header')
+            .addClass('directory-part directory-label')
     );
 };
 
 /**
- * Create folder content dom
+ * Create directory content dom
  * @param pathName
  * @return {*}
  */
 GuiTreeView.prototype.getDirectoryContent = function (pathName) {
 
-    return $('<li>').attr('data-name', pathName).addClass('folder-content')
+    return $('<li>').attr('data-name', pathName).addClass('directory-part directory-content')
 };
 
 /**
@@ -227,9 +265,12 @@ GuiTreeView.prototype.addToggle = function (element) {
 
     return element
         .on('click', function () {
-            $(this).parent('ul')
-                .find('li.folder-content[data-name="'+$(this).attr('data-name')+'"]:first > .collapsible')
-                .toggleClass('collapsed');
+            var parent = $(this).parent('ul')
+
+            parent.children('li.directory-part').toggleClass('on gui-tree-view-visible-item');
+            parent.children('li.directory-content.on').children('.gui-tree-view-list-item').addClass('gui-tree-view-visible-item');
+            parent.find('li.directory-content[data-name="'+$(this).attr('data-name')+'"]:first > .collapsible')
+                .toggleClass('collapsed expanded');
         });
 };
 

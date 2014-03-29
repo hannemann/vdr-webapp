@@ -11,7 +11,7 @@ Recording.prototype.dateReg = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9
 
 Recording.prototype.dayReg = /([0-9]{4})-([0-9]{2})-([0-9]{2})/;
 
-Recording.prototype.className = 'list-item recording-list-item collapsible collapsed';
+Recording.prototype.className = 'recording-list-item collapsible collapsed';
 
 /**
  * retrieve date object of start timestamp

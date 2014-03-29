@@ -1,0 +1,42 @@
+
+.collapsible.collapsed {
+    display: none;
+}
+
+.directory-content.on .gui-tree-view-list-item,
+.gui-tree-view-root-item {
+    background: linear-gradient(330deg, #696969 15%, #404040 85%);
+}
+
+.directory-content.on .gui-tree-view-list-item:nth-child(odd),
+.gui-tree-view-root-item:nth-child(odd) {
+    background: linear-gradient(30deg, #696969 15%, #404040 85%);
+}
+
+li.directory-label {
+    padding: 5px 10px;
+}
+
+.directory-wrapper{
+    background: inherit;
+}
+
+.directory-label {
+    background: inherit;
+}
+
+.directory-label:before {
+    content: "▶";
+    margin: 5px;
+}
+.directory-part.directory-label.on:before {
+    content: "▼";
+}
+
+.directory-content {
+    margin-left: 10px;
+}
+
+.gui-tree-view-list-item {
+    padding: 5px 20px;
+}

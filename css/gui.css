@@ -56,10 +56,3 @@ ul#menubar #refresh {
 #drawer .navi-button.current {
 	background:  linear-gradient(90deg, #707070 50%, #404040 100%);
 }
-.list-item,
-.collapsible {
-    padding-left: 10px;
-}
-.collapsible.collapsed {
-    display: none;
-}
