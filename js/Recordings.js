@@ -39,7 +39,7 @@ Recordings.prototype.onSuccess = function (result) {
 
     this.treeView
         .setItems(recordings)
-        .setParentNode(this.itemList)
+        .setRoot(this.itemList)
         .render();
 };
 

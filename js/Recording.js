@@ -41,7 +41,7 @@ Recording.prototype.date = function() {
  * retrieve paths as array
  * @return {Array}
  */
-Recording.prototype.paths = function () {
+Recording.prototype.pathNames = function () {
 
     var paths = this.get(this.relative ? 'relative_file_name' : 'file_name'),
         i = 0,
