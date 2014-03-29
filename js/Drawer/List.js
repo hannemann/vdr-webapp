@@ -36,11 +36,13 @@ DrawerList.prototype.isOpen = false;
 DrawerList.prototype.init = function () {
     var i;
     for (i in main.modules) {
-        if ("undefined" !== typeof main.modules[i].optionName) {
-            this.items[i] = {
-                "module":main.modules[i],
-                "listItem":new DrawerListItem(main.modules[i], this)
-            };
+        if (main.modules.hasOwnProperty(i)) {
+            if ("undefined" !== typeof main.modules[i].optionName) {
+                this.items[i] = {
+                    "module":main.modules[i],
+                    "listItem":new DrawerListItem(main.modules[i], this)
+                };
+            }
         }
     }
     this.dispatch();
@@ -53,7 +55,9 @@ DrawerList.prototype.dispatch = function () {
     var i;
     this.dom.append(this.header);
     for (i in this.items) {
-        this.dom.append(this.items[i].listItem.dispatch());
+        if (this.items.hasOwnProperty(i)) {
+            this.dom.append(this.items[i].listItem.dispatch());
+        }
     }
     this.addDomEvents();
     this.dom.insertAfter('#menubar');
