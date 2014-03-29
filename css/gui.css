@@ -19,7 +19,7 @@ ul#menubar #refresh {
 #drawer-button {
 	height: 38px;
 	width: 38px;
-	background-image: linear-gradient(0deg, dimgrey 50%, white 50%);
+	background-image: linear-gradient(0deg, #696969 50%, white 50%);
 	background-size: 30px 12px;
 	background-position: center 3px;
 	background-repeat: repeat-y;
@@ -39,7 +39,7 @@ ul#menubar #refresh {
 	box-shadow: 0 0 20px 0 black;
 }
 #drawer .header {
-	background: dimgrey;
+	background: #696969;
 	font-weight: bold;
 	font-family: serif;
 	padding:10px;
