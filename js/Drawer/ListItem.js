@@ -4,25 +4,44 @@ DrawerListItem = function (options, drawer) {
     this.dom = $('<li>').addClass('navi-button');
 };
 
+/**
+ * render button
+ * @return {*}
+ */
 DrawerListItem.prototype.dispatch = function () {
+
     this.dom.addClass(this.module.name);
     this.dom.text(this.module.optionName);
     this.addDomEvents();
+
     return this.dom;
 };
 
+/**
+ * add click event to button
+ */
 DrawerListItem.prototype.addDomEvents = function () {
-    var moduleName = this.module.name;
+
     this.dom.on('click', $.proxy(function () {
 
-        this.drawer.onIsClosed = function () {
-            window.history.go(-1);
-            setTimeout(function () {
-                window.location.hash = '#' + moduleName;
-                this.drawer.onIsClosed = false;
-            }, 100);
-        };
-
+        $(document).one('drawerClosed', $.proxy(this.closedCallback, this));
         this.drawer.close();
+
     }, this));
+};
+
+/**
+ * callback to fire if drawer is closed
+ */
+DrawerListItem.prototype.closedCallback = function () {
+
+    var moduleName = this.module.name;
+
+    window.history.go(-1);
+
+    setTimeout(function () {
+
+        window.location.hash = '#' + moduleName;
+
+    }, 100);
 };

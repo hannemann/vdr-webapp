@@ -1,21 +1,38 @@
 DrawerList = function () {};
 
+/**
+ * @type {String}
+ */
 DrawerList.prototype.name = 'drawer';
 
+/**
+ * @type {*}
+ */
 DrawerList.prototype.dom = $('<ul>').attr('id', 'drawer');
 
+/**
+ * @type {*}
+ */
 DrawerList.prototype.header = $('<li>').text('Seiten').addClass('header').append($('<div>').addClass('close').html('&#10006;'));
 
+/**
+ * @type {Object}
+ */
 DrawerList.prototype.items = {};
 
+/**
+ * @type {Boolean}
+ */
 DrawerList.prototype.noConfig = true;
 
-DrawerList.prototype.opened = false;
+/**
+ * @type {Boolean}
+ */
+DrawerList.prototype.isOpen = false;
 
-DrawerList.prototype.onIsClosed = false;
-
-DrawerList.prototype.onIsOpen = false;
-
+/**
+ * initilize buttons and dispatch
+ */
 DrawerList.prototype.init = function () {
     var i;
     for (i in main.modules) {
@@ -29,6 +46,9 @@ DrawerList.prototype.init = function () {
     this.dispatch();
 };
 
+/**
+ * append buttons and render drawer
+ */
 DrawerList.prototype.dispatch = function () {
     var i;
     this.dom.append(this.header);
@@ -39,6 +59,9 @@ DrawerList.prototype.dispatch = function () {
     this.dom.insertAfter('#menubar');
 };
 
+/**
+ * add open and close functionality
+ */
 DrawerList.prototype.addDomEvents = function () {
     var me = this;
     this.dom.find('.close').on('click', function () {
@@ -50,31 +73,46 @@ DrawerList.prototype.addDomEvents = function () {
     });
 };
 
+/**
+ * open the drawer, fire event afterwards
+ */
 DrawerList.prototype.open = function () {
 
-    if (this.opened) return;
+    if (this.isOpen) return;
     this.dom.animate({"width":"50%"}, 'fast', 'swing', $.proxy(function () {
-        main.destroy = function () {
+
+        main.destroy = $.proxy(function () {
             this.close();
-        };
+        }, this);
+
         window.location.hash = '#show-drawer';
-        this.opened = true;
-        if ("function" === typeof this.onIsOpen) {
-            this.onIsOpen();
-        }
+        this.isOpen = true;
+        $.event.trigger({
+            "type":"drawerOpen"
+        });
     }, this));
 };
 
+
+/**
+ * close the drawer, fire event afterwards
+ */
 DrawerList.prototype.close = function () {
-    if (!this.opened) return;
+
+    if (!this.isOpen) return;
     this.dom.animate({"width":"0"}, 'fast', $.proxy(function () {
-        this.opened = false;
-        if ("function" === typeof this.onIsClosed) {
-            this.onIsClosed();
-        }
+
+        this.isOpen = false;
+        $.event.trigger({
+            "type":"drawerClosed"
+        });
     }, this));
 };
 
+/**
+ * add classes to currently active module
+ * @param module
+ */
 DrawerList.prototype.setCurrent = function (module) {
     this.dom.find('.navi-button').removeClass('current');
     this.dom.find('.navi-button.'+module).addClass('current');
