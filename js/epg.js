@@ -1,33 +1,39 @@
 var Epg = function () {
-    this.optionName = 'EPG';
     this.isDispatched = false;
+    this.events = [];
+    this.channels = null;
+    this.endTimes = {};
+    this.scrollTimer = null;
 };
+
+Epg.prototype = new Rest();
+
+Epg.prototype.optionName = "EPG";
 
 Epg.prototype.name = "epg";
 
 Epg.prototype.init = function () {
+    this.channelsList = $('#channels');
+    this.eventsList = $('#events');
+    this.timeline = $('#timeline');
+    this.body = $('body');
+    this.window = $(window);
+    this.verticalScroller = $('dl.epg dd');
+
+    this.scrollFinishCallback = $.proxy(function () {
+        this.scrollFinish();
+    }, this);
+};
+
+Epg.prototype.dispatch = function () {
+
     $('#timeSelector .' + config.getItem('lastEpg')).hide();
     this.now = new Date();
     this.prime = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), 20, 15, 0);
     if (this.now > this.prime) {
         this.prime.setTime(this.prime.getTime() + 1000 * 24 * 60 * 60);
     }
-    this.channelsList = $('#channels');
-    this.eventsList = $('#events');
-    this.timeline = $('#timeline');
-    this.events = [];
-    this.channels = null;
-    this.endTimes = {};
-    this.body = $('body');
-    this.verticalScroller = $('dl.epg dd');
-    this.window = $(window);
-    this.scrollTimer = null;
-    this.host = config.getItem('host');
-    this.port = config.getItem('port');
     this.addDomEvents();
-};
-
-Epg.prototype.dispatch = function () {
     $('.epg-wrapper').show();
     if (!this.isDispatched) {
         this.loadChannels();
@@ -37,7 +43,11 @@ Epg.prototype.dispatch = function () {
     }
 };
 
-Epg.prototype.scrollFinish = function (ev) {
+/**
+ * handle horizontal scroll events
+ * load events in case of empty space in grid
+ */
+Epg.prototype.scrollFinish = function () {
     var me = this, l = me.channels.length, i = 0;
     clearTimeout(this.scrollTimer);
     this.scrollTimer = setTimeout(function () {
@@ -50,10 +60,11 @@ Epg.prototype.scrollFinish = function (ev) {
         if (me.isScrolledIntoView(me.timeline.find('div:last'), me.window)) {
             me.renderTimeLine();
         }
-    }, 200, ev);
-}
+    }, 200);
+};
 
 Epg.prototype.addDomEvents = function () {
+
     var me = this, i = 0, l = 0;
     $('#refresh').show().on('click', function () {
         me.loadFrom(config.getItem('lastEpg'));
@@ -63,26 +74,41 @@ Epg.prototype.addDomEvents = function () {
             me.loadFrom(this.className);
         })
     });
-    this.window.on('orientationchange', $.proxy(this.scrollFinish, this));
-    this.body.scroll(function () {
-        me.scrollFinish();
-    });
-    this.verticalScroller.scroll(function (e) {
-        var scroll = this.scrollLeft * -1, ddOffset = this.offsetLeft, date = '';
-        $('#timeline').css({"left":scroll + 'px'});
+    this.window.on('orientationchange', this.scrollFinishCallback);
+    this.body.on('scroll', this.scrollFinishCallback);
+    this.verticalScroller.on('scroll', $.proxy(this.moveTimeline, this));
+};
 
-        $('#timeline [data-date]').each(function (k, v) {
-            var d = $(v);
-            if (d.offset().left <= ddOffset) {
-                date = d.attr('data-date');
-            } else {
-                return false;
-            }
-        });
-        $('#menubar .epg-wrapper .date').text(date);
+Epg.prototype.removeDomEvents = function () {
 
-        me.scrollFinish();
+    $('#refresh').show().off('click');
+    $('#timeSelector li').off('click');
+    this.window.off('orientationchange', this.scrollFinishCallback);
+    this.body.off('scroll', this.scrollFinishCallback);
+    this.verticalScroller.off('scroll');
+};
+
+/**
+ * scroll timeline callback
+ * attach to vertical scroll event
+ */
+Epg.prototype.moveTimeline = function () {
+
+    var that = this.verticalScroller.get(0);
+    var scroll = that.scrollLeft * -1, ddOffset = that.offsetLeft, date = '';
+    this.timeline.css({"left":scroll + 'px'});
+
+    this.timeline.find('*[data-date]').each(function (k, v) {
+        var d = $(v);
+        if (d.offset().left <= ddOffset) {
+            date = d.attr('data-date');
+        } else {
+            return false;
+        }
     });
+    $('#menubar .epg-wrapper .date').text(date);
+
+    this.scrollFinish();
 };
 
 Epg.prototype.addChannelEvents = function () {
@@ -342,6 +368,7 @@ Epg.prototype.renderTimeLine = function () {
 
 Epg.prototype.destruct = function () {
     $('#refresh').off('click').hide();
+    this.removeDomEvents();
 };
 
 main.registerModule('Epg');
