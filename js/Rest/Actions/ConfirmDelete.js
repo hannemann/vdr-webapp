@@ -1,6 +1,6 @@
 Actions.ConfirmDelete = function (message) {
 
-    GuiItem.apply(this, [{"message":message}]);
+    Gui.Item.apply(this, [{"message":message}]);
     this.view = new Actions.ConfirmDelete.View(this);
 };
 

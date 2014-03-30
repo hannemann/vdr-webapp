@@ -2,7 +2,7 @@ Gui.Window = function () {
     this.view = new Gui.Window.View();
 };
 
-Gui.Window.prototype = new GuiItem();
+Gui.Window.prototype = new Gui.Item();
 
 /**
  * @type {String}

@@ -1,4 +1,11 @@
-Timers = function () {};
+Timers = function () {
+
+    Gui.List.call(this);
+
+    this.cacheResponse = true;
+
+    this.listView = new Gui.ListView();
+};
 
 Timers.prototype = new Gui.List();
 
@@ -13,20 +20,26 @@ Timers.prototype.urls = {
 };
 
 Timers.prototype.onSuccess = function (result) {
-    var  now = new Date(),
-        timers = result.timers, timer,
+
+    var timers = result.timers,
         i = 0,
         l = timers.length;
 
-    this.index = {};
+    if (!this.cachedResponse) {
 
-    for (i;i<l;i++) {
-        timer = new Timer(timers[i]);
+        for (i;i<l;i++) {
 
-//        console.log(timer.date(), timer.startDate(), timer.stopDate(), timer.paths(), timer.name(), timer.get('priority'));
+            timers[i] = new Timer(timers[i]);
+            timers[i].decodePaths = true;
 
-        this.renderRecursive(timer.paths(), this.index, this.itemList, timer);
+//            console.log(timers[i].date(), timers[i].startDate(), timers[i].stopDate(), timers[i].paths(), timers[i].name(), timers[i].getData('priority'));
+        }
     }
+
+    this.listView
+        .setItems(timers)
+        .setRoot(this.itemList)
+        .render();
 }
 
 main.registerModule('Timers');

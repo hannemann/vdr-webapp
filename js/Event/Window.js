@@ -1,6 +1,6 @@
 Event.Window = function () {
 
-    GuiItem.apply(this, arguments);
+    Gui.Item.apply(this, arguments);
     this.view = new Event.Window.View(this);
 };
 

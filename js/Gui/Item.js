@@ -2,7 +2,7 @@
  * @param options
  * @constructor
  */
-GuiItem = function (options) {
+Gui.Item = function (options) {
     var i;
     this.data = {};
     this.element = null;
@@ -18,7 +18,7 @@ GuiItem = function (options) {
  * retrieve HTMLElement
  * @return {*}
  */
-GuiItem.prototype.dom = function () {
+Gui.Item.prototype.dom = function () {
 
     return this.element;
 };
@@ -29,7 +29,7 @@ GuiItem.prototype.dom = function () {
  * @param defaultValue
  * @return {*}
  */
-GuiItem.prototype.getData = function (option, defaultValue) {
+Gui.Item.prototype.getData = function (option, defaultValue) {
 
     if ('undefined' === typeof option) {
 
@@ -53,7 +53,7 @@ GuiItem.prototype.getData = function (option, defaultValue) {
  * @param value
  * @return {*}
  */
-GuiItem.prototype.setData = function (option, value) {
+Gui.Item.prototype.setData = function (option, value) {
 
     this.data[option] = value;
     return this;

@@ -26,7 +26,7 @@ Event.prototype.dispatchWindow = function () {
  */
 Event.prototype.startDate = function() {
 
-    return helper.getDate(this.getData('start_timestamp'), this.dateReg);
+    return helper.strToDate(this.getData('start_timestamp'), this.dateReg);
 };
 
 /**
@@ -35,7 +35,7 @@ Event.prototype.startDate = function() {
  */
 Event.prototype.stopDate = function() {
 
-    return helper.getDate(this.getData('stop_timestamp'), this.dateReg);
+    return helper.strToDate(this.getData('stop_timestamp'), this.dateReg);
 };
 
 /**
@@ -44,5 +44,5 @@ Event.prototype.stopDate = function() {
  */
 Event.prototype.date = function() {
 
-    return helper.getDate(this.getData('day'), this.dayReg);
+    return helper.strToDate(this.getData('day'), this.dayReg);
 };

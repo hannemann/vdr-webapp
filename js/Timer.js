@@ -9,6 +9,16 @@ Timer.prototype = new Event();
 Timer.prototype.className = 'timer-list-item collapsible collapsed';
 
 /**
+ * create and dispatch info window
+ */
+Timer.prototype.dispatchWindow = function () {
+
+    var win = new Timer.Window(this.getData());
+
+    win.dispatch();
+};
+
+/**
  * retrieve paths as array
  * @return {Array}
  */
