@@ -25,7 +25,13 @@ Main.prototype.modules = {};
  * destroy callbacks in cas of history is used
  * @type {Array}
  */
-Main.prototype.destroy = [];
+Main.prototype.destroyer = [];
+
+/**
+ * observe if location hash changes to observeHash
+ * @type {Boolean|String}
+ */
+Main.prototype.observeHash = false;
 
 /**
  * add module instance to buffer
@@ -82,14 +88,33 @@ Main.prototype.run = function () {
 };
 
 /**
+ * retrieve location hash
+ * @return {String}
+ */
+Main.prototype.getLocationHash = function () {
+    return window.location.hash.replace('#', '');
+};
+
+/**
+ * set location hash
+ * @param hash
+ * @return {*}
+ */
+Main.prototype.setLocationHash = function (hash) {
+
+    window.location.hash = '#' + hash;
+    return this;
+};
+
+/**
  * poll location hash and dispatch changes
  */
 Main.prototype.pollLocation = function () {
-    var start = config.getItem('start'), hash, destroy;
+    var start = config.getItem('start'), hash;
 
     setInterval($.proxy(function () {
 
-        hash = window.location.hash.replace('#', '');
+        hash = this.getLocationHash();
 
         if ("" === hash) {
 
@@ -100,15 +125,45 @@ Main.prototype.pollLocation = function () {
 
             this.dispatch(hash, undefined);
 
-        } else if (hash === this.current && this.destroy.length > 0) {
+        } else if (this.observeHash === hash) {
+//            debugger;
+            this.observeHash = false;
+            this.destroy();
 
-            destroy = this.destroy.pop();
-            if ("function" === typeof destroy) {
-                destroy();
-            }
+        } else if (hash === this.current && this.destroyer.length > 0) {
+
+            this.destroy();
         }
 
     }, this), 100);
+};
+
+/**
+ * add destroyer method
+ * @param destroyer
+ */
+Main.prototype.addDestroyer = function (destroyer) {
+
+    if ("function" !== typeof destroyer) {
+
+        throw "Argument destroyer not of type function in Main";
+    }
+
+    this.destroyer.push(destroyer);
+
+};
+
+/**
+ * call last added destroyer
+ */
+Main.prototype.destroy = function () {
+
+    destroy = this.destroyer.pop();
+
+    if ("function" === typeof destroy) {
+
+        destroy();
+    }
 };
 
 /**
@@ -143,14 +198,14 @@ Main.prototype.initNoConfig = function () {
 
 /**
  * main dispatcher
- * @param module
+ * @param moduleName
  * @param callback
  */
-Main.prototype.dispatch = function (module, callback) {
+Main.prototype.dispatch = function (moduleName, callback) {
 
     if (this.isRegistered('drawer')) this.modules.drawer.close();
 
-	if (this.current != module) {
+	if (this.current != moduleName) {
 
         if (this.current && 'function' === typeof this.modules[this.current].destruct) {
 
@@ -159,17 +214,17 @@ Main.prototype.dispatch = function (module, callback) {
 
         if (this.isRegistered('drawer')) {
 
-            this.modules.drawer.setCurrent(module);
+            this.modules.drawer.setCurrent(moduleName);
         }
 
         $('.content').hide();
         $('body').scrollTop();
-        if ('#'+module !== window.location.hash) {
+        if (moduleName !== this.getLocationHash()) {
 
-            window.location.hash = '#'+module;
+            this.setLocationHash(moduleName);
         }
-		this.modules[module].dispatch(callback);
-		this.current = module;
+		this.modules[moduleName].dispatch(callback);
+		this.current = moduleName;
 	}
 };
 

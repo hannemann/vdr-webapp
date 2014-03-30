@@ -51,7 +51,7 @@ Gui.Window.View.prototype.dispatch = function () {
 
     $(document).one('dispatched', $.proxy(function () {
 
-        main.destroy.push($.proxy(this.historyCallback, this));
+        main.addDestroyer($.proxy(this.historyCallback, this));
     }, this));
 
     return this.wrapper;
@@ -107,6 +107,12 @@ Gui.Window.View.prototype.historyCallback = function () {
     this.wrapper.animate(this.getDefaultDimension(), 'fast', $.proxy(function () {
 
         this.wrapper.remove();
+
+        if (this.modal) {
+
+            this.modalOverlay.remove();
+        }
+
     }, this));
 };
 

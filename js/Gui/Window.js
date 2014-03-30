@@ -4,9 +4,22 @@ Gui.Window = function () {
 
 Gui.Window.prototype = new GuiItem();
 
+/**
+ * @type {String}
+ */
 Gui.Window.prototype.locationHash = 'default-popup';
 
+/**
+ * @type {String}
+ */
 Gui.Window.prototype.wrapperClassName = 'default-popup';
+
+/**
+ * main observes current location hash if window is dispatched
+ * destroys window if hash changes back to observeHash
+ * @type {Boolean}
+ */
+Gui.Window.prototype.observeHash = false;
 
 /**
  * maximum dimension of view
@@ -35,14 +48,25 @@ Gui.Window.prototype.dispatch = function () {
     this.triggerAnimation();
 };
 
+/**
+ * Animate Window
+ */
 Gui.Window.prototype.triggerAnimation = function () {
+
+    if (this.observeHash) {
+
+        main.observeHash = main.getLocationHash();
+
+    }
+
+    main.setLocationHash(this.locationHash);
 
     this.dom().animate(this.maxDimension, 'fast', 'linear', $.proxy(function () {
 
         $.event.trigger({
             "type" : "dispatched"
         });
-        window.location.hash = '#' + this.locationHash;
+
     }, this));
 };
 
@@ -52,9 +76,6 @@ Gui.Window.prototype.triggerAnimation = function () {
  */
 Gui.Window.prototype.dom = function () {
 
-//    if ("undefined" === typeof this.domElement) {
-//        this.domElement = this.view.dispatch();
-//    }
     return this.domElement;
 };
 
