@@ -125,11 +125,10 @@ Epg.prototype.addEventsToList = function (events) {
     var me = this, i = 0, l = events.length;
     for (i; i < l; i++) {
         this.events[events[i]].dom.on('click', function () {
-            var event = me.events[this.id];
-            if (typeof event.show === 'undefined') {
-                event.show = new Event(event);
-            }
-            event.show.render();
+            var event = me.events[this.id], win;
+
+            win = new Event(event);
+            win.dispatchWindow();
         });
     }
 };
