@@ -85,9 +85,9 @@ DrawerList.prototype.open = function () {
     if (this.isOpen) return;
     this.dom.animate({"width":"50%"}, 'fast', 'swing', $.proxy(function () {
 
-        main.destroy = $.proxy(function () {
+        main.destroy.push($.proxy(function () {
             this.close();
-        }, this);
+        }, this));
 
         window.location.hash = '#show-drawer';
         this.isOpen = true;

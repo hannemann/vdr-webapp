@@ -22,6 +22,12 @@ Main.prototype.checkConfig = function () {
 Main.prototype.modules = {};
 
 /**
+ * destroy callbacks in cas of history is used
+ * @type {Array}
+ */
+Main.prototype.destroy = [];
+
+/**
  * add module instance to buffer
  * @param module
  */
@@ -79,7 +85,7 @@ Main.prototype.run = function () {
  * poll location hash and dispatch changes
  */
 Main.prototype.pollLocation = function () {
-    var start = config.getItem('start'), hash;
+    var start = config.getItem('start'), hash, destroy;
 
     setInterval($.proxy(function () {
 
@@ -94,10 +100,12 @@ Main.prototype.pollLocation = function () {
 
             this.dispatch(hash, undefined);
 
-        } else if (hash === this.current && typeof this.destroy === 'function') {
+        } else if (hash === this.current && this.destroy.length > 0) {
 
-            this.destroy();
-            this.destroy = undefined;
+            destroy = this.destroy.pop();
+            if ("function" === typeof destroy) {
+                destroy();
+            }
         }
 
     }, this), 100);

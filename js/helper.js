@@ -7,11 +7,20 @@ Helper.prototype.getTimeString = function (date) {
 	return false;
 };
 
-Helper.prototype.getDateString = function (date) {
-	if (date instanceof Date) {
-		return this.pad(date.getDate(), 2)+'.'+this.pad(date.getMonth(), 2);
-	}
-	return false;
+Helper.prototype.getDateString = function (date, fullYear) {
+
+    fullYear = fullYear || false;
+    if (date instanceof Date) {
+        return this.pad(date.getDate(), 2)+'.'+this.pad(date.getMonth()+1, 2) + (fullYear ? '.' + date.getFullYear() : '');
+    }
+    return false;
+};
+
+Helper.prototype.getDateTimeString = function (date, fullYear) {
+    if (date instanceof Date) {
+        return this.getDateString(date, fullYear)+' '+this.getTimeString(date);
+    }
+    return false;
 };
 
 /**

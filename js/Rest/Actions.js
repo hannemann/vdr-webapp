@@ -1,5 +1,9 @@
 Actions = function () {};
 
+Actions.prototype = new Rest();
+
+Actions.prototype.urls = {};
+
 Actions.prototype.addTimer = function (obj, callback) {
     var url, data; //, weekdays, start, stop, day;
 
@@ -31,7 +35,7 @@ Actions.prototype.addTimer = function (obj, callback) {
         "eventid":obj.getData('id'),
         "minpre":config.getItem('recordingStartGap')/60,
         "minpost":config.getItem('recordingEndGap')/60
-    }
+    };
 
     $.ajax({
         "url":url,
@@ -83,6 +87,28 @@ Actions.prototype.loadTimer = function (obj) {
     });
 };
 
-//TODO: Confirm bauen
+Actions.prototype.deleteRecording = function (obj, callback) {
+
+    var c = new Actions.ConfirmDelete('Aufnahme löschen?');
+    c.dispatch();
+
+    $(document).one('confirm', $.proxy(function () {
+
+        $.ajax({
+            "url":this.getBaseUrl() + 'recordings/' + obj.getData('number'),
+            "type":"DELETE",
+            "success":$.proxy(function () {
+                if (typeof callback == 'function') {
+                    callback.apply(obj);
+                }
+            }, this),
+            "complete":function (result) {
+                helper.log(obj, result);
+            }
+        });
+        obj.view.closeCallback();
+    }, this));
+
+};
 
 actions = new Actions();

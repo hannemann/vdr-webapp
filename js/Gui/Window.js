@@ -1,6 +1,5 @@
 Gui.Window = function () {
     this.view = new Gui.Window.View();
-    this.domElement = this.view.dispatch();
 };
 
 Gui.Window.prototype = new GuiItem();
@@ -25,12 +24,13 @@ Gui.Window.prototype.maxDimension = {
  */
 Gui.Window.prototype.dispatch = function () {
 
-    var dom = this.dom();
+    if ("undefined" === typeof this.domElement) {
+        this.domElement = this.view.dispatch();
+    }
 
-    dom.addClass(this.wrapperClassName);
-    dom.css(this.view.getDefaultDimension());
-
-    dom.appendTo('body');
+    this.dom().addClass(this.wrapperClassName)
+        .css(this.view.getDefaultDimension())
+        .appendTo('body');
 
     this.triggerAnimation();
 };

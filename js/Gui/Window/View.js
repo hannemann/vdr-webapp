@@ -14,10 +14,25 @@ Gui.Window.View.prototype.hasBody = true;
 
 Gui.Window.View.prototype.hasCloseButton = true;
 
+Gui.Window.View.prototype.modal = false;
+
 /**
  * initialize window
  */
 Gui.Window.View.prototype.init = function () {
+
+    if (this.modal) {
+
+        this.modalOverlay = $('<div>').css({
+            "top":0,
+            "right":0,
+            "bottom":0,
+            "left":0,
+            "opacity":"0.5",
+            "background-color":"#000000",
+            "position":"fixed"
+        }).appendTo($('body'));
+    }
 
     this.wrapper = $('<div>')
         .addClass(this.wrapperClassName);
@@ -36,7 +51,7 @@ Gui.Window.View.prototype.dispatch = function () {
 
     $(document).one('dispatched', $.proxy(function () {
 
-        main.destroy = $.proxy(this.historyCallback, this);
+        main.destroy.push($.proxy(this.historyCallback, this));
     }, this));
 
     return this.wrapper;
@@ -48,7 +63,7 @@ Gui.Window.View.prototype.dispatch = function () {
  */
 Gui.Window.View.prototype.initClose = function () {
 
-    if (!this.hasCloseButton) return;
+    if (!this.hasCloseButton) return this;
 
     this.closeButton = button = $('<div>')
         .addClass('close')
@@ -74,12 +89,14 @@ Gui.Window.View.prototype.addCloseEvent = function () {
  */
 Gui.Window.View.prototype.closeCallback = function () {
 
-    var me = this;
-    this.wrapper.animate(this.getDefaultDimension(), 'fast', function () {
+    this.wrapper.animate(this.getDefaultDimension(), 'fast', $.proxy(function () {
 
-        me.wrapper.remove();
+        if (this.modal) {
+            this.modalOverlay.remove();
+        }
+        this.wrapper.remove();
         window.history.back();
-    });
+    }, this));
 };
 
 /**
@@ -87,11 +104,10 @@ Gui.Window.View.prototype.closeCallback = function () {
  */
 Gui.Window.View.prototype.historyCallback = function () {
 
-    var me = this;
-    this.wrapper.animate(this.getDefaultDimension(), 'fast', function () {
+    this.wrapper.animate(this.getDefaultDimension(), 'fast', $.proxy(function () {
 
-        me.wrapper.remove();
-    });
+        this.wrapper.remove();
+    }, this));
 };
 
 Gui.Window.View.prototype.getDefaultDimension = function () {
@@ -113,7 +129,7 @@ Gui.Window.View.prototype.getDefaultDimension = function () {
  */
 Gui.Window.View.prototype.initHeader = function () {
 
-    if (!this.hasHeader) return;
+    if (!this.hasHeader) return this;
 
     this.header = $('<div>')
         .addClass(this.headerClassName)
@@ -129,7 +145,7 @@ Gui.Window.View.prototype.initHeader = function () {
  */
 Gui.Window.View.prototype.initBody = function () {
 
-    if (!this.hasBody) return;
+    if (!this.hasBody) return this;
 
     this.body = $('<div>')
         .addClass(this.bodyClassName);

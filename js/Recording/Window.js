@@ -30,7 +30,9 @@ Recording.Window.prototype.addDetails = function () {
         details = $('<ul class="details"><li class="italic">'+data.event_short_text+'</li></ul>'),
         duration = helper.getDurationAsString(data.duration);
 
-    details.append('<li>'+duration+'</li>')
+    details
+        .append('<li>'+helper.getDateTimeString(new Date(data.event_start_time * 1000), true)+'</li>')
+        .append('<li>Länge: '+duration+'</li>')
         .appendTo(this.getHeader());
 
     return this;
@@ -74,7 +76,11 @@ Recording.Window.prototype.toolsConfig = {
         },
         "callback":function () {
 
-            actions.deleteRecording(this, this.refresh);
+            actions.deleteRecording(this, this.removeDeleted);
         }
     }
+};
+
+Recording.Window.prototype.removeDeleted = function () {
+    this.getData('dom').remove();
 };

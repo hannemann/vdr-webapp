@@ -2,7 +2,6 @@ Event.Window = function () {
 
     GuiItem.apply(this, arguments);
     this.view = new Event.Window.View(this);
-    this.domElement = this.view.dispatch();
 };
 
 Event.Window.prototype = new Gui.Window();
@@ -27,6 +26,7 @@ Event.Window.prototype.componentsMap = {
  */
 Event.Window.prototype.dispatch = function () {
 
+    this.domElement = this.view.dispatch();
     this.addContents();
     this.decorate();
 
