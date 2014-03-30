@@ -1,10 +1,10 @@
 Event = function () {
 
-    GuiListItem.apply(this, arguments);
+    Gui.List.Item.apply(this, arguments);
 	return this;
 };
 
-Event.prototype = new GuiListItem();
+Event.prototype = new Gui.List.Item();
 
 Event.prototype.dateReg = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})/;
 

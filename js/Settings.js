@@ -6,14 +6,20 @@ Settings.prototype.optionName = 'Einstellungen';
 
 Settings.prototype.name = 'settings';
 
+Settings.prototype.fields = ['host', 'port', 'start'];
+
+/**
+ * init settings page
+ */
 Settings.prototype.init = function () {
 	this.dom = $('.settings-wrapper');
 	this.cancel = this.dom.find('.cancel');
 	this.submit = this.dom.find('.submit');
 };
 
-Settings.prototype.fields = ['host', 'port', 'start'];
-
+/**
+ * add events
+ */
 Settings.prototype.addDomEvents = function () {
 	this.cancel.on('click', function () {
 		if (typeof this.callback === 'function') {
@@ -28,6 +34,10 @@ Settings.prototype.addDomEvents = function () {
 	}, this));
 };
 
+/**
+ * dispatch settings page
+ * @param callback
+ */
 Settings.prototype.dispatch = function (callback) {
 	var i=0, l=this.fields.length, options, o, field;
 	this.callback = callback;
@@ -54,6 +64,9 @@ Settings.prototype.dispatch = function (callback) {
 	this.addDomEvents();
 };
 
+/**
+ * save changes
+ */
 Settings.prototype.persist = function () {
 	var i=0; l=this.fields.length;
 	for (i;i<l;i++) {

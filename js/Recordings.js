@@ -1,13 +1,13 @@
 Recordings = function () {
 
-    GuiList.call(this);
+    Gui.List.call(this);
 
     this.cacheResponse = true;
 
-    this.treeView = new GuiTreeView();
+    this.treeView = new Gui.TreeView();
 };
 
-Recordings.prototype = new GuiList();
+Recordings.prototype = new Gui.List();
 
 Recordings.constructor = Recordings;
 

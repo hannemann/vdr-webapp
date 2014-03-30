@@ -1,6 +1,6 @@
 Timers = function () {};
 
-Timers.prototype = new GuiList();
+Timers.prototype = new Gui.List();
 
 Timers.prototype.optionName = "Timer";
 

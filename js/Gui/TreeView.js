@@ -1,11 +1,11 @@
-GuiTreeView = function () {};
+Gui.TreeView = function () {};
 
 /**
  * Items Setter
  * @param items
  * @return {*}
  */
-GuiTreeView.prototype.setItems = function (items) {
+Gui.TreeView.prototype.setItems = function (items) {
     this.items = items;
     return this;
 };
@@ -15,7 +15,7 @@ GuiTreeView.prototype.setItems = function (items) {
  * @param root
  * @return {*}
  */
-GuiTreeView.prototype.setRoot = function (root) {
+Gui.TreeView.prototype.setRoot = function (root) {
     this.root = root;
     return this;
 };
@@ -23,7 +23,7 @@ GuiTreeView.prototype.setRoot = function (root) {
 /**
  * sort and render
  */
-GuiTreeView.prototype.render = function () {
+Gui.TreeView.prototype.render = function () {
 
     $(this.items).sort(this.sortByName).each($.proxy(function () {
 
@@ -38,7 +38,7 @@ GuiTreeView.prototype.render = function () {
 /**
  * Move Folders to the Top of root
  */
-GuiTreeView.prototype.moveFoldersToTop = function () {
+Gui.TreeView.prototype.moveFoldersToTop = function () {
 
     this.root.children('li.root-directory-item')
         .sort(this.sortByDataNameAttribute)
@@ -48,7 +48,7 @@ GuiTreeView.prototype.moveFoldersToTop = function () {
 /**
  * unhide root items
  */
-GuiTreeView.prototype.showRootItems = function () {
+Gui.TreeView.prototype.showRootItems = function () {
 
     this.root.children('li.root-list-item').removeClass('collapsed collapsible').addClass('expanded gui-tree-view-visible-item');
     this.root.children('li.root-directory-item')
@@ -61,18 +61,18 @@ GuiTreeView.prototype.showRootItems = function () {
 
 /**
  * Add Nodes to itemList recursively
- * @param item {GuiListItem}
+ * @param item {Gui.List.Item}
  * @param currentNode  {*}
  * @param pathNames {Array}
  */
-GuiTreeView.prototype.renderRecursive = function (item, currentNode, pathNames) {
+Gui.TreeView.prototype.renderRecursive = function (item, currentNode, pathNames) {
 
     var pathName,
         nextNode,
         depth;
 
-    if (!item instanceof GuiListItem) {
-        throw 'Argument item not of type GuiListItem in GuiTreeView.renderRecursive';
+    if (!item instanceof Gui.List.Item) {
+        throw 'Argument item not of type Gui.List.Item in Gui.TreeView.renderRecursive';
     }
 
     pathNames = pathNames || item.pathNames();
@@ -98,7 +98,7 @@ GuiTreeView.prototype.renderRecursive = function (item, currentNode, pathNames) 
  * @param currentNode
  * @return {*}
  */
-GuiTreeView.prototype.decorateItem = function (item, currentNode) {
+Gui.TreeView.prototype.decorateItem = function (item, currentNode) {
     var dom = item.dom();
 
     if (this.isRoot(currentNode)) {
@@ -115,7 +115,7 @@ GuiTreeView.prototype.decorateItem = function (item, currentNode) {
  * @param pathNames
  * @return {*}
  */
-GuiTreeView.prototype.getDepth = function (item, pathNames) {
+Gui.TreeView.prototype.getDepth = function (item, pathNames) {
     return item.pathNames().length - pathNames.length;
 };
 
@@ -125,7 +125,7 @@ GuiTreeView.prototype.getDepth = function (item, pathNames) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectory = function (currentNode, pathName, depth) {
+Gui.TreeView.prototype.getDirectory = function (currentNode, pathName, depth) {
 
     var directory,
         selector = [],
@@ -159,7 +159,7 @@ GuiTreeView.prototype.getDirectory = function (currentNode, pathName, depth) {
  * @param currentNode
  * @return {Boolean}
  */
-GuiTreeView.prototype.isRoot = function (currentNode) {
+Gui.TreeView.prototype.isRoot = function (currentNode) {
     return currentNode === this.root;
 };
 
@@ -168,7 +168,7 @@ GuiTreeView.prototype.isRoot = function (currentNode) {
  * @param pathNames
  * @return {*}
  */
-GuiTreeView.prototype.getPathName = function (pathNames) {
+Gui.TreeView.prototype.getPathName = function (pathNames) {
     var pathName = pathNames.shift();
 
     return "undefined" !== typeof pathName ? pathName : false;
@@ -180,7 +180,7 @@ GuiTreeView.prototype.getPathName = function (pathNames) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.createDirectory = function (currentNode, pathName, depth) {
+Gui.TreeView.prototype.createDirectory = function (currentNode, pathName, depth) {
 
     var directoryContent = this.getDirectoryContent(pathName);
 
@@ -197,7 +197,7 @@ GuiTreeView.prototype.createDirectory = function (currentNode, pathName, depth) 
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getWrapperNode = function (currentNode, pathName) {
+Gui.TreeView.prototype.getWrapperNode = function (currentNode, pathName) {
 
     var wrapper;
 
@@ -223,7 +223,7 @@ GuiTreeView.prototype.getWrapperNode = function (currentNode, pathName) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectoryWrapper = function (pathName, depth) {
+Gui.TreeView.prototype.getDirectoryWrapper = function (pathName, depth) {
 
     return $('<ul>')
         .addClass('directory-wrapper collapsible collapsed')
@@ -236,7 +236,7 @@ GuiTreeView.prototype.getDirectoryWrapper = function (pathName, depth) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectoryLabel = function (pathName) {
+Gui.TreeView.prototype.getDirectoryLabel = function (pathName) {
 
     return this.addToggle(
         $('<li>')
@@ -251,7 +251,7 @@ GuiTreeView.prototype.getDirectoryLabel = function (pathName) {
  * @param pathName
  * @return {*}
  */
-GuiTreeView.prototype.getDirectoryContent = function (pathName) {
+Gui.TreeView.prototype.getDirectoryContent = function (pathName) {
 
     return $('<li>').attr('data-name', pathName).addClass('directory-part directory-content')
 };
@@ -261,7 +261,7 @@ GuiTreeView.prototype.getDirectoryContent = function (pathName) {
  * @param element
  * @return {*}
  */
-GuiTreeView.prototype.addToggle = function (element) {
+Gui.TreeView.prototype.addToggle = function (element) {
 
     return element
         .on('click', function () {
@@ -282,7 +282,7 @@ GuiTreeView.prototype.addToggle = function (element) {
  * @param b
  * @return {Number}
  */
-GuiTreeView.prototype.sortByName = function (a, b){
+Gui.TreeView.prototype.sortByName = function (a, b){
     var aName = a.name().toLowerCase();
     var bName = b.name().toLowerCase();
     return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
@@ -296,7 +296,7 @@ GuiTreeView.prototype.sortByName = function (a, b){
  * @param b
  * @return {Number}
  */
-GuiTreeView.prototype.sortByDataNameAttribute = function (a, b){
+Gui.TreeView.prototype.sortByDataNameAttribute = function (a, b){
     var aName = $(a).attr('data-name').toLowerCase();
     var bName = $(b).attr('data-name').toLowerCase();
     return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
