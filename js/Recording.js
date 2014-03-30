@@ -1,40 +1,23 @@
-Recording = function (options) {
+Recording = function () {
+
+    Event.apply(this, arguments);
     this.decodePaths = false;
     this.relative = true;
     this.element = $('<li>');
-    GuiItem.call(this, options);
 };
 
-Recording.prototype = new GuiListItem();
-
-Recording.prototype.dateReg = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})/;
-
-Recording.prototype.dayReg = /([0-9]{4})-([0-9]{2})-([0-9]{2})/;
+Recording.prototype = new Event();
 
 Recording.prototype.className = 'recording-list-item collapsible collapsed';
 
 /**
- * retrieve date object of start timestamp
- * @return {Date}
+ * create and dispatch info window
  */
-Recording.prototype.startDate = function() {
-    return this.getDate(this.get('start_timestamp'), this.dateReg);
-};
+Recording.prototype.dispatchWindow = function () {
 
-/**
- * retrieve date object of end timestamp
- * @return {Date}
- */
-Recording.prototype.stopDate = function() {
-    return this.getDate(this.get('stop_timestamp'), this.dateReg);
-};
+    var win = new Recording.Window(this.getData());
 
-/**
- * retrieve date object of day
- * @return {Date}
- */
-Recording.prototype.date = function() {
-    return this.getDate(this.get('day'), this.dayReg);
+    win.dispatch();
 };
 
 /**
@@ -43,7 +26,7 @@ Recording.prototype.date = function() {
  */
 Recording.prototype.pathNames = function () {
 
-    var paths = this.get(this.relative ? 'relative_file_name' : 'file_name'),
+    var paths = this.getData(this.relative ? 'relative_file_name' : 'file_name'),
         i = 0,
         l;
 
@@ -53,7 +36,7 @@ Recording.prototype.pathNames = function () {
 
     if (this.decodePaths) {
         for (i;i<l;i++) {
-            paths[i] = this.vdrDecodeURI(paths[i]);
+            paths[i] = helper.vdrDecodeURI(paths[i]);
         }
     }
 
@@ -66,10 +49,10 @@ Recording.prototype.pathNames = function () {
  */
 Recording.prototype.name = function () {
 
-    var filename = this.get(this.relative ? 'relative_file_name' : 'file_name')
+    var filename = this.getData(this.relative ? 'relative_file_name' : 'file_name')
         .split('/').slice(-2, -1)[0].replace(/_/g, ' ');
 
-    return this.decodePaths ? this.vdrDecodeURI(filename) : filename;
+    return this.decodePaths ? helper.vdrDecodeURI(filename) : filename;
 };
 
 /**
@@ -82,29 +65,15 @@ Recording.prototype.renderIn = function (dom) {
         throw 'Argument dom is not of type jQuery in Timer.prototype.renderIn';
     }
     this.addDomEvents();
-    dom.append(this.dom().addClass(this.className).text(this.decodePaths ? this.vdrDecodeURI(this.name()) : this.name()));
+    dom.append(this.dom().addClass(this.className).text(this.decodePaths ? helper.vdrDecodeURI(this.name()) : this.name()));
 };
 
 Recording.prototype.addDomEvents = function () {
 
     this.dom().on('click', $.proxy(function () {
 
-        console.log(this);
+        helper.log(this);
+        this.dispatchWindow();
+
     }, this));
-};
-
-/**
- * decode vdr style entity encoding
- * @param path
- * @return {*}
- */
-Recording.prototype.vdrDecodeURI = function (path) {
-
-    try {
-
-        path = decodeURIComponent(encodeURIComponent(path).replace(/%23/g, '%'));
-
-    } catch (e) {}
-
-    return path.replace(/_/g, ' ');
 };

@@ -5,6 +5,7 @@
 GuiItem = function (options) {
     var i;
     this.data = {};
+    this.element = null;
 
     for (i in options) {
         if (options.hasOwnProperty(i)) {
@@ -18,6 +19,7 @@ GuiItem = function (options) {
  * @return {*}
  */
 GuiItem.prototype.dom = function () {
+
     return this.element;
 };
 
@@ -27,10 +29,19 @@ GuiItem.prototype.dom = function () {
  * @param defaultValue
  * @return {*}
  */
-GuiItem.prototype.get = function (option, defaultValue) {
-    if ('undefined' !== this.data[option]) {
+GuiItem.prototype.getData = function (option, defaultValue) {
+
+    if ('undefined' === typeof option) {
+
+        return this.data
+    }
+
+    if ('undefined' !== typeof this.data[option]) {
+
         return this.data[option];
+
     } else if (defaultValue) {
+
         return defaultValue;
     }
     return null;
@@ -42,7 +53,8 @@ GuiItem.prototype.get = function (option, defaultValue) {
  * @param value
  * @return {*}
  */
-GuiItem.prototype.set = function (option, value) {
+GuiItem.prototype.setData = function (option, value) {
+
     this.data[option] = value;
     return this;
 };
