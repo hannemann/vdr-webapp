@@ -6,8 +6,7 @@ Config = function () {
 		}
 	} catch (e) {
 		throw 'No localStorage available.';
-		return false;
-	};
+	}
 
 	this.setItem = function (k, v) {
 		storage.setItem(k, v);
@@ -33,15 +32,14 @@ Config = function () {
 	};
 };
 
-Config.prototype.storage = null;
-
 Config.prototype.defaults = {
-	"lastEpg":"now",
-	"start":"epg",
-    "debug":false,
-    "port":"8002",
-    "recordingStartGap":120,
-    "recordingEndGap":600
+	"lastEpg"           :   "now",
+	"start"             :   "epg",
+    "debug"             :   false,
+    "port"              :   "8002",
+    "recordingStartGap" :   120,
+    "recordingEndGap"   :   600,
+    "protocol"          :   "http"
 };
 
 config = new Config();

@@ -22,7 +22,7 @@ Rest = function () {
 };
 
 /**
- * @type {string}
+ * @type {String}
  */
 Rest.prototype.host = config.getItem('host');
 
@@ -32,13 +32,28 @@ Rest.prototype.host = config.getItem('host');
 Rest.prototype.port = config.getItem('port');
 
 /**
+ * @type {String}
+ */
+Rest.prototype.protocol = config.getItem('protocol');
+
+/**
+ * @type {string}
+ */
+Rest.prototype.getBaseUrl = function () {
+
+    return this.protocol + '://' + this.host + ':' + this.port + '/';
+};
+
+/**
  * fetch data from rest api
  * @param url {string}
  */
-Rest.prototype.load = function (url) {
+Rest.prototype.load = function (url, method) {
 
     url = "undefined" !== typeof url && "undefined" !== typeof this.urls[url] ?
         this.urls[url] : this.urls.load;
+
+    method = method || 'GET';
 
     this.itemList.empty();
     main.getModule('gui').showThrobber();
@@ -54,6 +69,7 @@ Rest.prototype.load = function (url) {
         this.cachedResponse = false;
         $.ajax({
             "url"       :   "http://"+this.host+":"+this.port+"/"+url,
+            "method"    :   method,
             "success"   :   $.proxy(function (result) {
                                 this.responseCache[url] = result;
                                 this.onSuccess(result);
@@ -66,9 +82,8 @@ Rest.prototype.load = function (url) {
 
 /**
  * abstract request success handler
- * @param result
  */
-Rest.prototype.onSuccess = function (result) {};
+Rest.prototype.onSuccess = function () {};
 
 /**
  * abstract request error handler

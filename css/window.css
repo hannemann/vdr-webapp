@@ -52,20 +52,27 @@ div.show-event .tools li:nth-child(2n+1) {
     margin-right: 20px;
 }
 div.show-event .web-button,
-div.show-event .record-button {
+div.show-event .record-button,
+div.show-event .delete-button {
     text-align: center;
 }
 div.show-event .web-button dt,
-div.show-event .record-button dt {
+div.show-event .record-button dt,
+div.show-event .delete-button dt {
     text-align: center;
     margin: 0 auto 5px;
     width: 60px;
     height:60px;
 }
+div.show-event .delete-button dt,
 div.show-event .record-button dt {
     background: #FF0000;
     border-radius: 30px;
     box-shadow: 0 0 5px 0 #FF0000, 0 0 5px #FFFFFF inset;
+}
+div.show-event .delete-button dt {
+    font-size: 50px;
+    line-height: 60px;
 }
 div.show-event .record-button dt.activate-timer {
     background: #404040;

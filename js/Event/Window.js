@@ -2,6 +2,7 @@ Event.Window = function () {
 
     GuiItem.apply(this, arguments);
     this.view = new Event.Window.View(this);
+    this.domElement = this.view.dispatch();
 };
 
 Event.Window.prototype = new Gui.Window();
@@ -9,6 +10,8 @@ Event.Window.prototype = new Gui.Window();
 Event.Window.constructor = Event.Window;
 
 Event.Window.prototype.wrapperClassName = 'show-event';
+
+Event.Window.prototype.locationHash = 'show-event';
 
 Event.Window.prototype.host = config.getItem('host');
 
@@ -24,26 +27,10 @@ Event.Window.prototype.componentsMap = {
  */
 Event.Window.prototype.dispatch = function () {
 
-    var view = this.view,
-        dom = this.dom();
-
-    dom.addClass(this.wrapperClassName);
     this.addContents();
-
-    dom.css(this.view.getOptionsDom());
-    dom.appendTo('body');
     this.decorate();
 
-    dom.animate(this.maxDimension, 'fast', 'linear', function () {
-
-        main.destroy = function () {
-            dom.animate(view.getOptionsDom(), 'fast', function () {
-
-                dom.remove();
-            });
-        };
-        window.location.hash = '#show-event';
-    });
+    Gui.Window.prototype.dispatch.apply(this);
 };
 
 Event.Window.prototype.addContents = function () {
@@ -57,7 +44,7 @@ Event.Window.prototype.addContents = function () {
  */
 Event.Window.prototype.addTitle = function () {
 
-    this.getHeader().append('<h2>'+this.getData('title')+'</h2>');
+    this.getHeader().append('<h2>'+this.getTitle()+'</h2>');
     return this;
 };
 
@@ -207,7 +194,7 @@ Event.Window.prototype.webConfig = {
         },
         "callback":function () {
 
-            window.open("http://www.imdb.com/find?s=tt&q="+encodeURIComponent(this.getData('title')));
+            window.open("http://www.imdb.com/find?s=tt&q="+encodeURIComponent(this.getTitle()));
         }
     }
 };
@@ -257,6 +244,14 @@ Event.Window.prototype.toolsConfig = {
  */
 Event.Window.prototype.getDescription = function () {
     return this.getData('description');
+};
+
+/**
+ * retrieve description
+ * @return {*}
+ */
+Event.Window.prototype.getTitle = function () {
+    return this.getData('title');
 };
 
 /**

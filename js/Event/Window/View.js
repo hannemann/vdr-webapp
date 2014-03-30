@@ -9,21 +9,10 @@ Event.Window.View.prototype = new Gui.Window.View();
 Event.Window.View.constructor = Event.Window.View;
 
 /**
- * method to call on close
- */
-Event.Window.View.prototype.closeCallback = function () {
-
-    this.wrapper.animate(this.getOptionsDom(), 'fast', $.proxy(function () {
-        this.wrapper.remove();
-        window.history.back();
-    }, this));
-};
-
-/**
  * retrieve offsets of caller
  * @return {Object}
  */
-Event.Window.View.prototype.getOptionsDom = function () {
+Event.Window.View.prototype.getDefaultDimension = function () {
 
     var dom = this.event.getData('dom'),
         offset = dom.offset(), window = $(top);

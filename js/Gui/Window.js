@@ -1,8 +1,13 @@
 Gui.Window = function () {
     this.view = new Gui.Window.View();
+    this.domElement = this.view.dispatch();
 };
 
 Gui.Window.prototype = new GuiItem();
+
+Gui.Window.prototype.locationHash = 'default-popup';
+
+Gui.Window.prototype.wrapperClassName = 'default-popup';
 
 /**
  * maximum dimension of view
@@ -16,14 +21,40 @@ Gui.Window.prototype.maxDimension = {
 };
 
 /**
+ * render window to body
+ */
+Gui.Window.prototype.dispatch = function () {
+
+    var dom = this.dom();
+
+    dom.addClass(this.wrapperClassName);
+    dom.css(this.view.getDefaultDimension());
+
+    dom.appendTo('body');
+
+    this.triggerAnimation();
+};
+
+Gui.Window.prototype.triggerAnimation = function () {
+
+    this.dom().animate(this.maxDimension, 'fast', 'linear', $.proxy(function () {
+
+        $.event.trigger({
+            "type" : "dispatched"
+        });
+        window.location.hash = '#' + this.locationHash;
+    }, this));
+};
+
+/**
  * getter for wrapper
  * @return {*}
  */
 Gui.Window.prototype.dom = function () {
 
-    if ("undefined" === typeof this.domElement) {
-        this.domElement = this.view.dispatch();
-    }
+//    if ("undefined" === typeof this.domElement) {
+//        this.domElement = this.view.dispatch();
+//    }
     return this.domElement;
 };
 

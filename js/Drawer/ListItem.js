@@ -37,7 +37,7 @@ DrawerListItem.prototype.closedCallback = function () {
 
     var moduleName = this.module.name;
 
-    window.history.go(-1);
+    window.history.back();
 
     setTimeout(function () {
 

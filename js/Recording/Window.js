@@ -7,8 +7,6 @@ Recording.Window.prototype = new Event.Window();
 
 Recording.Window.prototype.addContents = function () {
 
-    console.log(this);
-
     this.addTitle().addDetails().addTabs();
 };
 
@@ -18,7 +16,7 @@ Recording.Window.prototype.addContents = function () {
  */
 Recording.Window.prototype.addTitle = function () {
 
-    this.getHeader().append('<h2>'+this.getData('event_title')+'</h2>');
+    this.getHeader().append('<h2>'+this.getTitle()+'</h2>');
     return this;
 };
 
@@ -47,6 +45,36 @@ Recording.Window.prototype.getDescription = function () {
 };
 
 /**
+ * retrieve title
+ * @return {*}
+ */
+Recording.Window.prototype.getTitle = function () {
+    return this.getData('event_title');
+};
+
+/**
  * add decorations according to data
  */
 Recording.Window.prototype.decorate = function () {};
+
+/**
+ * @type {Object}
+ */
+Recording.Window.prototype.toolsConfig = {
+    "record":{
+        "dom":function () {
+
+            var dom = $('<dl>').addClass('delete-button'),
+                button = $('<dt>').html(this.view.closeSymbol),
+                text = $('<dd>');
+
+            text.text('Aufnahme löschen');
+
+            return dom.append(button).append(text);
+        },
+        "callback":function () {
+
+            actions.deleteRecording(this, this.refresh);
+        }
+    }
+};

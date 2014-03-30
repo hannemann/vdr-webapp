@@ -8,6 +8,12 @@ Gui.Window.View.prototype.bodyClassName = 'body';
 
 Gui.Window.View.prototype.closeSymbol = '&#10006;';
 
+Gui.Window.View.prototype.hasHeader = true;
+
+Gui.Window.View.prototype.hasBody = true;
+
+Gui.Window.View.prototype.hasCloseButton = true;
+
 /**
  * initialize window
  */
@@ -28,6 +34,11 @@ Gui.Window.View.prototype.dispatch = function () {
 
     this.init();
 
+    $(document).one('dispatched', $.proxy(function () {
+
+        main.destroy = $.proxy(this.historyCallback, this);
+    }, this));
+
     return this.wrapper;
 };
 
@@ -36,6 +47,8 @@ Gui.Window.View.prototype.dispatch = function () {
  * @return {*}
  */
 Gui.Window.View.prototype.initClose = function () {
+
+    if (!this.hasCloseButton) return;
 
     this.closeButton = button = $('<div>')
         .addClass('close')
@@ -61,8 +74,38 @@ Gui.Window.View.prototype.addCloseEvent = function () {
  */
 Gui.Window.View.prototype.closeCallback = function () {
 
-    this.wrapper.remove();
-    window.history.back();
+    var me = this;
+    this.wrapper.animate(this.getDefaultDimension(), 'fast', function () {
+
+        me.wrapper.remove();
+        window.history.back();
+    });
+};
+
+/**
+ * method to call on close
+ */
+Gui.Window.View.prototype.historyCallback = function () {
+
+    var me = this;
+    this.wrapper.animate(this.getDefaultDimension(), 'fast', function () {
+
+        me.wrapper.remove();
+    });
+};
+
+Gui.Window.View.prototype.getDefaultDimension = function () {
+
+    var window = $(top),
+        width = parseInt(window.width()/2),
+        height = parseInt(window.height()/2);
+
+    return {
+        "top"   :   height + "px",
+        "left"  :   width + "px",
+        "bottom":   height + "px",
+        "right" :   width + "px"
+    };
 };
 
 /**
@@ -70,9 +113,13 @@ Gui.Window.View.prototype.closeCallback = function () {
  */
 Gui.Window.View.prototype.initHeader = function () {
 
+    if (!this.hasHeader) return;
+
     this.header = $('<div>')
         .addClass(this.headerClassName)
         .appendTo(this.wrapper);
+
+    this.wrapper.addClass('has-header');
 
     return this;
 };
@@ -81,6 +128,8 @@ Gui.Window.View.prototype.initHeader = function () {
  * init bod and appen to wrapper
  */
 Gui.Window.View.prototype.initBody = function () {
+
+    if (!this.hasBody) return;
 
     this.body = $('<div>')
         .addClass(this.bodyClassName);
