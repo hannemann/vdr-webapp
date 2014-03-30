@@ -31,8 +31,6 @@ Timers.prototype.onSuccess = function (result) {
 
             timers[i] = new Timer(timers[i]);
             timers[i].decodePaths = true;
-
-//            console.log(timers[i].date(), timers[i].startDate(), timers[i].stopDate(), timers[i].paths(), timers[i].name(), timers[i].getData('priority'));
         }
     }
 
