@@ -126,7 +126,7 @@ Main.prototype.pollLocation = function () {
             this.dispatch(hash, undefined);
 
         } else if (this.observeHash === hash) {
-//            debugger;
+            
             this.observeHash = false;
             this.destroy();
 
