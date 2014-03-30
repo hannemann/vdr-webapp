@@ -49,7 +49,7 @@ Recording.prototype.pathNames = function () {
 
     paths = paths.replace(/_/g, ' ').split('/').slice(1, -2);
 
-    l = paths.lengths
+    l = paths.lengths;
 
     if (this.decodePaths) {
         for (i;i<l;i++) {
@@ -81,7 +81,16 @@ Recording.prototype.renderIn = function (dom) {
     if (!dom instanceof jQuery) {
         throw 'Argument dom is not of type jQuery in Timer.prototype.renderIn';
     }
+    this.addDomEvents();
     dom.append(this.dom().addClass(this.className).text(this.decodePaths ? this.vdrDecodeURI(this.name()) : this.name()));
+};
+
+Recording.prototype.addDomEvents = function () {
+
+    this.dom().on('click', $.proxy(function () {
+
+        console.log(this);
+    }, this));
 };
 
 /**
@@ -98,4 +107,4 @@ Recording.prototype.vdrDecodeURI = function (path) {
     } catch (e) {}
 
     return path.replace(/_/g, ' ');
-}
+};

@@ -5,7 +5,7 @@ Config = function () {
 			storage = localStorage;
 		}
 	} catch (e) {
-		alert('Kein LocalStorage. Kauf einen neuen Browser!');
+		throw 'No localStorage available.';
 		return false;
 	};
 
@@ -38,7 +38,8 @@ Config.prototype.storage = null;
 Config.prototype.defaults = {
 	"lastEpg":"now",
 	"start":"epg",
-    "debug":true,
+    "debug":false,
+    "port":"8002",
     "recordingStartGap":120,
     "recordingEndGap":600
 };
