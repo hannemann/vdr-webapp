@@ -82,11 +82,10 @@ Channel.prototype.renderEvents = function (result) {
         dom = $('<li class="clearfix"'+(i==0?' data-date="'+helper.getWeekDay(now)+', '+helper.getDateString(now)+'"':'')+' id="'+event.id+'"><div class="event clearfix'+classNames+'"><h2><div class="start">'+startTime+'</div>'+event.title+'</h2><div class="short-text italic">'+event.short_text+'</div><div class="duration">'+duration+'</div></div></li>');
         event.dom = dom;
         dom.on('click', function () {
-            var event = me.events[this.id];
-            if (typeof event.show === 'undefined') {
-                event.show = new Event(event);
-            }
-            event.show.render();
+            var event = me.events[this.id], win;
+
+            win = new Event(event);
+            win.dispatchWindow();
         });
         this.events[event.id] = event;
         this.itemList.append(dom);
