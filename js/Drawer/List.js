@@ -45,6 +45,10 @@ DrawerList.prototype.init = function () {
             }
         }
     }
+
+    $(document).on('dispatchBefore', $.proxy(this.close, this));
+    $(document).on('dispatchAfter', $.proxy(this.setCurrent, this));
+
     this.dispatch();
 };
 
@@ -117,9 +121,14 @@ DrawerList.prototype.close = function () {
  * add classes to currently active module
  * @param module
  */
-DrawerList.prototype.setCurrent = function (module) {
+DrawerList.prototype.setCurrent = function (moduleName) {
+
+    if ("string" !== typeof moduleName) {
+        moduleName = main.getCurrent();
+    }
+
     this.dom.find('.navi-button').removeClass('current');
-    this.dom.find('.navi-button.'+module).addClass('current');
+    this.dom.find('.navi-button.'+moduleName).addClass('current');
 };
 
 main.registerModule('DrawerList');

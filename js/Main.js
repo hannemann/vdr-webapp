@@ -126,7 +126,7 @@ Main.prototype.pollLocation = function () {
             this.dispatch(hash, undefined);
 
         } else if (this.observeHash === hash) {
-            
+
             this.observeHash = false;
             this.destroy();
 
@@ -203,8 +203,6 @@ Main.prototype.initNoConfig = function () {
  */
 Main.prototype.dispatch = function (moduleName, callback) {
 
-    if (this.isRegistered('drawer')) this.modules.drawer.close();
-
 	if (this.current != moduleName) {
 
         if (this.current && 'function' === typeof this.modules[this.current].destruct) {
@@ -212,10 +210,7 @@ Main.prototype.dispatch = function (moduleName, callback) {
             this.modules[this.current].destruct();
         }
 
-        if (this.isRegistered('drawer')) {
-
-            this.modules.drawer.setCurrent(moduleName);
-        }
+        $.event.trigger({"type":"dispatchBefore"});
 
         $('.content').hide();
         $('body').scrollTop();
@@ -225,6 +220,8 @@ Main.prototype.dispatch = function (moduleName, callback) {
         }
 		this.modules[moduleName].dispatch(callback);
 		this.current = moduleName;
+
+        $.event.trigger({"type":"dispatchAfter"});
 	}
 };
 
@@ -250,6 +247,15 @@ Main.prototype.getModule = function (module) {
 	}
 
 	return false;
+};
+
+/**
+ * retrieve current dispatched module name
+ * @return {*}
+ */
+Main.prototype.getCurrent = function () {
+
+    return this.current;
 };
 
 main = new Main();
