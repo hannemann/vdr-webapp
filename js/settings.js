@@ -18,10 +18,13 @@ Settings.prototype.addDomEvents = function () {
 	this.cancel.on('click', function () {
 		if (typeof this.callback === 'function') {
 			this.callback();
-		}
+		} else {
+            window.history.back();
+        }
 	});
 	this.submit.on('click', $.proxy(function () {
 		this.persist();
+        window.history.back();
 	}, this));
 };
 
@@ -35,9 +38,11 @@ Settings.prototype.dispatch = function (callback) {
 				options = eval(field.attr('data-provider'));
 				if (options instanceof Object) {
 					for (o in options) {
-						if (typeof options[o][field.attr('data-attribute')] != 'undefined') {
-							field.append('<option value="'+o+'">'+options[o][field.attr('data-attribute')]+'</option>');
-						}
+                        if (options.hasOwnProperty(o)) {
+                            if (typeof options[o][field.attr('data-attribute')] != 'undefined') {
+                                field.append('<option value="'+o+'">'+options[o][field.attr('data-attribute')]+'</option>');
+                            }
+                        }
 					}
 				}
 			}
