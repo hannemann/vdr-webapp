@@ -1,9 +1,7 @@
-Event.Window = function (event) {
+Event.Window = function () {
 
-    this.event = event;
-    this.view = new Event.Window.View(event);
-    this.dom().addClass(this.wrapperClassName);
-    this.addTitle().addImage().addDetails().addComponents().addTabs();
+    GuiItem.apply(this, arguments);
+    this.view = new Event.Window.View(this);
 };
 
 Event.Window.prototype = new Gui.Window();
@@ -27,8 +25,10 @@ Event.Window.prototype.componentsMap = {
 Event.Window.prototype.dispatch = function () {
 
     var view = this.view,
-        dom = this.dom(),
-        id = this.event.dom.attr('id');
+        dom = this.dom();
+
+    dom.addClass(this.wrapperClassName);
+    this.addContents();
 
     dom.css(this.view.getOptionsDom());
     dom.appendTo('body');
@@ -42,8 +42,13 @@ Event.Window.prototype.dispatch = function () {
                 dom.remove();
             });
         };
-        window.location.hash = '#show-event-'+id;
+        window.location.hash = '#show-event';
     });
+};
+
+Event.Window.prototype.addContents = function () {
+
+    this.addTitle().addImage().addDetails().addComponents().addTabs();
 };
 
 /**
@@ -52,7 +57,7 @@ Event.Window.prototype.dispatch = function () {
  */
 Event.Window.prototype.addTitle = function () {
 
-    this.getHeader().append('<h2>'+this.event.title+'</h2>');
+    this.getHeader().append('<h2>'+this.getData('title')+'</h2>');
     return this;
 };
 
@@ -62,12 +67,12 @@ Event.Window.prototype.addTitle = function () {
  */
 Event.Window.prototype.addImage = function () {
 
-    var image;
-    if (this.event.images > 0) {
+    var image, data = this.getData();
+    if (data.images > 0) {
 
         image = $('<img>')
             .addClass('event-img right')
-            .attr('src', 'http://'+this.host+':'+this.port+'/events/image/'+this.event.id+'/0')
+            .attr('src', 'http://'+this.host+':'+this.port+'/events/image/'+data.id+'/0')
             .appendTo(this.getHeader());
 
 
@@ -85,15 +90,16 @@ Event.Window.prototype.addImage = function () {
  */
 Event.Window.prototype.addDetails = function () {
 
-    var details = $('<ul class="details"><li class="italic">'+this.event.short_text+'</li></ul>'),
-        start = helper.getTimeString(new Date(this.event.start_time*1000)),
-        stop = helper.getTimeString(new Date(this.event.start_time*1000 + this.event.duration*1000));
+    var data = this.getData(),
+        details = $('<ul class="details"><li class="italic">'+data.short_text+'</li></ul>'),
+        start = helper.getTimeString(new Date(data.start_time*1000)),
+        stop = helper.getTimeString(new Date(data.start_time*1000 + data.duration*1000));
 
-    if (this.event.contents.length > 0) {
+    if (data.contents.length > 0) {
 
-        details.append('<li>'+this.event.contents.join(' | ')+'</li>');
+        details.append('<li>'+data.contents.join(' | ')+'</li>');
     }
-    details.append('<li>'+this.event.channel_name+'</li><li>'+start+' - '+stop+'</li>')
+    details.append('<li>'+data.channel_name+'</li><li>'+start+' - '+stop+'</li>')
         .appendTo(this.getHeader());
 
     return this;
@@ -105,7 +111,7 @@ Event.Window.prototype.addDetails = function () {
  */
 Event.Window.prototype.addComponents = function () {
 
-    var i = 0, l = this.event.components.length, components;
+    var data = this.getData(), i = 0, l = data.components.length, components;
 
     if (l > 0) {
 
@@ -113,9 +119,9 @@ Event.Window.prototype.addComponents = function () {
 
         for (i;i<l;i++) {
 
-            if (typeof this.componentsMap[this.event.components[i].description] != 'undefined') {
+            if (typeof this.componentsMap[data.components[i].description] != 'undefined') {
 
-                components.push(this.componentsMap[this.event.components[i].description]);
+                components.push(this.componentsMap[data.components[i].description]);
             }
         }
         this.getHeader()
@@ -146,7 +152,7 @@ Event.Window.prototype.addTabs = function () {
  */
 Event.Window.prototype.decorate = function () {
 
-    if (this.event.timer_exists && this.event.timer_active) {
+    if (this.getData('timer_exists') && this.getData('timer_active')) {
 
         this.getHeader().addClass('active-timer');
 
@@ -164,7 +170,7 @@ Event.Window.prototype.tabConfig = {
         "label":"Details",
         "content":function (content) {
 
-            $(content).append(this.event.description);
+            $(content).append(this.getDescription());
         },
         "default":true
     },
@@ -201,7 +207,7 @@ Event.Window.prototype.webConfig = {
         },
         "callback":function () {
 
-            window.open("http://www.imdb.com/find?s=tt&q="+encodeURIComponent(this.event.title));
+            window.open("http://www.imdb.com/find?s=tt&q="+encodeURIComponent(this.getData('title')));
         }
     }
 };
@@ -217,7 +223,7 @@ Event.Window.prototype.toolsConfig = {
                 button = $('<dt>'),
                 text = $('<dd>');
 
-            if (this.event.timer_exists) {
+            if (this.getData('timer_exists')) {
 
                 text.text('Timer löschen');
                 button.removeClass('activate-timer');
@@ -232,7 +238,7 @@ Event.Window.prototype.toolsConfig = {
         },
         "callback":function () {
 
-            if (this.event.timer_exists) {
+            if (this.getData('timer_exists')) {
 
                 actions.deleteTimer(this, this.refresh);
 
@@ -243,6 +249,14 @@ Event.Window.prototype.toolsConfig = {
             }
         }
     }
+};
+
+/**
+ * retrieve description
+ * @return {*}
+ */
+Event.Window.prototype.getDescription = function () {
+    return this.getData('description');
 };
 
 /**

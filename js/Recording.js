@@ -4,6 +4,7 @@ Recording = function () {
     this.decodePaths = false;
     this.relative = true;
     this.element = $('<li>');
+    this.setData('dom', this.element);
 };
 
 Recording.prototype = new Event();
@@ -72,8 +73,6 @@ Recording.prototype.addDomEvents = function () {
 
     this.dom().on('click', $.proxy(function () {
 
-        helper.log(this);
         this.dispatchWindow();
-
     }, this));
 };

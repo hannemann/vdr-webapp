@@ -25,11 +25,13 @@ Event.Window.View.prototype.closeCallback = function () {
  */
 Event.Window.View.prototype.getOptionsDom = function () {
 
-    var offset = this.event.dom.offset(), window = $(top);
+    var dom = this.event.getData('dom'),
+        offset = dom.offset(), window = $(top);
+
     return {
         "top":offset.top+"px",
         "left":offset.left+"px",
-        "right":window.width()-(offset.left+this.event.dom.width())+"px",
-        "bottom":window.height()-(offset.top+this.event.dom.height())+"px"
+        "right":window.width()-(offset.left+dom.width())+"px",
+        "bottom":window.height()-(offset.top+dom.height())+"px"
     };
 };

@@ -27,8 +27,8 @@ Actions.prototype.addTimer = function (obj, callback) {
 //                }
 
     data = {
-        "channel":obj.event.channel,
-        "eventid":obj.event.id,
+        "channel":obj.getData('channel'),
+        "eventid":obj.getData('id'),
         "minpre":config.getItem('recordingStartGap')/60,
         "minpost":config.getItem('recordingEndGap')/60
     }
@@ -39,10 +39,10 @@ Actions.prototype.addTimer = function (obj, callback) {
         "type":"POST",
         "success":$.proxy(function (result) {
 
-            obj.event.dom.addClass('active-timer');
-            obj.event.timer_active = true;
-            obj.event.timer_exists = true;
-            obj.event.timer_id = result.timers[0].id;
+            obj.getData('dom').addClass('active-timer');
+            obj.setData('timer_active', true);
+            obj.setData('timer_exists', true);
+            obj.setData('timer_id', result.timers[0].id);
             if (typeof callback == 'function') {
                 callback.apply(obj);
             }
@@ -54,16 +54,16 @@ Actions.prototype.addTimer = function (obj, callback) {
 };
 
 Actions.prototype.deleteTimer = function (obj, callback) {
-    var url = 'http://'+config.getItem('host')+':'+config.getItem('port')+'/timers/'+obj.event.timer_id;
+    var url = 'http://'+config.getItem('host')+':'+config.getItem('port')+'/timers/'+obj.getData('timer_id');
 
     $.ajax({
         "url":url,
         "type":"DELETE",
         "success":$.proxy(function () {
-            obj.event.dom.removeClass('active-timer');
-            obj.event.timer_active = false;
-            obj.event.timer_exists = false;
-            obj.event.timer_id = '';
+            obj.getData('dom').removeClass('active-timer');
+            obj.setData('timer_active', false);
+            obj.setData('timer_exists', false);
+            obj.setData('timer_id', '');
             if (typeof callback == 'function') {
                 callback.apply(obj);
             }
@@ -76,7 +76,7 @@ Actions.prototype.deleteTimer = function (obj, callback) {
 
 Actions.prototype.loadTimer = function (obj) {
     $.ajax({
-        "url":"http://"+config.getItem('host')+':'+config.getItem('port')+"/timers/"+obj.event.timer_id+'.json',
+        "url":"http://"+config.getItem('host')+':'+config.getItem('port')+"/timers/"+obj.getData('timer_id')+'.json',
         "success":function (result) {
             obj.timer = result.timers[0];
         }

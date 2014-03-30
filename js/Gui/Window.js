@@ -2,6 +2,8 @@ Gui.Window = function () {
     this.view = new Gui.Window.View();
 };
 
+Gui.Window.prototype = new GuiItem();
+
 /**
  * maximum dimension of view
  * @type {Object}

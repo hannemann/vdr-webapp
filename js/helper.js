@@ -44,7 +44,11 @@ Helper.prototype.pad = function (n, width, z) {
 };
 
 Helper.prototype.getDurationAsString = function (duration) {
-	return this.pad(parseInt(duration/60/60, 10), 2) + ':' + this.pad((duration - parseInt(duration/60/60, 10)*60*60)/60, 2)
+
+    var hours = parseInt(duration/60/60, 10),
+        minutes = Math.round((duration - parseInt(duration/60/60, 10)*60*60)/60);
+
+	return this.pad(hours, 2) + ':' + this.pad(minutes, 2)
 };
 
 Helper.prototype.getWeekDay = function (date, abbr) {
