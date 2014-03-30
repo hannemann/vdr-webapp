@@ -10,6 +10,8 @@ Actions.ConfirmDelete.prototype.wrapperClassName = 'confirm';
 
 Actions.ConfirmDelete.prototype.locationHash = 'confirm';
 
+Actions.ConfirmDelete.prototype.observeHash = true;
+
 /**
  * maximum dimension of view
  * @type {Object}
@@ -42,15 +44,18 @@ Actions.ConfirmDelete.prototype.addButtons = function () {
         cancel = $('<li>').addClass('cancel');
 
     confirm.on('click', $.proxy(function () {
+
         $.event.trigger({
             "type":"confirm"
         });
         this.view.closeCallback();
+
     }, this)).text('OK').appendTo(wrapper);
 
     cancel.on('click', $.proxy(function () {
 
         this.view.closeCallback();
+
     }, this)).text('Cancel').appendTo(wrapper);
 
     wrapper.appendTo(this.getBody());

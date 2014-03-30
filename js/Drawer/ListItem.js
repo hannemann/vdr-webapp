@@ -41,7 +41,7 @@ DrawerListItem.prototype.closedCallback = function () {
 
     setTimeout(function () {
 
-        window.location.hash = '#' + moduleName;
+        main.setLocationHash(moduleName);
 
     }, 100);
 };

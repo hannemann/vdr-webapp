@@ -85,11 +85,11 @@ DrawerList.prototype.open = function () {
     if (this.isOpen) return;
     this.dom.animate({"width":"50%"}, 'fast', 'swing', $.proxy(function () {
 
-        main.destroy.push($.proxy(function () {
+        main.addDestroyer($.proxy(function () {
             this.close();
         }, this));
 
-        window.location.hash = '#show-drawer';
+        main.setLocationHash('show-drawer');
         this.isOpen = true;
         $.event.trigger({
             "type":"drawerOpen"
