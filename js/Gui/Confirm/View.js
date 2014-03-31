@@ -24,9 +24,9 @@ Gui.Confirm.View.prototype.setMaxDimension = function () {
     var center = this.getDefaultDimension();
 
     this.maxDimension = {
-        "top" : parseInt(center.top, 10) - 75 + 'px',
+        "top" : parseInt(center.top, 10) - 60 + 'px',
         "right" : '50px',
-        "bottom" : parseInt(center.bottom, 10) - 75 + 'px',
+        "bottom" : parseInt(center.bottom, 10) - 60 + 'px',
         "left" : '50px'
     };
 
