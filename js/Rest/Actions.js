@@ -43,11 +43,21 @@ Actions.prototype.addTimer = function (obj, callback) {
         "type":"POST",
         "success":$.proxy(function (result) {
 
-            obj.getData('dom').addClass('active-timer');
+            var id = obj.getData('dom').attr('id'),
+                epgEvent = main.getModule('epg').events[id];
+
             obj.setData('timer_active', true);
             obj.setData('timer_exists', true);
             obj.setData('timer_id', result.timers[0].id);
+
+            obj.getData('dom').addClass('active-timer');
+            epgEvent.timer_active =  true;
+            epgEvent.timer_exists = true;
+            epgEvent.timer_id = result.timers[0].id;
+
+            main.getModule('timers').refreshCache = true;
             if (typeof callback == 'function') {
+
                 callback.apply(obj);
             }
         }, this),
@@ -64,11 +74,23 @@ Actions.prototype.deleteTimer = function (obj, callback) {
         "url":url,
         "type":"DELETE",
         "success":$.proxy(function () {
-            obj.getData('dom').removeClass('active-timer');
+
+            var id = obj.getData('dom').attr('id'),
+                epgEvent = main.getModule('epg').events[id];
+
             obj.setData('timer_active', false);
             obj.setData('timer_exists', false);
             obj.setData('timer_id', '');
+
+            obj.getData('dom').removeClass('active-timer');
+            epgEvent.timer_active = false;
+            epgEvent.timer_exists = false;
+            epgEvent.timer_id = '';
+
+            main.getModule('timers').refreshCache = true;
+
             if (typeof callback == 'function') {
+
                 callback.apply(obj);
             }
         }, this),

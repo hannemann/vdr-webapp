@@ -67,6 +67,7 @@ Rest.prototype.load = function (url, method) {
     } else {
 
         this.cachedResponse = false;
+        this.refreshCache = false;
         $.ajax({
             "url"       :   "http://"+this.host+":"+this.port+"/"+url,
             "method"    :   method,
