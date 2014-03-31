@@ -95,5 +95,11 @@ Recording.Window.prototype.toolsConfig = {
  * remove self
  */
 Recording.Window.prototype.removeDeleted = function () {
-    this.getData('dom').remove();
+
+    var dom = this.getData('dom')
+
+    dom.fadeOut(function () {
+            dom.remove();
+        }
+    );
 };

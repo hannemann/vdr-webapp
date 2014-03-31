@@ -29,7 +29,7 @@ Gui.Confirm.prototype.addButtons = function () {
 
         $.event.trigger({
             "type" : this.eventPrefix + ".close",
-            "action":"confirmed"
+            "confirmed":true
         });
 
     }, this)).text('OK').appendTo(wrapper);
@@ -38,7 +38,7 @@ Gui.Confirm.prototype.addButtons = function () {
 
         $.event.trigger({
             "type" : this.eventPrefix + ".close",
-            "action":"canceled"
+            "confirmed":false
         });
 
     }, this)).text('Cancel').appendTo(wrapper);

@@ -114,23 +114,27 @@ Actions.prototype.deleteRecording = function (obj, callback) {
     var c = new Gui.Confirm();
     c.dispatch({"message":'Aufnahme löschen?'});
 
-    $(document).one('Gui.Confirm.confirm', $.proxy(function () {
+    $(document).one('Gui.Confirm.close', $.proxy(function (e) {
 
-        $.ajax({
-            "url":this.getBaseUrl() + 'recordings/' + obj.getData('number'),
-            "type":"DELETE",
-            "success":$.proxy(function () {
-                if (typeof callback == 'function') {
-                    callback.apply(obj);
+        if (e && e.confirmed) {
 
-                    // close recording window
-                    obj.view.close();
+            $.ajax({
+                "url":this.getBaseUrl() + 'recordings/' + obj.getData('number'),
+                "type":"DELETE",
+                "success":$.proxy(function () {
+                    if (typeof callback == 'function') {
+
+                        // close recording window
+                        obj.view.close();
+                        // trigger callback
+                        callback.apply(obj);
+                    }
+                }, this),
+                "complete":function (result) {
+                    helper.log(obj, result);
                 }
-            }, this),
-            "complete":function (result) {
-                helper.log(obj, result);
-            }
-        });
+            });
+        }
 
     }, this));
 
