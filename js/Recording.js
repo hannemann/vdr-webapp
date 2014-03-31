@@ -11,15 +11,7 @@ Recording.prototype = new Event();
 
 Recording.prototype.className = 'recording-list-item collapsible collapsed';
 
-/**
- * create and dispatch info window
- */
-Recording.prototype.dispatchWindow = function () {
-
-    var win = new Recording.Window(this.getData());
-
-    win.dispatch();
-};
+Recording.prototype.windowWrapperClass = 'Recording';
 
 /**
  * retrieve paths as array

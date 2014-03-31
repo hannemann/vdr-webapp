@@ -3,7 +3,10 @@
  * @constructor
  */
 Gui.Item = function (options) {
+
     var i;
+    options = options || {};
+
     this.data = {};
     this.element = null;
 

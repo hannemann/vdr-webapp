@@ -1,16 +1,8 @@
-Event.Window = function () {
-
-    Gui.Item.apply(this, arguments);
-    this.view = new Event.Window.View(this);
-};
+Event.Window = function () {};
 
 Event.Window.prototype = new Gui.Window();
 
-Event.Window.constructor = Event.Window;
-
-Event.Window.prototype.wrapperClassName = 'show-event';
-
-Event.Window.prototype.locationHash = 'show-event';
+Event.Window.prototype.windowWrapper = 'Event';
 
 Event.Window.prototype.host = config.getItem('host');
 
@@ -22,15 +14,12 @@ Event.Window.prototype.componentsMap = {
 };
 
 /**
- * render window to body
+ * render contents to window
  */
-Event.Window.prototype.dispatch = function () {
+Event.Window.prototype.appendChildren = function () {
 
-    this.domElement = this.view.dispatch();
     this.addContents();
     this.decorate();
-
-    Gui.Window.prototype.dispatch.apply(this);
 };
 
 Event.Window.prototype.addContents = function () {

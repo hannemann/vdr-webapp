@@ -142,15 +142,10 @@ Main.prototype.pollLocation = function () {
  * add destroyer method
  * @param destroyer
  */
-Main.prototype.addDestroyer = function (destroyer) {
-
-    if ("function" !== typeof destroyer) {
-
-        throw "Argument destroyer not of type function in Main";
-    }
+Main.prototype.addDestroyer = function (destroyer, callback) {
 
     this.destroyer.push(destroyer);
-
+    $(document).one(destroyer, callback);
 };
 
 /**
@@ -158,12 +153,12 @@ Main.prototype.addDestroyer = function (destroyer) {
  */
 Main.prototype.destroy = function () {
 
-    destroy = this.destroyer.pop();
+    var destroyer = this.destroyer.pop();
 
-    if ("function" === typeof destroy) {
-
-        destroy();
-    }
+    $.event.trigger({
+        "type" : destroyer,
+        "skipHistoryBack" : true
+    });
 };
 
 /**

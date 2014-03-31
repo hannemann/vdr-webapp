@@ -1,6 +1,15 @@
-Gui.Window.View = function () {};
+Gui.Window.View = function (window) {
+    this.window = window;
 
-Gui.Window.View.prototype.wrapperClassName = 'window';
+    this.maxDimension = {
+        "top":"20px",
+        "left":"20px",
+        "bottom":"20px",
+        "right":"20px"
+    };
+};
+
+Gui.Window.View.prototype.windowClassName = 'window';
 
 Gui.Window.View.prototype.headerClassName = 'header clearfix';
 
@@ -17,29 +26,59 @@ Gui.Window.View.prototype.hasCloseButton = true;
 Gui.Window.View.prototype.modal = false;
 
 /**
+ * @type {String}
+ */
+Gui.Window.View.prototype.locationHash = 'default-popup';
+
+/**
+ * @type {String}
+ */
+Gui.Window.View.prototype.wrapperClassName = 'default-popup';
+
+/**
+ * main observes current location hash if window is dispatched
+ * destroys window if hash changes back to observeHash
+ * @type {Boolean}
+ */
+Gui.Window.View.prototype.observeHash = false;
+
+/**
  * initialize window
  */
 Gui.Window.View.prototype.init = function () {
 
-    if (this.modal) {
+    this.eventPrefix = this.window.eventPrefix + '.View';
 
-        this.modalOverlay = $('<div>').css({
-            "top":0,
-            "right":0,
-            "bottom":0,
-            "left":0,
-            "opacity":"0.5",
-            "background-color":"#000000",
-            "position":"fixed"
-        }).appendTo($('body'));
+    if (this.modal) {
+        main.getModule('gui').addModalOverlay(this.eventPrefix + '.removed');
     }
 
+    this.setMaxDimension();
+    this.setObserver();
+
     this.wrapper = $('<div>')
-        .addClass(this.wrapperClassName);
+        .addClass(this.wrapperClassName+' '+this.windowClassName);
 
     this.initClose()
         .initHeader()
         .initBody();
+};
+
+Gui.Window.View.prototype.setObserver = function () {
+
+    $(document).one(this.eventPrefix + '.dispatched', $.proxy(function () {
+
+        main.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.close, this));
+    }, this));
+};
+
+/**
+ * maximum dimension of view
+ * Abstract implementation
+ * @type {Object}
+ */
+Gui.Window.View.prototype.setMaxDimension = function () {
+    return this;
 };
 
 /**
@@ -47,14 +86,34 @@ Gui.Window.View.prototype.init = function () {
  */
 Gui.Window.View.prototype.dispatch = function () {
 
-    this.init();
-
-    $(document).one('dispatched', $.proxy(function () {
-
-        main.addDestroyer($.proxy(this.historyCallback, this));
-    }, this));
-
     return this.wrapper;
+};
+
+/**
+ * Animate Window
+ */
+Gui.Window.View.prototype.triggerAnimation = function () {
+
+    if (this.observeHash) {
+
+        main.observeHash = main.getLocationHash();
+
+    }
+
+    this.wrapper.addClass(this.wrapperClassName)
+        .css(this.getDefaultDimension())
+        .appendTo('body');
+
+    main.setLocationHash(this.locationHash);
+
+    this.wrapper.animate(this.maxDimension, 'fast', 'linear', $.proxy(function () {
+
+        $.event.trigger({
+            "type" : this.eventPrefix + ".dispatched",
+            "view" : this
+        });
+
+    }, this));
 };
 
 /**
@@ -81,41 +140,33 @@ Gui.Window.View.prototype.initClose = function () {
  */
 Gui.Window.View.prototype.addCloseEvent = function () {
 
-    this.closeButton.on('click', $.proxy(this.closeCallback, this));
+    this.closeButton.on('click', $.proxy(this.close, this));
 };
 
 /**
  * method to call on close
  */
-Gui.Window.View.prototype.closeCallback = function () {
+Gui.Window.View.prototype.close = function (e) {
 
     this.wrapper.animate(this.getDefaultDimension(), 'fast', $.proxy(function () {
 
-        if (this.modal) {
-            this.modalOverlay.remove();
-        }
         this.wrapper.remove();
-        window.history.back();
+
+        $.event.trigger({
+            "type" : this.eventPrefix + '.removed',
+            "view" : this
+        });
+
+        if (e && "undefined" === typeof e.skipHistoryBack) {
+            window.history.back();
+        }
     }, this));
 };
 
 /**
- * method to call on close
+ * retrieve dimension of window in creation state
+ * @return {Object}
  */
-Gui.Window.View.prototype.historyCallback = function () {
-
-    this.wrapper.animate(this.getDefaultDimension(), 'fast', $.proxy(function () {
-
-        this.wrapper.remove();
-
-        if (this.modal) {
-
-            this.modalOverlay.remove();
-        }
-
-    }, this));
-};
-
 Gui.Window.View.prototype.getDefaultDimension = function () {
 
     var window = $(top),

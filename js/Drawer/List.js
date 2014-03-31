@@ -93,6 +93,8 @@ DrawerList.prototype.open = function () {
             this.close();
         }, this));
 
+        main.addDestroyer('drawer.hashChanged', $.proxy(this.close, this));
+
         main.setLocationHash('show-drawer');
         this.isOpen = true;
         $.event.trigger({

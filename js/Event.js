@@ -10,14 +10,16 @@ Event.prototype.dateReg = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}
 
 Event.prototype.dayReg = /([0-9]{4})-([0-9]{2})-([0-9]{2})/;
 
+Event.prototype.windowWrapperClass = 'Event';
+
 /**
  * create and dispatch info window
  */
 Event.prototype.dispatchWindow = function () {
 
-    var win = new Event.Window(this.getData());
+    var win = new window[this.windowWrapperClass].Window();
 
-    win.dispatch();
+    win.dispatch(this.getData());
 };
 
 /**

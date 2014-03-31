@@ -7,7 +7,7 @@ Gui = function () {
 Gui.prototype.name = 'gui';
 
 Gui.prototype.init = function () {
-	var me = this;
+
 	this.throbber = $('#throbber');
 };
 
@@ -24,6 +24,26 @@ Gui.prototype.hideThrobber = function (force) {
 		this.throbber.hide();
 		this.throbberShown = 0;
 	}
+};
+
+Gui.prototype.addModalOverlay = function (eventName) {
+
+    $(document).one(eventName, $.proxy(this.removeModalOverlay, this));
+
+    this.modalOverlay = $('<div>').css({
+        "top":0,
+        "right":0,
+        "bottom":0,
+        "left":0,
+        "opacity":"0.5",
+        "background-color":"#000000",
+        "position":"fixed"
+    }).appendTo($('body'));
+};
+
+Gui.prototype.removeModalOverlay = function () {
+
+    this.modalOverlay.remove();
 };
 
 main.registerModule('Gui');

@@ -1,80 +1,62 @@
-Gui.Window = function () {
-    this.view = new Gui.Window.View();
-};
+Gui.Window = function () {};
 
 Gui.Window.prototype = new Gui.Item();
 
-/**
- * @type {String}
- */
-Gui.Window.prototype.locationHash = 'default-popup';
+Gui.Window.prototype.windowWrapper = 'Gui';
 
-/**
- * @type {String}
- */
-Gui.Window.prototype.wrapperClassName = 'default-popup';
+Gui.Window.prototype.viewWrapper = 'Window';
 
-/**
- * main observes current location hash if window is dispatched
- * destroys window if hash changes back to observeHash
- * @type {Boolean}
- */
-Gui.Window.prototype.observeHash = false;
-
-/**
- * maximum dimension of view
- * @type {Object}
- */
-Gui.Window.prototype.maxDimension = {
-    "top":"20px",
-    "left":"20px",
-    "bottom":"20px",
-    "right":"20px"
-};
+Gui.Window.prototype.viewClassName = 'View';
 
 /**
  * render window to body
  */
 Gui.Window.prototype.dispatch = function () {
 
-    if ("undefined" === typeof this.domElement) {
-        this.domElement = this.view.dispatch();
-    }
+    Gui.Item.apply(this, arguments);
+    this.setEventPrefix();
 
-    this.dom().addClass(this.wrapperClassName)
-        .css(this.view.getDefaultDimension())
-        .appendTo('body');
+    $.event.trigger({
+        "type"      :   this.eventPrefix + ".before",
+        "window"    :   this,
+        "arguments" :   arguments
+    });
 
-    this.triggerAnimation();
+    this.init();
+    $(document).one(this.eventPrefix + '.close', $.proxy(this.view.close, this.view));
+    this.view.triggerAnimation();
+
+    $.event.trigger({
+        "type"      :   this.eventPrefix + ".after",
+        "window"    :   this,
+        "arguments" :   arguments
+    });
 };
 
-/**
- * Animate Window
- */
-Gui.Window.prototype.triggerAnimation = function () {
+Gui.Window.prototype.setEventPrefix = function () {
 
-    if (this.observeHash) {
-
-        main.observeHash = main.getLocationHash();
-
-    }
-
-    main.setLocationHash(this.locationHash);
-
-    this.dom().animate(this.maxDimension, 'fast', 'linear', $.proxy(function () {
-
-        $.event.trigger({
-            "type" : "dispatched"
-        });
-
-    }, this));
+    this.eventPrefix = this.windowWrapper+'.'+this.viewWrapper;
+    return this;
 };
+
+Gui.Window.prototype.init = function () {
+
+    this.view = new window[this.windowWrapper][this.viewWrapper][this.viewClassName](this);
+    this.view.init();
+    this.appendChildren();
+};
+
+Gui.Window.prototype.appendChildren = function () {};
 
 /**
  * getter for wrapper
  * @return {*}
  */
 Gui.Window.prototype.dom = function () {
+
+    if ("undefined" === typeof this.domElement) {
+        this.domElement = this.view.dispatch();
+    }
 
     return this.domElement;
 };

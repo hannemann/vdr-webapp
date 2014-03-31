@@ -1,10 +1,20 @@
-Recording.Window = function () {
-
-    Event.Window.apply(this, arguments);
-};
+Recording.Window = function () {};
 
 Recording.Window.prototype = new Event.Window();
 
+/**
+ * set custom eventPrefix
+ * @return {*}
+ */
+Recording.Window.prototype.setEventPrefix = function () {
+
+    this.eventPrefix = 'Recording.Window';
+    return this;
+};
+
+/**
+ * add contents to wrapper
+ */
 Recording.Window.prototype.addContents = function () {
 
     this.addTitle().addDetails().addTabs();
@@ -81,6 +91,9 @@ Recording.Window.prototype.toolsConfig = {
     }
 };
 
+/**
+ * remove self
+ */
 Recording.Window.prototype.removeDeleted = function () {
     this.getData('dom').remove();
 };

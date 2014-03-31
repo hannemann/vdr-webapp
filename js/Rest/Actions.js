@@ -111,10 +111,10 @@ Actions.prototype.loadTimer = function (obj) {
 
 Actions.prototype.deleteRecording = function (obj, callback) {
 
-    var c = new Actions.ConfirmDelete('Aufnahme löschen?');
-    c.dispatch();
+    var c = new Gui.Confirm();
+    c.dispatch({"message":'Aufnahme löschen?'});
 
-    $(document).one('confirm', $.proxy(function () {
+    $(document).one('Gui.Confirm.confirm', $.proxy(function () {
 
         $.ajax({
             "url":this.getBaseUrl() + 'recordings/' + obj.getData('number'),
@@ -122,13 +122,16 @@ Actions.prototype.deleteRecording = function (obj, callback) {
             "success":$.proxy(function () {
                 if (typeof callback == 'function') {
                     callback.apply(obj);
+
+                    // close recording window
+                    obj.view.close();
                 }
             }, this),
             "complete":function (result) {
                 helper.log(obj, result);
             }
         });
-        obj.view.closeCallback();
+
     }, this));
 
 };
