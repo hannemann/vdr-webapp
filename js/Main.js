@@ -2,7 +2,7 @@
  * initialize main class
  * @constructor
  */
-Main = function () {
+var Main = function () {
 	this.current = null;
     this.initWithoutConfig = false;
 };
@@ -12,6 +12,7 @@ Main = function () {
  * @return {*}
  */
 Main.prototype.checkConfig = function () {
+
     return config.getItem('host') && config.getItem('port');
 };
 
@@ -37,14 +38,12 @@ Main.prototype.observeHash = false;
  * add module instance to buffer
  * @param module
  */
-Main.prototype.registerModule = function (module) {
-
-    if ("undefined" === typeof window[module].prototype.name) {
-
-        throw "Property name of module "+module+" is not defined";
-    }
+Main.prototype.registerModule = function (module, init) {
 
 	this.modules[window[module].prototype.name] = new window[module]();
+    if (init) {
+        this.initModule(module);
+    }
 };
 
 /**

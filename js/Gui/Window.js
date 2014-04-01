@@ -9,6 +9,13 @@ Gui.Window.prototype.viewWrapper = 'Window';
 Gui.Window.prototype.viewClassName = 'View';
 
 /**
+ * main observes current location hash if window is dispatched
+ * destroys window if hash changes back to observeHash
+ * @type {Boolean}
+ */
+Gui.Window.prototype.observeHash = false;
+
+/**
  * render window to body
  */
 Gui.Window.prototype.dispatch = function () {
@@ -17,20 +24,33 @@ Gui.Window.prototype.dispatch = function () {
     this.setEventPrefix();
 
     $.event.trigger({
-        "type"      :   this.eventPrefix + ".before",
+        "type"      :   this.eventPrefix + ".dispatch.before",
         "window"    :   this,
         "arguments" :   arguments
     });
-
+debugger;
     this.init();
-    $(document).one(this.eventPrefix + '.close', $.proxy(this.view.close, this.view));
+    $(document).one(this.eventPrefix + '.close', $.proxy(this.close, this));
+
+    $(document).one(this.eventPrefix + '.View.render.after', $.proxy(function () {
+
+        main.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.close, this));
+    }, this));
+
     this.view.triggerAnimation();
 
     $.event.trigger({
-        "type"      :   this.eventPrefix + ".after",
+        "type"      :   this.eventPrefix + ".dispatch.after",
         "window"    :   this,
         "arguments" :   arguments
     });
+};
+
+Gui.Window.prototype.close = function () {
+
+    $(document).off(this.eventPrefix + '.dispatch.before');
+    $(document).off(this.eventPrefix + '.dispatch.after');
+    this.view.close();
 };
 
 Gui.Window.prototype.setEventPrefix = function () {

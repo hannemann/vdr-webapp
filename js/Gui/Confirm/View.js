@@ -10,8 +10,6 @@ Gui.Confirm.View.prototype.hasCloseButton = false;
 
 Gui.Confirm.View.prototype.modal = true;
 
-Gui.Confirm.View.prototype.observeHash = true;
-
 Gui.Confirm.View.prototype.wrapperClassName = 'confirm';
 
 Gui.Confirm.View.prototype.locationHash = 'confirm';

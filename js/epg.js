@@ -122,13 +122,12 @@ Epg.prototype.addChannelEvents = function () {
 };
 
 Epg.prototype.addEventsToList = function (events) {
-    var me = this, i = 0, l = events.length;
+    var me = this, i = 0, l = events.length, gui = main.getModule('gui');
     for (i; i < l; i++) {
         this.events[events[i]].dom.on('click', function () {
-            var event = me.events[this.id], win;
+            var broadcast = me.events[this.id];
 
-            win = new Event(event);
-            win.dispatchWindow();
+            main.getModule('Broadcasts').dispatchView('Window', broadcast);
         });
     }
 };

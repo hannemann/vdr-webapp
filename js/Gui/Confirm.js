@@ -6,6 +6,8 @@ Gui.Confirm.prototype.windowWrapper = 'Gui';
 
 Gui.Confirm.prototype.viewWrapper = 'Confirm';
 
+Gui.Confirm.prototype.observeHash = true;
+
 /**
  * fill with content
  */

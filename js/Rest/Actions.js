@@ -123,11 +123,8 @@ Actions.prototype.deleteRecording = function (obj, callback) {
                 "type":"DELETE",
                 "success":$.proxy(function () {
                     if (typeof callback == 'function') {
-
-                        // close recording window
-                        obj.view.close();
-                        // trigger callback
-                        callback.apply(obj);
+debugger;
+                        callback();
                     }
                 }, this),
                 "complete":function (result) {

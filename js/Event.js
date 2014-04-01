@@ -1,7 +1,7 @@
 Event = function () {
 
-    Gui.List.Item.apply(this, arguments);
-	return this;
+//    Gui.List.Item.apply(this, arguments);
+//	return this;
 };
 
 Event.prototype = new Gui.List.Item();
@@ -10,16 +10,16 @@ Event.prototype.dateReg = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}
 
 Event.prototype.dayReg = /([0-9]{4})-([0-9]{2})-([0-9]{2})/;
 
-Event.prototype.windowWrapperClass = 'Event';
+Event.prototype.windowWrapperClass = 'Broadcasts';
 
 /**
  * create and dispatch info window
  */
-Event.prototype.dispatchWindow = function () {
+Event.prototype.dispatchWindow = function (event) {
 
-    var win = new window[this.windowWrapperClass].Window();
+    var win = Lib.factory.getClass(this.windowWrapperClass + '.' + 'Window', event);
 
-    win.dispatch(this.getData());
+    win.dispatch();
 };
 
 /**

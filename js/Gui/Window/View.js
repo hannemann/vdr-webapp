@@ -36,13 +36,6 @@ Gui.Window.View.prototype.locationHash = 'default-popup';
 Gui.Window.View.prototype.wrapperClassName = 'default-popup';
 
 /**
- * main observes current location hash if window is dispatched
- * destroys window if hash changes back to observeHash
- * @type {Boolean}
- */
-Gui.Window.View.prototype.observeHash = false;
-
-/**
  * initialize window
  */
 Gui.Window.View.prototype.init = function () {
@@ -54,7 +47,6 @@ Gui.Window.View.prototype.init = function () {
     }
 
     this.setMaxDimension();
-    this.setObserver();
 
     this.wrapper = $('<div>')
         .addClass(this.wrapperClassName+' '+this.windowClassName);
@@ -64,12 +56,11 @@ Gui.Window.View.prototype.init = function () {
         .initBody();
 };
 
-Gui.Window.View.prototype.setObserver = function () {
+Gui.Window.View.prototype.removeObserver = function () {
 
-    $(document).one(this.eventPrefix + '.dispatched', $.proxy(function () {
-
-        main.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.close, this));
-    }, this));
+        $(document).off(this.eventPrefix + '.removed');
+        $(document).off(this.eventPrefix + '.hashChanged');
+        $(document).off(this.eventPrefix + '.render.after');
 };
 
 /**
@@ -109,7 +100,7 @@ Gui.Window.View.prototype.triggerAnimation = function () {
     this.wrapper.animate(this.maxDimension, 'fast', 'linear', $.proxy(function () {
 
         $.event.trigger({
-            "type" : this.eventPrefix + ".dispatched",
+            "type" : this.eventPrefix + ".render.after",
             "view" : this
         });
 
@@ -156,8 +147,9 @@ Gui.Window.View.prototype.close = function (e) {
             "type" : this.eventPrefix + '.removed',
             "view" : this
         });
-
-        if (e && "undefined" === typeof e.skipHistoryBack) {
+        this.removeObserver();
+        debugger;
+        if (!e || "undefined" === typeof e.skipHistoryBack) {
             window.history.back();
         }
     }, this));

@@ -1,6 +1,6 @@
 Recording.Window = function () {};
 
-Recording.Window.prototype = new Event.Window();
+//Recording.Window.prototype = new Broadcasts.Window();
 
 /**
  * set custom eventPrefix
@@ -86,7 +86,7 @@ Recording.Window.prototype.toolsConfig = {
         },
         "callback":function () {
 
-            actions.deleteRecording(this, this.removeDeleted);
+            actions.deleteRecording(this, $.proxy(this.removeDeleted, this));
         }
     }
 };
@@ -96,7 +96,9 @@ Recording.Window.prototype.toolsConfig = {
  */
 Recording.Window.prototype.removeDeleted = function () {
 
-    var dom = this.getData('dom')
+    var dom = this.getData('dom');
+
+    $.event.trigger(this.eventPrefix + '.close');
 
     dom.fadeOut(function () {
             dom.remove();

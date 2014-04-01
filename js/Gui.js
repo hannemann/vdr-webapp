@@ -46,5 +46,10 @@ Gui.prototype.removeModalOverlay = function () {
     this.modalOverlay.remove();
 };
 
+Gui.prototype.getElement = function (path, data) {
+
+    return Lib.factory.getClass(path + '.Controller', data);
+};
+
 main.registerModule('Gui');
 
