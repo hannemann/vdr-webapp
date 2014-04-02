@@ -1,15 +1,41 @@
 var Lib = Lib || function () {};
 
-Lib.Factory = function () {};
+Lib.Factory = function () {
+
+    this.classes = {};
+};
 
 Lib.Factory.prototype.getClass = function (path, data) {
 
-    var _class = null, i = 0, l, instance, wrapper = 'window';
+    var _class = null,
+        instance;
+
+    data = data || {};
+
+    if ("undefined" === typeof this.classes[path]) {
+
+        _class = this.getConstructor(path);
+    } else {
+        _class = this.classes[path];
+    }
+
+    instance = new _class();
+
+    if ('function' === typeof instance.initData) {
+
+        instance.initData(data);
+    }
+
+    return instance;
+
+};
+
+Lib.Factory.prototype.getConstructor = function (path) {
+
+    var _class = null, i = 0, l, wrapper = 'window';
 
     path = path.split('.');
     l = path.length;
-
-    data = data || {};
 
     for (i;i<l;i++) {
 
@@ -28,15 +54,7 @@ Lib.Factory.prototype.getClass = function (path, data) {
         }
     }
 
-    instance = new _class();
-
-    if ('function' === typeof instance.initData) {
-
-        instance.initData(data);
-    }
-
-    return instance;
-
+    return _class;
 };
 
 Lib.Factory.prototype.classExists = function (wrapper, className) {
