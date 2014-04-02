@@ -16,7 +16,7 @@ Lib.Object.prototype.initData = function (data) {
 /**
  * retrieve option
  * @param option {String}
- * @param defaultValue {*}
+ * @param [defaultValue] {*}
  * @return {*}
  */
 Lib.Object.prototype.getData = function (option, defaultValue) {
@@ -48,3 +48,8 @@ Lib.Object.prototype.setData = function (option, value) {
     this.data[option] = value;
     return this;
 };
+
+Lib.Object.prototype.hasData = function (option) {
+
+    return "undefined" !== this.data[option];
+}

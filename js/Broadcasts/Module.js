@@ -9,6 +9,11 @@ Broadcasts.prototype.dispatchView = function (type, broadcast) {
     return this.getController(type, broadcast).dispatchView(type);
 };
 
+Broadcasts.prototype.initChannels = function () {
+
+    this.getController('Channels');
+};
+
 main.registerModule('Broadcasts', true);
 
 

@@ -47,21 +47,30 @@ Rest.prototype.getBaseUrl = function () {
 /**
  * fetch data from rest api
  * @param url {string}
+ * @param [method] {string}
+ * @param [callback] {Function}
  */
-Rest.prototype.load = function (url, method) {
+Rest.prototype.load = function (url, method, callback) {
 
     url = "undefined" !== typeof url && "undefined" !== typeof this.urls[url] ?
         this.urls[url] : this.urls.load;
 
     method = method || 'GET';
 
-    this.itemList.empty();
+    if ("undefined" !== typeof this.itemList) {
+        this.itemList.empty();
+    }
     main.getModule('gui').showThrobber();
+
+    if ("function" !== typeof callback) {
+
+        callback = this.onSuccess;
+    }
 
     if (!this.refreshCache && this.cacheResponse && "undefined" !== typeof this.responseCache[url]) {
 
         this.cachedResponse = true;
-        this.onSuccess(this.responseCache[url]);
+        callback(this.responseCache[url]);
         this.onComplete();
 
     } else {
@@ -69,12 +78,12 @@ Rest.prototype.load = function (url, method) {
         this.cachedResponse = false;
         this.refreshCache = false;
         $.ajax({
-            "url"       :   "http://"+this.host+":"+this.port+"/"+url,
+            "url"       :   this.getBaseUrl() + "/" + url,
             "method"    :   method,
             "success"   :   $.proxy(function (result) {
-                                this.responseCache[url] = result;
-                                this.onSuccess(result);
-                            }, this),
+                this.responseCache[url] = result;
+                callback(result);
+            }, this),
             "complete"  :   $.proxy(this.onComplete, this),
             "error"     :   $.proxy(this.onError, this)
         });

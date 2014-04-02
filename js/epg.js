@@ -13,34 +13,54 @@ Epg.prototype.optionName = "EPG";
 Epg.prototype.name = "epg";
 
 Epg.prototype.init = function () {
-    this.channelsList = $('#channels');
-    this.eventsList = $('#events');
-    this.timeline = $('#timeline');
-    this.body = $('body');
-    this.window = $(window);
-    this.verticalScroller = $('dl.epg dd');
-
-    this.scrollFinishCallback = $.proxy(function () {
-        this.scrollFinish();
-    }, this);
+//    this.channelsList = $('#channels');
+//    this.eventsList = $('#events');
+//    this.timeline = $('#timeline');
+//    this.body = $('body');
+//    this.window = $(window);
+//    this.verticalScroller = $('dl.epg dd');
+//
+//    this.scrollFinishCallback = $.proxy(function () {
+//        this.scrollFinish();
+//    }, this);
 };
 
 Epg.prototype.dispatch = function () {
 
-    $('#timeSelector .' + config.getItem('lastEpg')).hide();
-    this.now = new Date();
-    this.prime = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), 20, 15, 0);
-    if (this.now > this.prime) {
-        this.prime.setTime(this.prime.getTime() + 1000 * 24 * 60 * 60);
-    }
-    this.addDomEvents();
-    $('.epg-wrapper').show();
-    if (!this.isDispatched) {
-        this.loadChannels();
-        this.isDispatched = true;
-    } else {
-        this.scrollFinish();
-    }
+
+
+
+
+    var broadcasts = main.getModule('Broadcasts');
+
+    broadcasts.initChannels();
+
+    $(document).one('channelsLoaded', $.proxy(function (result) {
+
+        result.iterate(function (channel) {
+
+            console.log(channel);
+
+        });
+
+        console.log(broadcasts);
+    }, this));
+
+
+//    $('#timeSelector .' + config.getItem('lastEpg')).hide();
+//    this.now = new Date();
+//    this.prime = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), 20, 15, 0);
+//    if (this.now > this.prime) {
+//        this.prime.setTime(this.prime.getTime() + 1000 * 24 * 60 * 60);
+//    }
+//    this.addDomEvents();
+//    $('.epg-wrapper').show();
+//    if (!this.isDispatched) {
+//        this.loadChannels();
+//        this.isDispatched = true;
+//    } else {
+//        this.scrollFinish();
+//    }
 };
 
 /**
@@ -122,27 +142,33 @@ Epg.prototype.addChannelEvents = function () {
 };
 
 Epg.prototype.addEventsToList = function (events) {
-    var me = this, i = 0, l = events.length, gui = main.getModule('gui');
+    var me = this, i = 0, l = events.length,
+        gui = main.getModule('gui'),
+        broadcasts = main.getModule('Broadcasts');
+
     for (i; i < l; i++) {
         this.events[events[i]].dom.on('click', function () {
             var broadcast = me.events[this.id];
 
-            main.getModule('Broadcasts').dispatchView('Window', broadcast);
+            broadcasts.getModel('Broadcast', broadcast.id);
+
+            broadcasts.dispatchView('Window', broadcast);
         });
     }
 };
 
 Epg.prototype.loadChannels = function () {
-    $.ajax({
-        "url":"http://" + this.host + ":" + this.port + "/channels/.json",
-        "success":$.proxy(function (result) {
-            this.channels = result.channels;
-            this.channelCount = result.total;
-            this.renderSkeleton();
-            this.addChannelEvents();
-            this.loadFrom(config.getItem('lastEpg'));
-        }, this)
-    });
+//    $.ajax({
+//        "url":"http://" + this.host + ":" + this.port + "/channels/.json",
+//        "success":$.proxy(function (result) {
+//            this.channels = result.channels;
+//            this.channelCount = result.total;
+//            this.renderSkeleton();
+//            this.addChannelEvents();
+//            this.loadFrom(config.getItem('lastEpg'));
+//        }, this)
+//    });
+
 };
 
 Epg.prototype.loadEvents = function (channel, from) {

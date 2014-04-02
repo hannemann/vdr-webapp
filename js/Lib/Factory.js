@@ -2,14 +2,14 @@ var Lib = Lib || function () {};
 
 Lib.Factory = function () {};
 
-Lib.Factory.prototype.getClass = function (path, options) {
+Lib.Factory.prototype.getClass = function (path, data) {
 
     var _class = null, i = 0, l, instance, wrapper = 'window';
 
     path = path.split('.');
     l = path.length;
 
-    options = options || {};
+    data = data || {};
 
     for (i;i<l;i++) {
 
@@ -30,9 +30,9 @@ Lib.Factory.prototype.getClass = function (path, options) {
 
     instance = new _class();
 
-    if (options && 'function' === typeof instance.initData) {
+    if ('function' === typeof instance.initData) {
 
-        instance.initData(options);
+        instance.initData(data);
     }
 
     return instance;
