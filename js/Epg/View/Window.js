@@ -1,18 +1,18 @@
-Broadcasts.View.Window = function () {};
+Epg.View.Window = function () {};
 
-Broadcasts.View.Window.prototype = new Gui.Window.View();
+Epg.View.Window.prototype = new Gui.Window.View();
 
-Broadcasts.View.Window.constructor = Broadcasts.View.Window;
+Epg.View.Window.constructor = Epg.View.Window;
 
-Broadcasts.View.Window.prototype.wrapperClassName = 'show-event';
+Epg.View.Window.prototype.wrapperClassName = 'show-event';
 
-Broadcasts.View.Window.prototype.locationHash = 'show-event';
+Epg.View.Window.prototype.locationHash = 'show-event';
 
 /**
  * retrieve offsets of caller
  * @return {Object}
  */
-Broadcasts.View.Window.prototype.getDefaultDimension = function () {
+Epg.View.Window.prototype.getDefaultDimension = function () {
 
     var dom = this.window.getData('dom'),
         offset = dom.offset(), window = $(top);
@@ -28,13 +28,13 @@ Broadcasts.View.Window.prototype.getDefaultDimension = function () {
 /**
  * render contents to window
  */
-Broadcasts.View.Window.prototype.render = function () {
+Epg.View.Window.prototype.render = function () {
 
     this.addContents();
     this.decorate();
 };
 
-Broadcasts.View.Window.prototype.addContents = function () {
+Epg.View.Window.prototype.addContents = function () {
 
     this.addTitle().addImage().addDetails().addComponents().addTabs();
 };
@@ -43,7 +43,7 @@ Broadcasts.View.Window.prototype.addContents = function () {
  * add title
  * @return {*}
  */
-Broadcasts.View.Window.prototype.addTitle = function () {
+Epg.View.Window.prototype.addTitle = function () {
 
     this.getHeader().append('<h2>'+this.getTitle()+'</h2>');
     return this;
@@ -53,7 +53,7 @@ Broadcasts.View.Window.prototype.addTitle = function () {
  * add image if exists
  * @return {*}
  */
-Broadcasts.View.Window.prototype.addImage = function () {
+Epg.View.Window.prototype.addImage = function () {
 
     var image, data = this.getData();
     if (data.images > 0) {
@@ -76,7 +76,7 @@ Broadcasts.View.Window.prototype.addImage = function () {
  * add details
  * @return {*}
  */
-Broadcasts.View.Window.prototype.addDetails = function () {
+Epg.View.Window.prototype.addDetails = function () {
 
     var data = this.getData(),
         details = $('<ul class="details"><li class="italic">'+data.short_text+'</li></ul>'),
@@ -97,7 +97,7 @@ Broadcasts.View.Window.prototype.addDetails = function () {
  * add components
  * @return {*}
  */
-Broadcasts.View.Window.prototype.addComponents = function () {
+Epg.View.Window.prototype.addComponents = function () {
 
     var data = this.getData(), i = 0, l = data.components.length, components;
 
@@ -122,7 +122,7 @@ Broadcasts.View.Window.prototype.addComponents = function () {
 /**
  * add Tabs
  */
-Broadcasts.View.Window.prototype.addTabs = function () {
+Epg.View.Window.prototype.addTabs = function () {
 
     if (typeof this.tabs != 'undefined') {
 
@@ -138,7 +138,7 @@ Broadcasts.View.Window.prototype.addTabs = function () {
 /**
  * add decorations according to data
  */
-Broadcasts.View.Window.prototype.decorate = function () {
+Epg.View.Window.prototype.decorate = function () {
 
     if (this.getData('timer_exists') && this.getData('timer_active')) {
 

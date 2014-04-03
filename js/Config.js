@@ -73,7 +73,7 @@ Config = function () {
  */
 Config.prototype.defaults = {
 	"lastEpg"           :   "now",
-	"start"             :   "epg",
+	"start"             :   "epgold",
     "debug"             :   false,
     "port"              :   "8002",
     "recordingStartGap" :   120,

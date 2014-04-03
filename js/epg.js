@@ -1,4 +1,4 @@
-var Epg = function () {
+var Epgold = function () {
     this.isDispatched = false;
     this.events = [];
     this.channels = null;
@@ -6,13 +6,13 @@ var Epg = function () {
     this.scrollTimer = null;
 };
 
-Epg.prototype = new Rest();
+Epgold.prototype = new Rest();
 
-Epg.prototype.optionName = "EPG";
+Epgold.prototype.optionName = "EPG Old";
 
-Epg.prototype.name = "epg";
+Epgold.prototype.name = "epgold";
 
-Epg.prototype.init = function () {
+Epgold.prototype.init = function () {
 //    this.channelsList = $('#channels');
 //    this.eventsList = $('#events');
 //    this.timeline = $('#timeline');
@@ -25,13 +25,13 @@ Epg.prototype.init = function () {
 //    }, this);
 };
 
-Epg.prototype.dispatch = function () {
+Epgold.prototype.dispatch = function () {
 
 
 
 
 
-    var broadcasts = main.getModule('Broadcasts');
+    var broadcasts = main.getModule('Epg');
 
     broadcasts.initChannels();
 
@@ -67,7 +67,7 @@ Epg.prototype.dispatch = function () {
  * handle horizontal scroll events
  * load events in case of empty space in grid
  */
-Epg.prototype.scrollFinish = function () {
+Epgold.prototype.scrollFinish = function () {
     var me = this, l = me.channels.length, i = 0;
     clearTimeout(this.scrollTimer);
     this.scrollTimer = setTimeout(function () {
@@ -83,7 +83,7 @@ Epg.prototype.scrollFinish = function () {
     }, 200);
 };
 
-Epg.prototype.addDomEvents = function () {
+Epgold.prototype.addDomEvents = function () {
 
     var me = this, i = 0, l = 0;
     $('#refresh').show().on('click', function () {
@@ -99,7 +99,7 @@ Epg.prototype.addDomEvents = function () {
     this.verticalScroller.on('scroll', $.proxy(this.moveTimeline, this));
 };
 
-Epg.prototype.removeDomEvents = function () {
+Epgold.prototype.removeDomEvents = function () {
 
     $('#refresh').show().off('click');
     $('#timeSelector li').off('click');
@@ -112,7 +112,7 @@ Epg.prototype.removeDomEvents = function () {
  * scroll timeline callback
  * attach to vertical scroll event
  */
-Epg.prototype.moveTimeline = function () {
+Epgold.prototype.moveTimeline = function () {
 
     var that = this.verticalScroller.get(0);
     var scroll = that.scrollLeft * -1, ddOffset = that.offsetLeft, date = '';
@@ -131,7 +131,7 @@ Epg.prototype.moveTimeline = function () {
     this.scrollFinish();
 };
 
-Epg.prototype.addChannelEvents = function () {
+Epgold.prototype.addChannelEvents = function () {
     var me = this;
     for (var i in this.channels) {
         $('#channel-' + this.channels[i].channel_id).on('click', function () {
@@ -141,10 +141,10 @@ Epg.prototype.addChannelEvents = function () {
     };
 };
 
-Epg.prototype.addEventsToList = function (events) {
+Epgold.prototype.addEventsToList = function (events) {
     var me = this, i = 0, l = events.length,
         gui = main.getModule('gui'),
-        broadcasts = main.getModule('Broadcasts');
+        broadcasts = main.getModule('Epg');
 
     for (i; i < l; i++) {
         this.events[events[i]].dom.on('click', function () {
@@ -157,7 +157,7 @@ Epg.prototype.addEventsToList = function (events) {
     }
 };
 
-Epg.prototype.loadChannels = function () {
+Epgold.prototype.loadChannels = function () {
 //    $.ajax({
 //        "url":"http://" + this.host + ":" + this.port + "/channels/.json",
 //        "success":$.proxy(function (result) {
@@ -171,7 +171,7 @@ Epg.prototype.loadChannels = function () {
 
 };
 
-Epg.prototype.loadEvents = function (channel, from) {
+Epgold.prototype.loadEvents = function (channel, from) {
     var channelId = channel.channel_id;
     from = from || this.from;
 
@@ -239,7 +239,7 @@ Epg.prototype.loadEvents = function (channel, from) {
     });
 };
 
-Epg.prototype.renderSkeleton = function () {
+Epgold.prototype.renderSkeleton = function () {
     var channelId, markup;
     for (var i in this.channels) {
         channelId = this.channels[i].channel_id;
@@ -260,7 +260,7 @@ Epg.prototype.renderSkeleton = function () {
     this.eventsList.width(width);
 };
 
-Epg.prototype.renderEvents = function () {
+Epgold.prototype.renderEvents = function () {
     for (var i in this.channels) {
         var channelId = this.channels[i].channel_id, elem = $('#' + channelId + ' li:last');
         if (typeof this.channels[i].loadedTimestamps === 'undefined') {
@@ -273,7 +273,7 @@ Epg.prototype.renderEvents = function () {
     }
 };
 
-Epg.prototype.loadFrom = function (from) {
+Epgold.prototype.loadFrom = function (from) {
     $('#timeSelector li').hide();
     if ('prime' === from) {
         from = this.prime;
@@ -298,7 +298,7 @@ Epg.prototype.loadFrom = function (from) {
     this.renderTimeLine();
 };
 
-Epg.prototype.isScrolledIntoView = function (elem, parent) {
+Epgold.prototype.isScrolledIntoView = function (elem, parent) {
     parent = parent || this.body;
     var top = false, right = false, bottom = false, left = false, eOffset = elem.offset(), pOffset = parent.offset(),
         eventsTop = typeof pOffset != 'undefined' ? pOffset.top : 0,
@@ -319,7 +319,7 @@ Epg.prototype.isScrolledIntoView = function (elem, parent) {
     return (top || bottom) && (right || left);
 };
 
-Epg.prototype.isScrolledIntoViewY = function (elem) {
+Epgold.prototype.isScrolledIntoViewY = function (elem) {
     var docViewTop = this.body.offset().top;
     var docViewBottom = docViewTop + this.body.height();
 
@@ -329,7 +329,7 @@ Epg.prototype.isScrolledIntoViewY = function (elem) {
     return ((elemTop <= docViewBottom) && (elemTop >= docViewTop)) || ((elemBottom <= docViewBottom) && (elemBottom >= docViewTop));
 };
 
-Epg.prototype.renderTimeLine = function () {
+Epgold.prototype.renderTimeLine = function () {
     var width = $('#timeline').width(),
         quarter,
         minute, hour, nextHour,
@@ -390,9 +390,9 @@ Epg.prototype.renderTimeLine = function () {
     $('#timeline').width(width).append(markup);
 };
 
-Epg.prototype.destruct = function () {
+Epgold.prototype.destruct = function () {
     $('#refresh').off('click').hide();
     this.removeDomEvents();
 };
 
-main.registerModule('Epg');
+main.registerModule('Epgold');

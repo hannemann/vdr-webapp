@@ -10,7 +10,7 @@ Event.prototype.dateReg = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}
 
 Event.prototype.dayReg = /([0-9]{4})-([0-9]{2})-([0-9]{2})/;
 
-Event.prototype.windowWrapperClass = 'Broadcasts';
+Event.prototype.windowWrapperClass = 'Epg';
 
 /**
  * create and dispatch info window

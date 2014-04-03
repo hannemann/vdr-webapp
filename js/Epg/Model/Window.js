@@ -1,14 +1,14 @@
-Broadcasts.Model.Window = function () {};
+Epg.Model.Window = function () {};
 
-Broadcasts.Model.Window.prototype = new Gui.Window();
+Epg.Model.Window.prototype = new Gui.Window();
 
-Broadcasts.Model.Window.prototype.windowWrapper = 'Broadcasts';
+Epg.Model.Window.prototype.windowWrapper = 'Epg';
 
-Broadcasts.Model.Window.prototype.host = config.getItem('host');
+Epg.Model.Window.prototype.host = config.getItem('host');
 
-Broadcasts.Model.Window.prototype.port = config.getItem('port');
+Epg.Model.Window.prototype.port = config.getItem('port');
 
-Broadcasts.Model.Window.prototype.componentsMap = {
+Epg.Model.Window.prototype.componentsMap = {
     "16:9":'<img src="assets/16_9.png" alt="">',
     "stereo":'<img src="assets/2_0.png" alt="">'
 };
@@ -16,7 +16,7 @@ Broadcasts.Model.Window.prototype.componentsMap = {
 /**
  * @type {Object}
  */
-Broadcasts.Model.Window.prototype.tabConfig = {
+Epg.Model.Window.prototype.tabConfig = {
     "details":{
         "label":"Details",
         "content":function (content) {
@@ -44,7 +44,7 @@ Broadcasts.Model.Window.prototype.tabConfig = {
 /**
  * @type {Object}
  */
-Broadcasts.Model.Window.prototype.webConfig = {
+Epg.Model.Window.prototype.webConfig = {
     "imdb":{
         "dom":function () {
 
@@ -66,7 +66,7 @@ Broadcasts.Model.Window.prototype.webConfig = {
 /**
  * @type {Object}
  */
-Broadcasts.Model.Window.prototype.toolsConfig = {
+Epg.Model.Window.prototype.toolsConfig = {
     "record":{
         "dom":function () {
 
@@ -106,7 +106,7 @@ Broadcasts.Model.Window.prototype.toolsConfig = {
  * retrieve description
  * @return {*}
  */
-Broadcasts.Model.Window.prototype.getDescription = function () {
+Epg.Model.Window.prototype.getDescription = function () {
     return this.getData('description');
 };
 
@@ -114,14 +114,14 @@ Broadcasts.Model.Window.prototype.getDescription = function () {
  * retrieve description
  * @return {*}
  */
-Broadcasts.Model.Window.prototype.getTitle = function () {
+Epg.Model.Window.prototype.getTitle = function () {
     return this.getData('title');
 };
 
 /**
  * @return {*}
  */
-Broadcasts.Model.Window.prototype.renderTools = function () {
+Epg.Model.Window.prototype.renderTools = function () {
 
     var i, dom, button;
 
@@ -142,7 +142,7 @@ Broadcasts.Model.Window.prototype.renderTools = function () {
 /**
  * @return {*}
  */
-Broadcasts.Model.Window.prototype.renderWeb = function () {
+Epg.Model.Window.prototype.renderWeb = function () {
 
     var i, dom, button;
 
@@ -164,7 +164,7 @@ Broadcasts.Model.Window.prototype.renderWeb = function () {
  * @param options
  * @return {*}
  */
-Broadcasts.Model.Window.prototype.getToolButton = function (options) {
+Epg.Model.Window.prototype.getToolButton = function (options) {
     var dom, me=this;
 
     dom = $('<li>');
@@ -207,7 +207,7 @@ Broadcasts.Model.Window.prototype.getToolButton = function (options) {
     return dom;
 };
 
-Broadcasts.Model.Window.prototype.refresh = function () {
+Epg.Model.Window.prototype.refresh = function () {
 
     var current = this.tabs.getCurrent();
     this.addTabs();

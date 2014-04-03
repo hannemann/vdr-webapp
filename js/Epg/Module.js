@@ -1,20 +1,20 @@
-var Broadcasts = function () {};
+var Epg = function () {};
 
-Broadcasts.prototype = new Abstract.Module();
+Epg.prototype = new Abstract.Module();
 
-Broadcasts.prototype.name = 'Broadcasts';
+Epg.prototype.name = 'Epg';
 
-Broadcasts.prototype.dispatchView = function (type, broadcast) {
+Epg.prototype.dispatchView = function (type, broadcast) {
 
     return this.getController(type, broadcast).dispatchView(type);
 };
 
-Broadcasts.prototype.initChannels = function () {
+Epg.prototype.initChannels = function () {
 
     this.getController('Channels');
 };
 
-main.registerModule('Broadcasts', true);
+main.registerModule('Epg', true);
 
 
 /**

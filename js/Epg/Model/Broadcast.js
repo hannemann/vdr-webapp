@@ -1,8 +1,8 @@
-Broadcasts.Model.Broadcast = function () {};
+Epg.Model.Broadcast = function () {};
 
-Broadcasts.Model.Broadcast.prototype = new Abstract.Model();
+Epg.Model.Broadcast.prototype = new Abstract.Model();
 
-Broadcasts.Model.Broadcast.prototype.init = function () {
+Epg.Model.Broadcast.prototype.init = function () {
 
     debugger;
     if (!this.hasData('count')) {
