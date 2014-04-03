@@ -75,6 +75,7 @@ Abstract.Module.prototype.getAndInitialize = function (classType, type, data) {
     if (!instance.initialized && 'function' === typeof instance.init) {
 
         instance.init();
+        instance.initialized = true;
     }
 
     return instance;

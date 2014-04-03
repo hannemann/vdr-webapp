@@ -10,7 +10,6 @@ Abstract.Model.prototype.processCollection = function (result) {
 
     var i = 0,
         l = result[this.resultCollection].length,
-        me = this,
         model;
 
     if (this.hasData('count')) {
@@ -27,11 +26,16 @@ Abstract.Model.prototype.processCollection = function (result) {
         this.collection[i] = model;
     }
 
+    if ("function" === typeof this.afterCollectionLoaded) {
+
+        this.afterCollectionLoaded();
+    }
+
     $.event.trigger({
-        "type"          : me.events.collectionloaded,
-        "collection"    : me.collection,
-        "_class"        : me._class,
-        "iterate"       : me.collectionIterator
+        "type"          : this.events.collectionloaded,
+        "collection"    : this.collection,
+        "_class"        : this._class,
+        "iterate"       : $.proxy(this.collectionIterator, this)
     });
 };
 

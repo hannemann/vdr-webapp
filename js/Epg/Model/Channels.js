@@ -16,7 +16,7 @@ Epg.Model.Channels.prototype.events = {
 Epg.Model.Channels.prototype.init = function () {
 
     this.collection = {};
-    this.setData('count', 0);
+    this.data.count = 0;
 };
 
 //Epg.Model.Channels.prototype.getChannel = function (id) {

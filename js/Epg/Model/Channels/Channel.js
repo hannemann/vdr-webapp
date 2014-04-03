@@ -10,6 +10,8 @@ Epg.Model.Channels.Channel.prototype.collectionItemModel = 'Channels.Channel.Bro
 
 Epg.Model.Channels.Channel.prototype.resultCollection = 'events';
 
+Epg.Model.Channels.Channel.prototype.lastEventEnd = 0;
+
 Epg.Model.Channels.Channel.prototype.events = {
 
     "collectionloaded" : 'eventsloaded'
@@ -18,6 +20,7 @@ Epg.Model.Channels.Channel.prototype.events = {
 Epg.Model.Channels.Channel.prototype.init = function () {
 
     this.collection = {};
+    this.data.count = 0;
 
     this.baseUrl = this.module.getResource('Channels').getBaseUrl();
 
@@ -25,17 +28,22 @@ Epg.Model.Channels.Channel.prototype.init = function () {
 
         this.setData('image', this.baseUrl + 'channels/image/' + this.getData('channel_id'));
     }
-
-    this.initialized = true;
 };
 
 Epg.Model.Channels.Channel.prototype.getBroadcasts = function () {
 
-    this.module.getResource('Channels.Channel')
-        .setUrl(this.getData('channel_id'))
+    this.module.getResource('Channels.Channel', {
+
+        "channelId":this.getData('channel_id')
+
+    }).setHourlyUrl()
         .load({
             "url" : 'broadcastsHourly',
             "callback" : $.proxy(this.processCollection, this)
     });
+};
+
+Epg.Model.Channels.Channel.prototype.afterCollectionLoaded = function () {
+//    console.log(this);
 };
 
