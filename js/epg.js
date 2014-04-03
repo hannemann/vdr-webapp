@@ -31,19 +31,24 @@ Epgold.prototype.dispatch = function () {
 
 
 
-    var broadcasts = main.getModule('Epg');
+    var epg = main.getModule('Epg');
 
-    broadcasts.initChannels();
+    epg.initChannels();
 
-    $(document).one('channelsLoaded', $.proxy(function (result) {
+    $(document).one('channelsloaded', $.proxy(function (result) {
 
         result.iterate(function (channel) {
 
-            console.log(channel);
+            channel.getBroadcasts(channel);
 
         });
 
-        console.log(broadcasts);
+        console.log(epg);
+    }, this));
+
+
+    $(document).on('eventsloaded', $.proxy(function (result) {
+//        console.log(result);
     }, this));
 
 

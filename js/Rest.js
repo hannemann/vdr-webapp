@@ -21,6 +21,8 @@ Rest = function () {
     this.cachedResponse = false;
 };
 
+Rest.prototype = new Lib.Object();
+
 /**
  * @type {String}
  */
@@ -50,16 +52,15 @@ Rest.prototype.getBaseUrl = function () {
  * @param [method] {string}
  * @param [callback] {Function}
  */
-Rest.prototype.load = function (url, method, callback) {
+Rest.prototype.load = function (options) {
 
-    url = "undefined" !== typeof url && "undefined" !== typeof this.urls[url] ?
-        this.urls[url] : this.urls.load;
+    var url = "undefined" !== typeof options.url && "undefined" !== typeof this.urls[options.url] ?
+        this.urls[options.url] : this.urls.load,
 
-    method = method || 'GET';
+        method = options.method || 'GET',
 
-    if ("undefined" !== typeof this.itemList) {
-        this.itemList.empty();
-    }
+        callback = options.callback || undefined;
+
     main.getModule('gui').showThrobber();
 
     if ("function" !== typeof callback) {

@@ -1,6 +1,15 @@
 Helper = function () {};
 
 /**
+ * retrieve instance of Date
+ * @returns {Date}
+ */
+Helper.prototype.now = function () {
+
+    return new Date();
+};
+
+/**
  * retrieve time string from date object
  * @param {Date}
  * @return {*}

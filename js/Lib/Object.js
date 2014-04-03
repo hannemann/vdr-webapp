@@ -11,6 +11,8 @@ Lib.Object.prototype.initData = function (data) {
     data = data || {};
 
     this.data = data;
+
+    return this;
 };
 
 /**
