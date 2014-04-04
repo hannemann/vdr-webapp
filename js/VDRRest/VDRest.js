@@ -1,29 +1,37 @@
 /**
+ * @namespace
+ */
+var VDRest = {};
+
+/**
+ * @namespace
+ */
+VDRest.Abstract = {};
+
+/**
+ * @namespace
+ */
+VDRest.Lib = {};
+
+/**
+ * @namespace
+ */
+VDRest.Rest = {};
+
+/**
  * initialize main class
  * @constructor
  */
-var VDRest = function () {
+VDRest.App = function () {
 	this.current = null;
     this.initWithoutConfig = false;
 };
 
 /**
- * init Abstract namespace
- * @constructor
- */
-VDRest.Abstract = function () {};
-
-/**
- * init Lib namespace
- * @constructor
- */
-VDRest.Lib = function () {};
-
-/**
  * Check if necessary configuration is set
  * @return {*}
  */
-VDRest.prototype.checkConfig = function () {
+VDRest.App.prototype.checkConfig = function () {
 
     return config.getItem('host') && config.getItem('port');
 };
@@ -32,26 +40,26 @@ VDRest.prototype.checkConfig = function () {
  * modules buffer
  * @type {Object}
  */
-VDRest.prototype.modules = {};
+VDRest.App.prototype.modules = {};
 
 /**
  * destroy callbacks in cas of history is used
  * @type {Array}
  */
-VDRest.prototype.destroyer = [];
+VDRest.App.prototype.destroyer = [];
 
 /**
  * observe if location hash changes to observeHash
  * @type {Boolean|String}
  */
-VDRest.prototype.observeHash = false;
+VDRest.App.prototype.observeHash = false;
 
 /**
  * add module instance to buffer
  * @param {string} module name of module to be instantiated
  * @param {boolean} init
  */
-VDRest.prototype.registerModule = function (module, init) {
+VDRest.App.prototype.registerModule = function (module, init) {
 
 	this.modules[window.VDRest[module].prototype.name] = new window.VDRest[module]();
     if (init) {
@@ -64,14 +72,14 @@ VDRest.prototype.registerModule = function (module, init) {
  * @param module
  * @return {Boolean}
  */
-VDRest.prototype.isRegistered = function (module) {
+VDRest.App.prototype.isRegistered = function (module) {
     return typeof this.modules[module] != 'undefined';
 };
 
 /**
  * entrypoint of programm
  */
-VDRest.prototype.run = function () {
+VDRest.App.prototype.run = function () {
 	var start = 'settings', i;
 
 	start = config.getItem('start') || start;
@@ -103,7 +111,7 @@ VDRest.prototype.run = function () {
  * retrieve location hash
  * @return {String}
  */
-VDRest.prototype.getLocationHash = function () {
+VDRest.App.prototype.getLocationHash = function () {
     return window.location.hash.replace('#', '');
 };
 
@@ -112,7 +120,7 @@ VDRest.prototype.getLocationHash = function () {
  * @param hash
  * @return {*}
  */
-VDRest.prototype.setLocationHash = function (hash) {
+VDRest.App.prototype.setLocationHash = function (hash) {
 
     window.location.hash = '#' + hash;
     return this;
@@ -121,7 +129,7 @@ VDRest.prototype.setLocationHash = function (hash) {
 /**
  * poll location hash and dispatch changes
  */
-VDRest.prototype.pollLocation = function () {
+VDRest.App.prototype.pollLocation = function () {
     var start = config.getItem('start'), hash;
 
     setInterval($.proxy(function () {
@@ -155,7 +163,7 @@ VDRest.prototype.pollLocation = function () {
  * @param {string} destroyer
  * @param {function} callback
  */
-VDRest.prototype.addDestroyer = function (destroyer, callback) {
+VDRest.App.prototype.addDestroyer = function (destroyer, callback) {
 
     this.destroyer.push(destroyer);
     $(document).one(destroyer, callback);
@@ -164,7 +172,7 @@ VDRest.prototype.addDestroyer = function (destroyer, callback) {
 /**
  * call last added destroyer
  */
-VDRest.prototype.destroy = function () {
+VDRest.App.prototype.destroy = function () {
 
     var destroyer = this.destroyer.pop();
 
@@ -178,7 +186,7 @@ VDRest.prototype.destroy = function () {
  * call init method of module
  * @param {string} module name of module to be initialized
  */
-VDRest.prototype.initModule = function (module) {
+VDRest.App.prototype.initModule = function (module) {
 
     if ("undefined" === typeof this.modules[module].initialized) {
 
@@ -190,7 +198,7 @@ VDRest.prototype.initModule = function (module) {
 /**
  * init modules that need to be initialized before config is loaded
  */
-VDRest.prototype.initNoConfig = function () {
+VDRest.App.prototype.initNoConfig = function () {
     var i;
 
     for (i in this.modules) {
@@ -209,7 +217,7 @@ VDRest.prototype.initNoConfig = function () {
  * @param {string} moduleName
  * @param {function} [callback]
  */
-VDRest.prototype.dispatch = function (moduleName, callback) {
+VDRest.App.prototype.dispatch = function (moduleName, callback) {
 
 	if (this.current != moduleName) {
 
@@ -236,7 +244,7 @@ VDRest.prototype.dispatch = function (moduleName, callback) {
 /**
  * initialize settings module
  */
-VDRest.prototype.getConfig = function () {
+VDRest.App.prototype.getConfig = function () {
 
 	this.modules['settings'].init();
 	this.dispatch('settings', $.proxy(this.run, this));
@@ -247,7 +255,7 @@ VDRest.prototype.getConfig = function () {
  * @param module
  * @return {*}
  */
-VDRest.prototype.getModule = function (module) {
+VDRest.App.prototype.getModule = function (module) {
 
 	if (typeof this.modules[module] != 'undefined') {
 
@@ -261,14 +269,14 @@ VDRest.prototype.getModule = function (module) {
  * retrieve current dispatched module name
  * @return {*}
  */
-VDRest.prototype.getCurrent = function () {
+VDRest.App.prototype.getCurrent = function () {
 
     return this.current;
 };
 
-VDRest.app = new VDRest();
+VDRest.app = new VDRest.App();
 
-jQuery(document).ready(function () {
+$(document).ready(function () {
 
 	VDRest.app.run();
 });

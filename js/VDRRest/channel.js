@@ -5,7 +5,7 @@ VDRest.Channel = function () {
     this.next = null;
 };
 
-VDRest.Channel.prototype = new VDRest.Api();
+VDRest.Channel.prototype = new VDRest.Rest.Api();
 
 VDRest.Channel.prototype.name = 'channel';
 

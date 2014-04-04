@@ -1,6 +1,6 @@
 Actions = function () {};
 
-Actions.prototype = new VDRest.Api();
+Actions.prototype = new VDRest.Rest.Api();
 
 Actions.prototype.urls = {};
 

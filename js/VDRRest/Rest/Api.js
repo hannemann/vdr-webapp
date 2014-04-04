@@ -1,4 +1,4 @@
-VDRest.Api = function () {
+VDRest.Rest.Api = function () {
 
     /**
      * @type {Object}
@@ -21,38 +21,38 @@ VDRest.Api = function () {
     this.cachedResponse = false;
 };
 
-VDRest.Api.prototype = new VDRest.Lib.Object();
+VDRest.Rest.Api.prototype = new VDRest.Lib.Object();
 
 /**
  * @type {String}
  */
-VDRest.Api.prototype.host = config.getItem('host');
+VDRest.Rest.Api.prototype.host = config.getItem('host');
 
 /**
  * @type {int}
  */
-VDRest.Api.prototype.port = config.getItem('port');
+VDRest.Rest.Api.prototype.port = config.getItem('port');
 
 /**
  * @type {String}
  */
-VDRest.Api.prototype.protocol = config.getItem('protocol');
+VDRest.Rest.Api.prototype.protocol = config.getItem('protocol');
 
 /**
  * @type {string}
  */
-VDRest.Api.prototype.getBaseUrl = function () {
+VDRest.Rest.Api.prototype.getBaseUrl = function () {
 
     return this.protocol + '://' + this.host + ':' + this.port + '/';
 };
 
 /**
- * fetch data from VDRest.Api api
+ * fetch data from VDRest.Rest.Api api
  * @param url {string}
  * @param [method] {string}
  * @param [callback] {Function}
  */
-VDRest.Api.prototype.load = function (options) {
+VDRest.Rest.Api.prototype.load = function (options) {
 
     var url = "undefined" !== typeof options.url && "undefined" !== typeof this.urls[options.url] ?
         this.urls[options.url] : this.urls.load,
@@ -94,16 +94,16 @@ VDRest.Api.prototype.load = function (options) {
 /**
  * abstract request success handler
  */
-VDRest.Api.prototype.onSuccess = function () {};
+VDRest.Rest.Api.prototype.onSuccess = function () {};
 
 /**
  * abstract request error handler
  */
-VDRest.Api.prototype.onError = function () {};
+VDRest.Rest.Api.prototype.onError = function () {};
 
 /**
  * method to be called any time an request is complete
  */
-VDRest.Api.prototype.onComplete = function () {
+VDRest.Rest.Api.prototype.onComplete = function () {
     VDRest.app.getModule('gui').hideThrobber();
 };

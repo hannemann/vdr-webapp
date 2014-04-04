@@ -6,7 +6,7 @@ VDRest.Epgold = function () {
     this.scrollTimer = null;
 };
 
-VDRest.Epgold.prototype = new VDRest.Api();
+VDRest.Epgold.prototype = new VDRest.Rest.Api();
 
 VDRest.Epgold.prototype.optionName = "EPG Old";
 

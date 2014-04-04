@@ -5,9 +5,9 @@
 VDRest.Epg.Model.Channels.Channel.Resource = function () {};
 
 /**
- * @type {VDRest.Api}
+ * @type {VDRest.Rest.Api}
  */
-VDRest.Epg.Model.Channels.Channel.Resource.prototype = new VDRest.Api();
+VDRest.Epg.Model.Channels.Channel.Resource.prototype = new VDRest.Rest.Api();
 
 /**
  * key of model in cache

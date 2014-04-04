@@ -1,6 +1,6 @@
 VDRest.Gui.List = function () {
 
-    VDRest.Api.call(this);
+    VDRest.Rest.Api.call(this);
     this.itemList = null;
     this.wrapper = null;
     this.isDispatched = false;
@@ -9,7 +9,7 @@ VDRest.Gui.List = function () {
     this.cache = {};
 };
 
-VDRest.Gui.List.prototype = new VDRest.Api();
+VDRest.Gui.List.prototype = new VDRest.Rest.Api();
 
 VDRest.Gui.List.prototype.init = function () {};
 
