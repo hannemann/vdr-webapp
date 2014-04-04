@@ -1,5 +1,12 @@
+/**
+ * Broadcast data model
+ * @constructor
+ */
 VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
 
+/**
+ * @type {VDRest.Abstract.Model}
+ */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype = new VDRest.Abstract.Model();
 
 //Epg.Model.Channels.Channel.Broadcasts.Broadcast.prototype.init = function () {

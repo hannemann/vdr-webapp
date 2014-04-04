@@ -9,7 +9,7 @@ VDRest.Gui.Window.prototype.viewWrapper = 'Window';
 VDRest.Gui.Window.prototype.viewClassName = 'View';
 
 /**
- * vdrest observes current location hash if window is dispatched
+ * VDRest.app observes current location hash if window is dispatched
  * destroys window if hash changes back to observeHash
  * @type {Boolean}
  */
@@ -34,7 +34,7 @@ debugger;
 
     $(document).one(this.eventPrefix + '.View.render.after', $.proxy(function () {
 
-        vdrest.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.close, this));
+        VDRest.app.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.close, this));
     }, this));
 
     this.view.triggerAnimation();

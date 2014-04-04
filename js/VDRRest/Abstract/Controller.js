@@ -1,12 +1,7 @@
-VDRest.Abstract = VDRest.Abstract || function () {};
-
 /**
- * initialize views cache
  * @constructor
  */
 VDRest.Abstract.Controller = function () {
-
-    this.views = {};
 };
 
 /**
@@ -16,15 +11,23 @@ VDRest.Abstract.Controller = function () {
 VDRest.Abstract.Controller.prototype = new VDRest.Lib.Object();
 
 /**
+ * initialize views cache
+ */
+VDRest.Abstract.Controller.prototype.init = function () {
+
+    this.views = {};
+};
+
+/**
  * lazy fetch model and view
- * @param type
- * @return {*}
+ * @param {string} type
+ * @return {VDRest.Abstract.View}
  */
 VDRest.Abstract.Controller.prototype.getView = function (type) {
 
     if ("undefined" === typeof this.views[type]) {
         // initialize view
-        this.views[type] = Lib.factory.getClass(this.module.name + '.View.' + type);
+        this.views[type] = VDRest.Lib.factory.getClass(this.module.name + '.View.' + type);
 
         // initialize model
         this.module.getModel(type, {
@@ -38,8 +41,8 @@ VDRest.Abstract.Controller.prototype.getView = function (type) {
 
 /**
  * retrieve rendered view
- * @param type
- * @return {*}
+ * @param {string} type
+ * @return {VDRest.Abstract.View}
  */
 VDRest.Abstract.Controller.prototype.dispatchView = function (type) {
 

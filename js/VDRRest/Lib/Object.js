@@ -1,7 +1,11 @@
-VDRest.Lib = VDRest.Lib || function () {};
-
+/**
+ * @constructor
+ */
 VDRest.Lib.Object = function () {};
 
+/**
+ * @type {string}
+ */
 VDRest.Lib.Object.prototype.namespace = 'VDRest';
 
 /**
@@ -19,7 +23,7 @@ VDRest.Lib.Object.prototype.initData = function (data) {
 
 /**
  * retrieve option
- * @param option {String}
+ * @param [option] {String}
  * @param [defaultValue] {*}
  * @return {*}
  */
@@ -53,6 +57,11 @@ VDRest.Lib.Object.prototype.setData = function (option, value) {
     return this;
 };
 
+/**
+ * determine if object has option in its store
+ * @param option
+ * @returns {boolean}
+ */
 VDRest.Lib.Object.prototype.hasData = function (option) {
 
     return "undefined" !== this.data[option];

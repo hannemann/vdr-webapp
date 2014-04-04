@@ -1,5 +1,3 @@
-VDRest.Abstract = VDRest.Abstract || function () {};
-
 /**
  * @constructor
  */
@@ -30,8 +28,8 @@ VDRest.Abstract.Module.prototype.init = function () {
 
 /**
  * retrieve model
- * @param type {String}
- * @param [data] {Object}
+ * @param {String} type
+ * @param {Object} [data]
  * @return {*}
  */
 VDRest.Abstract.Module.prototype.getModel = function (type, data) {
@@ -41,8 +39,8 @@ VDRest.Abstract.Module.prototype.getModel = function (type, data) {
 
 /**
  * retrieve controller
- * @param type {String}
- * @param [data] {Object|undefined}
+ * @param {String} type
+ * @param {Object} [data]
  * @return {*}
  */
 VDRest.Abstract.Module.prototype.getController = function (type, data) {
@@ -52,7 +50,8 @@ VDRest.Abstract.Module.prototype.getController = function (type, data) {
 
 /**
  * retrieve resource model
- * @param type {String}
+ * @param {String} type
+ * @param {Object} [data]
  * @return {*}
  */
 VDRest.Abstract.Module.prototype.getResource = function (type, data) {
@@ -62,9 +61,9 @@ VDRest.Abstract.Module.prototype.getResource = function (type, data) {
 
 /**
  * retrieve initialized instance
- * @param classType {String}
- * @param type {String}
- * @param [data] {Object|undefined}
+ * @param {String} classType
+ * @param {String} type
+ * @param {Object} [data]
  * @returns {*}
  */
 VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, data) {
@@ -83,9 +82,9 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
 
 /**
  * lazy fetching of requested class
- * @param type {String}
- * @param _class {String}
- * @param [data] {Object|undefined}
+ * @param {string} type                     Model, View, Controller
+ * @param {string} _class                   classpath
+ * @param {(object|string|number)} [data]   data object or identifier
  * @return {*}
  */
 VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
@@ -123,9 +122,9 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
 /**
  * init data object with identifier
- * @param id
- * @param constructor
- * @returns {{}}
+ * @param {(string|number)} id
+ * @param {constructor}     constructor
+ * @returns {object}
  */
 VDRest.Abstract.Module.prototype.initInstanceData = function (id, constructor) {
 

@@ -48,8 +48,8 @@ VDRest.Gui.prototype.removeModalOverlay = function () {
 
 VDRest.Gui.prototype.getElement = function (path, data) {
 
-    return Lib.factory.getClass(path + '.Controller', data);
+    return VDRest.Lib.factory.getClass(path + '.Controller', data);
 };
 
-vdrest.registerModule('Gui');
+VDRest.app.registerModule('Gui');
 

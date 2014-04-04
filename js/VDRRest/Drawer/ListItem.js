@@ -41,7 +41,7 @@ VDRest.DrawerListItem.prototype.closedCallback = function () {
 
     setTimeout(function () {
 
-        vdrest.setLocationHash(moduleName);
+        VDRest.app.setLocationHash(moduleName);
 
     }, 100);
 };

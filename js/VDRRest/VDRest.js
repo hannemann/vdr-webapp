@@ -8,6 +8,18 @@ var VDRest = function () {
 };
 
 /**
+ * init Abstract namespace
+ * @constructor
+ */
+VDRest.Abstract = function () {};
+
+/**
+ * init Lib namespace
+ * @constructor
+ */
+VDRest.Lib = function () {};
+
+/**
  * Check if necessary configuration is set
  * @return {*}
  */
@@ -36,7 +48,8 @@ VDRest.prototype.observeHash = false;
 
 /**
  * add module instance to buffer
- * @param module
+ * @param {string} module name of module to be instantiated
+ * @param {boolean} init
  */
 VDRest.prototype.registerModule = function (module, init) {
 
@@ -139,7 +152,8 @@ VDRest.prototype.pollLocation = function () {
 
 /**
  * add destroyer method
- * @param destroyer
+ * @param {string} destroyer
+ * @param {function} callback
  */
 VDRest.prototype.addDestroyer = function (destroyer, callback) {
 
@@ -162,7 +176,7 @@ VDRest.prototype.destroy = function () {
 
 /**
  * call init method of module
- * @param module
+ * @param {string} module name of module to be initialized
  */
 VDRest.prototype.initModule = function (module) {
 
@@ -192,8 +206,8 @@ VDRest.prototype.initNoConfig = function () {
 
 /**
  * main dispatcher
- * @param moduleName
- * @param callback
+ * @param {string} moduleName
+ * @param {function} [callback]
  */
 VDRest.prototype.dispatch = function (moduleName, callback) {
 
@@ -220,7 +234,7 @@ VDRest.prototype.dispatch = function (moduleName, callback) {
 };
 
 /**
- * initiliaze settings module
+ * initialize settings module
  */
 VDRest.prototype.getConfig = function () {
 
@@ -252,9 +266,9 @@ VDRest.prototype.getCurrent = function () {
     return this.current;
 };
 
-vdrest = new VDRest();
+VDRest.app = new VDRest();
 
-$(document).ready(function () {
+jQuery(document).ready(function () {
 
-	vdrest.run();
+	VDRest.app.run();
 });

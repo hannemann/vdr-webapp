@@ -40,4 +40,4 @@ VDRest.Timers.prototype.onSuccess = function (result) {
         .render();
 }
 
-vdrest.registerModule('Timers');
+VDRest.app.registerModule('Timers');

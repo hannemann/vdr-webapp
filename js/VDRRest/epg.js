@@ -31,7 +31,7 @@ VDRest.Epgold.prototype.dispatch = function () {
 
 
 
-    var epg = vdrest.getModule('Epg');
+    var epg = VDRest.app.getModule('Epg');
 
     epg.initChannels();
 
@@ -40,7 +40,7 @@ VDRest.Epgold.prototype.dispatch = function () {
         result.iterate(function (channel) {
 
             $(document).one('eventsloaded-' + channel.getData('channel_id'), $.proxy(function (result) {
-                console.log(result);
+//                console.log(result);
             }, this));
 
             channel.getBroadcasts(channel);
@@ -139,16 +139,16 @@ VDRest.Epgold.prototype.addChannelEvents = function () {
     var me = this;
     for (var i in this.channels) {
         $('#channel-' + this.channels[i].channel_id).on('click', function () {
-            vdrest.modules.channel.next = me.channels[$(this).attr('data-channelsid')];
-            vdrest.dispatch('channel');
+            VDRest.app.modules.channel.next = me.channels[$(this).attr('data-channelsid')];
+            VDRest.app.dispatch('channel');
         });
     };
 };
 
 VDRest.Epgold.prototype.addEventsToList = function (events) {
     var me = this, i = 0, l = events.length,
-        gui = vdrest.getModule('gui'),
-        broadcasts = vdrest.getModule('Epg');
+        gui = VDRest.app.getModule('gui'),
+        broadcasts = VDRest.app.getModule('Epg');
 
     for (i; i < l; i++) {
         this.events[events[i]].dom.on('click', function () {
@@ -192,7 +192,7 @@ VDRest.Epgold.prototype.loadEvents = function (channel, from) {
         return;
     }
 
-    vdrest.getModule('gui').showThrobber();
+    VDRest.app.getModule('gui').showThrobber();
     channel.loadedTimestamps[from.getTime()/1000] = 'Loading';
 
     $.ajax({
@@ -237,7 +237,7 @@ VDRest.Epgold.prototype.loadEvents = function (channel, from) {
         }, this),
         "complete":function () {
             channel.loading = false;
-            vdrest.getModule('gui').hideThrobber();
+            VDRest.app.getModule('gui').hideThrobber();
             channel.loadedTimestamps[from.getTime()/1000] = 'Complete';
         }
     });
@@ -399,4 +399,4 @@ VDRest.Epgold.prototype.destruct = function () {
     this.removeDomEvents();
 };
 
-vdrest.registerModule('Epgold');
+VDRest.app.registerModule('Epgold');

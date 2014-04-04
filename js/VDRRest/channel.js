@@ -123,4 +123,4 @@ VDRest.Channel.prototype.destruct = function () {
     this.wrapper.removeClass('channel-wrapper');
 };
 
-vdrest.registerModule('Channel');
+VDRest.app.registerModule('Channel');

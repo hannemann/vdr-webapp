@@ -1,10 +1,18 @@
-VDRest.Lib = VDRest.Lib || function () {};
-
+/**
+ * Class factory
+ * @constructor
+ */
 VDRest.Lib.Factory = function () {
 
     this.classes = {};
 };
 
+/**
+ *
+ * @param path {String}
+ * @param [data] {Object}
+ * @returns {_class}
+ */
 VDRest.Lib.Factory.prototype.getClass = function (path, data) {
 
     var _class = null,
@@ -30,6 +38,11 @@ VDRest.Lib.Factory.prototype.getClass = function (path, data) {
 
 };
 
+/**
+ * retrieve constructor foe path
+ * @param path
+ * @returns {*}
+ */
 VDRest.Lib.Factory.prototype.getConstructor = function (path) {
 
     var _class = null, i = 0, l, wrapper = VDRest;
@@ -57,6 +70,12 @@ VDRest.Lib.Factory.prototype.getConstructor = function (path) {
     return _class;
 };
 
+/**
+ * check if class exists in namespace
+ * @param wrapper
+ * @param className
+ * @returns {boolean}
+ */
 VDRest.Lib.Factory.prototype.classExists = function (wrapper, className) {
 
     return "function" === typeof wrapper[className];

@@ -43,4 +43,4 @@ VDRest.Recordings.prototype.onSuccess = function (result) {
         .render();
 };
 
-vdrest.registerModule('Recordings');
+VDRest.app.registerModule('Recordings');

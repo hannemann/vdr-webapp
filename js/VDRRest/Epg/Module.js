@@ -1,20 +1,44 @@
+/**
+ * EPG Module
+ * @constructor
+ */
 VDRest.Epg = function () {};
 
+/**
+ * prototype
+ * @type {VDRest.Abstract.Module}
+ */
 VDRest.Epg.prototype = new VDRest.Abstract.Module();
 
+/**
+ * Modulename
+ * @type {string}
+ */
 VDRest.Epg.prototype.name = 'Epg';
 
+/**
+ * not really implemented yet
+ * @param type
+ * @param broadcast
+ * @returns {*|VDRest.Abstract.View}
+ */
 VDRest.Epg.prototype.dispatchView = function (type, broadcast) {
 
     return this.getController(type, broadcast).dispatchView(type);
 };
 
+/**
+ * initialize channels controller
+ */
 VDRest.Epg.prototype.initChannels = function () {
 
     this.getController('Channels');
 };
 
-vdrest.registerModule('Epg', true);
+/**
+ * register module
+ */
+VDRest.app.registerModule('Epg', true);
 
 
 /**

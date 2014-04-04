@@ -1,11 +1,29 @@
-VDRest.Abstract = VDRest.Abstract || function () {};
-
+/**
+ * @class Abstract model
+ * @constructor
+ */
 VDRest.Abstract.Model = function () {};
 
+/**
+ * prototype
+ * @type {VDRest.Lib.Object}
+ */
 VDRest.Abstract.Model.prototype = new VDRest.Lib.Object();
 
+/**
+ * default identifier field
+ * models are stored in cache width value of field identifier
+ * in its data
+ * e.g. channels objects have unique identifier called number or channel_id
+ * override property if 'id' is not appropriate
+ * @type {string}
+ */
 VDRest.Abstract.Model.prototype.identifier = 'id';
 
+/**
+ * default callback when collection is loaded
+ * @param result {JSON}
+ */
 VDRest.Abstract.Model.prototype.processCollection = function (result) {
 
     var i = 0,
@@ -39,6 +57,10 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
     });
 };
 
+/**
+ * default collection iterator
+ * @param callback {function}
+ */
 VDRest.Abstract.Model.prototype.collectionIterator = function (callback) {
 
     var i;

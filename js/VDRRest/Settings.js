@@ -77,4 +77,4 @@ VDRest.Settings.prototype.persist = function () {
 	}
 };
 
-vdrest.registerModule('Settings');
+VDRest.app.registerModule('Settings');

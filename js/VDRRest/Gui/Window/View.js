@@ -43,7 +43,7 @@ VDRest.Gui.Window.View.prototype.init = function () {
     this.eventPrefix = this.window.eventPrefix + '.View';
 
     if (this.modal) {
-        vdrest.getModule('gui').addModalOverlay(this.eventPrefix + '.removed');
+        VDRest.app.getModule('gui').addModalOverlay(this.eventPrefix + '.removed');
     }
 
     this.setMaxDimension();
@@ -87,7 +87,7 @@ VDRest.Gui.Window.View.prototype.triggerAnimation = function () {
 
     if (this.observeHash) {
 
-        vdrest.observeHash = vdrest.getLocationHash();
+        VDRest.app.observeHash = VDRest.app.getLocationHash();
 
     }
 
@@ -95,7 +95,7 @@ VDRest.Gui.Window.View.prototype.triggerAnimation = function () {
         .css(this.getDefaultDimension())
         .appendTo('body');
 
-    vdrest.setLocationHash(this.locationHash);
+    VDRest.app.setLocationHash(this.locationHash);
 
     this.wrapper.animate(this.maxDimension, 'fast', 'linear', $.proxy(function () {
 

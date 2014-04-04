@@ -44,7 +44,7 @@ Actions.prototype.addTimer = function (obj, callback) {
         "success":$.proxy(function (result) {
 
             var id = obj.getData('dom').attr('id'),
-                epgEvent = vdrest.getModule('epg').events[id];
+                epgEvent = VDRest.app.getModule('epg').events[id];
 
             obj.setData('timer_active', true);
             obj.setData('timer_exists', true);
@@ -55,7 +55,7 @@ Actions.prototype.addTimer = function (obj, callback) {
             epgEvent.timer_exists = true;
             epgEvent.timer_id = result.timers[0].id;
 
-            vdrest.getModule('timers').refreshCache = true;
+            VDRest.app.getModule('timers').refreshCache = true;
             if (typeof callback == 'function') {
 
                 callback.apply(obj);
@@ -76,7 +76,7 @@ Actions.prototype.deleteTimer = function (obj, callback) {
         "success":$.proxy(function () {
 
             var id = obj.getData('dom').attr('id'),
-                epgEvent = vdrest.getModule('epg').events[id];
+                epgEvent = VDRest.app.getModule('epg').events[id];
 
             obj.setData('timer_active', false);
             obj.setData('timer_exists', false);
@@ -87,7 +87,7 @@ Actions.prototype.deleteTimer = function (obj, callback) {
             epgEvent.timer_exists = false;
             epgEvent.timer_id = '';
 
-            vdrest.getModule('timers').refreshCache = true;
+            VDRest.app.getModule('timers').refreshCache = true;
 
             if (typeof callback == 'function') {
 

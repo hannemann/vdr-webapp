@@ -17,7 +17,7 @@ VDRest.Event.prototype.windowWrapperClass = 'Epg';
  */
 VDRest.Event.prototype.dispatchWindow = function (event) {
 
-    var win = Lib.factory.getClass(this.windowWrapperClass + '.' + 'Window', event);
+    var win = VDRest.Lib.factory.getClass(this.windowWrapperClass + '.' + 'Window', event);
 
     win.dispatch();
 };
