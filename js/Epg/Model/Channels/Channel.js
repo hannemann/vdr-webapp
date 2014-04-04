@@ -12,21 +12,22 @@ Epg.Model.Channels.Channel.prototype.resultCollection = 'events';
 
 Epg.Model.Channels.Channel.prototype.lastEventEnd = 0;
 
-Epg.Model.Channels.Channel.prototype.events = {
-
-    "collectionloaded" : 'eventsloaded'
-};
-
 Epg.Model.Channels.Channel.prototype.init = function () {
+
+    var channelId = this.getData('channel_id');
 
     this.collection = {};
     this.data.count = 0;
+    this.events = {
+
+        "collectionloaded" : 'eventsloaded-' + channelId
+    };
 
     this.baseUrl = this.module.getResource('Channels').getBaseUrl();
 
     if (this.getData('image')) {
 
-        this.setData('image', this.baseUrl + 'channels/image/' + this.getData('channel_id'));
+        this.setData('image', this.baseUrl + 'channels/image/' + channelId);
     }
 };
 

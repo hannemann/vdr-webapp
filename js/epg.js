@@ -39,16 +39,15 @@ Epgold.prototype.dispatch = function () {
 
         result.iterate(function (channel) {
 
+            $(document).one('eventsloaded-' + channel.getData('channel_id'), $.proxy(function (result) {
+                console.log(result);
+            }, this));
+
             channel.getBroadcasts(channel);
 
         });
 
         console.log(epg);
-    }, this));
-
-
-    $(document).on('eventsloaded', $.proxy(function (result) {
-//        console.log(result);
     }, this));
 
 
