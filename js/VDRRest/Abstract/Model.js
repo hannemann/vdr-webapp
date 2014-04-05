@@ -36,10 +36,18 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
         l = result[this.resultCollection].length,
         model;
 
-    if (this.hasData('count')) {
-        this.data.count += l;
+    // set currentResult if we have matches already
+    if ("undefined" !== typeof this.preprocessedCollection) {
+
+        this.currentResult = this.preprocessedCollection;
+        this.preprocessedCollection = undefined;
+
+    } else {
+
+        this.currentResult = [];
     }
 
+    // add loaded entities to result set
     for (i;i<l;i++) {
 
         if ("undefined" !== typeof this.replaceInCollection) {
@@ -51,7 +59,12 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
             this.collectionItemModel,
             result[this.resultCollection][i]
         );
-        this.collection[i] = model;
+
+        if ("undefined" === typeof model.isCached) {
+            this.collection.push(model);
+            model.isCached = true
+        }
+        this.currentResult.push(model);
     }
 
     if ("function" === typeof this.afterCollectionLoaded) {
@@ -59,31 +72,32 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
         this.afterCollectionLoaded();
     }
 
+    this.triggerCollectionLoaded();
+};
+
+/**
+ * trigger event after collection is loaded
+ */
+VDRest.Abstract.Model.prototype.triggerCollectionLoaded = function () {
+
     $.event.trigger({
         "type"          : this.events.collectionloaded,
-        "collection"    : this.collection,
+        "collection"    : this.currentResult,
         "_class"        : this._class,
-        "iterate"       : $.proxy(this.collectionIterator, this)
+        "iterate"       : $.proxy(this.resultIterator, this)
     });
-};
+}
 
 /**
  * default collection iterator
  * @param callback {function}
  */
-VDRest.Abstract.Model.prototype.collectionIterator = function (callback) {
+VDRest.Abstract.Model.prototype.resultIterator = function (callback) {
 
-    var i;
+    var i = 0, l = this.currentResult.length;
 
-    if ("undefined" === typeof this.collection) {
+    for (i;i<l;i++) {
 
-        throw 'Model has no collection.';
-    }
-
-    for (i in this.collection) {
-
-        if (this.collection.hasOwnProperty(i)) {
-            callback(this.collection[i]);
-        }
+        callback(this.currentResult[i]);
     }
 };

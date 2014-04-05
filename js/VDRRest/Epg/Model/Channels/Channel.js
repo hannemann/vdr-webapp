@@ -1,7 +1,9 @@
 
 /**
- * @typedef data
- * @type {object}
+ * Channel Model
+ * @class
+ * @constructor
+ * @var {object} data
  * @property {string} channel_id
  * @property {string} group - groupname channel belongs to
  * @property {string} image - url of channel logo
@@ -13,13 +15,9 @@
  * @property {number} number
  * @property {string} stream - filename of stream
  * @property {number} transponder
- */
-
-/**
- * Channel Model
- * @class
- * @member {.data} this.data
- * @constructor
+ *
+ * @var {object} events
+ * @property {string} collectionloaded
  */
 VDRest.Epg.Model.Channels.Channel = function () {};
 
@@ -81,15 +79,15 @@ VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
 
     var channelId = this.getData('channel_id');
 
-    this.collection = {};
-    this.data.count = 0;
-    this.from = this.module[VDRest.config.getItem('lastEpg')];
+    this.collection = [];
+    this.currentResult = [];
+    this.getFromDate();
     this.events = {
         // event to be triggered when collection is loaded
         "collectionloaded" : 'broadcastsloaded-' + channelId
     };
 
-    this.baseUrl = this.module.getResource('Channels').getBaseUrl();
+    this.baseUrl = this.module.getResource('Channels.Channel').getBaseUrl();
 
     // add image url if image is true
     if (this.getData('image')) {
@@ -98,22 +96,112 @@ VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
     }
 };
 
+VDRest.Epg.Model.Channels.Channel.prototype.getFromDate = function () {
+
+    this.from = this.module[VDRest.config.getItem('lastEpg')];
+    return this.from;
+};
+
 /**
  * load broadcasts
  * process collection afterwards
  */
 VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
 
-    this.module.getResource('Channels.Channel', {
+    var from = this.collection.length > 0
+            ? this.collection[this.collection.length-1].data.end_date
+            : this.getFromDate();
+
+    this.getResource()
+        .setUrl({
+            "from":from
+        })
+        .load({
+            "url" : 'broadcastsHourly',
+            "callback" : $.proxy(this.processCollection, this)
+        });
+};
+
+/**
+ * retrieve Broadcast models from point of time
+ * @param {Date} from - Date object start
+ * @param {Date} [to] - Date object end
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to) {
+
+    var
+        /** @type {VDRest.Epg.Model.Channels.Channel.Broadcast[]} */
+        collection = [],
+
+        /** @type {Date} */
+        lastEndTime,
+
+        /** @type {number} */
+        i= 0,
+
+        /** @type {number} */
+        l=this.collection.length,
+
+        /** @type {VDRest.Epg.Model.Channels.Channel.Broadcast} */
+        broadcast;
+
+    from = from && from instanceof Date ? from : this.getFromDate();
+    lastEndTime = from;
+
+    to = to && to instanceof Date ? to : new Date(
+        from.getTime()
+        + VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan
+    );
+
+    // search in collection for broadcasts that math from and to arguments
+    for (i;i<l;i++) {
+
+        broadcast = this.collection[i];
+        if (broadcast.shownBetween(from, to)) {
+
+            collection.push(this.collection[i]);
+            lastEndTime = this.collection[i].data.end_date;
+        }
+    }
+
+    // add preprocessedCollection
+    if (i>0) {
+        this.preprocessedCollection = collection;
+    }
+
+    // load additional broadcasts if last match starts before endtime exceeds
+    if (lastEndTime < to) {
+
+        this.getResource()
+            .setUrl({
+                "from" : lastEndTime,
+                "to" : to
+            })
+            .load({
+                "url" : 'broadcastsHourly',
+                "callback" : $.proxy(this.processCollection, this)
+            });
+    } else {
+
+        this.currentResult = collection;
+        this.preprocessedCollection = undefined;
+        this.triggerCollectionLoaded();
+
+    }
+};
+
+/**
+ * retrieve broadcast resource model
+ * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast.Resource}
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.getResource = function () {
+
+    return this.module.getResource(this.collectionItemModel, {
 
         /** add identifier and this to resource */
         "channelId":this.getData('channel_id'),
         "channel" : this
 
-    }).setUrl({"from":parseInt(this.from.getTime()/1000, 10)})
-        .load({
-            "url" : 'broadcastsHourly',
-            "callback" : $.proxy(this.processCollection, this)
     });
 };
 

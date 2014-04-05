@@ -1,7 +1,9 @@
 
 /**
- * @typedef data
- * @type {object}
+ * Broadcast data model
+ * @class
+ * @constructor
+ * @var {object} data
  * @property {string} channel_name  channel_name
  * @property {Array} components     stream descriptions
  * @property {Array} contents
@@ -25,13 +27,6 @@
  * @property {Date} start_date
  * @property {Date} end_date
  * @property {VDRest.Epg.Model.Channels.Channel} channel
- */
-
-/**
- * Broadcast data model
- * @class
- * @member {.data} this.data
- * @constructor
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
 
@@ -78,6 +73,57 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.setImages = function () {
             this.data.images.push(this.data.channel.baseUrl + 'events/image/' + this.data.id + '/' + i);
         }
     }
+};
+
+/**
+ * determine if broadcast starts before given time
+ * @param {Date} time
+ * @returns {boolean}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.startsBeforeOrAt = function (time) {
+
+    return this.data.start_date <= time;
+};
+
+/**
+ * determine if broadcast starts before given time
+ * @param {Date} time
+ * @returns {boolean}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.startsAfterOrAt = function (time) {
+
+    return this.data.start_date >= time;
+};
+
+/**
+ * determine if broadcast ends before given time
+ * @param {Date} time
+ * @returns {boolean}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.endsBeforeOrAt = function (time) {
+
+    return this.data.end_date <= time;
+};
+
+/**
+ * determine if broadcast ends before given time
+ * @param {Date} time
+ * @returns {boolean}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.endsAfter = function (time) {
+
+    return this.data.end_date >= time;
+};
+
+/**
+ * determine if broadcast is shown between from and to
+ * @param {Date} from
+ * @param {Date} to
+ * @returns {boolean}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.shownBetween = function (from, to) {
+
+    return this.data.start_date < to && this.data.end_date > from;
 };
 
 

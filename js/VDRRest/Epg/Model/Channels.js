@@ -46,8 +46,8 @@ VDRest.Epg.Model.Channels.prototype.events = {
  */
 VDRest.Epg.Model.Channels.prototype.init = function () {
 
-    this.collection = {};
-    this.data.count = 0;
+    this.collection = [];
+    this.currentResult = [];
 };
 
 //Epg.Model.Channels.prototype.getChannel = function (id) {
@@ -61,7 +61,7 @@ VDRest.Epg.Model.Channels.prototype.init = function () {
  */
 VDRest.Epg.Model.Channels.prototype.initChannels = function () {
 
-    this.module.getResource('Channels').load({
+    this.module.getResource(this.collectionItemModel).load({
         "url" : 'channelList',
         "callback" : $.proxy(this.processCollection, this)
     });

@@ -1,5 +1,5 @@
 /**
- * Broadcasts resource model
+ * Channels resource
  * @constructor
  */
 VDRest.Epg.Model.Channels.Channel.Resource = function () {};
@@ -10,35 +10,10 @@ VDRest.Epg.Model.Channels.Channel.Resource = function () {};
 VDRest.Epg.Model.Channels.Channel.Resource.prototype = new VDRest.Rest.Api();
 
 /**
- * key of model in cache
- * @type {string}
+ * url store
+ * @type {{channelList: string}}
  */
-VDRest.Epg.Model.Channels.Channel.Resource.prototype.identifier = 'channelId';
+VDRest.Epg.Model.Channels.Channel.Resource.prototype.urls = {
 
-/**
- * @member {string} baseUrl
- * @member {object} urls
- */
-VDRest.Epg.Model.Channels.Channel.Resource.prototype.init = function () {
-
-    this.baseUrl = "events/" + this.data.channelId + ".json?";
-    this.urls = {};
+    "channelList" : "channels/.json"
 };
-
-/**
- * set url to retrieve broadcasts
- * in the hour after latest stored broadcast
- *
- * @param {object} parameter
- * @returns {VDRest.Epg.Model.Channels.Channel.Resource}
- */
-VDRest.Epg.Model.Channels.Channel.Resource.prototype.setUrl = function (parameter) {
-
-    this.urls.broadcastsHourly =  this.baseUrl
-        + "from=" + parameter.from
-        + "&start=0"
-        + "&timespan=" + 60 * 60;
-
-    return this;
-};
-
