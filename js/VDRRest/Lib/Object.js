@@ -1,16 +1,12 @@
 /**
  * @constructor
+ * @member {object} data
  */
 VDRest.Lib.Object = function () {};
 
 /**
- * @type {string}
- */
-VDRest.Lib.Object.prototype.namespace = 'VDRest';
-
-/**
  * initialize store
- * @param data {Object}
+ * @param {Object} data
  */
 VDRest.Lib.Object.prototype.initData = function (data) {
 
@@ -47,9 +43,9 @@ VDRest.Lib.Object.prototype.getData = function (option, defaultValue) {
 
 /**
  *
- * @param option {String}
- * @param value {*}
- * @return {*}
+ * @param {String} option
+ * @param {*} value
+ * @return {VDRest.Lib.Object}
  */
 VDRest.Lib.Object.prototype.setData = function (option, value) {
 
@@ -59,7 +55,7 @@ VDRest.Lib.Object.prototype.setData = function (option, value) {
 
 /**
  * determine if object has option in its store
- * @param option
+ * @param {string} option
  * @returns {boolean}
  */
 VDRest.Lib.Object.prototype.hasData = function (option) {

@@ -10,6 +10,11 @@ VDRest.Abstract.Module = function () {};
 VDRest.Abstract.Module.prototype = new VDRest.Lib.Object();
 
 /**
+ * @type {string}
+ */
+VDRest.Abstract.Module.prototype.namespace = 'VDRest';
+
+/**
  * Initialize module structure
  */
 VDRest.Abstract.Module.prototype.init = function () {
@@ -73,6 +78,11 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
 
     if (!instance.initialized && 'function' === typeof instance.init) {
 
+        if ('function' === typeof instance.initData) {
+
+            instance.initData(data);
+        }
+
         instance.init();
         instance.initialized = true;
     }
@@ -91,7 +101,7 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
     var cache = this.cache[type.toLowerCase() + 's'],
         identifier = _class,
-        path = this.name + '.' + type + '.' + _class,
+        path = this.namespace + '.' + this.name + '.' + type + '.' + _class,
         constructor = VDRest.Lib.factory.getConstructor(path);
 
     data = data || {};

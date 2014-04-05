@@ -1,5 +1,6 @@
 /**
  * Class factory
+ * @member {object} classes - cache for classes to be instantiated
  * @constructor
  */
 VDRest.Lib.Factory = function () {
@@ -9,16 +10,13 @@ VDRest.Lib.Factory = function () {
 
 /**
  *
- * @param path {String}
- * @param [data] {Object}
+ * @param {String} path
  * @returns {_class}
  */
-VDRest.Lib.Factory.prototype.getClass = function (path, data) {
+VDRest.Lib.Factory.prototype.getClass = function (path) {
 
-    var _class = null,
+    var _class,
         instance;
-
-    data = data || {};
 
     if ("undefined" === typeof this.classes[path]) {
 
@@ -29,42 +27,39 @@ VDRest.Lib.Factory.prototype.getClass = function (path, data) {
 
     instance = new _class();
 
-    if ('function' === typeof instance.initData) {
-
-        instance.initData(data);
-    }
-
     return instance;
 
 };
 
 /**
- * retrieve constructor foe path
- * @param path
+ * retrieve constructor for path
+ * @param {string} pathName - Namespace.Module.classType.concreteClass.concreteChildClass...
  * @returns {*}
  */
-VDRest.Lib.Factory.prototype.getConstructor = function (path) {
+VDRest.Lib.Factory.prototype.getConstructor = function (pathName) {
 
-    var _class = null, i = 0, l, wrapper = VDRest;
-
-    path = path.split('.');
-    l = path.length;
+    var _class = null,
+        parent = window,
+        path = pathName.split('.'),
+        i = 0,
+        l = path.length;
 
     for (i;i<l;i++) {
 
-        if (! _class && this.classExists(wrapper, path[i])) {
+        if (! _class && this.classExists(parent, path[i])) {
 
-            _class = wrapper[path[i]];
+            _class = parent[path[i]];
+
         } else if (this.classExists(_class, path[i])) {
 
             _class = _class[path[i]];
 
         } else {
 
-            throw 'Class ' + path[i] + ' does not exist in ' + wrapper + ', Factory'
+            throw 'Class ' + path[i] + ' does not exist in ' + parent + ', Factory'
         }
 
-        wrapper += '.' + path[i];
+        parent += '.' + path[i];
     }
 
     return _class;
@@ -72,13 +67,13 @@ VDRest.Lib.Factory.prototype.getConstructor = function (path) {
 
 /**
  * check if class exists in namespace
- * @param wrapper
- * @param className
+ * @param {function|object} parent
+ * @param {string} className
  * @returns {boolean}
  */
-VDRest.Lib.Factory.prototype.classExists = function (wrapper, className) {
+VDRest.Lib.Factory.prototype.classExists = function (parent, className) {
 
-    return "function" === typeof wrapper[className];
+    return "function" === typeof parent[className];
 };
 
 VDRest.Lib.factory = new VDRest.Lib.Factory();

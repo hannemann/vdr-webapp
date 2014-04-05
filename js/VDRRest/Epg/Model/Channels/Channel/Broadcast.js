@@ -1,6 +1,6 @@
 
 /**
- * @typedef dataHash
+ * @typedef data
  * @type {object}
  * @property {string} channel_name  channel_name
  * @property {Array} components     stream descriptions
@@ -29,6 +29,8 @@
 
 /**
  * Broadcast data model
+ * @class
+ * @member {.data} this.data
  * @constructor
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
@@ -40,7 +42,6 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype = new VDRest.Abstract.Mode
 
 /**
  * initialize broadcast
- * @member {dataHash} data
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.init = function () {
 

@@ -1,22 +1,22 @@
 /**
  * @namespace
  */
-var VDRest = {};
+var VDRest = function () {};
 
 /**
  * @namespace
  */
-VDRest.Abstract = {};
+VDRest.Abstract = function () {};
 
 /**
  * @namespace
  */
-VDRest.Lib = {};
+VDRest.Lib = function () {};
 
 /**
  * @namespace
  */
-VDRest.Rest = {};
+VDRest.Rest = function () {};
 
 /**
  * initialize main class
