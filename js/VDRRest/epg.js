@@ -39,11 +39,13 @@ VDRest.Epgold.prototype.dispatch = function () {
 
         result.iterate(function (channel) {
 
-            $(document).one('eventsloaded-' + channel.getData('channel_id'), $.proxy(function (result) {
-//                console.log(result);
+            $(document).on('broadcastsloaded-' + channel.getData('channel_id'), $.proxy(function (result) {
+                result.iterate(function (e) {
+                    console.log(e.getData('title'));
+                });
             }, this));
 
-            channel.getBroadcasts(channel);
+            channel.getNextBroadcasts(channel);
 
         });
 
@@ -51,7 +53,7 @@ VDRest.Epgold.prototype.dispatch = function () {
     }, this));
 
 
-//    $('#timeSelector .' + config.getItem('lastEpg')).hide();
+//    $('#timeSelector .' + VDRest.config.getItem('lastEpg')).hide();
 //    this.now = new Date();
 //    this.prime = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), 20, 15, 0);
 //    if (this.now > this.prime) {
@@ -91,7 +93,7 @@ VDRest.Epgold.prototype.addDomEvents = function () {
 
     var me = this, i = 0, l = 0;
     $('#refresh').show().on('click', function () {
-        me.loadFrom(config.getItem('lastEpg'));
+        me.loadFrom(VDRest.config.getItem('lastEpg'));
     });
     $('#timeSelector li').each(function () {
         $(this).on('click', function () {
@@ -169,7 +171,7 @@ VDRest.Epgold.prototype.loadChannels = function () {
 //            this.channelCount = result.total;
 //            this.renderSkeleton();
 //            this.addChannelEvents();
-//            this.loadFrom(config.getItem('lastEpg'));
+//            this.loadFrom(VDRest.config.getItem('lastEpg'));
 //        }, this)
 //    });
 
@@ -282,12 +284,12 @@ VDRest.Epgold.prototype.loadFrom = function (from) {
     if ('prime' === from) {
         from = this.prime;
         $('li .epg-wrapper .now').show();
-        config.setItem('lastEpg', 'prime');
+        VDRest.config.setItem('lastEpg', 'prime');
     } else {
         this.now = new Date();
         from = this.now;
         $('li .epg-wrapper .prime').show();
-        config.setItem('lastEpg', 'now');
+        VDRest.config.setItem('lastEpg', 'now');
     }
     for (var i=0;i<this.channels.length;i++) {
         this.channels[i].loadedTimestamps = {};

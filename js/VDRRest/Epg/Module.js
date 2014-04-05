@@ -11,6 +11,31 @@ VDRest.Epg = function () {};
 VDRest.Epg.prototype = new VDRest.Abstract.Module();
 
 /**
+ * initialize module
+ * @member {Date} now       Date Object of now
+ * @member {Date} prime     Date Object of prime time 20:15 today or tomorrow
+ */
+VDRest.Epg.prototype.init = function () {
+
+    // call parent init method
+    VDRest.Abstract.Module.prototype.init.apply(this);
+
+    this.now = new Date();
+
+    this.prime = new Date(
+        this.now.getFullYear(),
+        this.now.getMonth(),
+        this.now.getDate(),
+        20, 15, 0
+    );
+
+    if (this.now > this.prime) {
+
+        this.prime.setTime(this.prime.getTime() + 1000 * 24 * 60 * 60);
+    }
+};
+
+/**
  * Modulename
  * @type {string}
  */

@@ -21,6 +21,12 @@ VDRest.Abstract.Model.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.Model.prototype.identifier = 'id';
 
 /**
+ * type of identifier
+ * @type {string}
+ */
+VDRest.Abstract.Model.prototype.identifierType = 'number';
+
+/**
  * default callback when collection is loaded
  * @param result {JSON}
  */
@@ -31,16 +37,20 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
         model;
 
     if (this.hasData('count')) {
-        this.count = l;
+        this.data.count += l;
     }
 
     for (i;i<l;i++) {
+
+        if ("undefined" !== typeof this.replaceInCollection) {
+
+            result[this.resultCollection][i][this.replaceInCollection] = this;
+        }
 
         model = this.module.getModel(
             this.collectionItemModel,
             result[this.resultCollection][i]
         );
-        model.owner = this;
         this.collection[i] = model;
     }
 

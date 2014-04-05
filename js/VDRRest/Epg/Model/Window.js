@@ -4,9 +4,9 @@ VDRest.Epg.Model.Window.prototype = new VDRest.Gui.Window();
 
 VDRest.Epg.Model.Window.prototype.windowWrapper = 'Epg';
 
-VDRest.Epg.Model.Window.prototype.host = config.getItem('host');
+VDRest.Epg.Model.Window.prototype.host = VDRest.config.getItem('host');
 
-VDRest.Epg.Model.Window.prototype.port = config.getItem('port');
+VDRest.Epg.Model.Window.prototype.port = VDRest.config.getItem('port');
 
 VDRest.Epg.Model.Window.prototype.componentsMap = {
     "16:9":'<img src="assets/16_9.png" alt="">',

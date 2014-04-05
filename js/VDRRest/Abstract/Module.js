@@ -96,7 +96,7 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
     data = data || {};
 
-    if ("number" === typeof data) {
+    if (constructor.prototype.identifierType === typeof data) {
 
         data = this.initInstanceData(data, constructor);
     }

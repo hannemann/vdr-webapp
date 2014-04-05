@@ -1,3 +1,32 @@
+
+/**
+ * @typedef dataHash
+ * @type {object}
+ * @property {string} channel_name  channel_name
+ * @property {Array} components     stream descriptions
+ * @property {Array} contents
+ * @property {string} description
+ * @property {Array} details
+ * @property {number} duration
+ * @property {number} id
+ * @property {number} images        number of epg images
+ * @property {number} parental_rating
+ * @property {Array} raw_contents   ???
+ * @property {string} short_text    short description, subtitle
+ * @property {number} table_id      ???
+ * @property {boolean} timer_active
+ * @property {boolean} timer_exists
+ * @property {number} timer_id
+ * @property {string} title
+ * @property {number} version
+ * @property {number} vps           timestamp
+ * @property {number} start_time    timestamp
+ * @property {number} end_time      timestamp
+ * @property {Date} start_date
+ * @property {Date} end_date
+ * @property {VDRest.Epg.Model.Channels.Channel} channel
+ */
+
 /**
  * Broadcast data model
  * @constructor
@@ -9,14 +38,18 @@ VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype = new VDRest.Abstract.Model();
 
-//Epg.Model.Channels.Channel.Broadcasts.Broadcast.prototype.init = function () {
-//
-//    debugger;
-//    if (!this.hasData('count')) {
-//
-//        if (this.hasData('id')) {
-//
-//            this.data = this.module.getResource('Channels.Channel.Broadcasts.Broadcast').load(this.getData('id'));
-//        }
-//    }
-//};
+/**
+ * initialize broadcast
+ * @member {dataHash} data
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.init = function () {
+
+    this.data.start_date = new Date((this.data.start_time)*1000);
+    this.data.end_date = new Date((this.data.start_time + this.data.duration)*1000);
+    this.data.end_time = this.data.start_time + this.data.duration;
+
+    if ( this.data.end_date > this.data.channel.from ) {
+
+        this.data.channel.from = this.data.end_date;
+    }
+};

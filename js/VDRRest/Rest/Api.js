@@ -26,17 +26,17 @@ VDRest.Rest.Api.prototype = new VDRest.Lib.Object();
 /**
  * @type {String}
  */
-VDRest.Rest.Api.prototype.host = config.getItem('host');
+VDRest.Rest.Api.prototype.host = VDRest.config.getItem('host');
 
 /**
  * @type {int}
  */
-VDRest.Rest.Api.prototype.port = config.getItem('port');
+VDRest.Rest.Api.prototype.port = VDRest.config.getItem('port');
 
 /**
  * @type {String}
  */
-VDRest.Rest.Api.prototype.protocol = config.getItem('protocol');
+VDRest.Rest.Api.prototype.protocol = VDRest.config.getItem('protocol');
 
 /**
  * @type {string}

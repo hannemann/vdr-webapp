@@ -56,7 +56,7 @@ VDRest.Settings.prototype.dispatch = function (callback) {
 					}
 				}
 			}
-			field.val(config.getItem(this.fields[i]));
+			field.val(VDRest.config.getItem(this.fields[i]));
 		}
 		this.isDispatched = true;
 	}
@@ -70,7 +70,7 @@ VDRest.Settings.prototype.dispatch = function (callback) {
 VDRest.Settings.prototype.persist = function () {
 	var i=0; l=this.fields.length;
 	for (i;i<l;i++) {
-		config.setItem(this.fields[i], this.dom.find('[name="'+this.fields[i]+'"]').val());
+		VDRest.config.setItem(this.fields[i], this.dom.find('[name="'+this.fields[i]+'"]').val());
 	}
 	if (typeof this.callback === 'function') {
 		this.callback();

@@ -28,22 +28,17 @@ VDRest.Epg.Model.Channels.Channel.Resource.prototype.init = function () {
 /**
  * set url to retrieve broadcasts
  * in the hour after latest stored broadcast
+ *
+ * @param {object} parameter
  * @returns {VDRest.Epg.Model.Channels.Channel.Resource}
  */
-VDRest.Epg.Model.Channels.Channel.Resource.prototype.setHourlyUrl = function () {
+VDRest.Epg.Model.Channels.Channel.Resource.prototype.setUrl = function (parameter) {
 
-    this.urls.broadcastsHourly =  this.baseUrl + this.getHourlyParameter();
+    this.urls.broadcastsHourly =  this.baseUrl
+        + "from=" + parameter.from
+        + "&start=0"
+        + "&timespan=" + 60 * 60;
 
     return this;
 };
 
-/**
- * retrieve parameter
- * @returns {string}
- */
-VDRest.Epg.Model.Channels.Channel.Resource.prototype.getHourlyParameter = function () {
-
-    return "from=" + parseInt(helper.now().getTime() / 1000)
-        + "&start=0"
-        + "&timespan=" + 60 * 60
-};

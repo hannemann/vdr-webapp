@@ -16,8 +16,8 @@ VDRest.Channel.prototype.urls = {
 };
 
 VDRest.Channel.prototype.init = function () {
-	this.host = config.getItem('host');
-	this.port = config.getItem('port');
+	this.host = VDRest.config.getItem('host');
+	this.port = VDRest.config.getItem('port');
     this.body = $('body');
     this.wrapper = $('.item-list-wrapper');
     this.itemList = $('.item-list-wrapper').find('ul');

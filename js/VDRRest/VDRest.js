@@ -28,12 +28,12 @@ VDRest.App = function () {
 };
 
 /**
- * Check if necessary configuration is set
+ * Check if necessary VDRest.configuration is set
  * @return {*}
  */
 VDRest.App.prototype.checkConfig = function () {
 
-    return config.getItem('host') && config.getItem('port');
+    return VDRest.config.getItem('host') && VDRest.config.getItem('port');
 };
 
 /**
@@ -82,7 +82,7 @@ VDRest.App.prototype.isRegistered = function (module) {
 VDRest.App.prototype.run = function () {
 	var start = 'settings', i;
 
-	start = config.getItem('start') || start;
+	start = VDRest.config.getItem('start') || start;
 
     if (!this.initWithoutConfig) {
 
@@ -130,7 +130,7 @@ VDRest.App.prototype.setLocationHash = function (hash) {
  * poll location hash and dispatch changes
  */
 VDRest.App.prototype.pollLocation = function () {
-    var start = config.getItem('start'), hash;
+    var start = VDRest.config.getItem('start'), hash;
 
     setInterval($.proxy(function () {
 

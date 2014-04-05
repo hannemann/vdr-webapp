@@ -1,20 +1,20 @@
-Helper = function () {};
+VDRest.Helper = function () {};
 
 /**
  * retrieve instance of Date
  * @returns {Date}
  */
-Helper.prototype.now = function () {
+VDRest.Helper.prototype.now = function () {
 
     return new Date();
 };
 
 /**
  * retrieve time string from date object
- * @param {Date}
+ * @param {Date} date
  * @return {*}
  */
-Helper.prototype.getTimeString = function (date) {
+VDRest.Helper.prototype.getTimeString = function (date) {
 	if (date instanceof Date) {
 		return this.pad(date.getHours(), 2)+':'+this.pad(date.getMinutes(), 2);
 	}
@@ -23,11 +23,11 @@ Helper.prototype.getTimeString = function (date) {
 
 /**
  * retrieve date string from date object
- * @param {Date}
- * @param {Boolean}
+ * @param {Date} date
+ * @param {Boolean} fullYear
  * @return {*}
  */
-Helper.prototype.getDateString = function (date, fullYear) {
+VDRest.Helper.prototype.getDateString = function (date, fullYear) {
 
     fullYear = fullYear || false;
     if (date instanceof Date) {
@@ -38,11 +38,11 @@ Helper.prototype.getDateString = function (date, fullYear) {
 
 /**
  * retrieve datetime string from date object
- * @param {Date}
- * @param {Boolean}
+ * @param {Date} date
+ * @param {Boolean} fullYear
  * @return {*}
  */
-Helper.prototype.getDateTimeString = function (date, fullYear) {
+VDRest.Helper.prototype.getDateTimeString = function (date, fullYear) {
     if (date instanceof Date) {
         return this.getDateString(date, fullYear)+' '+this.getTimeString(date);
     }
@@ -51,11 +51,11 @@ Helper.prototype.getDateTimeString = function (date, fullYear) {
 
 /**
  * match string against reg and return date
- * @param {string}
- * @param {RegExp}
+ * @param {string} time
+ * @param {RegExp} reg
  * @return {Date|Boolean}
  */
-Helper.prototype.strToDate = function (time, reg) {
+VDRest.Helper.prototype.strToDate = function (time, reg) {
 
     if (!reg instanceof RegExp) {
 
@@ -78,12 +78,12 @@ Helper.prototype.strToDate = function (time, reg) {
 
 /**
  * pad zeros
- * @param {String}
- * @param {int}
- * @param {int|string}
+ * @param {String} n
+ * @param {int} width
+ * @param {int|string} z
  * @return {String}
  */
-Helper.prototype.pad = function (n, width, z) {
+VDRest.Helper.prototype.pad = function (n, width, z) {
 
 	z = z || '0';
 	n = n + '';
@@ -92,10 +92,10 @@ Helper.prototype.pad = function (n, width, z) {
 
 /**
  * convert seconds to hh:mm
- * @param {int}
+ * @param {int} duration
  * @return {String}
  */
-Helper.prototype.getDurationAsString = function (duration) {
+VDRest.Helper.prototype.getDurationAsString = function (duration) {
 
     var hours = parseInt(duration/60/60, 10),
         minutes = Math.round((duration - parseInt(duration/60/60, 10)*60*60)/60);
@@ -105,11 +105,11 @@ Helper.prototype.getDurationAsString = function (duration) {
 
 /**
  * get day of week from date object
- * @param {Date}
- * @param {Boolean}
+ * @param {Date} date
+ * @param {Boolean} abbr
  * @return {*}
  */
-Helper.prototype.getWeekDay = function (date, abbr) {
+VDRest.Helper.prototype.getWeekDay = function (date, abbr) {
 
 	if (date instanceof Date) {
 
@@ -118,14 +118,14 @@ Helper.prototype.getWeekDay = function (date, abbr) {
 	return false;
 };
 
-Helper.prototype.weekDays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+VDRest.Helper.prototype.weekDays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
 /**
  * log to console in debug mode
  */
-Helper.prototype.log = function () {
+VDRest.Helper.prototype.log = function () {
 
-    if (config.getItem('debug')) {
+    if (VDRest.config.getItem('debug')) {
 
         console.log.apply(window, arguments);
     }
@@ -133,10 +133,10 @@ Helper.prototype.log = function () {
 
 /**
  * decode vdr style entity encoding
- * @param {String}
+ * @param {String} string
  * @return {*}
  */
-Helper.prototype.vdrDecodeURI = function (string) {
+VDRest.Helper.prototype.vdrDecodeURI = function (string) {
 
     try {
 
@@ -164,4 +164,4 @@ Array.prototype.unique = function() {
     return a;
 };
 
-helper = new Helper();
+VDRest.helper = new VDRest.Helper();

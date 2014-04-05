@@ -65,4 +65,13 @@ VDRest.Lib.Object.prototype.setData = function (option, value) {
 VDRest.Lib.Object.prototype.hasData = function (option) {
 
     return "undefined" !== this.data[option];
-}
+};
+
+/**
+ * retrieve helper object
+ * @returns {VDRest.helper|*}
+ */
+VDRest.Lib.Object.prototype.helper = function () {
+
+    return VDRest.helper;
+};

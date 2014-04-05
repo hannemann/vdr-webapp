@@ -2,7 +2,7 @@
  * read from and write to localStorage
  * @constructor
  */
-Config = function () {
+VDRest.Config = function () {
 
 	var storage = null;
 
@@ -71,7 +71,7 @@ Config = function () {
  * Default values
  * @type {Object}
  */
-Config.prototype.defaults = {
+VDRest.Config.prototype.defaults = {
 	"lastEpg"           :   "now",
 	"start"             :   "epgold",
     "debug"             :   false,
@@ -81,4 +81,4 @@ Config.prototype.defaults = {
     "protocol"          :   "http"
 };
 
-config = new Config();
+VDRest.config = new VDRest.Config();

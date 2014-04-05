@@ -14,7 +14,14 @@ VDRest.Epg.Model.Channels.Channel.prototype = new VDRest.Abstract.Model();
  * overrides default
  * @type {string}
  */
-VDRest.Epg.Model.Channels.Channel.prototype.identifier = 'number';
+VDRest.Epg.Model.Channels.Channel.prototype.identifier = 'channel_id';
+
+/**
+ * identifier type in result object
+ * overrides default
+ * @type {string}
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.identifierType = 'string';
 
 /**
  * Modelpath
@@ -36,18 +43,20 @@ VDRest.Epg.Model.Channels.Channel.prototype.collectionItemModel = 'Channels.Chan
 VDRest.Epg.Model.Channels.Channel.prototype.resultCollection = 'events';
 
 /**
- * timestamp of the end of the latest broadcast
- * @type {number}
+ * member of collection entity to replace with this
+ * @type {string}
  */
-VDRest.Epg.Model.Channels.Channel.prototype.lastBroadcastEnd = 0;
+VDRest.Epg.Model.Channels.Channel.prototype.replaceInCollection = 'channel';
 
 /**
  * initialize collection cache
  * do some data transformations
  * @member {object} collection holds collection items VDRest.Epg.Model.Channels.Channel.Broadcast
  * @member {number} data.count number of currently stored broadcast
+ * @member {number} lastBroadcastEnd timestamp of the end of the latest broadcast
  * @member {object} events event names
  * @member {string} baseUrl
+ * @member {Date} from
  */
 VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
 
@@ -55,9 +64,10 @@ VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
 
     this.collection = {};
     this.data.count = 0;
+    this.from = this.module[VDRest.config.getItem('lastEpg')];
     this.events = {
         // event to be triggered when collection is loaded
-        "collectionloaded" : 'eventsloaded-' + channelId
+        "collectionloaded" : 'broadcastsloaded-' + channelId
     };
 
     this.baseUrl = this.module.getResource('Channels').getBaseUrl();
@@ -73,13 +83,15 @@ VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
  * load broadcasts
  * process collection afterwards
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getBroadcasts = function () {
+VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
 
     this.module.getResource('Channels.Channel', {
 
-        "channelId":this.getData('channel_id')
+        /** add identifier and this to resource */
+        "channelId":this.getData('channel_id'),
+        "channel" : this
 
-    }).setHourlyUrl()
+    }).setUrl({"from":parseInt(this.from.getTime()/1000, 10)})
         .load({
             "url" : 'broadcastsHourly',
             "callback" : $.proxy(this.processCollection, this)
