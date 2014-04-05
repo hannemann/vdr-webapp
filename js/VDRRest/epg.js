@@ -40,12 +40,12 @@ VDRest.Epgold.prototype.dispatch = function () {
         result.iterate(function (channel) {
 
             $(document).on('broadcastsloaded-' + channel.getData('channel_id'), $.proxy(function (result) {
-                result.iterate(function (e) {
-                    console.log(e.getData('title'));
+                result.iterate(function (broadcast) {
+                    console.log(broadcast);
                 });
             }, this));
 
-            channel.getNextBroadcasts(channel);
+//            channel.getNextBroadcasts();
 
         });
 

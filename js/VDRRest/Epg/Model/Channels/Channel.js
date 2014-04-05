@@ -1,5 +1,24 @@
+
+/**
+ * @typedef data
+ * @type {object}
+ * @property {string} channel_id
+ * @property {string} group - groupname channel belongs to
+ * @property {string} image - url of channel logo
+ * @property {boolean} is_atsc
+ * @property {boolean} is_cable
+ * @property {boolean} is_sat
+ * @property {boolean} is_terr
+ * @property {string} name
+ * @property {number} number
+ * @property {string} stream - filename of stream
+ * @property {number} transponder
+ */
+
 /**
  * Channel Model
+ * @class
+ * @member {.data} this.data
  * @constructor
  */
 VDRest.Epg.Model.Channels.Channel = function () {};

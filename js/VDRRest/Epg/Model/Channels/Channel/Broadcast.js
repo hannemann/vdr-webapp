@@ -45,6 +45,15 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype = new VDRest.Abstract.Mode
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.init = function () {
 
+    this.setDates();
+    this.setImages();
+};
+
+/**
+ * init date objects
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.setDates = function () {
+
     this.data.start_date = new Date((this.data.start_time)*1000);
     this.data.end_date = new Date((this.data.start_time + this.data.duration)*1000);
     this.data.end_time = this.data.start_time + this.data.duration;
@@ -54,3 +63,21 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.init = function () {
         this.data.channel.from = this.data.end_date;
     }
 };
+
+/**
+ * init image array
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.setImages = function () {
+
+    var i = 0, l = this.data.images;
+    if (i < l) {
+
+        this.data.images = [];
+        for (i;i<l;i++) {
+
+            this.data.images.push(this.data.channel.baseUrl + 'events/image/' + this.data.id + '/' + i);
+        }
+    }
+};
+
+
