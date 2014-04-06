@@ -79,7 +79,7 @@ VDRest.Rest.Api.prototype.load = function (options) {
         this.cachedResponse = false;
         this.refreshCache = false;
         $.ajax({
-            "url"       :   this.getBaseUrl() + "/" + url,
+            "url"       :   this.getBaseUrl() + url,
             "method"    :   method,
             "success"   :   $.proxy(function (result) {
                 this.responseCache[url] = result;
