@@ -15,9 +15,7 @@ VDRest.Abstract.Module.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.Module.prototype.namespace = 'VDRest';
 
 /**
- * separate property names of
- * data object that should be used
- * to compose the cacheKey
+ *
  * @type {string}
  */
 VDRest.Abstract.Module.prototype.cacheKeySeparator = '/';
@@ -33,10 +31,7 @@ VDRest.Abstract.Module.prototype.init = function () {
 
     window.VDRest[this.name].Controller = function () {};
 
-    this.cache = {
-        "controllers" : {},
-        "models" : {}
-    }
+    this.cache = new VDRest.Lib.Cache();
 };
 
 /**
@@ -84,13 +79,12 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
     var instance = this.getClass(classType, type, data);
     instance.module = this;
 
-    if (!instance.dataInitialized && 'function' === typeof instance.initData) {
-
-        instance.initData(data);
-        instance.dataInitialized = true;
-    }
-
     if (!instance.initialized && 'function' === typeof instance.init) {
+
+        if ('function' === typeof instance.initData) {
+
+            instance.initData(data);
+        }
 
         instance.init();
         instance.initialized = true;
@@ -108,25 +102,20 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
  */
 VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
-    var cache = this.cache[type.toLowerCase() + 's'],
+    var cache = this.cache.getStore(type),
         cacheKey = _class,
         path = this.namespace + '.' + this.name + '.' + type + '.' + _class,
         constructor = VDRest.Lib.factory.getConstructor(path);
 
     if ("undefined" !== typeof constructor.prototype.cacheKey) {
 
-        if (!data instanceof Object) {
+        if (!(data instanceof Object)) {
 
             data = this.initInstanceData(data, constructor.prototype.cacheKey);
         }
 
-        if ("undefined" === typeof cache[_class]) {
-
-            cache[_class] = {};
-        }
-
-        cache = cache[_class];
-        cacheKey = this.getCacheKey(data, constructor.prototype.cacheKey);
+        cache = this.cache.getStore(type, _class);
+        cacheKey = this.cache.getCacheKey(data, constructor.prototype.cacheKey);
     }
 
     if ("undefined" === typeof cache[cacheKey]) {
@@ -135,28 +124,6 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
     }
 
     return cache[cacheKey];
-};
-
-/**
- * build cacheKey from appropriate properties of data object
- * @param data
- * @param keyNames
- * @returns {*}
- */
-VDRest.Abstract.Module.prototype.getCacheKey = function (data, keyNames) {
-
-    var keys = keyNames.split(this.cacheKeySeparator),
-        cacheKey = data[keys[0]],
-        i= 1, l=keys.length;
-
-    if (l > 1) {
-
-        for (i;i<l;i++) {
-            cacheKey += '/' + data[keys[i]];
-        }
-    }
-
-    return cacheKey;
 };
 
 /**
