@@ -106,7 +106,7 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
         if (!(data instanceof Object)) {
 
-            data = this.initInstanceData(data, constructor.prototype.cacheKey);
+            data = this.mockInstanceData(data, constructor.prototype.cacheKey);
         }
 
         cache = this.cache.getStore(type, _class);
@@ -122,12 +122,18 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 };
 
 /**
- * init data object with identifier
+ * init data object with properties
+ * needed to build the cache key
+ * only used if we want to fetch
+ * an object from cache that has
+ * a cacheKey property.
+ * Usually an item of a collection
+ *
  * @param {(string|number)} id
- * @param {string}     cacheKey
+ * @param {string}          cacheKey
  * @returns {object}
  */
-VDRest.Abstract.Module.prototype.initInstanceData = function (id, cacheKey) {
+VDRest.Abstract.Module.prototype.mockInstanceData = function (id, cacheKey) {
 
     var data = {},
         keys = cacheKey.split(this.cache.cacheKeySeparator),
