@@ -31,7 +31,7 @@ VDRest.Abstract.Model.prototype.mixIntoCollectionItem = undefined;
  * @type {string}
  * @private
  */
-VDRest.Epg.Model.Channels.Channel.Broadcast.prototype._class = undefined;
+VDRest.Abstract.Model.prototype._class = undefined;
 
 /**
  * default callback when collection is loaded
