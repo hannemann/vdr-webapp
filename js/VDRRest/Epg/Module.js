@@ -65,22 +65,3 @@ VDRest.Epg.prototype.initChannels = function () {
  */
 VDRest.app.registerModule('Epg', true);
 
-
-/**
- * Im Controller wird der view in das Model gestopft. dieses reichert den view um benötigte Methoden zur darstellung an
- *
- *
- * Model:
- *
- * this.view = this.getData('view');
- *
- * this.view.getDate = function () {
- *
- *     return helper.getStrToDate(this.getData('start_timestamp'));
- * }
- *
- * usw.
- *
- *
- * Der view rendert dann den ganzen rotz
- */
