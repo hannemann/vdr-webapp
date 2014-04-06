@@ -84,12 +84,13 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
     var instance = this.getClass(classType, type, data);
     instance.module = this;
 
+    if (!instance.dataInitialized && 'function' === typeof instance.initData) {
+
+        instance.initData(data);
+        instance.dataInitialized = true;
+    }
+
     if (!instance.initialized && 'function' === typeof instance.init) {
-
-        if ('function' === typeof instance.initData) {
-
-            instance.initData(data);
-        }
 
         instance.init();
         instance.initialized = true;
