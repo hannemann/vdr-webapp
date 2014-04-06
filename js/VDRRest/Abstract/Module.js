@@ -15,12 +15,6 @@ VDRest.Abstract.Module.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.Module.prototype.namespace = 'VDRest';
 
 /**
- *
- * @type {string}
- */
-VDRest.Abstract.Module.prototype.cacheKeySeparator = '/';
-
-/**
  * Initialize module structure
  */
 VDRest.Abstract.Module.prototype.init = function () {
