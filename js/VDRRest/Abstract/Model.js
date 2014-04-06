@@ -27,6 +27,13 @@ VDRest.Abstract.Model.prototype.cacheKey = undefined;
 VDRest.Abstract.Model.prototype.mixIntoCollectionItem = undefined;
 
 /**
+ * class name
+ * @type {string}
+ * @private
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype._class = undefined;
+
+/**
  * default callback when collection is loaded
  * @param result {JSON}
  */

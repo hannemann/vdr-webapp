@@ -50,11 +50,6 @@ VDRest.Epg.Model.Channels.prototype.init = function () {
     this.currentResult = [];
 };
 
-//Epg.Model.Channels.prototype.getChannel = function (id) {
-//
-//    return this.module.getModel('Channels.Channel', id);
-//};
-
 /**
  * fetch resource model and load channels
  * fire callback afterwards

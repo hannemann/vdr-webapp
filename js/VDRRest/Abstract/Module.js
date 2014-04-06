@@ -15,6 +15,9 @@ VDRest.Abstract.Module.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.Module.prototype.namespace = 'VDRest';
 
 /**
+ * separate property names of
+ * data object that should be used
+ * to compose the cacheKey
  * @type {string}
  */
 VDRest.Abstract.Module.prototype.cacheKeySeparator = '/';
