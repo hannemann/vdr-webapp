@@ -31,7 +31,7 @@ VDRest.Epg.prototype.init = function () {
 
     if (this.now > this.prime) {
 
-        this.prime.setTime(this.prime.getTime() + 1000 * 24 * 60 * 60);
+        this.prime.setTime(this.prime.getTime() + 24 * 60 * 60 * 1000);
     }
 };
 

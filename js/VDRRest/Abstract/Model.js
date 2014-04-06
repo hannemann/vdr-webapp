@@ -18,13 +18,13 @@ VDRest.Abstract.Model.prototype = new VDRest.Lib.Object();
  * override property if 'id' is not appropriate
  * @type {string}
  */
-VDRest.Abstract.Model.prototype.identifier = 'id';
+VDRest.Abstract.Model.prototype.cacheKey = undefined;
 
 /**
- * type of identifier
+ * name of property that holds parent object
  * @type {string}
  */
-VDRest.Abstract.Model.prototype.identifierType = 'number';
+VDRest.Abstract.Model.prototype.mixIntoCollectionItem = undefined;
 
 /**
  * default callback when collection is loaded
@@ -50,15 +50,15 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
     // add loaded entities to result set
     for (i;i<l;i++) {
 
-        if ("undefined" !== typeof this.replaceInCollection) {
-
-            result[this.resultCollection][i][this.replaceInCollection] = this;
-        }
-
         model = this.module.getModel(
             this.collectionItemModel,
             result[this.resultCollection][i]
         );
+
+        if ("undefined" !== typeof this.mixIntoCollectionItem) {
+
+            model.data[this.mixIntoCollectionItem] = this;
+        }
 
         if ("undefined" === typeof model.isCached) {
             this.collection.push(model);
@@ -86,7 +86,7 @@ VDRest.Abstract.Model.prototype.triggerCollectionLoaded = function () {
         "_class"        : this._class,
         "iterate"       : $.proxy(this.resultIterator, this)
     });
-}
+};
 
 /**
  * default collection iterator

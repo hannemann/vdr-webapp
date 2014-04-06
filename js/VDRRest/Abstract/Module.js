@@ -15,6 +15,11 @@ VDRest.Abstract.Module.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.Module.prototype.namespace = 'VDRest';
 
 /**
+ * @type {string}
+ */
+VDRest.Abstract.Module.prototype.cacheKeySeparator = '/';
+
+/**
  * Initialize module structure
  */
 VDRest.Abstract.Module.prototype.init = function () {
@@ -100,18 +105,16 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
 VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
     var cache = this.cache[type.toLowerCase() + 's'],
-        identifier = _class,
+        cacheKey = _class,
         path = this.namespace + '.' + this.name + '.' + type + '.' + _class,
         constructor = VDRest.Lib.factory.getConstructor(path);
 
-    data = data || {};
+    if ("undefined" !== typeof constructor.prototype.cacheKey) {
 
-    if (constructor.prototype.identifierType === typeof data) {
+        if (!data instanceof Object) {
 
-        data = this.initInstanceData(data, constructor);
-    }
-
-    if ("undefined" !== typeof data[constructor.prototype.identifier]) {
+            data = this.initInstanceData(data, constructor.prototype.cacheKey);
+        }
 
         if ("undefined" === typeof cache[_class]) {
 
@@ -119,27 +122,61 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
         }
 
         cache = cache[_class];
-        identifier = data[constructor.prototype.identifier];
+        cacheKey = this.getCacheKey(data, constructor.prototype.cacheKey);
     }
 
-    if ("undefined" === typeof cache[identifier]) {
+    if ("undefined" === typeof cache[cacheKey]) {
 
-        cache[identifier] = VDRest.Lib.factory.getClass(path, data);
+        cache[cacheKey] = VDRest.Lib.factory.getClass(path, data);
     }
 
-    return cache[identifier];
+    return cache[cacheKey];
+};
+
+/**
+ * build cacheKey from appropriate properties of data object
+ * @param data
+ * @param keyNames
+ * @returns {*}
+ */
+VDRest.Abstract.Module.prototype.getCacheKey = function (data, keyNames) {
+
+    var keys = keyNames.split(this.cacheKeySeparator),
+        cacheKey = data[keys[0]],
+        i= 1, l=keys.length;
+
+    if (l > 1) {
+
+        for (i;i<l;i++) {
+            cacheKey += '/' + data[keys[i]];
+        }
+    }
+
+    return cacheKey;
 };
 
 /**
  * init data object with identifier
  * @param {(string|number)} id
- * @param {constructor}     constructor
+ * @param {string}     cacheKey
  * @returns {object}
  */
-VDRest.Abstract.Module.prototype.initInstanceData = function (id, constructor) {
+VDRest.Abstract.Module.prototype.initInstanceData = function (id, cacheKey) {
 
-    var data = {};
-    data[constructor.prototype.identifier] = id;
+    var data = {},
+        keys = cacheKey.split(this.cacheKeySeparator),
+        ids = id.split(this.cacheKeySeparator),
+        i = 0, l = keys.length;
+
+    if (l != ids.length) {
+
+        throw 'ID and cacheKey mismatch'
+    }
+
+    for (i;i<l;i++) {
+
+        data[keys[i]] = ids[i];
+    }
 
     return data;
 };

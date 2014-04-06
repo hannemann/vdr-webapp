@@ -13,13 +13,13 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype = new VDRest.Rest
  * key of model in cache
  * @type {string}
  */
-VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.identifier = 'channelId';
+VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.cacheKey = 'channelId';
 
 /**
  * number of seconds to add to starting point of time if broadcasts are loaded
  * @type {number}
  */
-VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan = 60 * 60 * 1000;
+VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan = 3 * 60 * 60 * 1000;
 
 /**
  * @member {string} baseUrl
@@ -35,25 +35,28 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.init = function (
  * set url to retrieve broadcasts
  * in the hour after latest stored broadcast
  *
- * @type {object} parameter
- * @property {Date} from
- * @property {Date} to
+ * @param {Date} from
+ * @param {Date} [to]
  * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast.Resource}
  */
-VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setUrl = function (parameter) {
+VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setUrl = function (from, to) {
 
-    var
-        /** @type {number} */
-        from = parseInt(parameter.from.getTime()/1000, 10),
-
-        /** @type {Date} */
-        to = parameter.to || new Date(parameter.from.getTime() + this.defaultTimeSpan),
+    /** @type {number} */
+    var timeSpan,
 
         /** @type {number} */
-        timeSpan = parseInt( ( to.getTime() - parameter.from.getTime() ) / 1000, 10 );
+        _from;
+
+    /** @type {number} */
+    _from = parseInt(from.getTime()/1000, 10);
+
+    /** @type {Date} */
+    to = to || new Date(from.getTime() + this.defaultTimeSpan);
+
+    timeSpan = parseInt( ( to.getTime() - from.getTime() ) / 1000, 10 );
 
     this.urls.broadcastsHourly =  this.baseUrl
-        + "from=" + from
+        + "from=" + _from
         + "&start=0"
         + "&timespan=" + timeSpan;
 

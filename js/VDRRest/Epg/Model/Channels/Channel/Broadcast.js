@@ -4,26 +4,28 @@
  * @class
  * @constructor
  * @var {object} data
- * @property {string} channel_name  channel_name
- * @property {Array} components     stream descriptions
+ * @property {string} channel           channel_name
+ * @property {VDRest.Epg.Model.Channels.Channel} channelObj           channel_name
+ * @property {string} channel_name      channel_name
+ * @property {Array} components         stream descriptions
  * @property {Array} contents
  * @property {string} description
  * @property {Array} details
  * @property {number} duration
  * @property {number} id
- * @property {number} images        number of epg images
+ * @property {number} images            number of epg images
  * @property {number} parental_rating
- * @property {Array} raw_contents   ???
- * @property {string} short_text    short description, subtitle
- * @property {number} table_id      ???
+ * @property {Array} raw_contents       ???
+ * @property {string} short_text        short description, subtitle
+ * @property {number} table_id          ???
  * @property {boolean} timer_active
  * @property {boolean} timer_exists
  * @property {number} timer_id
  * @property {string} title
  * @property {number} version
- * @property {number} vps           timestamp
- * @property {number} start_time    timestamp
- * @property {number} end_time      timestamp
+ * @property {number} vps               timestamp
+ * @property {number} start_time        timestamp
+ * @property {number} end_time          timestamp
  * @property {Date} start_date
  * @property {Date} end_date
  * @property {VDRest.Epg.Model.Channels.Channel} channel
@@ -34,6 +36,11 @@ VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
  * @type {VDRest.Abstract.Model}
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype = new VDRest.Abstract.Model();
+
+/**
+ * @type {string}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.cacheKey = 'channel/id';
 
 /**
  * initialize broadcast
@@ -70,7 +77,7 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.setImages = function () {
         this.data.images = [];
         for (i;i<l;i++) {
 
-            this.data.images.push(this.data.channel.baseUrl + 'events/image/' + this.data.id + '/' + i);
+            this.data.images.push(this.data.channelObj.baseUrl + 'events/image/' + this.data.id + '/' + i);
         }
     }
 };
@@ -123,7 +130,7 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.endsAfter = function (time
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.shownBetween = function (from, to) {
 
-    return this.data.start_date < to && this.data.end_date > from;
+    return this.data.start_date <= to && this.data.end_date > from;
 };
 
 

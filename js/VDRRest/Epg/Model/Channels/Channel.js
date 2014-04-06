@@ -31,14 +31,7 @@ VDRest.Epg.Model.Channels.Channel.prototype = new VDRest.Abstract.Model();
  * overrides default
  * @type {string}
  */
-VDRest.Epg.Model.Channels.Channel.prototype.identifier = 'channel_id';
-
-/**
- * identifier type in result object
- * overrides default
- * @type {string}
- */
-VDRest.Epg.Model.Channels.Channel.prototype.identifierType = 'string';
+VDRest.Epg.Model.Channels.Channel.prototype.cacheKey = 'channel_id';
 
 /**
  * Modelpath
@@ -60,11 +53,10 @@ VDRest.Epg.Model.Channels.Channel.prototype.collectionItemModel = 'Channels.Chan
 VDRest.Epg.Model.Channels.Channel.prototype.resultCollection = 'events';
 
 /**
- * member of collection entity to replace with this
+ * name of property that holds parent object
  * @type {string}
  */
-VDRest.Epg.Model.Channels.Channel.prototype.replaceInCollection = 'channel';
-
+VDRest.Epg.Model.Channels.Channel.prototype.mixIntoCollectionItem = 'channelObj';
 /**
  * initialize collection cache
  * do some data transformations
@@ -96,10 +88,13 @@ VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
     }
 };
 
+/**
+ * retrieve date object of chosen EPG start time
+ * @returns {*}
+ */
 VDRest.Epg.Model.Channels.Channel.prototype.getFromDate = function () {
 
-    this.from = this.module[VDRest.config.getItem('lastEpg')];
-    return this.from;
+    return this.module[VDRest.config.getItem('lastEpg')];
 };
 
 /**
@@ -113,9 +108,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
             : this.getFromDate();
 
     this.getResource()
-        .setUrl({
-            "from":from
-        })
+        .setUrl(from)
         .load({
             "url" : 'broadcastsHourly',
             "callback" : $.proxy(this.processCollection, this)
@@ -173,10 +166,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to) {
     if (lastEndTime < to) {
 
         this.getResource()
-            .setUrl({
-                "from" : lastEndTime,
-                "to" : to
-            })
+            .setUrl(lastEndTime, to)
             .load({
                 "url" : 'broadcastsHourly',
                 "callback" : $.proxy(this.processCollection, this)
