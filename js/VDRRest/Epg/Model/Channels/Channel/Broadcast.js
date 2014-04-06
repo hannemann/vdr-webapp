@@ -50,6 +50,12 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype._class = 'VDRest.Epg.Model
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.cacheKey = 'channel/id';
 
 /**
+ * indicates if object cache entry can be invalidated
+ * @type {boolean}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.canInvalidate = true;
+
+/**
  * initialize broadcast
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.init = function () {

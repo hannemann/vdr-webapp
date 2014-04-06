@@ -73,12 +73,13 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
     var instance = this.getClass(classType, type, data);
     instance.module = this;
 
+    if (!instance.initializedData && 'function' === typeof instance.initData) {
+
+        instance.initData(data);
+        instance.initializedData = true;
+    }
+
     if (!instance.initialized && 'function' === typeof instance.init) {
-
-        if ('function' === typeof instance.initData) {
-
-            instance.initData(data);
-        }
 
         instance.init();
         instance.initialized = true;
@@ -129,13 +130,13 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 VDRest.Abstract.Module.prototype.initInstanceData = function (id, cacheKey) {
 
     var data = {},
-        keys = cacheKey.split(this.cacheKeySeparator),
-        ids = id.split(this.cacheKeySeparator),
+        keys = cacheKey.split(this.cache.cacheKeySeparator),
+        ids = id.split(this.cache.cacheKeySeparator),
         i = 0, l = keys.length;
 
     if (l != ids.length) {
 
-        throw 'ID and cacheKey mismatch'
+        throw new Error('ID and cacheKey mismatch');
     }
 
     for (i;i<l;i++) {

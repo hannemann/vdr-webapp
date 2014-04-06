@@ -21,6 +21,12 @@ VDRest.Abstract.Model.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.Model.prototype.cacheKey = undefined;
 
 /**
+ * indicates if object cache entry can be invalidated
+ * @type {boolean}
+ */
+VDRest.Abstract.Model.prototype.canInvalidate = undefined;
+
+/**
  * name of property that holds parent object
  * @type {string}
  */

@@ -9,14 +9,14 @@
 VDRest.Lib.Cache = function () {
 
     this.store = {
-        "controllers" : {},
-        "models" : {},
-        "views" : {}
+        "Model" : {},
+        "View" : {},
+        "Controller" : {}
     }
 };
 
 /**
- *
+ * string that separates composed cache keys
  * @type {string}
  */
 VDRest.Lib.Cache.prototype.cacheKeySeparator = '/';
@@ -29,7 +29,7 @@ VDRest.Lib.Cache.prototype.cacheKeySeparator = '/';
  */
 VDRest.Lib.Cache.prototype.getStore = function (type, _class) {
 
-    var store = this.store[type.toLowerCase() + 's'];
+    var store = this.store[type];
 
     if ("undefined" !== typeof _class) {
 
@@ -66,11 +66,73 @@ VDRest.Lib.Cache.prototype.getCacheKey = function (data, keyNames) {
 
 /**
  * invalidate cache entry
- * @param obj
+ * @param {string} type
+ * @param {*} obj
+ *
+ * TODO: interval that invalidates cache entries by specified argument e.g. end_time exceeded
  */
 VDRest.Lib.Cache.prototype.invalidate = function (obj) {
 
-    var key = this.getCacheKey(obj.data, obj.cacheKey);
+    var key = this.getCacheKey(obj.data, obj.cacheKey), cache;
 
+    if ("undefined" === typeof obj._class) {
+
+        throw new ReferenceError('Cannot determine cache type from object. Property _class not defined in argument obj.');
+    }
+
+    cache = this.getClassCache(obj._class);
+
+    if (cache && "undefined" !== typeof cache[key].canInvalidate && cache[key].canInvalidate) {
+
+        delete cache[key];
+    }
+};
+
+/**
+ * retrieve cache
+ * @param _class
+ * @returns {object}
+ */
+VDRest.Lib.Cache.prototype.getClassCache = function (_class) {
+
+    var cache = this.getCacheByType(_class),
+        classCache;
+
+    if (cache) {
+        new RegExp('.*(Model|View|Controller)\\.(.*)').test(_class);
+
+        classCache = RegExp.$2;
+
+        if ("undefined" !== typeof cache[classCache]) {
+
+            cache = cache[classCache];
+        }
+    }
+
+    return cache;
+};
+
+/**
+ * retrieve cache type
+ * @param {string} _class
+ * @returns {string}
+ */
+VDRest.Lib.Cache.prototype.getCacheByType = function (_class) {
+
+    var cache = null;
+
+    if (_class.indexOf('.Model.') > -1) {
+        cache = this.store.Model;
+    }
+
+    if (_class.indexOf('.View.') > -1) {
+        cache = this.store.View;
+    }
+
+    if (_class.indexOf('.Controller.') > -1) {
+        cache = this.store.Controller;
+    }
+
+    return cache;
 
 };

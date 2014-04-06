@@ -56,7 +56,7 @@ VDRest.Lib.Factory.prototype.getConstructor = function (pathName) {
 
         } else {
 
-            throw 'Class ' + path[i] + ' does not exist in ' + parent + ', Factory'
+            throw new ReferenceError('Class ' + path[i] + ' does not exist in ' + parent + ', Factory');
         }
 
         parent += '.' + path[i];

@@ -41,6 +41,12 @@ VDRest.Epg.Model.Channels.Channel.prototype._class = 'VDRest.Epg.Model.Channels.
 VDRest.Epg.Model.Channels.Channel.prototype.cacheKey = 'channel_id';
 
 /**
+ * indicates if object cache entry can be invalidated
+ * @type {boolean}
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.canInvalidate = false;
+
+/**
  * Modelpath
  * @type {string}
  * @private
