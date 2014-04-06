@@ -50,15 +50,15 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
     // add loaded entities to result set
     for (i;i<l;i++) {
 
+        if ("undefined" !== typeof this.mixIntoCollectionItem) {
+
+            result[this.resultCollection][i][this.mixIntoCollectionItem] = this;
+        }
+
         model = this.module.getModel(
             this.collectionItemModel,
             result[this.resultCollection][i]
         );
-
-        if ("undefined" !== typeof this.mixIntoCollectionItem) {
-
-            model.data[this.mixIntoCollectionItem] = this;
-        }
 
         if ("undefined" === typeof model.isCached) {
             this.collection.push(model);

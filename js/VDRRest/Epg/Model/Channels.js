@@ -13,7 +13,7 @@ VDRest.Epg.Model.Channels = function () {};
 VDRest.Epg.Model.Channels.prototype = new VDRest.Abstract.Model();
 
 /**
- * classname
+ * class name
  * @type {string}
  * @private
  */

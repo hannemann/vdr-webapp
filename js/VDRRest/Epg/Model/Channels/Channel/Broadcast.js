@@ -38,6 +38,13 @@ VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype = new VDRest.Abstract.Model();
 
 /**
+ * class name
+ * @type {string}
+ * @private
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype._class = 'VDRest.Epg.Model.Channels.Channel.Broadcast';
+
+/**
  * @type {string}
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.cacheKey = 'channel/id';

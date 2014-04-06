@@ -10,6 +10,13 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource = function () {};
 VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype = new VDRest.Rest.Api();
 
 /**
+ * class name
+ * @type {string}
+ * @private
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype._class = 'VDRest.Epg.Model.Channels.Channel.Broadcast.Resource';
+
+/**
  * key of model in cache
  * @type {string}
  */
