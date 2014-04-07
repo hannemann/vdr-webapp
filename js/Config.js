@@ -78,7 +78,10 @@ Config.prototype.defaults = {
     "port"              :   "8002",
     "recordingStartGap" :   120,
     "recordingEndGap"   :   600,
-    "protocol"          :   "http"
+    "protocol"          :   "http",
+    "streamdev-port"    :   "3000",
+    "streamdev-ext"     :   "EXT",
+    "streamdev-param"   :   ";QUALITY=WLAN"
 };
 
 config = new Config();

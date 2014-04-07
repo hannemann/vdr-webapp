@@ -113,11 +113,41 @@ Epg.prototype.moveTimeline = function () {
 
 Epg.prototype.addChannelEvents = function () {
     var me = this;
+    me.preventClick = undefined;
     for (var i in this.channels) {
-        $('#channel-' + this.channels[i].channel_id).on('click', function () {
-            main.modules.channel.next = me.channels[$(this).attr('data-channelsid')];
-            main.dispatch('channel');
+
+
+        $('#channel-' + this.channels[i].channel_id).on('mouseup', function () {
+            var channel = $(this).attr('data-channelsid');
+
+            if ("undefined" !== typeof me.preventClick) {
+
+                return false;
+            } else {
+                if ("undefined" !== typeof me.channelClickTimeout) {
+                    window.clearTimeout(me.channelClickTimeout);
+                }
+                main.modules.channel.next = me.channels[$(this).attr('data-channelsid')];
+                main.dispatch('channel');
+            }
+
+        }).on('mousedown', function (e) {
+
+            var stream = $(this).attr('data-stream');
+            me.preventClick = undefined;
+            me.channelClickTimeout = window.setTimeout(function () {
+                me.preventClick = true;
+                e.preventDefault();
+                window.location.href = 'http://' + me.host + ':' + config.getItem('streamdev-port') + '/EXT;QUALITY=WLAN/' + stream;
+            }, 1000);
         });
+
+
+
+//        $('#channel-' + this.channels[i].channel_id).on('click', function () {
+//            main.modules.channel.next = me.channels[$(this).attr('data-channelsid')];
+//            main.dispatch('channel');
+//        });
     };
 };
 
@@ -218,11 +248,11 @@ Epg.prototype.renderSkeleton = function () {
     var channelId, markup;
     for (var i in this.channels) {
         channelId = this.channels[i].channel_id;
-        markup = '<li class="channel clearfix" data-channelsid="' + i + '" id="channel-' + channelId + '">';
+        markup = '<li class="channel clearfix" data-stream="' + this.channels[i].stream + '" data-channelsid="' + i + '" id="channel-' + channelId +'"';
         if (this.channels[i].image) {
-            markup += '<img src="http://' + this.host + ':' + this.port + '/channels/image/' + channelId + '" alt="' + this.channels[i].name + '">'
+            markup += ' style="background-image: url(http://' + this.host + ':' + this.port + '/channels/image/' + channelId + ')">'
         } else {
-            markup += '<div>' + this.channels[i].name + '</div>'
+            markup += '"><div>' + this.channels[i].name + '</div>'
         }
         markup += '</li>';
         this.channelsList.append(markup);

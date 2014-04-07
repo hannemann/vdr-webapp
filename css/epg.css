@@ -53,10 +53,12 @@
 }
 .epg-wrapper li.channel {
 	border-right: 1px solid black;
-	width: 39px;
+    width: 39px;
+    height: 39px;
 	font-size: 10px;
 	color: dimgrey;
-	background: white;
+    background-color: white;
+    background-size: 39px 39px;
 }
 .epg-wrapper li.channel img,
 .epg-wrapper li.channel div {
