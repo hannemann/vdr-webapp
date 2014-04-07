@@ -1,0 +1,53 @@
+/**
+ * Epg Module
+ * @constructor
+ */
+Gui.Epg = function () {};
+
+/**
+ * prototype
+ * @type {VDRest.Abstract.Module}
+ */
+Gui.Epg.prototype = new VDRest.Abstract.Module();
+
+/**
+ * @type {string}
+ */
+Gui.Epg.prototype.namespace = 'Gui';
+
+/**
+ * Modulename
+ * @type {string}
+ */
+Gui.Epg.prototype.name = 'Epg';
+
+/**
+ * dispatch default view
+ */
+Gui.Epg.prototype.dispatch = function () {
+
+    var epg = VDRest.app.getModule('VDRest.Epg'),
+        channels = this.getController('Channels').dispatchView();
+
+    VDRest.app.setLocationHash(this.name);
+
+    $(document).one('channelsloaded', $.proxy(function (collection) {
+
+        collection.iterate($.proxy(function (channel) {
+
+            this.getController('Channels.Channel', channel.data)
+                .dispatchView(channels);
+        }, this));
+    }, this));
+
+    epg.initChannels();
+
+    this.getController('Default').dispatchView()
+        .append(channels);
+
+};
+
+/**
+ * register module
+ */
+VDRest.app.registerModule('Gui.Epg', true);

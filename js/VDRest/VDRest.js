@@ -56,14 +56,17 @@ VDRest.App.prototype.observeHash = false;
 
 /**
  * add module instance to buffer
- * @param {string} module name of module to be instantiated
+ * @param {string} keys namespace and name of module to be instantiated
  * @param {boolean} init
  */
-VDRest.App.prototype.registerModule = function (module, init) {
+VDRest.App.prototype.registerModule = function (keys, init) {
 
-	this.modules[window.VDRest[module].prototype.name] = new window.VDRest[module]();
+    var namespace = keys.split('.')[0],
+        module = keys.split('.')[1];
+
+	this.modules[keys] = new window[namespace][module]();
     if (init) {
-        this.initModule(module);
+        this.initModule(keys);
     }
 };
 
@@ -100,7 +103,9 @@ VDRest.App.prototype.run = function () {
 
         this.pollLocation();
         $.event.trigger('dispatch.before');
-		this.dispatch(start);
+//		this.dispatch(start);
+        // TODO: wieder entfernen...
+        this.dispatch('Gui.Epg');
         $.event.trigger('dispatch.after');
 
 	} else {

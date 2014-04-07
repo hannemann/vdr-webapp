@@ -38,4 +38,4 @@ VDRest.Recordings.prototype.initList = function () {
 /**
  * register module
  */
-VDRest.app.registerModule('Recordings', true);
+VDRest.app.registerModule('VDRest.Recordings', true);

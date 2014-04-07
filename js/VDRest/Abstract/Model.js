@@ -102,8 +102,8 @@ VDRest.Abstract.Model.prototype.triggerCollectionLoaded = function () {
 };
 
 /**
- * default collection iterator
- * @param callback {function}
+ * default result iterator
+ * @param {function} callback
  */
 VDRest.Abstract.Model.prototype.resultIterator = function (callback) {
 
@@ -113,4 +113,13 @@ VDRest.Abstract.Model.prototype.resultIterator = function (callback) {
 
         callback(this.currentResult[i]);
     }
+};
+
+/**
+ * default collection iterator
+ * @param {function} callback
+ */
+VDRest.Abstract.Model.prototype.getCollection = function () {
+
+    return this.collection;
 };

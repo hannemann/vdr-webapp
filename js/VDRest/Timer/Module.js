@@ -38,4 +38,4 @@ VDRest.Timer.prototype.initList = function () {
 /**
  * register module
  */
-VDRest.app.registerModule('Timer', true);
+VDRest.app.registerModule('VDRest.Timer', true);

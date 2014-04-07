@@ -19,11 +19,11 @@ VDRest.Abstract.Module.prototype.namespace = 'VDRest';
  */
 VDRest.Abstract.Module.prototype.init = function () {
 
-    window.VDRest[this.name].Model = function () {};
+    window[this.namespace][this.name].Model = function () {};
 
-    window.VDRest[this.name].View = function () {};
+    window[this.namespace][this.name].View = function () {};
 
-    window.VDRest[this.name].Controller = function () {};
+    window[this.namespace][this.name].Controller = function () {};
 
     this.cache = new VDRest.Lib.Cache();
 };
@@ -37,6 +37,17 @@ VDRest.Abstract.Module.prototype.init = function () {
 VDRest.Abstract.Module.prototype.getModel = function (type, data) {
 
     return this.getAndInitialize('Model', type, data);
+};
+
+/**
+ * retrieve controller
+ * @param {String} type
+ * @param {Object} [data]
+ * @return {*}
+ */
+VDRest.Abstract.Module.prototype.getView = function (type, data) {
+
+    return this.getAndInitialize('View', type, data);
 };
 
 /**

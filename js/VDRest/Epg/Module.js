@@ -63,5 +63,5 @@ VDRest.Epg.prototype.initChannels = function () {
 /**
  * register module
  */
-VDRest.app.registerModule('Epg', true);
+VDRest.app.registerModule('VDRest.Epg', true);
 

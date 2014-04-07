@@ -1,3 +1,67 @@
+
+#timeline {
+    height:15px;
+    width:2000px;
+    position: absolute;
+    top: 0;
+    left: -500px;
+    background-image: linear-gradient(90deg, black 50%, white 0);
+    background-size: 240px 100%;
+    z-index: 1;
+}
+
+#epg {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: calc(100% - 15px);
+}
+
+#epg-channels {
+    width: 39px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    border-right: 1px solid black;
+}
+
+#epg-channels .channel {
+    width: 39px;
+    height: 39px;
+    border-bottom: 1px solid black;
+    background-size: 39px 39px;
+    background-color: white;
+}
+
+#broadcasts-wrapper {
+    position: absolute;
+    width: calc(100% - 40px);
+    top: 0;
+    left: 40px;
+    overflow-x: scroll;
+}
+#broadcasts {
+    width: 5000px;
+    overflow: auto;
+    background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
+    background-size: 100% 40px;
+}
+#broadcasts .channel {
+    height: 40px;
+}
+#broadcasts .broadcast {
+    float: left;
+    width: 80px;
+    height: 39px;
+    background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
+}
+
+
+/*
 #timeSelector li {
 	font-size: 15px;
 	font-weight: bold;
@@ -10,7 +74,7 @@
 	float: left;
 }
 .epg-wrapper dd {
-	width: calc(100% - 40px); /* breite der Kanallogos abziehen */
+	width: calc(100% - 40px); /* breite der Kanallogos abziehen * /
 	overflow: auto;
 	background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
 	background-size: 100% 40px;
@@ -83,3 +147,4 @@
 	background-position: right bottom;
 	background-repeat: no-repeat;
 }
+*/

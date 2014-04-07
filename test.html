@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta charset="utf-8">
+
+    <style type="text/css">
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            background: red;
+            position: relative;
+            z-index: 0;
+        }
+
+
+        .clearer:before,
+        .clearer:after {
+            content:"";
+            display:table;
+        }
+        .clearer:after {
+            clear:both;
+        }
+
+        #menubar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 50px;
+            width: 100%;
+            background: blue;
+            z-index: 1;
+        }
+
+        #viewport {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            height: calc(100% - 50px);
+            width: 100%;
+            background: cyan;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        /* epg related */
+
+        #timeline {
+            height:15px;
+            width:2000px;
+            position: absolute;
+            top: 0;
+            left: -500px;
+            background-image: linear-gradient(90deg, black 50%, white 0);
+            background-size: 240px 100%;
+            z-index: 1;
+        }
+
+        #epg {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            height: calc(100% - 15px);
+        }
+
+        #channels {
+            width: 39px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 0;
+            border-right: 1px solid black;
+        }
+
+        #channels .channel {
+            width: 39px;
+            height: 39px;
+            border-bottom: 1px solid black;
+            background: yellow;
+        }
+
+        #channels .channel:nth-child(2n-1) {
+            background: orange;
+        }
+
+        #events-wrapper {
+            position: absolute;
+            width: calc(100% - 40px);
+            top: 0;
+            left: 40px;
+            overflow-x: scroll;
+        }
+        #events {
+            width: 5000px;
+            overflow: auto;
+            background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
+            background-size: 100% 40px;
+        }
+        #events .channel {
+            height: 40px;
+        }
+        #events .broadcast {
+            float: left;
+            width: 80px;
+            height: 39px;
+            background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
+        }
+
+        #testwindow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            overflow-y: scroll;
+            background: yellow;
+            z-index: 2;
+            display: none;
+        }
+        #testwindow #testcontent {
+            height: 1500px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-image: linear-gradient(45deg, black 50%, white 0%);
+            background-size: 20px 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div id="testwindow">
+        <div id="testcontent"></div>
+    </div>
+
+    <div id="menubar"></div>
+
+    <div id="viewport">
+        <div id="timeline"></div>
+        <div id="epg">
+            <div id="channels">
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+                <div class="channel"></div>
+            </div>
+            <div id="events-wrapper">
+                <div id="events">
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                    <div class="channel">
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                        <div class="broadcast"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
