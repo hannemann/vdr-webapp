@@ -98,8 +98,10 @@ VDRest.App.prototype.run = function () {
             }
 		}
 
-		this.dispatch(start);
         this.pollLocation();
+        $.event.trigger('dispatch.before');
+		this.dispatch(start);
+        $.event.trigger('dispatch.after');
 
 	} else {
 
