@@ -1,4 +1,9 @@
-
+/**
+ * @class
+ * @constructor
+ * @var {jQuery} node
+ * @method getImage
+ */
 Gui.Epg.View.Channels.Channel = function () {};
 
 Gui.Epg.View.Channels.Channel.prototype = new VDRest.Abstract.View();
@@ -7,31 +12,36 @@ Gui.Epg.View.Channels.Channel.prototype.cacheKey = 'channel_id';
 
 Gui.Epg.View.Channels.Channel.prototype.init = function () {
 
-    this.channel = $('<div class="channel">');
+    this.node = $('<div class="channel">');
 };
 
-Gui.Epg.View.Channels.Channel.prototype.render = function (parent) {
+Gui.Epg.View.Channels.Channel.prototype.render = function () {
 
     this.setAttributes()
-        .addLogo()
+        .addLogo();
 
-    this.channel.appendTo(parent);
+    VDRest.Abstract.View.prototype.render.call(this);
 };
 
-Gui.Epg.View.Channels.Channel.prototype.setAttributes = function (parent) {
+Gui.Epg.View.Channels.Channel.prototype.setAttributes = function () {
 
-    this.channel.attr("data-channel-id", this.data.channel_id);
+    this.node.attr("data-channel-id", this.getChannelId());
 
     return this;
 };
 
-Gui.Epg.View.Channels.Channel.prototype.addLogo = function (parent) {
+Gui.Epg.View.Channels.Channel.prototype.addLogo = function () {
 
-    if (this.data.image) {
+    var image = this.getImage();
 
-        this.channel.css({
-            "background-image" : "url(" + this.data.image + ")"
-        })
+    if (image) {
+
+        this.node.css({
+            "background-image" : "url(" + image + ")"
+        });
+    } else {
+        this.node.text(this.getName());
     }
+
     return this;
 };

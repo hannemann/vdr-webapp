@@ -35,6 +35,8 @@
     border-bottom: 1px solid black;
     background-size: 39px 39px;
     background-color: white;
+    color: #707070;
+    font-size: 10px;
 }
 
 #broadcasts-wrapper {
@@ -50,14 +52,31 @@
     background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
     background-size: 100% 40px;
 }
-#broadcasts .channel {
+#broadcasts .broadcasts-list {
     height: 40px;
 }
-#broadcasts .broadcast {
+#broadcasts .broadcasts-list .broadcast {
     float: left;
-    width: 80px;
     height: 39px;
     background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
+    font-size: 9px;
+    overflow: hidden;
+    color: white;
+}
+#broadcasts .broadcasts-list .broadcast {
+    float: left;
+    height: 39px;
+    background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
+}
+#broadcasts .broadcasts-list .broadcast div {
+    height: 35px;
+    padding: 2px;
+}
+#broadcasts .broadcasts-list .broadcast.active-timer div {
+    background-image: linear-gradient(135deg, #404040 30%, #930000 70%);
+    background-size: 5px 5px;
+    background-position: right bottom;
+    background-repeat: no-repeat;
 }
 
 

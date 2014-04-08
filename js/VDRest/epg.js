@@ -42,7 +42,7 @@ VDRest.Epgold.prototype.dispatch = function () {
 //            $(document).on('broadcastsloaded-' + channel.getData('channel_id'), $.proxy(function (result) {
 //
 //                result.iterate(function (broadcast) {
-//                    /** @type {VDRest.Epg.Model.Channels.Channel.Broadcast} broadcast */
+//                    /** @type {VDRest.Epg.ViewModel.Channels.Channel.Broadcast} broadcast */
 //                    console.log(broadcast.data.start_date, broadcast.data.title);
 //                });
 //            }, this));

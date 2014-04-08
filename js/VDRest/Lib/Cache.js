@@ -11,6 +11,7 @@ VDRest.Lib.Cache = function () {
     this.store = {
         "Model" : {},
         "View" : {},
+        "ViewModel" : {},
         "Controller" : {}
     }
 };
@@ -99,7 +100,7 @@ VDRest.Lib.Cache.prototype.getClassCache = function (_class) {
         classCache;
 
     if (cache) {
-        new RegExp('.*(Model|View|Controller)\\.(.*)').test(_class);
+        new RegExp('.*(Model|View|ViewModel|Controller)\\.(.*)').test(_class);
 
         classCache = RegExp.$2;
 

@@ -1,6 +1,6 @@
 
 /**
- * Channel Model
+ * Channel ViewModel
  * @class
  * @constructor
  * @var {object} data
@@ -73,7 +73,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.mixIntoCollectionItem = 'channelObj'
 /**
  * initialize collection cache
  * do some data transformations
- * @member {object} collection holds collection items VDRest.Epg.Model.Channels.Channel.Broadcast
+ * @member {object} collection holds collection items VDRest.Epg.ViewModel.Channels.Channel.Broadcast
  * @member {number} data.count number of currently stored broadcast
  * @member {number} lastBroadcastEnd timestamp of the end of the latest broadcast
  * @member {object} events event names

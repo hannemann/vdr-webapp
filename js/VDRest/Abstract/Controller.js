@@ -40,11 +40,9 @@ VDRest.Abstract.Controller.prototype.getView = function (type) {
 };
 
 /**
- * retrieve rendered view
- * @param {string} type
- * @return {VDRest.Abstract.View}
+ * render view
  */
-VDRest.Abstract.Controller.prototype.dispatchView = function (type) {
+VDRest.Abstract.Controller.prototype.dispatchView = function () {
 
-    return this.getView(type).render();
+    this.view.render();
 };

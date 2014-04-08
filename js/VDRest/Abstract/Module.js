@@ -23,6 +23,8 @@ VDRest.Abstract.Module.prototype.init = function () {
 
     window[this.namespace][this.name].View = function () {};
 
+    window[this.namespace][this.name].ViewModel = function () {};
+
     window[this.namespace][this.name].Controller = function () {};
 
     this.cache = new VDRest.Lib.Cache();
@@ -37,6 +39,17 @@ VDRest.Abstract.Module.prototype.init = function () {
 VDRest.Abstract.Module.prototype.getModel = function (type, data) {
 
     return this.getAndInitialize('Model', type, data);
+};
+
+/**
+ * retrieve viewmodel
+ * @param {String} type
+ * @param {Object} [data]
+ * @return {*}
+ */
+VDRest.Abstract.Module.prototype.getViewModel = function (type, data) {
+
+    return this.getAndInitialize('ViewModel', type, data);
 };
 
 /**
@@ -101,7 +114,7 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
 
 /**
  * lazy fetching of requested class
- * @param {string} type                     Model, View, Controller
+ * @param {string} type                     ViewModel, View, Controller
  * @param {string} _class                   classpath
  * @param {(object|string|number)} [data]   data object or identifier
  * @return {*}

@@ -26,25 +26,19 @@ Gui.Epg.prototype.name = 'Epg';
  */
 Gui.Epg.prototype.dispatch = function () {
 
-    var epg = VDRest.app.getModule('VDRest.Epg'),
-        channels = this.getController('Channels').dispatchView();
-
     VDRest.app.setLocationHash(this.name);
 
-    $(document).one('channelsloaded', $.proxy(function (collection) {
+    this.store = VDRest.app.getModule('VDRest.Epg');
+    this.getController('Epg').dispatchView();
+};
 
-        collection.iterate($.proxy(function (channel) {
+/**
+ * retrieve date object of chosen EPG start time
+ * @returns {*}
+ */
+Gui.Epg.prototype.getFromDate = function () {
 
-            this.getController('Channels.Channel', channel.data)
-                .dispatchView(channels);
-        }, this));
-    }, this));
-
-    epg.initChannels();
-
-    this.getController('Default').dispatchView()
-        .append(channels);
-
+    return this.store[VDRest.config.getItem('lastEpg')];
 };
 
 /**
