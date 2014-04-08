@@ -138,7 +138,7 @@ Epg.prototype.addChannelEvents = function () {
             me.channelClickTimeout = window.setTimeout(function () {
                 me.preventClick = true;
                 e.preventDefault();
-                window.location.href = 'http://' + me.host + ':' + config.getItem('streamdev-port') + '/EXT;QUALITY=WLAN/' + stream;
+                window.location.href = 'http://' + me.host + ':' + config.getItem('streamdev-port') + '/EXT;QUALITY=MOBIL/' + stream;
             }, 1000);
         });
 
