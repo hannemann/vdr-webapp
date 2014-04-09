@@ -24,5 +24,5 @@ Gui.Epg.ViewModel.Channels.Channel.prototype.cacheKey = 'channel_id';
 Gui.Epg.ViewModel.Channels.Channel.prototype.init = function () {
 
     this.resource = this.data.resource.data;
-    this.initViewGetters(this.data.view, this.data.resource);
+    this.initViewMethods(this.data.view, this.data.resource);
 };

@@ -28,7 +28,6 @@
  * @property {number} end_time          timestamp
  * @property {Date} start_date
  * @property {Date} end_date
- * @property {VDRest.Epg.Model.Channels.Channel} channel
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
 

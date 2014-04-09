@@ -29,4 +29,13 @@ VDRest.Abstract.View.prototype.setParentView = function (parentView) {
 VDRest.Abstract.View.prototype.render = function () {
 
     this.node.appendTo(this.parentView.node);
+
+    this.isRendered = !this.isRendered;
+};
+
+VDRest.Abstract.View.prototype.remove = function () {
+
+    this.node.remove();
+
+    this.isRendered = !this.isRendered;
 };

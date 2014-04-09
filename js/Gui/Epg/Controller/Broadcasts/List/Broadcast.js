@@ -7,6 +7,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.cacheKey = 'channel/id';
 
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
 
+    this.epgController = this.module.getController('Epg');
+
     this.view = this.module.getView('Broadcasts.List.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel
@@ -19,4 +21,16 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
         "view" : this.view,
         "resource" : this.data.dataModel
     });
+
+    this.view.decorate();
+};
+
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
+
+    var metrics = this.epgController.getMetrics(),
+        parentOffset = this.view.parentView.node.offset(),
+        left = this.view.getLeft() + parentOffset.left,
+        right = this.view.getRight() + parentOffset.left;
+
+    return left < metrics.win.width && right > metrics.broadcasts.left;
 };

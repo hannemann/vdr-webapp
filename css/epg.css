@@ -47,26 +47,23 @@
     overflow-x: scroll;
 }
 #broadcasts {
-    width: 5000px;
+    width: 1000px;
     overflow: auto;
     background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
     background-size: 100% 40px;
 }
 #broadcasts .broadcasts-list {
     height: 40px;
+    position: relative;
 }
 #broadcasts .broadcasts-list .broadcast {
-    float: left;
+    position: absolute;
+    top: 0;
     height: 39px;
     background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
     font-size: 9px;
     overflow: hidden;
     color: white;
-}
-#broadcasts .broadcasts-list .broadcast {
-    float: left;
-    height: 39px;
-    background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
 }
 #broadcasts .broadcasts-list .broadcast div {
     height: 35px;

@@ -7,6 +7,7 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
 
     this.view = this.module.getView('Broadcasts');
     this.view.setParentView(this.data.parent.view);
+    this.addScrollEvents();
     this.addObserver();
 };
 
@@ -24,4 +25,15 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
         }, this));
     }, this));
+};
+
+Gui.Epg.Controller.Broadcasts.prototype.addScrollEvents = function () {
+
+    $(this.view.wrapper).on('scroll', function () {
+
+        $.event.trigger({
+            "type" : "epg.scroll",
+            "direction" : "horizontal"
+        });
+    });
 };

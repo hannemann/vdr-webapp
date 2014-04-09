@@ -10,17 +10,16 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
     this.node = $('<div class="broadcast"><div></div></div>');
 };
 
-Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.decorate = function () {
 
     this.setWidth().addClasses().addTitle();
-
-    VDRest.Abstract.View.prototype.render.call(this);
 };
 
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.setWidth = function () {
 
     this.node.css({
-        "width" : this.getWidth() + 'px'
+        "width" : this.getWidth() + 'px',
+        "left" : this.getLeft() + 'px'
     });
 
     return this;
