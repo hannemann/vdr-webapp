@@ -17,13 +17,18 @@ ul#menubar #refresh {
     font-style: italic;
 }
 #drawer-button {
-	height: 38px;
-	width: 38px;
-	background-image: linear-gradient(0deg, #696969 50%, white 50%);
-	background-size: 30px 12px;
-	background-position: center 3px;
-	background-repeat: repeat-y;
-	margin-right: 15px;
+    height: 38px;
+    width: 38px;
+    background-image: linear-gradient(0deg, #696969 50%, white 50%);
+    background-size: 30px 4px;
+    background-position: center 3px;
+    background-repeat: repeat-y;
+    margin-right: 15px;
+}
+#drawer-button img {
+    height: 38px;
+    width: 38px;
+    margin-left: 15px;
 }
 
 #drawer {
