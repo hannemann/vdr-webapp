@@ -45,6 +45,8 @@ Gui.Epg.Controller.Epg.prototype.init = function () {
         VDRest.app.getModule('Gui.Viewport').getView('Default')
     );
 
+    this.timeLine = this.module.getController('TimeLine', {"parent":this});
+
     this.channels = this.module.getController('Channels', {"parent":this});
 
     this.broadcasts = this.module.getController('Broadcasts', {"parent":this});
@@ -56,6 +58,7 @@ Gui.Epg.Controller.Epg.prototype.init = function () {
 Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
 
     this.module.store.initChannels();
+    this.timeLine.dispatchView();
     this.channels.dispatchView();
     this.broadcasts.dispatchView();
     this.addScrollEvents();

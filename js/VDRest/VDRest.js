@@ -253,8 +253,8 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
  */
 VDRest.App.prototype.getConfig = function () {
 
-	this.modules['settings'].init();
-	this.dispatch('settings', $.proxy(this.run, this));
+	this.modules['VDRest.Settings'].init();
+	this.dispatch('VDRest.Settings', $.proxy(this.run, this));
 };
 
 /**

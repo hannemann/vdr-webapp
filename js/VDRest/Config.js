@@ -20,8 +20,8 @@ VDRest.Config = function () {
 
     /**
      * persist item in storage
-     * @param {String}
-     * @param {String}
+     * @param {String} k
+     * @param {String} v
      * @return {*}
      */
 	this.setItem = function (k, v) {
@@ -78,7 +78,9 @@ VDRest.Config.prototype.defaults = {
     "port"              :   "8002",
     "recordingStartGap" :   120,
     "recordingEndGap"   :   600,
-    "protocol"          :   "http"
+    "protocol"          :   "http",
+    "host"              :   "192.168.3.99",
+    "pixelPerSecond"    :   2/60
 };
 
 VDRest.config = new VDRest.Config();
