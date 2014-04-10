@@ -16,7 +16,7 @@ Gui.Epg.prototype = new VDRest.Abstract.Module();
 Gui.Epg.prototype.namespace = 'Gui';
 
 /**
- * Modulename
+ * Module name
  * @type {string}
  */
 Gui.Epg.prototype.name = 'Epg';
