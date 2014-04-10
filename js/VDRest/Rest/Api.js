@@ -55,7 +55,7 @@ VDRest.Rest.Api.prototype.getBaseUrl = function () {
 VDRest.Rest.Api.prototype.load = function (options) {
 
     var url = "undefined" !== typeof options.url && "undefined" !== typeof this.urls[options.url] ?
-        this.urls[options.url] : this.urls.load,
+        this.urls[options.url] : this.urls.load, me=this,
 
         method = options.method || 'GET',
 
@@ -79,14 +79,15 @@ VDRest.Rest.Api.prototype.load = function (options) {
         this.cachedResponse = false;
         this.refreshCache = false;
         $.ajax({
-            "url"       :   this.getBaseUrl() + url,
-            "method"    :   method,
-            "success"   :   $.proxy(function (result) {
-                this.responseCache[url] = result;
-                callback(result);
-            }, this),
-            "complete"  :   $.proxy(this.onComplete, this),
-            "error"     :   $.proxy(this.onError, this)
+            "url": this.getBaseUrl() + url,
+            "method": method
+        }).done(function (result) {
+            me.responseCache[url] = result;
+            callback(result);
+        }).fail(function () {
+            me.onError.apply(me, arguments)
+        }).always(function () {
+            me.onComplete.apply(me, arguments)
         });
     }
 };
