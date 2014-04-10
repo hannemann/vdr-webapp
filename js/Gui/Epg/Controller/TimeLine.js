@@ -25,5 +25,53 @@ Gui.Epg.Controller.TimeLine.prototype.dispatchView = function () {
         "from" : this.from
     });
 
-    console.log(this.view);
+    this.addObserver();
+
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+};
+
+Gui.Epg.Controller.TimeLine.prototype.addObserver = function () {
+
+    var me = this,
+        broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0),
+        epgController = this.module.getController('Epg');
+
+    this.menubarDate = null;
+
+    $(document).on('epg.scroll', function (e) {
+
+        if ('horizontal' === e.direction) {
+
+            var scroll = broadcastsWrapper.scrollLeft * -1,
+                ddOffset = broadcastsWrapper.offsetLeft,
+                date = me.view.node.find('*[data-date]:first').attr('data-date');
+
+            me.view.node.css({"left": scroll + 'px'});
+
+            me.view.node.find('*[data-date]').each(function (k, v) {
+                var d = $(v);
+
+                if (d.offset().left + d.width() <= ddOffset) {
+
+                    date = d.attr('data-date');
+                } else {
+                    return false;
+                }
+            });
+
+            if (date !== me.menubarDate) {
+                $.event.trigger({
+                    "type" : "epg.date.changed",
+                    "date" : new Date(parseInt(date, 10))
+                });
+                me.menubarDate = date;
+            }
+
+            if (me.view.node.find('div:last').offset().left < epgController.getMetrics().win.width) {
+
+                me.view.renderTimeLine();
+            }
+        }
+    });
+
 };

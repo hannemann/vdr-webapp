@@ -65,6 +65,8 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
     this.addObserver();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+    $.event.trigger('epg.dispatched');
 };
 
 /**

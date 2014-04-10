@@ -1,23 +1,23 @@
 
-#timeline {
-    height:15px;
-    width:2000px;
-    position: absolute;
-    top: 0;
-    left: -500px;
-    background-image: linear-gradient(90deg, black 50%, white 0);
-    background-size: 240px 100%;
-    z-index: 1;
-}
+/*#time-line {*/
+    /*height:15px;*/
+    /*width:2000px;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: -500px;*/
+    /*background-image: linear-gradient(90deg, black 50%, white 0);*/
+    /*background-size: 240px 100%;*/
+    /*z-index: 1;*/
+/*}*/
 
 #epg {
     position: absolute;
-    top: 15px;
+    top: 21px;
     left: 0;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-    height: calc(100% - 15px);
+    height: calc(100% - 21px);
 }
 
 #epg-channels {
@@ -83,9 +83,6 @@
 	font-weight: bold;
 	line-height: 22px;
 }
-#menubar .epg-wrapper .date {
-	font-size: 10px;
-}
 .epg-wrapper dt, .epg-wrapper dd {
 	float: left;
 }
@@ -95,7 +92,11 @@
 	background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
 	background-size: 100% 40px;
 }
-.epg-wrapper div#timeline {
+*/
+#menubar .epg-wrapper .date {
+    font-size: 10px;
+}
+div#time-line {
 	height: 20px;
 	border-bottom: 1px solid black;
 	color: white;
@@ -103,28 +104,29 @@
 	padding-left: 40px;
 	background: #404040;
 	position: fixed;
-	top: 38px;
+	top: 50px;
 	width: 100%;
 }
-.epg-wrapper div#timeline div {
+div#time-line div {
 	float: left;
 	width: 15px;
 	line-height: 20px;
 }
-.epg-wrapper div#timeline div.odd {
+div#time-line div.odd {
 	color: black;
 	background: white;
 }
-.epg-wrapper div#timeline .qr {
+div#time-line .qr {
 	text-align: left;
 }
-.epg-wrapper div#timeline .ql {
+div#time-line .ql {
 	text-align: right;
 }
-.epg-wrapper div#timeline .ql.hour {
+div#time-line .ql.hour {
 	font-size: 12px;
 	font-weight: bold;
 }
+/*
 .epg-wrapper li.channel,
 .epg-wrapper li.events {
 	margin-bottom: 1px;

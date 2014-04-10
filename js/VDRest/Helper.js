@@ -25,7 +25,7 @@ VDRest.Helper.prototype.getTimeString = function (date) {
  * retrieve date string from date object
  * @param {Date} date
  * @param {Boolean} fullYear
- * @return {*}
+ * @return {string|Boolean}
  */
 VDRest.Helper.prototype.getDateString = function (date, fullYear) {
 
@@ -78,9 +78,9 @@ VDRest.Helper.prototype.strToDate = function (time, reg) {
 
 /**
  * pad zeros
- * @param {String} n
- * @param {int} width
- * @param {int|string} z
+ * @param {number|string} n
+ * @param {number} width
+ * @param {number|string} [z]
  * @return {String}
  */
 VDRest.Helper.prototype.pad = function (n, width, z) {
@@ -107,7 +107,7 @@ VDRest.Helper.prototype.getDurationAsString = function (duration) {
  * get day of week from date object
  * @param {Date} date
  * @param {Boolean} abbr
- * @return {*}
+ * @return {string|boolean}
  */
 VDRest.Helper.prototype.getWeekDay = function (date, abbr) {
 
