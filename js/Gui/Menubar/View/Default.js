@@ -10,7 +10,7 @@ Gui.Menubar.View.Default.prototype.init = function () {
 
 Gui.Menubar.View.Default.prototype.render = function () {
 
-    this.addIcon().addThrobber();
+    this.addIcon().addContent().addThrobber().setTitle();
     this.node.prependTo(this.parentView.node);
 };
 
@@ -22,10 +22,26 @@ Gui.Menubar.View.Default.prototype.addIcon = function () {
     return this;
 };
 
+Gui.Menubar.View.Default.prototype.addContent = function () {
+
+    this.content = $('<div class="menubar-content"><div id="header"></div></div>')
+        .appendTo(this.node);
+    this.header = this.content.find('#header');
+
+    return this;
+};
+
 Gui.Menubar.View.Default.prototype.addThrobber = function () {
 
     this.throbber = $('<img src="/assets/ajax-loader-lightblue.gif" id="throbber">')
         .appendTo(this.node);
+
+    return this;
+};
+
+Gui.Menubar.View.Default.prototype.setTitle = function (title) {
+
+    this.header.text(title);
 
     return this;
 };

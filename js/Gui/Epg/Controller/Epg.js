@@ -65,6 +65,8 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
+    VDRest.app.getModule('Gui.Menubar').getView('Default').setTitle(this.module.name);
+
     $.event.trigger('epg.dispatched');
 };
 
