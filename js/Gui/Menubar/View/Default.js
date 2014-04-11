@@ -10,7 +10,10 @@ Gui.Menubar.View.Default.prototype.init = function () {
 
 Gui.Menubar.View.Default.prototype.render = function () {
 
-    this.addIcon().addContent().addThrobber().setTitle();
+    this.addIcon()
+        .addContent()
+        .addThrobber()
+        .addSettingsButton();
     this.node.prependTo(this.parentView.node);
 };
 
@@ -34,6 +37,14 @@ Gui.Menubar.View.Default.prototype.addContent = function () {
 Gui.Menubar.View.Default.prototype.addThrobber = function () {
 
     this.throbber = $('<img src="/assets/ajax-loader-lightblue.gif" id="throbber">')
+        .appendTo(this.node);
+
+    return this;
+};
+
+Gui.Menubar.View.Default.prototype.addSettingsButton = function () {
+
+    this.settingsButton = $('<div id="button-settings">')
         .appendTo(this.node);
 
     return this;
