@@ -7,10 +7,22 @@ Gui.Epg.Controller.Channels.prototype.init = function () {
 
     this.view = this.module.getView('Channels');
     this.view.setParentView(this.data.parent.view);
-    this.addObserver();
 };
+Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 
+    var me = this;
+
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+    $(document).one('epg.dispatched', function () {
+        me.addObserver();
+    });
+};
 Gui.Epg.Controller.Channels.prototype.addObserver = function () {
+
+    var me = this,
+        broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0),
+        offsetTop = parseInt(this.view.node.css('top'), 10);
 
     $(document).one('channelsloaded', $.proxy(function (collection) {
 
@@ -24,4 +36,11 @@ Gui.Epg.Controller.Channels.prototype.addObserver = function () {
 
         }, this));
     }, this));
+
+    $(document).on('epg.scroll', function () {
+
+        var scroll = broadcastsWrapper.scrollTop * -1;
+
+        me.view.node.css({"top": scroll + offsetTop + 'px'});
+    });
 };

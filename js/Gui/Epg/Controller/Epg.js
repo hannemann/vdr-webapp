@@ -61,26 +61,11 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
     this.timeLine.dispatchView();
     this.channels.dispatchView();
     this.broadcasts.dispatchView();
-    this.addScrollEvents();
     this.addObserver();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
     $.event.trigger('epg.dispatched');
-};
-
-/**
- * trigger events on vertical scroll
- */
-Gui.Epg.Controller.Epg.prototype.addScrollEvents = function () {
-
-    $(this.view.node).on('scroll', function () {
-
-        $.event.trigger({
-            "type" : "epg.scroll",
-            "direction" : "vertical"
-        });
-    });
 };
 
 /**

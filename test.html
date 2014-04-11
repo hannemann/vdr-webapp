@@ -59,32 +59,32 @@
 
         /* epg related */
 
+        #epg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            height: 100%;
+        }
+
         #timeline {
-            height:15px;
+            height:20px;
             width:2000px;
             position: absolute;
             top: 0;
-            left: -500px;
+            left: 0;
             background-image: linear-gradient(90deg, black 50%, white 0);
             background-size: 240px 100%;
+            border-bottom: 1px solid black;
             z-index: 1;
-        }
-
-        #epg {
-            position: absolute;
-            top: 15px;
-            left: 0;
-            width: 100%;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            height: calc(100% - 15px);
         }
 
         #channels {
             width: 39px;
             position: absolute;
             left: 0;
-            top: 0;
+            top: 21px;
             z-index: 0;
             border-right: 1px solid black;
         }
@@ -103,15 +103,15 @@
         #events-wrapper {
             position: absolute;
             width: calc(100% - 40px);
-            top: 0;
+            top: 21px;
             left: 40px;
-            overflow-x: scroll;
+            height: calc(100% - 21px);
+            overflow: auto;
         }
         #events {
-            width: 5000px;
-            overflow: auto;
             background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
             background-size: 100% 40px;
+            width:5000px;
         }
         #events .channel {
             height: 40px;
@@ -146,6 +146,26 @@
 
     </style>
 
+
+    <script type="text/javascript" src="js/VDRest/Lib/jquery-2.1.0.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            var timeline = $('#timeline'),
+                channels = $('#channels');
+            $('#events-wrapper').on('scroll', function () {
+
+                var scroll = {
+                    left:this.scrollLeft * -1,
+                    top:this.scrollTop * -1 + 21
+                };
+
+                timeline.css({"left": scroll.left + 'px'});
+                channels.css({"top": scroll.top + 'px'});
+            });
+        });
+    </script>
+
 </head>
 
 <body>
@@ -157,8 +177,8 @@
     <div id="menubar"></div>
 
     <div id="viewport">
-        <div id="timeline"></div>
         <div id="epg">
+            <div id="timeline"></div>
             <div id="channels">
                 <div class="channel"></div>
                 <div class="channel"></div>
