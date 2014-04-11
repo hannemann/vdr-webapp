@@ -61,7 +61,7 @@ VDRest.Rest.Api.prototype.load = function (options) {
 
         callback = options.callback || undefined;
 
-//    VDRest.app.getModule('gui').showThrobber();
+    VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
 
     if ("function" !== typeof callback) {
 
@@ -106,5 +106,6 @@ VDRest.Rest.Api.prototype.onError = function () {};
  * method to be called any time an request is complete
  */
 VDRest.Rest.Api.prototype.onComplete = function () {
-//    VDRest.app.getModule('gui').hideThrobber();
+
+    VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
 };
