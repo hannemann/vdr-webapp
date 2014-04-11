@@ -84,18 +84,19 @@
 	font-weight: bold;
 	line-height: 22px;
 }
-.epg-wrapper dt, .epg-wrapper dd {
-	float: left;
-}
-.epg-wrapper dd {
-	width: calc(100% - 40px); /* breite der Kanallogos abziehen * /
-	overflow: auto;
-	background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
-	background-size: 100% 40px;
-}
+
 */
-#menubar .epg-wrapper .date {
+#epg-date {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(90deg, #404040 25%, transparent 89%);
+    width: 100px;
+    height: 16px;
+    line-height: 16px;
     font-size: 10px;
+    padding: 2px 3px;
+    z-index: 2;
 }
 div#time-line {
 	height: 20px;

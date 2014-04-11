@@ -30,13 +30,3 @@
     margin: 4px 0;
     display: none;
 }
-#menubar .epg-wrapper .date {
-    font-size: 10px;
-    position: absolute;
-    left: 0;
-    top: 50px;
-    background: linear-gradient(90deg, #404040 25%, transparent 89%);
-    width: 100px;
-    height: 14px;
-    padding: 3px;
-}

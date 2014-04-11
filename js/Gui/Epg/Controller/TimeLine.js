@@ -58,10 +58,7 @@ Gui.Epg.Controller.TimeLine.prototype.addObserver = function () {
         });
 
         if (date !== me.menubarDate) {
-            $.event.trigger({
-                "type" : "epg.date.changed",
-                "date" : new Date(parseInt(date, 10))
-            });
+            me.view.setDate(new Date(parseInt(date, 10)));
             me.menubarDate = date;
         }
 

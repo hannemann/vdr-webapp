@@ -19,6 +19,7 @@ Gui.Epg.View.TimeLine.prototype = new VDRest.Abstract.View();
 Gui.Epg.View.TimeLine.prototype.init = function () {
 
     this.node = $('<div id="time-line">');
+    this.date = $('<div id="epg-date">');
 };
 
 /**
@@ -27,13 +28,17 @@ Gui.Epg.View.TimeLine.prototype.init = function () {
 Gui.Epg.View.TimeLine.prototype.render = function () {
 
     this.renderTimeLine();
-
-    $.event.trigger({
-        "type" : "epg.date.changed",
-        "date" : this.getStartDate()
-    });
+    this.setDate(this.getStartDate());
+    this.date.appendTo(this.parentView.node);
 
     VDRest.Abstract.View.prototype.render.call(this);
+};
+
+Gui.Epg.View.TimeLine.prototype.setDate = function (date) {
+
+    var dateString = VDRest.helper.getWeekDay(date, true) + ', ' + VDRest.helper.getDateString(date);
+
+    this.date.text(dateString);
 };
 
 /**
@@ -55,7 +60,7 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
 
     if (!this.isRendered) {
         quarterWidth = this.getQuarterWidth();
-        quarterEnd = this.getNextQuarterEnd();
+        quarterEnd = this.getQuarterEnd();
         firstDate = quarterEnd.getTime();
     } else {
         quarterEnd = this.getQuarterEnd();
