@@ -20,6 +20,7 @@ Gui.Epg.View.TimeLine.prototype.init = function () {
 
     this.node = $('<div id="time-line">');
     this.date = $('<div id="epg-date">');
+    this.gradient = $('<div id="epg-timeline-right-gradient">');
 };
 
 /**
@@ -30,6 +31,7 @@ Gui.Epg.View.TimeLine.prototype.render = function () {
     this.renderTimeLine();
     this.setDate(this.getStartDate());
     this.date.appendTo(this.parentView.node);
+    this.gradient.appendTo(this.parentView.node);
 
     VDRest.Abstract.View.prototype.render.call(this);
 };

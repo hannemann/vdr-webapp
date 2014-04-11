@@ -25,8 +25,9 @@
     position: absolute;
     left: 0;
     top: 21px;
-    z-index: 0;
+    z-index: 1;
     border-right: 1px solid black;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.5);
 }
 
 #epg-channels .channel {
@@ -90,13 +91,26 @@
     position: absolute;
     left: 0;
     top: 0;
-    background: linear-gradient(90deg, #404040 25%, transparent 89%);
+    background: linear-gradient(90deg, #404040 40%, transparent 90%);
     width: 100px;
     height: 16px;
     line-height: 16px;
     font-size: 10px;
     padding: 2px 3px;
-    z-index: 2;
+    z-index: 3;
+}
+#epg-timeline-right-gradient {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: linear-gradient(90deg, transparent 10%, #404040 85%);
+    width: 100px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 10px;
+    padding: 2px 3px;
+    z-index: 3;
+    display: none;
 }
 div#time-line {
 	height: 20px;
@@ -105,7 +119,7 @@ div#time-line {
 	top: 0;
     left: 0;
 	width: 100%;
-    z-index: 1;
+    z-index: 2;
     background: #404040;
     border-bottom: 1px solid black;
     color: white;
