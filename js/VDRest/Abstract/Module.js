@@ -141,7 +141,8 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
     if ("undefined" === typeof cache[cacheKey]) {
 
-        cache[cacheKey] = VDRest.Lib.factory.getClass(path, data);
+        cache[cacheKey] = VDRest.Lib.factory.getClass(path);
+        cache[cacheKey].keyInCache = cacheKey;
     }
 
     return cache[cacheKey];
