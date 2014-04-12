@@ -33,7 +33,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.addDomEvents = function () {
             + VDRest.config.getItem('host')
             + ':'
             + VDRest.config.getItem('streamdev-port')
-            + '/EXT;QUALITY=SLOW/'
+            + '/' + VDRest.config.getItem('streamdev-params') + '/'
             + this.data.dataModel.data.stream;
 
     this.view.node.on('mouseup', function () {

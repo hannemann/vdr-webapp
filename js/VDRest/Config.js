@@ -81,7 +81,8 @@ VDRest.Config.prototype.defaults = {
     "recordingEndGap"   :   600,
     "protocol"          :   "http",
     "host"              :   "192.168.3.99",
-    "pixelPerSecond"    :   2/60
+    "pixelPerSecond"    :   2/60,
+    "streamdev-params"  :   "EXT;QUALITY=SLOW"
 };
 
 VDRest.config = new VDRest.Config();
