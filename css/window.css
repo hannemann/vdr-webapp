@@ -1,3 +1,61 @@
+/** default window styles */
+
+.window {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+    background: #404040;
+    z-index: 2;
+    overflow: auto;
+    box-shadow:         0 0 20px 0 rgba(0, 0, 0, 1);
+}
+
+.window-close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 20px;
+    cursor: default;
+}
+.window.has-header .window-close {
+    color: black;
+}
+
+.window-header {
+    background: white;
+    color: black;
+    padding: 20px;
+}
+
+.window-header * {
+    color: inherit;
+}
+
+/* Broadcast window related styles */
+
+.broadcast-header-image {
+    max-width: 50%;
+}
+
+.broadcast-header-details {
+    clear: left;
+    padding: 0;
+    margin-right: 20px;
+}
+
+.window.image-expanded .broadcast-header-details {
+    width: calc(100% - 20px);
+}
+.broadcast-header-components li {
+    margin-left: 5px;
+}
+
+/* deprecated stuff */
 div.show-event .header.active-timer {
     background-image: linear-gradient(135deg, #FF0000 20%, #FFFFFF 35%);
     background-repeat: no-repeat;

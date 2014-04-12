@@ -151,17 +151,17 @@ VDRest.Helper.prototype.vdrDecodeURI = function (string) {
 // * remove duplicates
 // * @return {Array}
 // */
-//Array.prototype.unique = function() {
-//
-//    var u = {}, a = [];
-//    for(var i = 0, l = this.length; i < l; ++i){
-//        if(u.hasOwnProperty(this[i])) {
-//            continue;
-//        }
-//        a.push(this[i]);
-//        u[this[i]] = 1;
-//    }
-//    return a;
-//};
+Array.prototype.unique = function() {
+
+    var u = {}, a = [];
+    for(var i = 0, l = this.length; i < l; ++i){
+        if(u.hasOwnProperty(this[i])) {
+            continue;
+        }
+        a.push(this[i]);
+        u[this[i]] = 1;
+    }
+    return a;
+};
 
 VDRest.helper = new VDRest.Helper();
