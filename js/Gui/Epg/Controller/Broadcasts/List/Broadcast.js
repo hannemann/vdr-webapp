@@ -23,6 +23,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
     });
 
     this.view.decorate();
+
+    this.addObserver();
 };
 
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
@@ -33,4 +35,20 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
         right = this.view.getRight() + parentOffset.left;
 
     return left < metrics.win.width && right > metrics.broadcasts.left;
+};
+
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function () {
+
+    var me = this;
+
+    this.view.node.on('click', function () {
+
+        $.event.trigger({
+            "type" : 'window.request',
+            "object" : {
+                "type" : "Broadcast",
+                "data" : me.data
+            }
+        })
+    });
 };
