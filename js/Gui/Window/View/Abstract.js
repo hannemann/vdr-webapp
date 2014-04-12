@@ -16,6 +16,10 @@ Gui.Window.View.Abstract.prototype.init = function () {
 
     this.node = $('<div class="window">');
 
+    if (this.hasCloseButton && !this.closeButton) {
+        this.addCloseButton();
+    }
+
     if (this.hasHeader) {
         this.header = $('<div class="window-header clearer">').appendTo(this.node);
         this.node.addClass('has-header');
@@ -29,10 +33,6 @@ Gui.Window.View.Abstract.prototype.init = function () {
  * render essentials
  */
 Gui.Window.View.Abstract.prototype.render = function () {
-
-    if (this.hasCloseButton && !this.closeButton) {
-        this.addCloseButton();
-    }
 
     VDRest.Abstract.View.prototype.render.call(this);
 };
@@ -50,6 +50,10 @@ Gui.Window.View.Abstract.prototype.addCloseButton = function () {
  * remove window
  */
 Gui.Window.View.Abstract.prototype.destruct = function () {
+
+    $.event.trigger({
+        "type" : "destruct.window-" + this.getChannel() + '/' + this.getId()
+    });
 
     if (this.hasHeader) {
         this.header.empty();

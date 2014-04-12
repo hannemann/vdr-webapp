@@ -20,6 +20,22 @@ Gui.Window.Controller.Abstract.prototype.init = function () {
 };
 
 /**
+ * init parentView
+ */
+Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
+
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+    if (this.view.getTabConfig) {
+
+        $.event.trigger({
+            "type" : "tabs.request",
+            "tabConfig" : this.view.getTabConfig()
+        });
+    }
+};
+
+/**
  * add event handler
  * add destroyer to VDRest.app
  */

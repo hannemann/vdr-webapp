@@ -126,15 +126,17 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
         path = this.namespace + '.' + this.name + '.' + type + '.' + _class,
         constructor = VDRest.Lib.factory.getConstructor(path);
 
-    if ("undefined" !== typeof constructor.prototype.cacheKey) {
+    if ("undefined" !== typeof constructor.prototype.cacheKey || (data && data.cacheKey)) {
+
+        cacheKey = constructor.prototype.cacheKey || data.cacheKey;
 
         if (!(data instanceof Object)) {
 
-            data = this.mockInstanceData(data, constructor.prototype.cacheKey);
+            data = this.mockInstanceData(data, cacheKey);
         }
 
         cache = this.cache.getStore(type, _class);
-        cacheKey = this.cache.getCacheKey(data, constructor.prototype.cacheKey);
+        cacheKey = this.cache.getCacheKey(data, cacheKey);
     }
 
     if ("undefined" === typeof cache[cacheKey]) {

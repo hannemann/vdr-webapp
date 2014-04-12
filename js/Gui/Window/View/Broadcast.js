@@ -49,6 +49,50 @@ Gui.Window.View.Broadcast.prototype.render = function () {
     Gui.Window.View.Abstract.prototype.render.call(this);
 };
 
+
+/**
+ * @type {Object}
+ */
+Gui.Window.View.Broadcast.prototype.getTabConfig = function () {
+
+    this.body.addClass('has-tabs');
+
+    var me = this;
+
+    return {
+        "id": this.getId(),
+        "channel": this.getChannel(),
+        "parentView" : this.body,
+        "cacheKey" : this.cacheKey,
+        "tabs" : {
+            "details": {
+                "label": "Details",
+                "content": function (content) {
+
+                    $(content).append(me.getDescription());
+                },
+                "default": true
+            },
+            "tools": {
+                "label": "Tools",
+                "content": function (content) {
+
+//                $(content).append(this.renderTools());
+                    $(content).append(me.getChannel());
+                }
+            },
+            "web": {
+                "label": "Web",
+                "content": function (content) {
+
+//                $(content).append(this.renderWeb());
+                    $(content).append(me.getTitle());
+                }
+            }
+        }
+    }
+};
+
 /**
  * @returns {Gui.Window.View.Broadcast}
  */

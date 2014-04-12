@@ -6,10 +6,11 @@
     right: 20px;
     bottom: 20px;
     left: 20px;
-    background: #404040;
+    background: #696969;
+    border-bottom: 20px solid #696969;
     z-index: 2;
     overflow: auto;
-    box-shadow:         0 0 20px 0 rgba(0, 0, 0, 1);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
 }
 
 .window-close {
@@ -22,6 +23,7 @@
     font-size: 20px;
     cursor: default;
 }
+
 .window.has-header .window-close {
     color: black;
 }
@@ -35,6 +37,8 @@
 .window-header * {
     color: inherit;
 }
+
+.window-body {}
 
 /* Broadcast window related styles */
 
