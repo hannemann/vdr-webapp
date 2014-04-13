@@ -27,6 +27,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
         "channel_id" : this.data.channel_id
     });
     this.view.setParentView(this.data.parent.view);
+    this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', {
+        "channel_id" : this.data.channel_id
+    });
 };
 
 /**
@@ -35,8 +38,21 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
 Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
 
     this.addObserver();
-    this.getBroadcasts();
+
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+    if (this.dataModel.getCollection().length > 0) {
+
+        this.iterateBroadcasts({
+            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel),
+            "collection" : this.dataModel.getCollection()
+        });
+    } else {
+
+        this.getBroadcasts();
+    }
+
+//    console.log(this.view.node.get(0), this.dataModel, this.dataModel.getCollection().length);
 };
 
 /**
@@ -61,56 +77,80 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
     this.getStoreModel().getNextBroadcasts();
 };
 
+Gui.Epg.Controller.Broadcasts.List.prototype.initList = function () {
+};
+
 /**
  * add event listeners
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
 
+    $(document).on('broadcastsloaded-'+this.data.channel_id, $.proxy(this.iterateBroadcasts, this));
+
+    $(document).on('epg.scroll', $.proxy(this.handleScroll, this));
+
+    $(window).on('orientationchange', $.proxy(this.handleResize, this));
+
+    $(window).on('resize', $.proxy(this.handleResize, this));
+};
+
+Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
+
+    $(document).off('broadcastsloaded-'+this.data.channel_id);
+
+    $(document).off('epg.scroll', $.proxy(this.handleScroll, this));
+
+    $(window).off('orientationchange', $.proxy(this.handleResize, this));
+
+    $(window).off('resize', $.proxy(this.handleResize, this));
+};
+
+Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (collection) {
+
+    var isInView = this.isInView(), me = this;
+
+    collection.iterate($.proxy(function (dataModel) {
+
+        this.broadcasts.push(this.module.getController('Broadcasts.List.Broadcast', {
+            'channel' : dataModel.data.channel,
+            'id' : dataModel.data.id,
+            "parent" : this,
+            "dataModel" : dataModel
+        }));
+
+        if (isInView) {
+
+            this.broadcasts[this.broadcasts.length -1].dispatchView();
+        } else {
+            // TODO: stack erstellen, der abgearbeitet wird, statt in update list immer alle durch zu gehen.
+//                this.toRender.push(me.broadcasts[me.broadcasts.length -1]);
+        }
+    }, this));
+    // runs in endless loop if previous collection had items but current not
+    // trigger update ONLY if collection.length is not 0!!!
+    if (collection.collection.length > 0 && isInView) {
+
+        this.updateList.call(me);
+    }
+
+};
+
+Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
+
     var me = this;
 
-    $(document).on('broadcastsloaded-'+this.data.channel_id, function (collection) {
+    !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
 
-        var isInView = me.isInView.call(me);
+    this.scrollTimeout = setTimeout(function () {
 
-        collection.iterate(function (dataModel) {
+        me.updateList.call(me);
 
-            me.broadcasts.push(me.module.getController('Broadcasts.List.Broadcast', {
-                'channel' : dataModel.data.channel,
-                'id' : dataModel.data.id,
-                "parent" : me,
-                "dataModel" : dataModel
-            }));
+    }, 200);
+};
 
-            if (isInView) {
+Gui.Epg.Controller.Broadcasts.List.prototype.handleResize = function () {
 
-                me.broadcasts[me.broadcasts.length -1].dispatchView();
-            } else {
-                // TODO: stack erstellen, der abgearbeitet wird, statt in update list immer alle durch zu gehen.
-//                this.toRender.push(me.broadcasts[me.broadcasts.length -1]);
-            }
-        });
-        // runs in endless loop if previous collection had items but current not
-        // trigger update ONLY if collection.length is not 0!!!
-        if (collection.collection.length > 0 && isInView) {
-            me.updateList.call(me);
-        }
-    });
-
-    $(document).on('epg.scroll', function () {
-
-        !!me.scrollTimeout && clearTimeout(me.scrollTimeout);
-
-        me.scrollTimeout = setTimeout(function () {
-
-            me.updateList.call(me);
-
-        }, 200);
-    });
-
-    $(window).on('orientationchange', function () {
-
-        me.view.isRendered && me.updateList.call(me);
-    });
+    this.view.isRendered && this.updateList.call(this);
 };
 
 /**
@@ -170,4 +210,16 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
 
     return top < metrics.win.height && bottom > metrics.broadcasts.top;
 
+};
+
+Gui.Epg.Controller.Broadcasts.List.prototype.destructView = function () {
+
+    var i= 0, l=this.broadcasts.length;
+
+    for (i;i<l;i++) {
+
+        this.broadcasts[i].destructView();
+    }
+
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

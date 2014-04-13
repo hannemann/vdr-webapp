@@ -7,40 +7,81 @@ Gui.Epg.Controller.Channels.prototype.init = function () {
 
     this.view = this.module.getView('Channels');
     this.view.setParentView(this.data.parent.view);
+    this.channelsList = [];
+    this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
 };
-Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 
-    var me = this;
+Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    $(document).one('epg.dispatched', function () {
-        me.addObserver();
-    });
+    this.addObserver();
+
+    if (this.dataModel.getCollection().length) {
+        this.iterateChannels({
+            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel)
+        });
+    }
+
+    this.broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0);
 };
+
 Gui.Epg.Controller.Channels.prototype.addObserver = function () {
 
-    var me = this,
-        broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0),
-        offsetTop = parseInt(this.view.node.css('top'), 10);
+    $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
+    $(document).on('epg.scroll', $.proxy(this.handleScroll, this));
+};
 
-    $(document).one('channelsloaded', $.proxy(function (collection) {
+Gui.Epg.Controller.Channels.prototype.removeObserver = function () {
 
-        collection.iterate($.proxy(function (channelModel) {
+    $(document).on('epg.scroll', $.proxy(this.handleScroll, this));
+};
 
-            this.module.getController('Channels.Channel', {
-                "channel_id" : channelModel.data.channel_id,
-                "parent" : this,
-                "dataModel" : channelModel
-            }).dispatchView();
+/**
+ * iterate data model collection
+ * @param {object} collection
+ */
+Gui.Epg.Controller.Channels.prototype.iterateChannels = function (collection) {
 
-        }, this));
+    collection.iterate($.proxy(function (channelModel) {
+
+        this.channelsList.push(this.module.getController('Channels.Channel', {
+            "channel_id" : channelModel.data.channel_id,
+            "parent" : this,
+            "dataModel" : channelModel
+        }));
+
     }, this));
 
-    $(document).on('epg.scroll', function () {
+    this.dispatchChannels();
+};
 
-        var scroll = broadcastsWrapper.scrollTop * -1;
+Gui.Epg.Controller.Channels.prototype.dispatchChannels = function () {
 
-        me.view.node.css({"top": scroll + offsetTop + 'px'});
-    });
+    var i= 0, l=this.channelsList.length;
+
+    for (i;i<l;i++) {
+        this.channelsList[i].dispatchView();
+    }
+};
+
+Gui.Epg.Controller.Channels.prototype.handleScroll = function () {
+
+    var scroll = this.broadcastsWrapper.scrollTop * -1;
+
+    this.offsetTop = this.offsetTop || parseInt(this.view.node.css('top'), 10);
+
+    this.view.node.css({"top": scroll + this.offsetTop + 'px'});
+};
+
+Gui.Epg.Controller.Channels.prototype.destructView = function () {
+
+    var i= 0, l=this.channelsList.length;
+
+    for (i;i<l;i++) {
+
+        this.channelsList[i].destructView();
+    }
+
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

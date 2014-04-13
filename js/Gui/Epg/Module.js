@@ -33,6 +33,15 @@ Gui.Epg.prototype.dispatch = function () {
 };
 
 /**
+ * dispatch default view
+ */
+Gui.Epg.prototype.destruct = function () {
+
+    this.getController('Epg').destructView();
+    this.cache.flush();
+};
+
+/**
  * retrieve date object of chosen EPG start time
  * @returns {*}
  */

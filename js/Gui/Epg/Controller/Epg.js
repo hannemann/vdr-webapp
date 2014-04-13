@@ -57,17 +57,18 @@ Gui.Epg.Controller.Epg.prototype.init = function () {
  */
 Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
 
-    this.module.store.initChannels();
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
     this.timeLine.dispatchView();
     this.channels.dispatchView();
     this.broadcasts.dispatchView();
     this.addObserver();
 
-    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-
     VDRest.app.getModule('Gui.Menubar').getView('Default').setTitle(this.module.name);
 
     $.event.trigger('epg.dispatched');
+
+    this.module.store.initChannels();
 };
 
 /**
@@ -140,9 +141,28 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
 };
 
 /**
- * add handler to orientationchange event
+ * add handler to orientationchange and resize evente
  */
 Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 
     $(window).on('orientationchange', $.proxy(this.setMetrics, this));
+    $(window).on('resize', $.proxy(this.setMetrics, this));
+};
+
+/**
+ * remove handler from orientationchange and resize evente
+ */
+Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
+
+    $(window).off('orientationchange', $.proxy(this.setMetrics, this));
+    $(window).off('resize', $.proxy(this.setMetrics, this));
+};
+
+Gui.Epg.Controller.Epg.prototype.destructView = function () {
+
+    this.timeLine.destructView();
+    this.channels.destructView();
+    this.broadcasts.destructView();
+
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

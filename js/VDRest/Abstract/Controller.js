@@ -17,3 +17,12 @@ VDRest.Abstract.Controller.prototype.dispatchView = function () {
 
     this.view.render();
 };
+
+VDRest.Abstract.Controller.prototype.destructView = function () {
+
+    if ("function" === typeof this.removeObserver) {
+        this.removeObserver();
+    }
+
+    this.view.destruct();
+};

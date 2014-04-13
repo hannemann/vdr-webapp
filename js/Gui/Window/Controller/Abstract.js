@@ -33,6 +33,8 @@ Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
             "tabConfig" : this.view.getTabConfig()
         });
     }
+
+    VDRest.app.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.destructView, this));
 };
 
 /**
@@ -43,11 +45,15 @@ Gui.Window.Controller.Abstract.prototype.addObserver = function () {
 
     if (this.view.closeButton) {
 
-        this.view.closeButton.on('click', function () {
+        this.view.closeButton.one('click', function () {
 
             history.back();
         });
     }
+};
 
-    VDRest.app.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.view.destruct, this.view));
+Gui.Window.Controller.Abstract.prototype.destructView = function () {
+
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
+    this.module.cache.flushByClassKey(this);
 };

@@ -5,6 +5,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta charset="utf-8">
+
+    <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="css/default.css" />
     <link rel="stylesheet" type="text/css" href="css/menubar.css" />
     <link rel="stylesheet" type="text/css" href="css/epg.css" />
@@ -16,13 +18,9 @@
     <link rel="stylesheet" type="text/css" href="css/channel.css" />
 
     <script type="text/javascript" src="js/VDRest/Lib/jquery-2.1.0.js"></script>
-    <!--
-
-    Core Files
-
-    -->
+    <!-- Core -->
     <script type="text/javascript" src="js/VDRest/VDRest.js"></script>
-    <script type="text/javascript" src="js/VDRest/Config.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/Config.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/Factory.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/Object.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/Cache.js"></script>
@@ -35,37 +33,23 @@
     <script type="text/javascript" src="js/VDRest/Rest/Actions.js"></script>
     <script type="text/javascript" src="js/VDRest/Settings.js"></script>
     <script type="text/javascript" src="js/VDRest/Helper.js"></script>
-    <!--<script type="text/javascript" src="js/VDRest/Gui.js"></script>-->
-    <!--
 
-    Files for module EPG
-
-    -->
+    <!-- Backend -->
+    <!-- EPG -->
     <script type="text/javascript" src="js/VDRest/Epg/Module.js"></script>
     <script type="text/javascript" src="js/VDRest/Epg/Controller/Channels.js"></script>
-    <!--<script type="text/javascript" src="js/VDRest/Epg/Controller/Window.js"></script>-->
     <script type="text/javascript" src="js/VDRest/Epg/Model/Channels.js"></script>
     <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel.js"></script>
     <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel/Resource.js"></script>
     <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel/Broadcast.js"></script>
     <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel/Broadcast/Resource.js"></script>
-    <!--<script type="text/javascript" src="js/VDRest/Epg/ViewModel/Window.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Epg/View/Window.js"></script>-->
-    <!--
-
-    Files for module Timers
-
-    -->
+    <!-- Timers -->
     <script type="text/javascript" src="js/VDRest/Timer/Module.js"></script>
     <script type="text/javascript" src="js/VDRest/Timer/Controller/List.js"></script>
     <script type="text/javascript" src="js/VDRest/Timer/Model/List.js"></script>
     <script type="text/javascript" src="js/VDRest/Timer/Model/List/Timer.js"></script>
     <script type="text/javascript" src="js/VDRest/Timer/Model/List/Timer/Resource.js"></script>
-    <!--
-
-    Files for module Recordings
-
-    -->
+    <!-- Recordings -->
     <script type="text/javascript" src="js/VDRest/Recordings/Module.js"></script>
     <script type="text/javascript" src="js/VDRest/Recordings/Controller/List.js"></script>
     <script type="text/javascript" src="js/VDRest/Recordings/Model/List.js"></script>
@@ -82,6 +66,11 @@
     <script type="text/javascript" src="js/Gui/Viewport/Module.js"></script>
     <script type="text/javascript" src="js/Gui/Viewport/Controller/Default.js"></script>
     <script type="text/javascript" src="js/Gui/Viewport/View/Default.js"></script>
+    <!-- Config -->
+    <script type="text/javascript" src="js/Gui/Config/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Config/Controller/Settings.js"></script>
+    <script type="text/javascript" src="js/Gui/Config/View/Settings.js"></script>
+    <script type="text/javascript" src="js/Gui/Config/ViewModel/Settings.js"></script>
     <!-- Epg -->
     <script type="text/javascript" src="js/Gui/Epg/Module.js"></script>
     <script type="text/javascript" src="js/Gui/Epg/Controller/Epg.js"></script>
@@ -116,30 +105,7 @@
     <script type="text/javascript" src="js/Gui/Tabs/Controller/Abstract.js"></script>
     <script type="text/javascript" src="js/Gui/Tabs/View/Abstract.js"></script>
 
-
-
-    <!-- deprecated stuff -->
-    <!--<script type="text/javascript" src="js/VDRest/epg.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Event.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Tabs.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Rest/Actions.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/channel.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Recordings.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Recording.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Recording/Window.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/Item.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/List.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/List/Item.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/ListView.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/TreeView.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/Window.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/Window/View.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/Confirm.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Gui/Confirm/View.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Timers.js"></script>-->
-    <!--<script type="text/javascript" src="js/VDRest/Timer.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Drawer/List.js"></script>-->
-    <!--<script type="text/javascript" src="js/Gui/Drawer/ListItem.js"></script>-->
+    <!-- Icons -->
     <link rel="shortcut icon" sizes="196x196" href="assets/icon-highres.png">
     <link rel="shortcut icon" sizes="128x128" href="assets/icon.png">
     <link rel="apple-touch-icon" sizes="128x128" href="assets/icon.png">

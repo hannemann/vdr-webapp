@@ -39,22 +39,29 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
 
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function () {
 
-    var me = this;
+    this.view.node.on('click', $.proxy(this.handleClick, this));
+    $(document).on('timer-changed.' + this.keyInCache, $.proxy(this.handleTimer, this));
+};
 
-    this.view.node.on('click', function () {
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function () {
 
-        $.event.trigger({
-            "type" : 'window.request',
-            "object" : {
-                "type" : "Broadcast",
-                "data" : me.data
-            }
-        })
-    });
+    this.view.node.off('click', $.proxy(this.handleClick, this));
+    $(document).off('timer-changed.' + this.keyInCache, $.proxy(this.handleTimer, this));
+};
 
-    $(document).on('timer-changed.' + this.keyInCache, function () {
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function () {
 
-        me.view.handleTimerExists(me.data.dataModel.data.timer_exists);
-        me.view.handleTimerActive(me.data.dataModel.data.timer_active);
-    });
+    $.event.trigger({
+        "type" : 'window.request',
+        "object" : {
+            "type" : "Broadcast",
+            "data" : this.data
+        }
+    })
+};
+
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function () {
+
+    this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
+    this.view.handleTimerActive(this.data.dataModel.data.timer_active);
 };

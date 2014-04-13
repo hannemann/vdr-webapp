@@ -17,46 +17,59 @@ Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
         "view" : this.view,
         "resource" : this.data.dataModel
     });
+
+    this.streamUrl = 'http://'
+        + VDRest.config.getItem('host')
+        + ':'
+        + VDRest.config.getItem('streamdevPort')
+        + '/' + VDRest.config.getItem('streamdevParams') + '/'
+        + this.data.dataModel.data.stream;
 };
 
 Gui.Epg.Controller.Channels.Channel.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.addDomEvents();
+    this.addObserver();
 };
 
-Gui.Epg.Controller.Channels.Channel.prototype.addDomEvents = function () {
+Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
 
-    var me = this,
-        streamUrl = 'http://'
-            + VDRest.config.getItem('host')
-            + ':'
-            + VDRest.config.getItem('streamdev-port')
-            + '/' + VDRest.config.getItem('streamdev-params') + '/'
-            + this.data.dataModel.data.stream;
+    this.view.node
+        .on('mouseup', $.proxy(this.handleUp, this))
+        .on('mousedown', $.proxy(this.handleDown, this));
+};
 
-    this.view.node.on('mouseup', function () {
-        var channel = $(this).attr('data-channel-id');
+Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
 
-        if ("undefined" !== typeof me.preventClick) {
+    this.view.node
+        .off('mouseup', $.proxy(this.handleUp, this))
+        .off('mousedown', $.proxy(this.handleDown, this));
+};
 
-            return false;
-        } else {
-            if ("undefined" !== typeof me.channelClickTimeout) {
-                window.clearTimeout(me.channelClickTimeout);
-            }
+Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
+
+    var channel = $(e.currentTarget).attr('data-channel-id');
+
+    if ("undefined" !== typeof this.preventClick) {
+
+        return false;
+    } else {
+        if ("undefined" !== typeof this.channelClickTimeout) {
+            window.clearTimeout(this.channelClickTimeout);
+        }
 //            main.modules.channel.next = me.channels[$(this).attr('data-channelsid')];
 //            main.dispatch('channel');
-        }
+    }
 
-    }).on('mousedown', function (e) {
+};
 
-        me.preventClick = undefined;
-        me.channelClickTimeout = window.setTimeout(function () {
-            me.preventClick = true;
-            e.preventDefault();
-            window.location.href = streamUrl;
-        }, 1000);
-    });
+Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
+
+    this.preventClick = undefined;
+    this.channelClickTimeout = window.setTimeout($.proxy(function () {
+        this.preventClick = true;
+        e.preventDefault();
+        window.location.href = this.streamUrl;
+    }, this), 1000);
 };

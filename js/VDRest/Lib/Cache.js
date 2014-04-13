@@ -13,6 +13,45 @@ VDRest.Lib.Cache = function () {
         "View" : {},
         "ViewModel" : {},
         "Controller" : {}
+    };
+};
+
+/**
+ * reinit cache, flushes any data
+ */
+VDRest.Lib.Cache.prototype.flush = function () {
+
+    VDRest.Lib.Cache.call(this);
+};
+
+/**
+ * delete entries by key
+ * @param {object} cache
+ * @param {string} key
+ */
+VDRest.Lib.Cache.prototype.flushByKey = function (cache, key) {
+
+    if (cache.hasOwnProperty(key)) {
+        delete cache[key];
+    }
+};
+
+/**
+ * delete entries by key
+ * @param {object} obj
+ */
+VDRest.Lib.Cache.prototype.flushByClassKey = function (obj) {
+
+    var i, _class = obj._class, key = obj.keyInCache;
+
+    for (i in this.store)
+
+    if (this.store.hasOwnProperty(i)
+        && this.store[i].hasOwnProperty(_class)
+        && this.store[i][_class].hasOwnProperty(key)
+    ) {
+
+        delete this.store[i][_class][key];
     }
 };
 
@@ -67,8 +106,7 @@ VDRest.Lib.Cache.prototype.getCacheKey = function (data, keyNames) {
 
 /**
  * invalidate cache entry
- * @param {string} type
- * @param {*} obj
+ * @param {string} obj
  *
  * TODO: interval that invalidates cache entries by specified argument e.g. end_time exceeded
  */

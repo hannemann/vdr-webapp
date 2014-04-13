@@ -105,3 +105,11 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
 
     this.node.width(width).append(markup);
 };
+
+Gui.Epg.View.TimeLine.prototype.destruct = function () {
+
+    this.date.remove();
+    this.gradient.remove();
+
+    VDRest.Abstract.View.prototype.destruct.call(this);
+};

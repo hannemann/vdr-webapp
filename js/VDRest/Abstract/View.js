@@ -39,3 +39,8 @@ VDRest.Abstract.View.prototype.remove = function () {
 
     this.isRendered = !this.isRendered;
 };
+
+VDRest.Abstract.View.prototype.destruct = function () {
+
+    this.remove();
+};

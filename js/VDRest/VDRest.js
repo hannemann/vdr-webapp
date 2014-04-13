@@ -235,7 +235,7 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 
         $.event.trigger({"type":"dispatchBefore"});
 
-        $('.content').hide();
+        this.current && this.current.destruct();
         $('body').scrollTop();
         if (moduleName !== this.getLocationHash()) {
 

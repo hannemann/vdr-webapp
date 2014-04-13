@@ -119,6 +119,19 @@ VDRest.Abstract.Model.prototype.resultIterator = function (callback) {
  * default collection iterator
  * @param {function} callback
  */
+VDRest.Abstract.Model.prototype.collectionIterator = function (callback) {
+
+    var i = 0, l = this.collection.length;
+
+    for (i;i<l;i++) {
+
+        callback(this.collection[i]);
+    }
+};
+
+/**
+ * retrieve collection
+ */
 VDRest.Abstract.Model.prototype.getCollection = function () {
 
     return this.collection;

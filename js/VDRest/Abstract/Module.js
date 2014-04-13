@@ -28,6 +28,8 @@ VDRest.Abstract.Module.prototype.init = function () {
     window[this.namespace][this.name].Controller = function () {};
 
     this.cache = new VDRest.Lib.Cache();
+
+    this.cache.module = this;
 };
 
 /**
@@ -132,7 +134,7 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
         if (!(data instanceof Object)) {
 
-            data = this.mockInstanceData(data, cacheKey);
+            data = this.getInitData(data, cacheKey);
         }
 
         cache = this.cache.getStore(type, _class);
@@ -143,6 +145,8 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
         cache[cacheKey] = VDRest.Lib.factory.getClass(path);
         cache[cacheKey].keyInCache = cacheKey;
+        cache[cacheKey].cache = cache;
+        cache[cacheKey]._class = _class;
     }
 
     return cache[cacheKey];
@@ -160,7 +164,7 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
  * @param {string}          cacheKey
  * @returns {object}
  */
-VDRest.Abstract.Module.prototype.mockInstanceData = function (id, cacheKey) {
+VDRest.Abstract.Module.prototype.getInitData = function (id, cacheKey) {
 
     var data = {},
         keys = cacheKey.split(this.cache.cacheKeySeparator),

@@ -73,6 +73,6 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
     this.view.settingsButton.on('click', function () {
         // TODO: dispatch settings on click
-        console.log('Settings');
+        VDRest.app.dispatch('Gui.Config');
     });
 };
