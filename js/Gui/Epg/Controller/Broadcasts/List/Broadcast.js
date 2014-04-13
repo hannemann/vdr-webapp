@@ -51,4 +51,10 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function ()
             }
         })
     });
+
+    $(document).on('timer-changed.' + this.keyInCache, function () {
+
+        me.view.handleTimerExists(me.data.dataModel.data.timer_exists);
+        me.view.handleTimerActive(me.data.dataModel.data.timer_active);
+    });
 };

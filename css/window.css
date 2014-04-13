@@ -38,7 +38,9 @@
     color: inherit;
 }
 
-.window-body {}
+.window-body {
+    white-space: pre-wrap;
+}
 
 /* Broadcast window related styles */
 
@@ -60,87 +62,51 @@
 }
 
 /* deprecated stuff */
-div.show-event .header.active-timer {
+.window.broadcast.timer-exists .window-header {
     background-image: linear-gradient(135deg, #FF0000 20%, #FFFFFF 35%);
     background-repeat: no-repeat;
     background-size: 60px 60px;
 }
-div.confirm .header,
-div.show-event .header {
-	background: white;
-	color: black;
-	padding: 20px;
-}
-div.show-event .header h2 {
-	float: left;
-}
-div.show-event .header ul.details {
-    clear: left;
-}
-div.show-event .header ul.components {
-    clear: left;
-    float:right;
-}
-div.show-event .header ul.components li {
-    float:left;
-    margin-left: 5px;
-}
-div.show-event .header img.event-img {
-	max-width: 50%;
-}
-div.show-event .body {
-	color: white;
-	padding: 0 20px 20px;
+
+.body .details {
 }
 
-div.show-event .tabs {
-    width: calc(100% + 40px);
-    margin-left: -20px;
-}
-div.show-event .tab-contents {
-    padding-top: 20px;
-}
-
-div.show-event .body .details {
-    white-space: pre-wrap;
-}
-
-div.show-event .tools li,
-div.show-event .web li {
+.tools li,
+.web li {
     width: calc(100% / 2 - 10px);
     float: left;
 }
-div.show-event .web li:nth-child(2n+1),
-div.show-event .tools li:nth-child(2n+1) {
+.web li:nth-child(2n+1),
+.tools li:nth-child(2n+1) {
     margin-right: 20px;
 }
-div.show-event .web-button,
-div.show-event .record-button,
-div.show-event .delete-button {
+.web-button,
+.record-button,
+.delete-button {
     text-align: center;
 }
-div.show-event .web-button dt,
-div.show-event .record-button dt,
-div.show-event .delete-button dt {
+.web-button dt,
+.record-button dt,
+.delete-button dt {
     text-align: center;
     margin: 0 auto 5px;
     width: 60px;
     height:60px;
 }
-div.show-event .delete-button dt,
-div.show-event .record-button dt {
-    background: #FF0000;
+.delete-button dt,
+.record-button dt {
+    background: #404040;
     border-radius: 30px;
     box-shadow: 0 0 5px 0 #FF0000, 0 0 5px #FFFFFF inset;
 }
-div.show-event .delete-button dt {
+.delete-button dt {
     font-size: 50px;
     line-height: 60px;
 }
-div.show-event .record-button dt.activate-timer {
-    background: #404040;
+.timer-exists .record-button dt {
+    background: #FF0000;
 }
-div.show-event .web-button dt img {
+.web-button dt img {
     width: 100%;
     height: 100%;
     box-shadow: 0 0 5px 0 black;

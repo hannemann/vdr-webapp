@@ -78,7 +78,7 @@ VDRest.Config.prototype.defaults = {
     "port"              :   "8002",
     "streamdev-port"    :   "3000",
     "recordingStartGap" :   120,
-    "recordingEndGap"   :   600,
+    "recordingEndGap"   :   6000,
     "protocol"          :   "http",
     "host"              :   "192.168.3.99",
     "pixelPerSecond"    :   2/60,

@@ -40,7 +40,18 @@ VDRest.Abstract.ViewModel.prototype.initViewMethods = function () {
 
                 return function (value) {
 
+                    $.event.trigger({
+                        "type" : 'data-changed.' + me.data.resource.keyInCache,
+                        "payload" : {
+                            "key" : x,
+                            "new" : value,
+                            "old" : me.resource[x],
+                            "targetModel" : me.data.resource
+                        }
+                    });
+
                     me.resource[x] = value;
+
                     return this;
                 }
             }(i);

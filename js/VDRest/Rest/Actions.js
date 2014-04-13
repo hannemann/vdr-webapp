@@ -1,10 +1,10 @@
-Actions = function () {};
+VDRest.Rest.Actions = function () {};
 
-Actions.prototype = new VDRest.Rest.Api();
+VDRest.Rest.Actions.prototype = new VDRest.Rest.Api();
 
-Actions.prototype.urls = {};
+VDRest.Rest.Actions.prototype.urls = {};
 
-Actions.prototype.addTimer = function (obj, callback) {
+VDRest.Rest.Actions.prototype.addTimer = function (obj) {
     var url, data; //, weekdays, start, stop, day;
 
 //    start = new Date(obj.event.start_time * 1000);
@@ -31,10 +31,10 @@ Actions.prototype.addTimer = function (obj, callback) {
 //                }
 
     data = {
-        "channel":obj.getData('channel'),
-        "eventid":obj.getData('id'),
-        "minpre":VDRest.config.getItem('recordingStartGap')/60,
-        "minpost":VDRest.config.getItem('recordingEndGap')/60
+        "channel" : obj.getData('channel'),
+        "eventid" : obj.getData('id'),
+        "minpre"  : VDRest.config.getItem('recordingStartGap')/60,
+        "minpost" : VDRest.config.getItem('recordingEndGap')/60
     };
 
     $.ajax({
@@ -43,73 +43,60 @@ Actions.prototype.addTimer = function (obj, callback) {
         "type":"POST",
         "success":$.proxy(function (result) {
 
-            var id = obj.getData('dom').attr('id'),
-                epgEvent = VDRest.app.getModule('epg').events[id];
-
-            obj.setData('timer_active', true);
             obj.setData('timer_exists', true);
+            obj.setData('timer_active', result.timers[0].is_active);
             obj.setData('timer_id', result.timers[0].id);
 
-            obj.getData('dom').addClass('active-timer');
-            epgEvent.timer_active =  true;
-            epgEvent.timer_exists = true;
-            epgEvent.timer_id = result.timers[0].id;
+            // TODO: add timer to cache without reloading it
+//            VDRest.app.getModule('timers').refreshCache = true;
 
-            VDRest.app.getModule('timers').refreshCache = true;
-            if (typeof callback == 'function') {
+            $.event.trigger({
+                "type" : 'timer-changed.' + obj.keyInCache
+            });
 
-                callback.apply(obj);
-            }
         }, this),
         "complete":function (result) {
-            helper.log(obj, result);
+            VDRest.helper.log(obj, result);
         }
     });
 };
 
-Actions.prototype.deleteTimer = function (obj, callback) {
-    var url = 'http://'+VDRest.config.getItem('host')+':'+VDRest.config.getItem('port')+'/timers/'+obj.getData('timer_id');
+VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
+
+    var url = this.getBaseUrl() + '/timers/' + obj.getData('timer_id');
 
     $.ajax({
         "url":url,
         "type":"DELETE",
         "success":$.proxy(function () {
 
-            var id = obj.getData('dom').attr('id'),
-                epgEvent = VDRest.app.getModule('epg').events[id];
-
-            obj.setData('timer_active', false);
             obj.setData('timer_exists', false);
+            obj.setData('timer_active', false);
             obj.setData('timer_id', '');
 
-            obj.getData('dom').removeClass('active-timer');
-            epgEvent.timer_active = false;
-            epgEvent.timer_exists = false;
-            epgEvent.timer_id = '';
+            // TODO: add timer to cache without reloading it
+//            VDRest.app.getModule('timers').refreshCache = true;
 
-            VDRest.app.getModule('timers').refreshCache = true;
-
-            if (typeof callback == 'function') {
-
-                callback.apply(obj);
-            }
+            $.event.trigger({
+                "type" : 'timer-changed.' + obj.keyInCache
+            });
         }, this),
         "complete":function (result) {
-            helper.log(obj, result);
+            VDRest.helper.log(obj, result);
         }
     });
 };
 
-Actions.prototype.loadTimer = function (obj) {
-    $.ajax({
-        "url":"http://"+VDRest.config.getItem('host')+':'+VDRest.config.getItem('port')+"/timers/"+obj.getData('timer_id')+'.json',
-        "success":function (result) {
-            obj.timer = result.timers[0];
-        }
-    });
-};
+//VDRest.Rest.Actions.prototype.loadTimer = function (obj) {
+//    $.ajax({
+//        "url":"http://"+VDRest.config.getItem('host')+':'+VDRest.config.getItem('port')+"/timers/"+obj.getData('timer_id')+'.json',
+//        "success":function (result) {
+//            obj.timer = result.timers[0];
+//        }
+//    });
+//};
 
-Actions.prototype.deleteRecording = function (obj, callback) {
+VDRest.Rest.Actions.prototype.deleteRecording = function (obj, callback) {
 
     var c = new Gui.Confirm();
     c.dispatch({"message":'Aufnahme löschen?'});
@@ -137,4 +124,4 @@ debugger;
 
 };
 
-actions = new Actions();
+VDRest.Rest.actions = new VDRest.Rest.Actions();

@@ -11,7 +11,7 @@ Gui.Window.Controller.Broadcast.prototype.cacheKey = 'channel/id';
 
 Gui.Window.Controller.Broadcast.prototype.init = function () {
 
-    this.eventPrefix = 'window.' + this.data.channel + '/' + this.data.id;
+    this.eventPrefix = 'window.broadcast.' + this.data.channel + '/' + this.data.id;
 
     this.view = this.module.getView('Broadcast', {
         "id" : this.data.id,
@@ -46,6 +46,12 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
             me.view.animateImage();
         });
     }
+
+    $(document).on('timer-changed.' + this.keyInCache, function () {
+
+        me.view.handleTimerExists(me.data.dataModel.data.timer_exists);
+        me.view.handleTimerActive(me.data.dataModel.data.timer_active);
+    });
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };

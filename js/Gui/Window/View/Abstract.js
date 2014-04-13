@@ -47,6 +47,55 @@ Gui.Window.View.Abstract.prototype.addCloseButton = function () {
 };
 
 /**
+ * retrieve tool button
+ * @param options
+ * @returns {*|jQuery|HTMLElement}
+ */
+Gui.Window.View.Abstract.prototype.getToolButton = function (options) {
+
+    var dom, me=this;
+
+    dom = $('<li>');
+    if (typeof options.image != 'undefined') {
+
+        dom.append('<img src="'+options.image.src+'">');
+
+    } else if (typeof options.dom != 'undefined') {
+
+        if (typeof options.dom == 'function') {
+
+            dom.append(options.dom.apply(me));
+
+        } else {
+
+            dom.append(options.dom);
+
+        }
+    }
+
+    dom.on('click', function () {
+
+        if (typeof options.url != 'undefined') {
+
+            if (options.target == 'new') {
+
+                window.open(options.url);
+
+            } else {
+
+                location.href = options.url;
+            }
+
+        } else if (typeof options.callback == 'function') {
+
+            options.callback.apply(me);
+        }
+    });
+
+    return dom;
+};
+
+/**
  * remove window
  */
 Gui.Window.View.Abstract.prototype.destruct = function () {

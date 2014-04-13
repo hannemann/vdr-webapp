@@ -57,7 +57,6 @@ Gui.Window.ViewModel.Broadcast.prototype.init = function () {
 
         return me.getComponents();
     };
-    console.log(this.resource);
 };
 
 /**
@@ -65,8 +64,6 @@ Gui.Window.ViewModel.Broadcast.prototype.init = function () {
  * @returns {Array}
  */
 Gui.Window.ViewModel.Broadcast.prototype.getComponents = function () {
-
-
 
     var i = 0, l = this.resource.components.length, components, component;
 

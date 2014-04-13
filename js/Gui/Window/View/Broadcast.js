@@ -32,6 +32,8 @@ Gui.Window.View.Broadcast.prototype.hasCloseButton = true;
  */
 Gui.Window.View.Broadcast.prototype.render = function () {
 
+    this.addClasses();
+
     this.addTitle();
 
     if (this.hasImages()) {
@@ -49,6 +51,21 @@ Gui.Window.View.Broadcast.prototype.render = function () {
     Gui.Window.View.Abstract.prototype.render.call(this);
 };
 
+Gui.Window.View.Broadcast.prototype.addClasses = function () {
+
+    var classNames = ['broadcast'];
+
+    if (this.getTimerExists()) {
+        this.handleTimerExists(true);
+    }
+
+    if (this.getTimerActive()) {
+        this.handleTimerActive(true);
+    }
+
+    this.node.addClass(classNames.join(' '));
+    return this;
+};
 
 /**
  * @type {Object}
@@ -77,20 +94,125 @@ Gui.Window.View.Broadcast.prototype.getTabConfig = function () {
                 "label": "Tools",
                 "content": function (content) {
 
-//                $(content).append(this.renderTools());
-                    $(content).append(me.getChannel());
+                $(content).append(me.renderToolsTab());
                 }
             },
             "web": {
                 "label": "Web",
                 "content": function (content) {
 
-//                $(content).append(this.renderWeb());
-                    $(content).append(me.getTitle());
+                    $(content).append(me.renderWebTab());
                 }
             }
         }
     }
+};
+
+
+Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
+
+    var recordButton, recordText, broadcast;
+
+    broadcast = VDRest.app.getModule('VDRest.Epg').getModel(
+        'Channels.Channel.Broadcast',
+        this.keyInCache
+    );
+
+    return {
+        "record":{
+            "dom":function () {
+
+                var dom = $('<dl class="record-button"></dl>');
+                recordButton = $('<dt>');
+                recordText = $('<dd>');
+
+                if (this.hasTimerExists()) {
+
+                    recordText.text('Timer löschen');
+                    recordButton.removeClass('activate-timer');
+
+                } else {
+
+                    recordText.text('Timer erstellen');
+                    recordButton.addClass('activate-timer');
+                }
+
+                return dom.append(recordButton).append(recordText);
+            },
+            "callback":function () {
+
+                if (this.hasTimerExists()) {
+
+                    VDRest.Rest.actions.deleteTimer(broadcast);
+
+                } else {
+
+                    VDRest.Rest.actions.addTimer(broadcast);
+
+                }
+            }
+        }
+    }
+};
+
+Gui.Window.View.Broadcast.prototype.getWebConfig = function () {
+
+    return {
+        "imdb":{
+            "dom":function () {
+
+                var dom = $('<dl class="web-button imdb"></dl>'),
+                    button = $('<dt><img src="/assets/imdb-logo.png" alt="">'),
+                    text = $('<dd>');
+
+                text.text('IMDB Suche');
+
+                return dom.append(button).append(text);
+            },
+            "callback":function () {
+
+                window.open("http://www.imdb.com/find?s=tt&q="+encodeURIComponent(this.getTitle()));
+            }
+        }
+    };
+};
+/**
+ * render contents of tool tab
+ * return {jQuery}
+ */
+Gui.Window.View.Broadcast.prototype.renderToolsTab = function () {
+
+    var i, dom, button, config = this.getToolsConfig();
+
+    dom = $('<ul>');
+
+    for (i in config) {
+
+        if (config.hasOwnProperty(i)) {
+
+            button = this.getToolButton(config[i]);
+            dom.append(button);
+        }
+    }
+
+    return dom;
+};
+Gui.Window.View.Broadcast.prototype.renderWebTab = function () {
+
+    var i, dom, button, config = this.getWebConfig();
+
+    dom = $('<ul>');
+
+    for (i in config) {
+
+        if (config.hasOwnProperty(i)) {
+
+            button = this.getToolButton(config[i]);
+            dom.append(button);
+        }
+    }
+
+    return dom;
 };
 
 /**
@@ -192,4 +314,26 @@ Gui.Window.View.Broadcast.prototype.addComponents = function () {
         );
 
     return this;
+};
+
+Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
+
+    if (exists) {
+
+        this.node.addClass('timer-exists');
+    } else {
+
+        this.node.removeClass('timer-exists');
+    }
+};
+
+Gui.Window.View.Broadcast.prototype.handleTimerActive = function (active) {
+
+    if (active) {
+
+        this.node.addClass('timer-active');
+    } else {
+
+        this.node.removeClass('timer-active');
+    }
 };
