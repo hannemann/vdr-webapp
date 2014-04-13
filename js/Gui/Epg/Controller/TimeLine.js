@@ -25,47 +25,65 @@ Gui.Epg.Controller.TimeLine.prototype.dispatchView = function () {
         "from" : this.from
     });
 
+
+    this.broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0);
+    this.epgController = this.module.getController('Epg');
+    this.currentDate = this.view.node.find('*[data-date]:first').attr('data-date');
+
     this.addObserver();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 };
 
+/**
+ * add observer
+ */
 Gui.Epg.Controller.TimeLine.prototype.addObserver = function () {
-
-    var me = this,
-        broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0),
-        epgController = this.module.getController('Epg');
 
     this.menubarDate = null;
 
-    $(document).on('epg.scroll', function () {
+    $(document).on('epg.scroll', $.proxy(this.handleScroll, this));
 
-        var scroll = broadcastsWrapper.scrollLeft * -1,
-            ddOffset = broadcastsWrapper.offsetLeft,
-            date = me.view.node.find('*[data-date]:first').attr('data-date');
+};
 
-        me.view.node.css({"left": scroll + 'px'});
+/**
+ * remove observer
+ */
+Gui.Epg.Controller.TimeLine.prototype.removeObserver = function () {
 
-        me.view.node.find('*[data-date]').each(function (k, v) {
-            var d = $(v);
+    $(document).off('epg.scroll', $.proxy(this.handleScroll, this));
 
-            if (d.offset().left + d.width() <= ddOffset) {
+};
 
-                date = d.attr('data-date');
-            } else {
-                return false;
-            }
-        });
+/**
+ * handle scroll events
+ */
+Gui.Epg.Controller.TimeLine.prototype.handleScroll = function () {
 
-        if (date !== me.menubarDate) {
-            me.view.setDate(new Date(parseInt(date, 10)));
-            me.menubarDate = date;
-        }
+    var scroll = this.broadcastsWrapper.scrollLeft * -1,
+        ddOffset = this.broadcastsWrapper.offsetLeft, me = this;
 
-        if (me.view.node.find('div:last').offset().left < epgController.getMetrics().win.width) {
+    this.view.node.css({"left": scroll + 'px'});
 
-            me.view.renderTimeLine();
+    this.view.node.find('*[data-date]').each(function (k, v) {
+        var d = $(v);
+
+        if (d.offset().left + d.width() <= ddOffset) {
+
+            me.currentDate = d.attr('data-date');
+        } else {
+            return false;
         }
     });
 
+    if (this.currentDate && this.currentDate !== this.menubarDate) {
+
+        this.view.setDate(new Date(parseInt(this.currentDate, 10)));
+        this.menubarDate = this.currentDate;
+    }
+
+    if (this.view.node.find('div:last').offset().left < this.epgController.getMetrics().win.width) {
+
+        this.view.renderTimeLine();
+    }
 };
