@@ -150,7 +150,7 @@ VDRest.App.prototype.pollLocation = function () {
 
         if (hash !== this.current && this.isRegistered(hash)) {
 
-            this.dispatch(hash, undefined);
+            this.dispatch(hash);
 
         } else if (this.observeHash === hash) {
 
@@ -235,12 +235,10 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 
         $.event.trigger({"type":"dispatchBefore"});
 
-        this.current && this.current.destruct();
-        $('body').scrollTop();
-        if (moduleName !== this.getLocationHash()) {
-
-            this.setLocationHash(moduleName);
-        }
+//        if (moduleName !== this.getLocationHash()) {
+//
+//            this.setLocationHash(moduleName);
+//        }
 		this.modules[moduleName].dispatch(callback);
 		this.current = moduleName;
 

@@ -42,7 +42,17 @@ Gui.Config.prototype.init = function () {
 Gui.Config.prototype.dispatch = function () {
 
     VDRest.app.setLocationHash(this.name);
+    this.store = VDRest.config;
     this.getController('Settings').dispatchView();
+};
+
+/**
+ * destroy module
+ */
+Gui.Config.prototype.destruct = function () {
+
+    this.getController('Settings').destructView();
+    this.cache.flush();
 };
 
 /**

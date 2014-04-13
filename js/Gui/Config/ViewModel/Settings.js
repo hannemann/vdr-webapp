@@ -4,11 +4,15 @@ Gui.Config.ViewModel.Settings.prototype = new VDRest.Abstract.ViewModel();
 
 Gui.Config.ViewModel.Settings.prototype.init = function  () {
 
-    this.fields = VDRest.Lib.Config.prototype.fields;
+    this.backend = this.module.store;
 
-    this.view.fields = this.fields;
+    this.fields = this.backend.fields;
 
-    this.backend = VDRest.config;
+    this.categories = this.backend.categories;
+
+    this.data.view.fields = this.fields;
+
+    this.data.view.catConfig = this.categories;
 
     this.initViewMethods();
 };
@@ -22,6 +26,7 @@ Gui.Config.ViewModel.Settings.prototype.initViewMethods = function () {
         if (this.fields.hasOwnProperty(i)) {
 
             this.defineViewMethod(i, this.fields[i]);
+            this.fields[i].getter = this.data.view['get' + this.getMethodFragment(i)];
         }
     }
 };
@@ -53,12 +58,12 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
 
     var fragment = this.getMethodFragment(name), me = this;
 
-    this.view['get' + fragment] = function () {
+    this.data.view['get' + fragment] = function () {
 
         return me.backend.getItem(name);
     };
 
-    this.view['set' + fragment] = function (v) {
+    this.data.view['set' + fragment] = function (v) {
 
         if (field.type !== typeof v) {
 
@@ -80,12 +85,12 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
         return me.view;
     };
 
-    this.view['has' + fragment] = function () {
+    this.data.view['has' + fragment] = function () {
 
         return typeof me.backend.getItem(name) === field.type;
     };
 
-    this.view['uns' + fragment] = function () {
+    this.data.view['uns' + fragment] = function () {
 
         return me.backend.removeItem(name);
     };

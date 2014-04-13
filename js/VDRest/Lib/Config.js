@@ -86,12 +86,31 @@ VDRest.Lib.Config.prototype.defaults = {
     "streamdevParams"   :   "EXT;QUALITY=SLOW"
 };
 
+VDRest.Lib.Config.prototype.categories = {
+    "dev" : {
+        "label" : 'Developer Options'
+    },
+    "server" : {
+        "label" : 'Server Settings'
+    },
+    "timer" : {
+        "label" : 'Timer Settings'
+    },
+    "streaming" : {
+        "label" : 'Streaming'
+    },
+    "gui" : {
+        "label" : 'User Interface'
+    }
+};
+
 /**
  * Default values
  * @type {Object}
  */
 VDRest.Lib.Config.prototype.fields = {
     "start"             :   {
+        "category" : "gui",
         "type" : "enum",
         "label" : "Startpage",
         "values" : function () {
@@ -110,10 +129,14 @@ VDRest.Lib.Config.prototype.fields = {
         }
     },
     "debug"             :   {
-        "type" : "boolean"
+        "category" : "dev",
+        "type" : "boolean",
+        "label" : "Debugmode"
     },
     "protocol"          :   {
+        "category" : "server",
         "type" : "enum",
+        "label" : "Prototcol",
         "values" : {
             "http" : {
                 "label" : "HTTP",
@@ -126,25 +149,41 @@ VDRest.Lib.Config.prototype.fields = {
         }
     },
     "host"              :   {
-        "type" : "string"
+        "category" : "server",
+        "type" : "string",
+        "label" : "Host"
     },
     "port"              :   {
-        "type" : "number"
+        "category" : "server",
+        "type" : "number",
+        "label" : "Port"
     },
     "recordingStartGap" :   {
-        "type" : "number"
+        "category" : "timer",
+        "type" : "number",
+        "label" : "Recording lead time",
+        "info" : "Lead time of recording before broadcast starts"
     },
     "recordingEndGap"   :   {
-        "type" : "number"
+        "category" : "timer",
+        "type" : "number",
+        "label" : "Recording follow up time",
+        "info" : "Follow up time of recording after broadcast ends"
     },
     "streamdevHost"    :   {
-        "type" : "string"
+        "category" : "streaming",
+        "type" : "string",
+        "label" : "StreamDev host"
     },
     "streamdevPort"    :   {
-        "type" : "number"
+        "category" : "streaming",
+        "type" : "number",
+        "label" : "StreamDev port"
     },
     "streamdevParams"  :   {
-        "type" : "string"
+        "category" : "streaming",
+        "type" : "string",
+        "label" : "StreamDev parameter"
     }
 };
 

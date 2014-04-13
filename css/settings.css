@@ -1,19 +1,14 @@
-.settings-wrapper,
+#viewport.config {
+    overflow: auto;
+}
 #settings {
 	height: 100%;
+    padding: 20px;
 }
-#settings {
-	background: none repeat scroll 0 0 #404040;
-	color: #FFFFFF;
-	padding: 20px;
-}
-#settings fieldset {
-	border: 1px solid #FFFFFF;
-	margin-bottom: 20px;
-	padding: 20px;
-}
-#settings legend {
-	margin-left: 15px;
+#settings h2 {
+    border-bottom: 2px solid white;
+    margin: 5px 0;
+    font-size: 16px;
 }
 #settings label {
 	display: block;
@@ -23,4 +18,16 @@
 #settings label select {
 	float: right;
 	text-align: right;
+    background-color: #707070;
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+#settings input[type="text"],
+#settings input[type="number"] {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid white;
+    outline: none;
+    padding: 3px;
 }

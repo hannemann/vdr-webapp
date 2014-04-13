@@ -72,7 +72,7 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (force) {
 Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
     this.view.settingsButton.on('click', function () {
-        // TODO: dispatch settings on click
+
         VDRest.app.dispatch('Gui.Config');
     });
 };
