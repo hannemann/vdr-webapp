@@ -29,12 +29,12 @@ VDRest.Lib.Cache.prototype.flush = function () {
  * @param {object} cache
  * @param {string} key
  */
-VDRest.Lib.Cache.prototype.flushByKey = function (cache, key) {
-
-    if (cache.hasOwnProperty(key)) {
-        delete cache[key];
-    }
-};
+//VDRest.Lib.Cache.prototype.flushByKey = function (cache, key) {
+//
+//    if (cache.hasOwnProperty(key)) {
+//        delete cache[key];
+//    }
+//};
 
 /**
  * delete entries by key
@@ -46,13 +46,21 @@ VDRest.Lib.Cache.prototype.flushByClassKey = function (obj) {
 
     for (i in this.store)
 
+
     if (this.store.hasOwnProperty(i)
-        && this.store[i].hasOwnProperty(_class)
-        && this.store[i][_class].hasOwnProperty(key)
+        && ( "undefined" !== typeof obj.__proto__.cacheKey || (obj.data && obj.data.cacheKey) )
     ) {
 
-        delete this.store[i][_class][key];
+        if (this.store[i].hasOwnProperty(_class) && this.store[i][_class].hasOwnProperty(key)) {
+
+            delete this.store[i][_class][key];
+        }
+
+    } else if ( this.store.hasOwnProperty(i) && this.store[i].hasOwnProperty(_class) ) {
+
+        delete this.store[i][_class];
     }
+
 };
 
 /**
@@ -110,68 +118,68 @@ VDRest.Lib.Cache.prototype.getCacheKey = function (data, keyNames) {
  *
  * TODO: interval that invalidates cache entries by specified argument e.g. end_time exceeded
  */
-VDRest.Lib.Cache.prototype.invalidate = function (obj) {
-
-    var key = this.getCacheKey(obj.data, obj.cacheKey), cache;
-
-    if ("undefined" === typeof obj._class) {
-
-        throw new ReferenceError('Cannot determine cache type from object. Property _class not defined in argument obj.');
-    }
-
-    cache = this.getClassCache(obj._class);
-
-    if (cache && "undefined" !== typeof cache[key].canInvalidate && cache[key].canInvalidate) {
-
-        delete cache[key];
-    }
-};
+//VDRest.Lib.Cache.prototype.invalidate = function (obj) {
+//
+//    var key = this.getCacheKey(obj.data, obj.cacheKey), cache;
+//
+//    if ("undefined" === typeof obj._class) {
+//
+//        throw new ReferenceError('Cannot determine cache type from object. Property _class not defined in argument obj.');
+//    }
+//
+//    cache = this.getClassCache(obj._class);
+//
+//    if (cache && "undefined" !== typeof cache[key].canInvalidate && cache[key].canInvalidate) {
+//
+//        delete cache[key];
+//    }
+//};
 
 /**
  * retrieve cache
  * @param _class
  * @returns {object}
  */
-VDRest.Lib.Cache.prototype.getClassCache = function (_class) {
-
-    var cache = this.getCacheByType(_class),
-        classCache;
-
-    if (cache) {
-        new RegExp('.*(Model|View|ViewModel|Controller)\\.(.*)').test(_class);
-
-        classCache = RegExp.$2;
-
-        if ("undefined" !== typeof cache[classCache]) {
-
-            cache = cache[classCache];
-        }
-    }
-
-    return cache;
-};
+//VDRest.Lib.Cache.prototype.getClassCache = function (_class) {
+//
+//    var cache = this.getCacheByType(_class),
+//        classCache;
+//
+//    if (cache) {
+//        new RegExp('.*(Model|View|ViewModel|Controller)\\.(.*)').test(_class);
+//
+//        classCache = RegExp.$2;
+//
+//        if ("undefined" !== typeof cache[classCache]) {
+//
+//            cache = cache[classCache];
+//        }
+//    }
+//
+//    return cache;
+//};
 
 /**
  * retrieve cache type
  * @param {string} _class
  * @returns {string}
  */
-VDRest.Lib.Cache.prototype.getCacheByType = function (_class) {
-
-    var cache = null;
-
-    if (_class.indexOf('.Model.') > -1) {
-        cache = this.store.Model;
-    }
-
-    if (_class.indexOf('.View.') > -1) {
-        cache = this.store.View;
-    }
-
-    if (_class.indexOf('.Controller.') > -1) {
-        cache = this.store.Controller;
-    }
-
-    return cache;
-
-};
+//VDRest.Lib.Cache.prototype.getCacheByType = function (_class) {
+//
+//    var cache = null;
+//
+//    if (_class.indexOf('.Model.') > -1) {
+//        cache = this.store.Model;
+//    }
+//
+//    if (_class.indexOf('.View.') > -1) {
+//        cache = this.store.View;
+//    }
+//
+//    if (_class.indexOf('.Controller.') > -1) {
+//        cache = this.store.Controller;
+//    }
+//
+//    return cache;
+//
+//};

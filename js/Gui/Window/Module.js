@@ -32,18 +32,21 @@ Gui.Window.prototype.init = function () {
 
     $(document).on('window.request', function (e) {
 
-        me.dispatch(e.object);
+        me.dispatch(e.payload);
     });
 };
 
 /**
  * dispatch requested type
  */
-Gui.Window.prototype.dispatch = function (data) {
+Gui.Window.prototype.dispatch = function (payload) {
+
+    var me = this;
 
     VDRest.app.observeHash = VDRest.app.getLocationHash();
-    VDRest.app.setLocationHash(this.name + '-' + data.type);
-    this.getController(data.type, data.data).dispatchView();
+    VDRest.app.setLocationHash(this.name + '-' + payload.type);
+
+    me.getController(payload.type, payload.data).dispatchView();
 };
 
 /**

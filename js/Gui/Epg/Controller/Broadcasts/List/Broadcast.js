@@ -53,7 +53,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function ()
 
     $.event.trigger({
         "type" : 'window.request',
-        "object" : {
+        "payload" : {
             "type" : "Broadcast",
             "data" : this.data
         }

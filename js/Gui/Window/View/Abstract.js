@@ -37,6 +37,15 @@ Gui.Window.View.Abstract.prototype.render = function () {
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
+Gui.Window.View.Abstract.prototype.addModalOverlay = function () {
+
+    this.modalOverlay = $('<div id="modal-overlay">').appendTo('body');
+
+    this.parentView = {
+        "node" : this.modalOverlay
+    };
+};
+
 /**
  * add a button to close the window if configured
  */
@@ -100,13 +109,13 @@ Gui.Window.View.Abstract.prototype.getToolButton = function (options) {
  */
 Gui.Window.View.Abstract.prototype.destruct = function () {
 
-    $.event.trigger({
-        "type" : "destruct.window-" + this.getChannel() + '/' + this.getId()
-    });
-
     if (this.hasHeader) {
         this.header.empty();
     }
     this.body.empty();
     this.remove();
+
+    if (this.isModal) {
+        this.modalOverlay.remove();
+    }
 };

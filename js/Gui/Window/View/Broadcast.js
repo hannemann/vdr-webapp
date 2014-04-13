@@ -337,3 +337,15 @@ Gui.Window.View.Broadcast.prototype.handleTimerActive = function (active) {
         this.node.removeClass('timer-active');
     }
 };
+
+/**
+ * remove window
+ */
+Gui.Window.View.Broadcast.prototype.destruct = function () {
+
+    $.event.trigger({
+        "type" : "destruct.window-" + this.getChannel() + '/' + this.getId()
+    });
+
+    Gui.Window.View.Abstract.prototype.destruct.call(this);
+};

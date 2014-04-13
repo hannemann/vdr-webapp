@@ -73,7 +73,7 @@ VDRest.Lib.Config = function () {
  */
 VDRest.Lib.Config.prototype.defaults = {
     "lastEpg"           :   "now",
-    "start"             :   "epgold",
+    "start"             :   "Gui.Config",
     "debug"             :   false,
     "port"              :   "8002",
     "recordingStartGap" :   120,

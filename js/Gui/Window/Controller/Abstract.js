@@ -14,9 +14,17 @@ Gui.Window.Controller.Abstract.prototype = new VDRest.Abstract.Controller();
  */
 Gui.Window.Controller.Abstract.prototype.init = function () {
 
-    this.view.setParentView({
-        "node" :$('body')
-    });
+
+    VDRest.app.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.destructView, this));
+
+    if (!this.view.isModal) {
+        this.view.setParentView({
+            "node" :$('body')
+        });
+    } else {
+
+        this.view.addModalOverlay();
+    }
 };
 
 /**
@@ -33,8 +41,6 @@ Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
             "tabConfig" : this.view.getTabConfig()
         });
     }
-
-    VDRest.app.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.destructView, this));
 };
 
 /**

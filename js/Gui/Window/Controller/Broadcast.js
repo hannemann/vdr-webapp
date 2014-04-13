@@ -35,6 +35,7 @@ Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {
     this.addObserver();
 };
 
+// TODO: move logic to own methods
 Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
 
     var me = this;

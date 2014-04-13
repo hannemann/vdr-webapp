@@ -103,9 +103,7 @@ VDRest.App.prototype.run = function () {
 
         this.pollLocation();
         $.event.trigger('dispatch.before');
-//		this.dispatch(start);
-        // TODO: wieder entfernen...
-        this.dispatch('Gui.Epg');
+		this.dispatch(start);
         $.event.trigger('dispatch.after');
 
 	} else {
@@ -157,10 +155,10 @@ VDRest.App.prototype.pollLocation = function () {
             this.observeHash = false;
             this.destroy();
 
-        } else if (hash === this.current && this.destroyer.length > 0) {
+        } /*else if (hash === this.current && this.destroyer.length > 0) {
 
             this.destroy();
-        }
+        }*/
 
     }, this), 100);
 };

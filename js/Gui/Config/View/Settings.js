@@ -62,26 +62,53 @@ Gui.Config.View.Settings.prototype.prepareField = function (id, field) {
 
 Gui.Config.View.Settings.prototype.getBoolean = function (id, field) {
 
-    field.gui = $('<input type="checkbox" name="' + id + '">').val(field.getter());
+    field.gui = $('<input type="checkbox" name="' + id + '" value="1">')
+        .attr('readonly', true)
+        .val(field.getter());
+
     field.dom = $('<label id="' + id + '" class="clearer boolean">')
-        .text(field.label)
-        .append(field.gui);
+        .text(field.label);
+
+    if (field.hasOwnProperty('info')) {
+
+        $('<span class="info">').text(field.info).appendTo(field.dom);
+    }
+
+    field.dom.append(field.gui);
 };
 
 Gui.Config.View.Settings.prototype.getNumber = function (id, field) {
 
-    field.gui = $('<input type="number" name="' + id + '">').val(field.getter());
+    field.gui = $('<input type="number" name="' + id + '">')
+        .attr('readonly', true)
+        .val(field.getter());
+
     field.dom = $('<label id="' + id + '" class="clearer number">')
-        .text(field.label)
-        .append(field.gui);
+        .text(field.label);
+
+    if (field.hasOwnProperty('info')) {
+
+        $('<span class="info">').text(field.info).appendTo(field.dom);
+    }
+
+    field.dom.append(field.gui);
 };
 
 Gui.Config.View.Settings.prototype.getString = function (id, field) {
 
-    field.gui = $('<input type="text" name="' + id + '">').val(field.getter());
+    field.gui = $('<input type="text" name="' + id + '">')
+        .attr('readonly', true)
+        .val(field.getter());
+
     field.dom = $('<label id="' + id + '" class="clearer text">')
-        .text(field.label)
-        .append(field.gui);
+        .text(field.label);
+
+    if (field.hasOwnProperty('info')) {
+
+        $('<span class="info">').text(field.info).appendTo(field.dom);
+    }
+
+    field.dom.append(field.gui);
 };
 
 // TODO: Implement Enum
