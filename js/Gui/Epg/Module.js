@@ -26,8 +26,6 @@ Gui.Epg.prototype.name = 'Epg';
  */
 Gui.Epg.prototype.dispatch = function () {
 
-    VDRest.app.setLocationHash(this.name);
-
     this.store = VDRest.app.getModule('VDRest.Epg');
     this.getController('Epg').dispatchView();
 };

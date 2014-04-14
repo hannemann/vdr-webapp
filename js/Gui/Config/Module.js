@@ -41,7 +41,6 @@ Gui.Config.prototype.init = function () {
  */
 Gui.Config.prototype.dispatch = function () {
 
-    VDRest.app.setLocationHash(this.name);
     this.store = VDRest.config;
     this.getController('Settings').dispatchView();
 };

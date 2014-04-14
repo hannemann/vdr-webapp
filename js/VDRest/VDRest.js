@@ -155,7 +155,10 @@ VDRest.App.prototype.pollLocation = function () {
             this.observeHash = false;
             this.destroy();
 
-        } /*else if (hash === this.current && this.destroyer.length > 0) {
+        }
+
+        // Humbug?
+        /*else if (hash === this.current && this.destroyer.length > 0) {
 
             this.destroy();
         }*/
@@ -181,10 +184,13 @@ VDRest.App.prototype.destroy = function () {
 
     var destroyer = this.destroyer.pop();
 
-    $.event.trigger({
-        "type" : destroyer,
-        "skipHistoryBack" : true
-    });
+    if ("undefined" !== typeof destroyer) {
+
+        $.event.trigger({
+            "type" : destroyer,
+            "skipHistoryBack" : true
+        });
+    }
 };
 
 /**
@@ -233,10 +239,10 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 
         $.event.trigger({"type":"dispatchBefore"});
 
-//        if (moduleName !== this.getLocationHash()) {
-//
-//            this.setLocationHash(moduleName);
-//        }
+        if (moduleName !== this.getLocationHash()) {
+
+            this.setLocationHash(moduleName);
+        }
 		this.modules[moduleName].dispatch(callback);
 		this.current = moduleName;
 
