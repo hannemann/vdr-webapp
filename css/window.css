@@ -128,12 +128,26 @@
     bottom: auto;
     left: auto;
     right: auto;
-    padding: 20px;
+    padding: 20px 20px 0 20px;
     width: calc(80% - 40px);
-    height: 25%;
     border-bottom: none;
     margin-left: 10%;
     margin-right: 10%;
+}
+.window-input .button {
+    float: left;
+    border: none;
+    background: none;
+    padding: 15px 0;
+    width: calc(50% + 20px);
+    border-top: 1px solid white;
+    text-align: center;
+    margin: 10px 0 0 -20px;
+}
+.window-input .button-confirm {
+    margin: 10px -20px 0 0;
+    width: calc(50% + 19px);
+    border-left: 1px solid white;
 }
 
 /* Confirm Popup */

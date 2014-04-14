@@ -28,7 +28,10 @@ Gui.Config.Controller.Settings.prototype.addObserver = function () {
 
     for (i in this.view.fields) {
 
-        if (this.view.fields.hasOwnProperty(i) && this.view.fields[i].hasOwnProperty('dom')) {
+        if (this.view.fields.hasOwnProperty(i)
+            && this.view.fields[i].hasOwnProperty('dom')
+            && this.view.fields[i].type !== 'boolean'
+        ) {
 
             this.view.fields[i].dom.on('click', $.proxy(this.requestInput, this));
         }
@@ -59,4 +62,27 @@ Gui.Config.Controller.Settings.prototype.requestInput = function (e) {
             "data" : this.view.fields[e.currentTarget.id]
         }
     });
+};
+
+Gui.Config.Controller.Settings.prototype.destructView = function () {
+
+    var i, value;
+
+    for (i in this.view.fields) {
+
+        if (this.view.fields.hasOwnProperty(i) && this.view.fields[i].hasOwnProperty('gui')) {
+
+            if (this.view.fields[i].type === "boolean") {
+
+                value = this.view.fields[i].gui.prop('checked');
+            } else {
+
+                value = this.view.fields[i].gui.val();
+            }
+
+            VDRest.config.setItem(i, value);
+        }
+    }
+
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

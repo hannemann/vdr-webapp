@@ -17,6 +17,17 @@ Gui.Window.Controller.Input.prototype.dispatchView = function () {
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     this.addObserver();
+    this.setPosition();
+};
+
+Gui.Window.Controller.Input.prototype.setPosition = function () {
+
+    var winHeight = $(window).height(), height = this.view.node.height();
+
+    this.view.node.css({
+        "top": parseInt((winHeight - height) / 2, 10) + 'px'
+    });
+
 };
 
 Gui.Window.Controller.Input.prototype.addObserver = function () {
@@ -24,6 +35,8 @@ Gui.Window.Controller.Input.prototype.addObserver = function () {
     this.view.ok.on('click', $.proxy(this.ok, this));
 
     this.view.cancel.on('click', $.proxy(this.cancel, this));
+
+    $(window).on("resize", $.proxy(this.setPosition, this));
 };
 
 Gui.Window.Controller.Input.prototype.removeObserver = function () {
@@ -31,6 +44,8 @@ Gui.Window.Controller.Input.prototype.removeObserver = function () {
     this.view.ok.off('click', $.proxy(this.ok, this));
 
     this.view.cancel.off('click', $.proxy(this.cancel, this));
+
+    $(window).off("resize", $.proxy(this.setPosition, this));
 };
 
 Gui.Window.Controller.Input.prototype.ok = function () {
@@ -58,8 +73,6 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
 };
 
 Gui.Window.Controller.Input.prototype.setBoolean = function () {
-
-    console.log(this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]').prop('checked'));
 
     this.data.gui.get(0).checked = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]')
         .prop('checked');

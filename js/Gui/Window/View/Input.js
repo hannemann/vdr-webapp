@@ -24,7 +24,7 @@ Gui.Window.View.Input.prototype.render = function () {
 
 Gui.Window.View.Input.prototype.addClasses = function () {
 
-    this.node.addClass('window-input');
+    this.node.addClass('window-input clearer');
 
     return this;
 };
@@ -40,9 +40,9 @@ Gui.Window.View.Input.prototype.addInput = function () {
 
 Gui.Window.View.Input.prototype.addButtons = function () {
 
-    this.ok = $('<div class="button button-confirm">').text('OK').appendTo(this.body);
-
     this.cancel = $('<div class="button button-cancel">').text('Cancel').appendTo(this.body);
+
+    this.ok = $('<div class="button button-confirm">').text('OK').appendTo(this.body);
 
     return this;
 };

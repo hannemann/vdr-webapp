@@ -62,9 +62,10 @@ Gui.Config.View.Settings.prototype.prepareField = function (id, field) {
 
 Gui.Config.View.Settings.prototype.getBoolean = function (id, field) {
 
+    var value = "true" === field.getter() ? true : false;
+
     field.gui = $('<input type="checkbox" name="' + id + '" value="1">')
-        .attr('readonly', true)
-        .val(field.getter());
+        .prop('checked', value);
 
     field.dom = $('<label id="' + id + '" class="clearer boolean">')
         .text(field.label);
