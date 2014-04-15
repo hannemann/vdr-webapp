@@ -58,3 +58,11 @@ VDRest.Timer.Model.List.prototype.initList = function () {
         "callback" : $.proxy(this.processCollection, this)
     });
 };
+
+VDRest.Timer.Model.List.prototype.sortByTime = function (a, b) {
+
+    a = parseInt(a.data.start_timestamp.replace(/[^0-9]/g, ''));
+    b = parseInt(b.data.start_timestamp.replace(/[^0-9]/g, ''));
+
+    return a - b;
+};

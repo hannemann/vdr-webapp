@@ -51,8 +51,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
 
         this.getBroadcasts();
     }
-
-//    console.log(this.view.node.get(0), this.dataModel, this.dataModel.getCollection().length);
 };
 
 /**

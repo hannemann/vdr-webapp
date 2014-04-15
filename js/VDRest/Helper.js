@@ -106,7 +106,7 @@ VDRest.Helper.prototype.getDurationAsString = function (duration) {
 /**
  * get day of week from date object
  * @param {Date} date
- * @param {Boolean} abbr
+ * @param {Boolean} [abbr]
  * @return {string|boolean}
  */
 VDRest.Helper.prototype.getWeekDay = function (date, abbr) {

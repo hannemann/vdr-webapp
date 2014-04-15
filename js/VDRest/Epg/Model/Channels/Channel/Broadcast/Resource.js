@@ -26,7 +26,7 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.cacheKey = 'chann
  * number of seconds to add to starting point of time if broadcasts are loaded
  * @type {number}
  */
-VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan = 3 * 60 * 60 * 1000;
+VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan = 6 * 60 * 60 * 1000;
 
 /**
  * @member {string} baseUrl

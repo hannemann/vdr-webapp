@@ -129,6 +129,19 @@ VDRest.Abstract.Model.prototype.collectionIterator = function (callback) {
     }
 };
 
+VDRest.Abstract.Model.prototype.deleteFromCollection = function (model) {
+
+    var i = 0, l = this.collection.length;
+
+    for (i;i<l;i++) {
+
+        if (this.collection[i] === model) {
+
+            this.collection.splice(i, 1);
+        }
+    }
+};
+
 /**
  * retrieve collection
  */

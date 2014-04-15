@@ -44,23 +44,42 @@ VDRest.Lib.Cache.prototype.flushByClassKey = function (obj) {
 
     var i, _class = obj._class, key = obj.keyInCache;
 
-    for (i in this.store)
+    for (i in this.store) {
 
+        if (this.store.hasOwnProperty(i)) {
 
-    if (this.store.hasOwnProperty(i)
-        && ( "undefined" !== typeof obj.__proto__.cacheKey || (obj.data && obj.data.cacheKey) )
-    ) {
+            if ("undefined" !== typeof obj.__proto__.cacheKey || obj.data && obj.data.cacheKey) {
 
-        if (this.store[i].hasOwnProperty(_class) && this.store[i][_class].hasOwnProperty(key)) {
+                if (this.store[i].hasOwnProperty(_class) && this.store[i][_class].hasOwnProperty(key)) {
 
-            delete this.store[i][_class][key];
+                    delete this.store[i][_class][key];
+                }
+
+            } else if (this.store[i].hasOwnProperty(_class)) {
+
+                delete this.store[i][_class];
+            }
         }
-
-    } else if ( this.store.hasOwnProperty(i) && this.store[i].hasOwnProperty(_class) ) {
-
-        delete this.store[i][_class];
     }
+};
+/**
+ * delete entries by key
+ * @param {object} obj
+ */
+VDRest.Lib.Cache.prototype.invalidateByClassKey = function (obj) {
 
+    var i, _class = obj._class, key = obj.keyInCache;
+
+    for (i in this.store) {
+
+        if (this.store.hasOwnProperty(i)) {
+
+            if (this.store[i].hasOwnProperty(_class) && this.store[i][_class].hasOwnProperty(key)) {
+
+                delete this.store[i][_class][key];
+            }
+        }
+    }
 };
 
 /**
