@@ -24,7 +24,11 @@ Gui.Menubar.Controller.Default.prototype.init = function () {
 
     this.view = this.module.getView('Default');
 
+    $(document).on('dispatchAfter', $.proxy(this.view.setTitle, this.view));
+
     this.view.setParentView(parentView);
+
+    this.drawerDispatched = false;
 
     $.event.trigger('menubar.init');
 };
@@ -59,7 +63,7 @@ Gui.Menubar.Controller.Default.prototype.showThrobber = function () {
 Gui.Menubar.Controller.Default.prototype.hideThrobber = function (force) {
 
     this.throbberCalls--;
-    if (this.throbberCalls === 0 || force) {
+    if (this.throbberCalls <= 0 || force) {
         this.view.throbber.hide();
         this.view.settingsButton.show();
         this.throbberCalls = 0;
@@ -71,8 +75,46 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (force) {
  */
 Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
+    var me = this, indicatorWidth = this.view.drawerIndicator.width();
+
     this.view.settingsButton.on('click', function () {
 
         VDRest.app.dispatch('Gui.Config');
     });
+
+    $(document).on('drawer.dispatched', function (e) {
+
+        me.drawerDispatched = !!e.payload;
+    });
+
+    $(document).on('drawer.animate', function () {
+
+        var target = Math.floor(indicatorWidth / 2);
+        if (me.drawerDispatched) {
+
+            target = indicatorWidth;
+        }
+        me.view.drawerIndicator.animate({
+            "width" : target + 'px'
+        }, 'fast');
+    });
+
+    this.view.icon.on('click', function () {
+
+        if (me.drawerDispatched) {
+
+            history.back()
+        } else {
+
+            $.event.trigger({
+                "type" : 'window.request',
+                "payload" : {
+                    "type" : "Drawer"
+                }
+            });
+        }
+    });
+
+    $(document).on('dispatchBefore', $.proxy(this.showThrobber, this));
+    $(document).on('dispatchAfter', $.proxy(this.hideThrobber, this));
 };

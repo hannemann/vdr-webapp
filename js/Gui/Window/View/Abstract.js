@@ -34,12 +34,28 @@ Gui.Window.View.Abstract.prototype.init = function () {
  */
 Gui.Window.View.Abstract.prototype.render = function () {
 
+    if (this.isModal) {
+
+        this.addModalOverlay(this.parentView);
+    }
+
+    if (this.isModalViewport) {
+
+        this.addModalOverlay(VDRest.app.getModule('Gui.Viewport').getView('Default'));
+    }
+
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
-Gui.Window.View.Abstract.prototype.addModalOverlay = function () {
+Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
 
-    this.modalOverlay = $('<div id="modal-overlay">').appendTo('body');
+    /**
+     * @type {VDRest.Abstract.view|object}
+     * @property {jQuery.fn.init} node
+     */
+    parentView = parentView || $('body');
+
+    this.modalOverlay = $('<div id="modal-overlay">').appendTo(parentView.node);
 
     this.parentView = {
         "node" : this.modalOverlay

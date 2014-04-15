@@ -22,6 +22,18 @@ Gui.Epg.prototype.namespace = 'Gui';
 Gui.Epg.prototype.name = 'Epg';
 
 /**
+ * show up in drawer
+ * @type {string}
+ */
+Gui.Epg.prototype.inDrawer = true;
+
+/**
+ * headline in menu bar
+ * @type {string}
+ */
+Gui.Epg.prototype.headline = 'EPG';
+
+/**
  * dispatch default view
  */
 Gui.Epg.prototype.dispatch = function () {

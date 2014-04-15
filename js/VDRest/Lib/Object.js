@@ -6,15 +6,52 @@ VDRest.Lib.Object = function () {};
 
 /**
  * initialize store
- * @param {Object} data
+ * @param {Object} [data]
+ * @returns {VDRest.Lib.Object}
  */
 VDRest.Lib.Object.prototype.initData = function (data) {
+
+    var i;
+
+    this.length = 0;
 
     data = data || {};
 
     this.data = data;
 
+    for (i in this.data) {
+
+        if (this.data.hasOwnProperty(i)) {
+            this.length++;
+        }
+    }
+
+    this.each = function (callback) {
+
+        if ("function" !== typeof callback) return;
+
+        for (i in this.data) {
+
+            if (this.data.hasOwnProperty(i)) {
+
+                callback(i, this.data[i]);
+            }
+        }
+    };
+
     return this;
+};
+
+/**
+ * get initialized instance
+ * @param [data]
+ * @returns {VDRest.Lib.Object}
+ */
+VDRest.Lib.Object.prototype.getInstance = function (data) {
+
+    var obj = new VDRest.Lib.Object();
+
+    return obj.initData(data);
 };
 
 /**
@@ -50,6 +87,7 @@ VDRest.Lib.Object.prototype.getData = function (option, defaultValue) {
 VDRest.Lib.Object.prototype.setData = function (option, value) {
 
     this.data[option] = value;
+    this.length++;
     return this;
 };
 

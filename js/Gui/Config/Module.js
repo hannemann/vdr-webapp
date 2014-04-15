@@ -22,6 +22,18 @@ Gui.Config.prototype.namespace = 'Gui';
 Gui.Config.prototype.name = 'Config';
 
 /**
+ * show up in drawer
+ * @type {string}
+ */
+Gui.Config.prototype.inDrawer = true;
+
+/**
+ * headline in menu bar
+ * @type {string}
+ */
+Gui.Config.prototype.headline = 'Configuration';
+
+/**
  * add render event
  */
 Gui.Config.prototype.init = function () {

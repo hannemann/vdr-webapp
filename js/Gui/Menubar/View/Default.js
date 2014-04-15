@@ -5,7 +5,8 @@ Gui.Menubar.View.Default.prototype = new VDRest.Abstract.View();
 
 Gui.Menubar.View.Default.prototype.init = function () {
 
-    this.node = $('<div id="menubar"><div class="drawer-indicator"></div></div>');
+    this.node = $('<div id="menubar"></div>');
+    this.drawerIndicator = $('<div class="drawer-indicator"></div>').appendTo(this.node);
 };
 
 Gui.Menubar.View.Default.prototype.render = function () {
@@ -27,11 +28,20 @@ Gui.Menubar.View.Default.prototype.addIcon = function () {
 
 Gui.Menubar.View.Default.prototype.addContent = function () {
 
-    this.content = $('<div class="menubar-content"><div id="header"></div></div>')
+    this.content = $('<div class="menubar-content">')
+        .append(this.getHeader())
         .appendTo(this.node);
-    this.header = this.content.find('#header');
 
     return this;
+};
+
+Gui.Menubar.View.Default.prototype.getHeader = function () {
+
+    if (!this.header) {
+
+        this.header = $('<div id="header">');
+    }
+    return this.header;
 };
 
 Gui.Menubar.View.Default.prototype.addThrobber = function () {
@@ -50,9 +60,16 @@ Gui.Menubar.View.Default.prototype.addSettingsButton = function () {
     return this;
 };
 
-Gui.Menubar.View.Default.prototype.setTitle = function (title) {
+/**
+ * @param {jQuery.Event} e
+ * @returns {Gui.Menubar.View.Default}
+ */
+Gui.Menubar.View.Default.prototype.setTitle = function (e) {
 
-    this.header.text(title);
+    if (e instanceof jQuery.Event && e.payload && e.payload.headline) {
+
+        this.getHeader().text(e.payload.headline);
+    }
 
     return this;
 };

@@ -4,7 +4,6 @@ Gui.Config.Controller.Settings.prototype = new VDRest.Abstract.Controller();
 
 Gui.Config.Controller.Settings.prototype.init = function () {
 
-    VDRest.app.getModule('Gui.Menubar').getView('Default').setTitle(this.module.name);
     VDRest.app.getModule('Gui.Viewport').getView('Default').node.addClass(this.module.name.toLowerCase());
 
     this.view = this.module.getView('Settings');

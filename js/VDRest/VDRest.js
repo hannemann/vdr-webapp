@@ -237,7 +237,10 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
             this.modules[this.current].destruct();
         }
 
-        $.event.trigger({"type":"dispatchBefore"});
+        $.event.trigger({
+            "type":"dispatchBefore",
+            "payload" : this.modules[this.current]
+        });
 
         if (moduleName !== this.getLocationHash()) {
 
@@ -246,7 +249,10 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 		this.modules[moduleName].dispatch(callback);
 		this.current = moduleName;
 
-        $.event.trigger({"type":"dispatchAfter"});
+        $.event.trigger({
+            "type":"dispatchAfter",
+            "payload" : this.modules[this.current]
+        });
 	}
 };
 
