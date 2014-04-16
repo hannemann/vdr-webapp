@@ -37,7 +37,7 @@ Gui.Window.ViewModel.Drawer.prototype.getButtons = function () {
 
     for (i in modules) {
 
-        if (modules.hasOwnProperty(i) && modules[i].inDrawer && modules[i].headline) {
+        if (current !== i && modules.hasOwnProperty(i) && modules[i].inDrawer && modules[i].headline) {
 
             module = modules[i].namespace+'.'+modules[i].name;
 
