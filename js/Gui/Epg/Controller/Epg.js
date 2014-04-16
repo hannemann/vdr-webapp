@@ -57,16 +57,26 @@ Gui.Epg.Controller.Epg.prototype.init = function () {
  */
 Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
 
-    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    if (this.isHidden) {
 
-    this.timeLine.dispatchView();
-    this.channels.dispatchView();
-    this.broadcasts.dispatchView();
-    this.addObserver();
+        this.view.node.show();
 
-    $.event.trigger('epg.dispatched');
+        this.isHidden = false;
 
-    this.module.store.initChannels();
+    } else {
+
+        VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+        this.timeLine.dispatchView();
+        this.channels.dispatchView();
+        this.broadcasts.dispatchView();
+        this.addObserver();
+
+        $.event.trigger('epg.dispatched');
+
+        this.module.store.initChannels();
+
+    }
 };
 
 /**
@@ -158,9 +168,13 @@ Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
 
 Gui.Epg.Controller.Epg.prototype.destructView = function () {
 
-    this.timeLine.destructView();
-    this.channels.destructView();
-    this.broadcasts.destructView();
+    this.view.node.hide();
 
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
+    this.isHidden = true;
+
+//    this.timeLine.destructView();
+//    this.channels.destructView();
+//    this.broadcasts.destructView();
+//
+//    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

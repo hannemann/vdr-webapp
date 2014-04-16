@@ -48,7 +48,7 @@ Gui.Epg.prototype.dispatch = function () {
 Gui.Epg.prototype.destruct = function () {
 
     this.getController('Epg').destructView();
-    this.cache.flush();
+//    this.cache.flush();
 };
 
 /**
