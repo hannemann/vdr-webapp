@@ -6,7 +6,7 @@ Gui.Menubar.View.Default.prototype = new VDRest.Abstract.View();
 Gui.Menubar.View.Default.prototype.init = function () {
 
     this.node = $('<div id="menubar"></div>');
-    this.drawerIndicator = $('<div class="drawer-indicator"></div>').appendTo(this.node);
+    this.drawerIndicator = $('<div class="drawer-indicator">❮</div>').appendTo(this.node);
 };
 
 Gui.Menubar.View.Default.prototype.render = function () {
@@ -72,4 +72,13 @@ Gui.Menubar.View.Default.prototype.setTitle = function (e) {
     }
 
     return this;
+};
+
+Gui.Menubar.View.Default.prototype.decorateIndicator = function (start) {
+
+    if (start) {
+        this.drawerIndicator.removeClass('back');
+    } else {
+        this.drawerIndicator.addClass('back');
+    }
 };

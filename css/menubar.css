@@ -20,6 +20,14 @@
     width: 11px;
     background: linear-gradient(0deg, transparent 50%, rgba(255,255,255,0.5) 50%) repeat-y center top;
     background-size: 100% 6px;
+    color: transparent;
+}
+#menubar .drawer-indicator.back {
+    background: none;
+    color: rgba(255,255,255,0.5);
+    top: 16px;
+    padding-left: 3px;
+    font-weight: bold;
 }
 
 #menubar .icon {

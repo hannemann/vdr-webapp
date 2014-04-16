@@ -104,17 +104,30 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
         if (me.drawerDispatched) {
 
             history.back()
+
         } else {
 
-            $.event.trigger({
-                "type" : 'window.request',
-                "payload" : {
-                    "type" : "Drawer"
-                }
-            });
+            if (VDRest.config.getItem('start') != VDRest.app.getCurrent()) {
+
+                history.back();
+
+            } else {
+
+                $.event.trigger({
+                    "type" : 'window.request',
+                    "payload" : {
+                        "type" : "Drawer"
+                    }
+                });
+
+            }
         }
     });
 
     $(document).on('dispatchBefore', $.proxy(this.showThrobber, this));
-    $(document).on('dispatchAfter', $.proxy(this.hideThrobber, this));
+    $(document).on('dispatchAfter', $.proxy(function () {
+
+        this.view.decorateIndicator(VDRest.config.getItem('start') == VDRest.app.getCurrent());
+        this.hideThrobber();
+    }, this));
 };
