@@ -63,9 +63,10 @@
     top: 0;
     height: 39px;
     background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
-    font-size: 9px;
+    font-size: 11px;
     overflow: hidden;
     color: white;
+    font-family: Source Sans ProBold, sans-serif
 }
 #broadcasts .broadcasts-list .broadcast div {
     height: 35px;
