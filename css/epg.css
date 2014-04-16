@@ -52,13 +52,14 @@
     height: 39px;
     background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
     font-size: 10px;
-    overflow: hidden;
     color: white;
     font-family: Source Sans ProBold, sans-serif
 }
 #broadcasts .broadcasts-list .broadcast div {
     height: 35px;
     padding: 2px;
+    overflow: hidden;
+    /*text-overflow: ellipsis;*/
 }
 #broadcasts .broadcasts-list .broadcast.timer-exists div {
     background-size: 5px 5px;

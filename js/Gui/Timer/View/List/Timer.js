@@ -11,12 +11,16 @@ Gui.Timer.View.List.Timer.prototype.init = function () {
 
     this.date = $('<span class="date">').appendTo(this.node);
 
+    this.channel = $('<span class="channel">').appendTo(this.node);
+
     this.time = $('<span class="time">').appendTo(this.node);
 
     this.name = $('<div class="filename">').appendTo(this.node);
 };
 
 Gui.Timer.View.List.Timer.prototype.render = function () {
+
+    this.channel.text(this.getChannelName());
 
     this.name.text(this.getFilename());
 
