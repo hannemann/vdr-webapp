@@ -32,16 +32,21 @@ Gui.Epg.View.Channels.Channel.prototype.setAttributes = function () {
 
 Gui.Epg.View.Channels.Channel.prototype.addLogo = function () {
 
-    var image = this.getImage();
+    var image = this.getImage(), preload;
 
     if (image) {
+
+        preload = $('<img src="' + image + '">');
 
         this.node.css({
             "background-image" : "url(" + image + ")"
         });
+
     } else {
         this.node.text(this.getName());
     }
+
+    preload = undefined;
 
     return this;
 };
