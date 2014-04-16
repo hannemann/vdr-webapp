@@ -7,6 +7,7 @@ Gui.Menubar.View.Default.prototype.init = function () {
 
     this.node = $('<div id="menubar"></div>');
     this.drawerIndicator = $('<div class="drawer-indicator">❮</div>').appendTo(this.node);
+    this.titleWrapper = $('<id class="title-wrapper">').appendTo(this.node);
 };
 
 Gui.Menubar.View.Default.prototype.render = function () {
@@ -20,17 +21,17 @@ Gui.Menubar.View.Default.prototype.render = function () {
 
 Gui.Menubar.View.Default.prototype.addIcon = function () {
 
-    this.icon = $('<img src="/assets/icon.png" class="icon">')
-        .appendTo(this.node);
+    $('<img src="/assets/icon.png" class="icon">')
+        .appendTo(this.titleWrapper);
 
     return this;
 };
 
 Gui.Menubar.View.Default.prototype.addContent = function () {
 
-    this.content = $('<div class="menubar-content">')
+    this.content = $('<div class="menubar-header">')
         .append(this.getHeader())
-        .appendTo(this.node);
+        .appendTo(this.titleWrapper);
 
     return this;
 };

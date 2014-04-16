@@ -20,13 +20,11 @@ Gui.Menubar.Controller.Default.prototype.throbberCalls = 0;
  */
 Gui.Menubar.Controller.Default.prototype.init = function () {
 
-    var parentView = {"node":$('body')};
-
     this.view = this.module.getView('Default');
 
     $(document).on('dispatchAfter', $.proxy(this.view.setTitle, this.view));
 
-    this.view.setParentView(parentView);
+    this.view.setParentView({"node":$('body')});
 
     this.drawerDispatched = false;
 
@@ -99,7 +97,7 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
         }, 'fast');
     });
 
-    this.view.icon.on('click', function () {
+    this.view.titleWrapper.on('click', function () {
 
         if (me.drawerDispatched) {
 

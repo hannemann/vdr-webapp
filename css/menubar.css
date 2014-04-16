@@ -30,24 +30,24 @@
     font-weight: bold;
 }
 
+#menubar .title-wrapper {
+    display: inline-block;
+}
 #menubar .icon {
     width: 40px;
     height: 40px;
+    float: left;
+}
+#menubar .menubar-header {
+    display: inline-block;
+    float: left;
+    font-family: Source Sans ProBold, sans-serif;
 }
 
 #menubar #throbber {
     float: right;
     margin: 4px 0;
     display: none;
-}
-#menubar .menubar-content {
-    width: calc(100% - 12px - 40px - 32px - 10px);
-    height: calc(100% - 10px);
-    display: inline-block;
-    padding: 5px;
-    position: absolute;
-    top: 0;
-    left: 47px;
 }
 #header {
     display: inline-block;
