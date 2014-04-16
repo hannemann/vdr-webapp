@@ -59,6 +59,12 @@ VDRest.Timer.Model.List.prototype.initList = function () {
     });
 };
 
+/**
+ * sort callback
+ * @param a
+ * @param b
+ * @returns {number}
+ */
 VDRest.Timer.Model.List.prototype.sortByTime = function (a, b) {
 
     a = parseInt(a.data.start_timestamp.replace(/[^0-9]/g, ''));
