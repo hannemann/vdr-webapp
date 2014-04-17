@@ -34,7 +34,7 @@ VDRest.Recordings.Model.List.prototype.resultCollection = 'recordings';
  */
 VDRest.Recordings.Model.List.prototype.events = {
 
-    "collectionloaded" : 'timersloaded'
+    "collectionloaded" : 'recordingsloaded'
 };
 
 /**
