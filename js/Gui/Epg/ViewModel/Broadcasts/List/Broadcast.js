@@ -27,7 +27,8 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.resource = this.data.resource.data;
 
-    this.calculateMetrics();
+    this.calculateMetrics()
+        .parseDescription();
 
     this.initViewMethods(this.data.view, this.data.resource);
 };
@@ -79,4 +80,31 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.calculateMetrics = functio
 
         return right;
     };
+
+    return this;
 };
+
+Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.parseDescription = function () {
+
+    var rating = new RegExp('([0-9])/[0-9]'),
+        topTipp = new RegExp('TopTipp', 'm'),
+        me = this;
+
+    rating.test(this.resource.description);
+
+    rating = parseInt(RegExp.$1, 10);
+
+    this.data.view.getRating = function () {
+
+        return rating;
+    };
+
+    this.data.view.getTopTip = function () {
+
+        return topTipp.test(me.resource.description);
+    };
+
+    return this;
+};
+
+

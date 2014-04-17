@@ -70,6 +70,61 @@
     background-size: 5px 5px;
 }
 
+.broadcast.rating-1 div:after {
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.broadcast.rating-1 div:after {
+    content: '★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.broadcast.rating-2 div:after {
+    content: '★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.broadcast.rating-3 div:after {
+    content: '★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.broadcast.rating-4 div:after {
+    content: '★★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.broadcast.rating-5 div:after {
+    content: '★★★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.broadcast.top-tipp div:before {
+    content: '\1F44D';
+    position: absolute;
+    bottom: 1px;
+    right: 10px;
+    color: #ffaf17;
+}
+
 #epg-date {
     position: absolute;
     left: 0;

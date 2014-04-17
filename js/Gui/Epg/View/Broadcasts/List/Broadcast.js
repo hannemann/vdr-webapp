@@ -27,7 +27,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.setWidth = function () {
 
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
 
-    var classNames = [];
+    var classNames = [], rating = this.getRating();
 
     if (this.getTimerExists()) {
         this.handleTimerExists(true);
@@ -35,6 +35,16 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
 
     if (this.getTimerActive()) {
         this.handleTimerActive(true);
+    }
+
+    if (rating) {
+
+        classNames.push('rating-' + rating);
+    }
+
+    if (this.getTopTip()) {
+
+        classNames.push('top-tipp');
     }
 
     this.node.addClass(classNames.join(' '));
