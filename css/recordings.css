@@ -5,24 +5,25 @@ div.window.recordings {
     right: 0;
     bottom: 0;
 }
+.recordings-path .name,
+.recording.list-item .name {
+    font-size: 16px;
+}
+.recordings-path .name:before {
+    content: url('/assets/folder.png');
+}
 
-
-div.show-event .delete-button {
+.recording.list-item span {
+    border: none;
+}
+.recording.list-item .time {
     text-align: center;
 }
-
-div.show-event .delete-button dt {
-    text-align: center;
-    margin: 0 auto 5px;
-    width: 60px;
-    height:60px;
+.recording.list-item .name {
+    border-bottom: 1px solid rgb(155,155,155);
+    clear:both;
+    padding-bottom: 10px;
 }
-div.show-event .delete-button dt {
-    background: #FF0000;
-    border-radius: 30px;
-    box-shadow: 0 0 5px 0 #FF0000, 0 0 5px #FFFFFF inset;
-}
-div.show-event .delete-button dt {
-    font-size: 50px;
-    line-height: 60px;
+.recording.list-item .shortText {
+    font-size: 12px;
 }

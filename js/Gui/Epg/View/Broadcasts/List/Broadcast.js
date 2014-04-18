@@ -39,12 +39,12 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
 
     if (rating) {
 
-        classNames.push('rating-' + rating);
+        this.node.find('div').addClass('rating-' + rating);
     }
 
     if (this.getTopTip()) {
 
-        classNames.push('top-tipp');
+        this.node.find('div').addClass('top-tipp');
     }
 
     this.node.addClass(classNames.join(' '));

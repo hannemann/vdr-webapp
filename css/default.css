@@ -71,6 +71,10 @@ ul {
 	cursor: default;
 }
 
+.list-item {
+    position: relative;
+}
+
 .list-item span {
     width: calc(100% / 3);
     display: block;
@@ -79,4 +83,60 @@ ul {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+
+.rating-1:after {
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-1:after {
+    content: '★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-2:after {
+    content: '★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-3:after {
+    content: '★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-4:after {
+    content: '★★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-5:after {
+    content: '★★★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.top-tipp:before {
+    content: '\1F44D';
+    position: absolute;
+    bottom: 1px;
+    right: 10px;
+    color: #ffaf17;
 }

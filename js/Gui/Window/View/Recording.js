@@ -32,7 +32,7 @@ Gui.Window.View.Recording.prototype.addClasses = function () {
 
 Gui.Window.View.Recording.prototype.decorateHeader = function () {
 
-    this.addTitle();
+    this.addTitle().addDetails();
 
     return this;
 };
@@ -43,6 +43,11 @@ Gui.Window.View.Recording.prototype.addTitle = function () {
         .text(this.getEventTitle())
         .appendTo(this.header);
 
+    return this;
+};
+
+Gui.Window.View.Recording.prototype.addDetails = function () {
+
     this.details = $('<ul class="window-header-details">')
         .appendTo(this.header);
 
@@ -52,6 +57,14 @@ Gui.Window.View.Recording.prototype.addTitle = function () {
             .text(this.getEventShortText())
             .appendTo(this.details);
     }
+
+    $('<li>')
+        .text(this.getStartDate())
+        .appendTo(this.details);
+
+    $('<li>')
+        .text(this.getDurationString())
+        .appendTo(this.details);
 
     return this;
 };

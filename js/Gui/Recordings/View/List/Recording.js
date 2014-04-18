@@ -8,35 +8,53 @@ Gui.Recordings.View.List.Recording.prototype.cacheKey = 'number';
 Gui.Recordings.View.List.Recording.prototype.init = function () {
 
     this.node = $('<div class="recording list-item clearer">');
-
-    this.date = $('<span class="date">').appendTo(this.node);
-
-    this.name = $('<div class="name">').appendTo(this.node);
 };
 
 Gui.Recordings.View.List.Recording.prototype.render = function () {
 
-    this.name.text(this.getName());
+    if ("undefined" === typeof this.module.figgi) {
+        this.module.figgi = 1;
+        console.log(this);
+    }
 
-    this.date.text(this.addStartDate());
+    this.name = $('<div class="name">')
+        .text(this.getName())
+        .appendTo(this.node);
+
+    if (this.hasEventShortText()) {
+
+        $('<div class="shortText italic">')
+            .text(this.getEventShortText())
+            .appendTo(this.name);
+    }
+
+    this.date = $('<span class="date">')
+        .text(this.getStartDate())
+        .appendTo(this.node);
+
+    this.duration = $('<span class="time">')
+        .text(this.getDurationString())
+        .appendTo(this.node);
+
+    this.addClasses();
 
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
-Gui.Recordings.View.List.Recording.prototype.addStartDate = function () {
+Gui.Recordings.View.List.Recording.prototype.addClasses = function () {
 
-    var date = new Date(this.getEventStartTime()*1000), string = '';
+    var classNames = [], rating = this.getRating();
 
-    string += this.helper().getWeekDay(date) + ' ' + this.helper().getDateString(date);
+    if (rating) {
 
-    return string;
-};
+        this.name.addClass('rating-' + rating);
+    }
 
-Gui.Recordings.View.List.Recording.prototype.addTime = function () {
+    if (this.getTopTip()) {
 
-    var start = this.getStartDate(), end = this.getEndDate(), string = '';
+        this.name.addClass('top-tipp');
+    }
 
-    string += this.helper().getTimeString(start) +' - '+ this.helper().getTimeString(end);
-
-    return string;
+    this.node.addClass(classNames.join(' '));
+    return this;
 };

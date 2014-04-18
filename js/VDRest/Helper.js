@@ -180,4 +180,31 @@ VDRest.Helper.prototype.sortAlpha = function (a, b) {
     return 0;
 };
 
+/**
+ * call in context of view model
+ * @param {string} description
+ * @returns {*}
+ */
+VDRest.Helper.prototype.parseDescription = function (description) {
+
+    var rating = new RegExp('(?:Wertung:|Bewertung:)\\s*([0-9])/[0-9]'),
+        topTipp = new RegExp('(TagesTipp|TopTipp)', 'm');
+
+    rating.test(description);
+
+    rating = parseInt(RegExp.$1, 10);
+
+    this.data.view.getRating = function () {
+
+        return isNaN(rating) ? 0 : rating;
+    };
+
+    this.data.view.getTopTip = function () {
+
+        return topTipp.test(description);
+    };
+
+    return this;
+};
+
 VDRest.helper = new VDRest.Helper();
