@@ -87,7 +87,7 @@ VDRest.Gui.Window.View.prototype.triggerAnimation = function () {
 
     if (this.observeHash) {
 
-        VDRest.app.observeHash = VDRest.app.getLocationHash();
+        VDRest.app.observe();
 
     }
 

@@ -52,7 +52,7 @@ VDRest.App.prototype.destroyer = [];
  * observe if location hash changes to observeHash
  * @type {Boolean|String}
  */
-VDRest.App.prototype.observeHash = false;
+VDRest.App.prototype.observeHash = [];
 
 /**
  * add module instance to buffer
@@ -150,9 +150,8 @@ VDRest.App.prototype.pollLocation = function () {
 
             this.dispatch(hash);
 
-        } else if (this.observeHash === hash) {
+        } else if (this.observeHash[this.observeHash.length-1] === hash) {
 
-            this.observeHash = false;
             this.destroy();
 
         }
@@ -164,6 +163,11 @@ VDRest.App.prototype.pollLocation = function () {
         }*/
 
     }, this), 100);
+};
+
+VDRest.App.prototype.observe = function (hash) {
+
+    this.observeHash.push(hash || this.getLocationHash());
 };
 
 /**
@@ -183,6 +187,7 @@ VDRest.App.prototype.addDestroyer = function (destroyer, callback) {
 VDRest.App.prototype.destroy = function () {
 
     var destroyer = this.destroyer.pop();
+    this.observeHash.pop();
 
     if ("undefined" !== typeof destroyer) {
 

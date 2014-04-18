@@ -70,3 +70,13 @@ ul {
 	padding: 5px 10px;
 	cursor: default;
 }
+
+.list-item span {
+    width: calc(100% / 3);
+    display: block;
+    float: left;
+    border-bottom: 1px solid rgb(155,155,155);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

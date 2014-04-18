@@ -142,6 +142,12 @@ VDRest.Abstract.Model.prototype.deleteFromCollection = function (model) {
     }
 };
 
+VDRest.Abstract.Model.prototype.flushCollection = function () {
+
+    this.collection = [];
+    this.currentResult = [];
+};
+
 /**
  * retrieve collection
  */

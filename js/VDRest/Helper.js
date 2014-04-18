@@ -147,10 +147,10 @@ VDRest.Helper.prototype.vdrDecodeURI = function (string) {
     return string.replace(/_/g, ' ');
 };
 
-///**
-// * remove duplicates
-// * @return {Array}
-// */
+/**
+* remove duplicates
+* @return {Array}
+*/
 Array.prototype.unique = function() {
 
     var u = {}, a = [];
@@ -162,6 +162,22 @@ Array.prototype.unique = function() {
         u[this[i]] = 1;
     }
     return a;
+};
+
+/**
+ * sort by name property in data object
+ * @param a
+ * @param b
+ * @returns {number}
+ */
+VDRest.Helper.prototype.sortAlpha = function (a, b) {
+
+    a = a.data.name.toLowerCase().replace(/^[^a-z]/, '');
+    b = b.data.name.toLowerCase().replace(/^[^a-z]/, '');
+
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
 };
 
 VDRest.helper = new VDRest.Helper();

@@ -7,7 +7,7 @@ Gui.Recordings.View.List.Recording.prototype.cacheKey = 'number';
 
 Gui.Recordings.View.List.Recording.prototype.init = function () {
 
-    this.node = $('<div class="timer list-item clearer">');
+    this.node = $('<div class="recording list-item clearer">');
 
     this.date = $('<span class="date">').appendTo(this.node);
 

@@ -39,5 +39,40 @@ Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-//    this.addObserver();
+
+    if ("root" !== this.keyInCache) {
+
+        this.addObserver();
+    }
+};
+
+/**
+ * add events to directory node
+ */
+Gui.Recordings.Controller.List.Directory.prototype.addObserver = function () {
+
+    this.view.node.on('click', $.proxy(this.requestWindow, this));
+};
+
+/**
+ * request window
+ */
+Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) {
+
+    e.preventDefault();
+
+    e.stopPropagation();
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "hashSuffix" : '~' + this.data.path,
+            "type" : "Directory",
+            "data" : {
+                "node" : this.view,
+                "dispatch" : $.proxy(this.view.renderItems, this.view),
+                "path" : this.data.path
+            }
+        }
+    });
 };

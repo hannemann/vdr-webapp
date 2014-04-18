@@ -43,8 +43,8 @@ Gui.Window.prototype.dispatch = function (payload) {
 
     var me = this;
 
-    VDRest.app.observeHash = VDRest.app.getLocationHash();
-    VDRest.app.setLocationHash(this.name + '-' + payload.type);
+    VDRest.app.observe();
+    VDRest.app.setLocationHash(this.name + '-' + payload.type + payload.hashSuffix);
 
     me.getController(payload.type, payload.data).dispatchView();
 };

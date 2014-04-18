@@ -42,7 +42,6 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
 
         }, this));
     }
-    console.log(this.tree);
 };
 
 Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDir) {

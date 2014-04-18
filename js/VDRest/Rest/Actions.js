@@ -49,10 +49,6 @@ VDRest.Rest.Actions.prototype.addTimer = function (obj) {
             obj.setData('timer_active', result.timers[0].is_active);
             obj.setData('timer_id', result.timers[0].id);
 
-            // TODO: add timer to cache without reloading it
-//            VDRest.app.getModule('timers').refreshCache = true;
-
-
             model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', result.timers[0]);
 
             if (collection.length > 0) {
@@ -88,16 +84,8 @@ VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
             obj.setData('timer_active', false);
             obj.setData('timer_id', '');
 
-            // TODO: add timer to cache without reloading it
-//            VDRest.app.getModule('timers').refreshCache = true;
-
             VDRest.app.getModule('VDRest.Timer').getModel('List').deleteFromCollection(model);
             delete model.cache[model.keyInCache];
-
-//            VDRest.app.getModule('VDRest.Timer').cache.invalidateByClassKey({
-//                "_class" : "List.Timer",
-//                "keyInCache" : timer_id
-//            });
 
             $.event.trigger({
                 "type" : 'timer-changed.' + obj.keyInCache

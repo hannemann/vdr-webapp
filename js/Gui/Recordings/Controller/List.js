@@ -22,7 +22,7 @@ Gui.Recordings.Controller.List.prototype.init = function () {
 
     this.recordingsList = VDRest.Lib.Object.prototype.getInstance();
 
-    this.dataModel = VDRest.app.getModule('VDRest.Recordings').getModel('List');
+    this.dataModel = this.module.store.getModel('List');
 };
 
 /**
@@ -34,12 +34,10 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
     this.addObserver();
 
-    if (this.dataModel.getCollection().length > 0) {
+    if (this.isHidden) {
 
-        this.iterateRecordings({
-            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel),
-            "collection" : this.dataModel.getCollection()
-        });
+        this.isHidden = false;
+        this.view.node.show();
     } else {
 
         this.dataModel.initList();
@@ -57,16 +55,8 @@ Gui.Recordings.Controller.List.prototype.iterateRecordings = function (collectio
     collection.iterate($.proxy(function (recordingsModel) {
 
         this.recordingsList.setData(
-
             recordingsModel.data.number,
-
             recordingsModel.data.name
-
-//            this.module.getController('List.Recording', {
-//                "number" : recordingsModel.data.number,
-//                "parent" : this,
-//                "dataModel" : recordingsModel
-//            })
         );
 
     }, this));
@@ -82,11 +72,6 @@ Gui.Recordings.Controller.List.prototype.dispatchList = function () {
     });
 
     this.view.renderFirstLevel();
-
-//    this.recordingsList.each(function () {
-//
-//        arguments[1].dispatchView();
-//    });
 };
 
 Gui.Recordings.Controller.List.prototype.addObserver = function () {
@@ -98,10 +83,6 @@ Gui.Recordings.Controller.List.prototype.removeObserver = function () {};
 
 Gui.Recordings.Controller.List.prototype.destructView = function () {
 
-    this.recordingsList.each(function () {
-
-        arguments[1].destructView();
-    });
-
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
+    this.isHidden = true;
+    this.view.node.hide();
 };

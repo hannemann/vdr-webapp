@@ -14,9 +14,9 @@ Gui.Recordings.View.List.Directory.prototype.init = function () {
 
 Gui.Recordings.View.List.Directory.prototype.render = function () {
 
-    this.name.text(this.getName());
-
-//    this.renderItems();
+    if ("root" !== this.getName()) {
+        this.name.text(this.getName());
+    }
 
     VDRest.Abstract.View.prototype.render.call(this);
 };
@@ -30,15 +30,21 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function () {
 
     l = directories.length;
 
+    directories.sort(this.helper().sortAlpha);
+
     for (i; i<l; i++) {
 
+        directories[i].view.setParentView({"node" : this.parentView.body});
         directories[i].dispatchView();
     }
 
     i = 0; l = files.length;
 
+    files.sort(this.helper().sortAlpha);
+
     for (i; i<l; i++) {
 
+        files[i].view.setParentView({"node" : this.parentView.body});
         files[i].dispatchView();
     }
 };

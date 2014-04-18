@@ -63,10 +63,10 @@ VDRest.Lib.Cache.prototype.flushByClassKey = function (obj) {
     }
 };
 /**
- * delete entries by key
- * @param {object} obj
+ * delete classes from all types
+ * @param {object} obj class to be deleted from caches
  */
-VDRest.Lib.Cache.prototype.invalidateByClassKey = function (obj) {
+VDRest.Lib.Cache.prototype.invalidateAllTypes = function (obj) {
 
     var i, _class = obj._class, key = obj.keyInCache;
 
@@ -77,6 +77,26 @@ VDRest.Lib.Cache.prototype.invalidateByClassKey = function (obj) {
             if (this.store[i].hasOwnProperty(_class) && this.store[i][_class].hasOwnProperty(key)) {
 
                 delete this.store[i][_class][key];
+            }
+        }
+    }
+};
+
+/**
+ * invalidate all cached classes named _class
+ * @param {string} _class
+ */
+VDRest.Lib.Cache.prototype.invalidateClasses = function (_class) {
+
+    var i;
+
+    for (i in this.store) {
+
+        if (this.store.hasOwnProperty(i)) {
+
+            if (this.store[i].hasOwnProperty(_class)) {
+
+                delete this.store[i][_class];
             }
         }
     }

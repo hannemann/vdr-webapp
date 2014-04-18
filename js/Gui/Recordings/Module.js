@@ -48,7 +48,16 @@ Gui.Recordings.prototype.dispatch = function () {
 Gui.Recordings.prototype.destruct = function () {
 
     this.getController('List').destructView();
+};
+
+Gui.Recordings.prototype.refresh = function () {
+
+    VDRest.app.getModule('Gui.Viewport').getView('Default').node.empty();
+    VDRest.app.getModule('Gui.Window').cache.invalidateClasses('Directory');
+    this.store.getModel('List').flushCollection();
+    this.store.cache.flush();
     this.cache.flush();
+    this.dispatch();
 };
 
 /**

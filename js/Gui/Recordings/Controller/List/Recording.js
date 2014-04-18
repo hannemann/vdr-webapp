@@ -42,5 +42,38 @@ Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-//    this.addObserver();
+    this.addObserver();
+};
+
+/**
+ * dispatch view, init event handling
+ */
+Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
+
+    this.view.node.on('click', $.proxy(this.requestWindow, this));
+};
+
+/**
+ * dispatch view, init event handling
+ */
+Gui.Recordings.Controller.List.Recording.prototype.requestWindow = function () {
+
+    console.log(this);
+
+    e.preventDefault();
+
+    e.stopPropagation();
+
+//    $.event.trigger({
+//        "type" : "window.request",
+//        "payload" : {
+//            "hashSuffix" : '~' + this.data.number,
+//            "type" : "Recording",
+//            "data" : {
+//                "node" : this.view,
+////                "dispatch" : $.proxy(this.view.renderItems, this.view),
+//                "number" : this.data.number
+//            }
+//        }
+//    });
 };
