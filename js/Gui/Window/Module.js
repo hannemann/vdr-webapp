@@ -41,10 +41,13 @@ Gui.Window.prototype.init = function () {
  */
 Gui.Window.prototype.dispatch = function (payload) {
 
-    var me = this;
+    var me = this, suffix = payload.type;
 
     VDRest.app.observe();
-    VDRest.app.setLocationHash(this.name + '-' + payload.type + payload.hashSuffix);
+
+    suffix += payload.hashSuffix ? payload.hashSuffix : '';
+
+    VDRest.app.setLocationHash(this.name + '-' + suffix );
 
     me.getController(payload.type, payload.data).dispatchView();
 };
