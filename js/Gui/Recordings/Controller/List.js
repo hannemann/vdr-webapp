@@ -60,11 +60,13 @@ Gui.Recordings.Controller.List.prototype.iterateRecordings = function (collectio
 
             recordingsModel.data.number,
 
-            this.module.getController('List.Recording', {
-                "number" : recordingsModel.data.number,
-                "parent" : this,
-                "dataModel" : recordingsModel
-            })
+            recordingsModel.data.name
+
+//            this.module.getController('List.Recording', {
+//                "number" : recordingsModel.data.number,
+//                "parent" : this,
+//                "dataModel" : recordingsModel
+//            })
         );
 
     }, this));
@@ -74,10 +76,17 @@ Gui.Recordings.Controller.List.prototype.iterateRecordings = function (collectio
 
 Gui.Recordings.Controller.List.prototype.dispatchList = function () {
 
-    this.recordingsList.each(function () {
-
-        arguments[1].dispatchView();
+    this.module.getViewModel('List', {
+        "view" : this.view,
+        "resource" : this.recordingsList
     });
+
+    this.view.renderFirstLevel();
+
+//    this.recordingsList.each(function () {
+//
+//        arguments[1].dispatchView();
+//    });
 };
 
 Gui.Recordings.Controller.List.prototype.addObserver = function () {

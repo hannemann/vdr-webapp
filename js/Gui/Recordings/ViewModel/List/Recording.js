@@ -20,21 +20,21 @@ Gui.Recordings.ViewModel.List.Recording.prototype.initViewMethods = function () 
 
     VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this);
 
-    this.data.view.getStartDate = function () {
-
-        if (!me.startDate) {
-            me.startDate = new Date(me.resource.event_start_time * 1000);
-        }
-
-        return me.startDate;
-    };
-
-    this.data.view.getEndDate = function () {
-
-        if (!me.endDate) {
-            me.endDate = new Date(me.getStartDate().getTime() + me.resource.duration);
-        }
-
-        return me.endDate;
-    };
+//    this.data.view.getStartDate = function () {
+//
+//        if (!me.startDate) {
+//            me.startDate = new Date(me.resource.event_start_time * 1000);
+//        }
+//
+//        return me.startDate;
+//    };
+//
+//    this.data.view.getEndDate = function () {
+//
+//        if (!me.endDate) {
+//            me.endDate = new Date(me.getStartDate().getTime() + me.resource.duration);
+//        }
+//
+//        return me.endDate;
+//    };
 };
