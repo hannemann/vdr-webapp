@@ -125,6 +125,10 @@ Gui.Window.View.Abstract.prototype.getToolButton = function (options) {
  */
 Gui.Window.View.Abstract.prototype.destruct = function () {
 
+    $.event.trigger({
+        "type" : "destruct.window-" + this.keyInCache
+    });
+
     if (this.hasHeader) {
         this.header.empty();
     }

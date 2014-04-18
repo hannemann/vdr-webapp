@@ -35,7 +35,7 @@ Gui.Tabs.Controller.Abstract.prototype.addObserver = function () {
 
     var me = this;
 
-    $(document).one("destruct.window-" + this.data.channel + '/' + this.data.id, function () {
+    $(document).one("destruct.window-" + this.data.keyInCache, function () {
 
         me.view.destruct();
         me.module.cache.flushByClassKey(me);

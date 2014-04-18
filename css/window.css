@@ -54,29 +54,29 @@
 
 /* Broadcast window related styles */
 
-.broadcast-header-image {
+.window-header-image {
     max-width: 50%;
 }
 
-.broadcast-header-details {
+.window-header-details {
     clear: left;
     padding: 0;
     margin-right: 20px;
 }
 
-.window.image-expanded .broadcast-header-details {
+.window.image-expanded .window-header-details {
     width: calc(100% - 20px);
 }
-.broadcast-header-components li {
+.window-header-components li {
     margin-left: 5px;
 }
 
 /* deprecated stuff */
-.window.broadcast.timer-exists .window-header {
-    background-image: linear-gradient(135deg, #FF0000 20%, #FFFFFF 35%);
-    background-repeat: no-repeat;
-    background-size: 60px 60px;
-}
+/*.window.broadcast.timer-exists .window-header {*/
+    /*background-image: linear-gradient(135deg, #FF0000 20%, #FFFFFF 35%);*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: 60px 60px;*/
+/*}*/
 
 .body .details {
 }
@@ -112,9 +112,7 @@
 .delete-button dt {
     font-size: 50px;
     line-height: 60px;
-}
-.timer-exists .record-button dt {
-    background: #FF0000;
+    background: red;
 }
 .web-button dt img {
     width: 100%;

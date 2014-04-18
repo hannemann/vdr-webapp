@@ -22,6 +22,8 @@ Gui.Window.View.Broadcast.prototype.cacheKey = 'channel/id';
  */
 Gui.Window.View.Broadcast.prototype.hasHeader = true;
 
+Gui.Window.View.Broadcast.prototype.isModal = true;
+
 /**
  * @type {string}
  */
@@ -77,8 +79,7 @@ Gui.Window.View.Broadcast.prototype.getTabConfig = function () {
     var me = this;
 
     return {
-        "id": this.getId(),
-        "channel": this.getChannel(),
+        "keyInCache": this.keyInCache,
         "parentView" : this.body,
         "cacheKey" : this.cacheKey,
         "tabs" : {
@@ -165,7 +166,7 @@ Gui.Window.View.Broadcast.prototype.getWebConfig = function () {
                     button = $('<dt><img src="/assets/imdb-logo.png" alt="">'),
                     text = $('<dd>');
 
-                text.text('IMDB Suche');
+                text.text('Search IMDB');
 
                 return dom.append(button).append(text);
             },
@@ -233,7 +234,7 @@ Gui.Window.View.Broadcast.prototype.addTitle = function () {
  */
 Gui.Window.View.Broadcast.prototype.addMainImage = function () {
 
-    this.image = $('<img class="broadcast-header-image right" src="' + this.getImages()[0] + '">')
+    this.image = $('<img class="window-header-image right" src="' + this.getImages()[0] + '">')
         .appendTo(this.header);
 
     return this;
@@ -242,6 +243,8 @@ Gui.Window.View.Broadcast.prototype.addMainImage = function () {
 /**
  * animate epg image on click
  * @returns {Gui.Window.View.Broadcast}
+ *
+ * // TODO: use CSS3
  */
 Gui.Window.View.Broadcast.prototype.animateImage = function () {
 
@@ -273,7 +276,7 @@ Gui.Window.View.Broadcast.prototype.animateImage = function () {
  */
 Gui.Window.View.Broadcast.prototype.addDetails = function () {
 
-    this.details = $('<ul class="broadcast-header-details">')
+    this.details = $('<ul class="window-header-details">')
         .appendTo(this.header);
 
     if (this.hasShortText()) {
@@ -308,7 +311,7 @@ Gui.Window.View.Broadcast.prototype.addComponents = function () {
 
     this.header
         .append(
-            '<ul class="broadcast-header-components clearer right"><li class="left">'
+            '<ul class="window-header-components clearer right"><li class="left">'
             +this.getComponents().join('</li><li class="left">')
             +'</li></ul>'
         );
@@ -336,16 +339,4 @@ Gui.Window.View.Broadcast.prototype.handleTimerActive = function (active) {
 
         this.node.removeClass('timer-active');
     }
-};
-
-/**
- * remove window
- */
-Gui.Window.View.Broadcast.prototype.destruct = function () {
-
-    $.event.trigger({
-        "type" : "destruct.window-" + this.getChannel() + '/' + this.getId()
-    });
-
-    Gui.Window.View.Abstract.prototype.destruct.call(this);
 };

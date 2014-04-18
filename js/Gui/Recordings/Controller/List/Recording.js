@@ -56,24 +56,22 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 /**
  * dispatch view, init event handling
  */
-Gui.Recordings.Controller.List.Recording.prototype.requestWindow = function () {
-
-    console.log(this);
+Gui.Recordings.Controller.List.Recording.prototype.requestWindow = function (e) {
 
     e.preventDefault();
 
     e.stopPropagation();
 
-//    $.event.trigger({
-//        "type" : "window.request",
-//        "payload" : {
-//            "hashSuffix" : '~' + this.data.number,
-//            "type" : "Recording",
-//            "data" : {
-//                "node" : this.view,
-////                "dispatch" : $.proxy(this.view.renderItems, this.view),
-//                "number" : this.data.number
-//            }
-//        }
-//    });
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "hashSuffix" : '~' + this.data.number,
+            "type" : "Recording",
+            "data" : {
+                "node" : this.view,
+                "number" : this.data.number,
+                "resource" : this.dataModel.data
+            }
+        }
+    });
 };

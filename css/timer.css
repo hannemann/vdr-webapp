@@ -9,3 +9,6 @@
     margin-top: 20px;
     clear: left;
 }
+.timer-exists .record-button dt {
+    background: #FF0000;
+}

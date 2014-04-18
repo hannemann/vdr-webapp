@@ -108,27 +108,36 @@ VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
 
 VDRest.Rest.Actions.prototype.deleteRecording = function (obj, callback) {
 
-    var c = new Gui.Confirm();
-    c.dispatch({"message":'Aufnahme löschen?'});
+    var message = obj.getEventTitle();
 
-    $(document).one('Gui.Confirm.close', $.proxy(function (e) {
+    message += obj.hasEventShortText() ? ' - ' + obj.getEventShortText() : '';
 
-        if (e && e.confirmed) {
-
-            $.ajax({
-                "url":this.getBaseUrl() + 'recordings/' + obj.getData('number'),
-                "type":"DELETE",
-                "success":$.proxy(function () {
-                    if (typeof callback == 'function') {
-debugger;
-                        callback();
-                    }
-                }, this),
-                "complete":function (result) {
-                    helper.log(obj, result);
-                }
-            });
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Confirm",
+            "data" : {
+                "message" : "Delete Recording '" + message + "'?",
+                "id" : 'delete.recording' + obj.getNumber()
+            }
         }
+    });
+
+    $(document).one('window.confirm.confirm', $.proxy(function () {
+
+        $.ajax({
+            "url":this.getBaseUrl() + 'recordings/' + obj.getNumber(),
+            "type":"DELETE",
+            "success":function () {
+                if (typeof callback == 'function') {
+
+                    callback();
+                }
+            },
+            "complete":function (result) {
+                VDRest.helper.log(obj, result);
+            }
+        });
 
     }, this));
 
