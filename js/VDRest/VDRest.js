@@ -83,9 +83,19 @@ VDRest.App.prototype.isRegistered = function (module) {
  * entrypoint of programm
  */
 VDRest.App.prototype.run = function () {
-	var start = 'settings', i;
+	var start = 'Gui.Config', i,
+        startConfig = VDRest.config.getItem('start');
 
-	start = VDRest.config.getItem('start') || start;
+
+    if (this.isRegistered(startConfig)) {
+
+        start = startConfig;
+    } else {
+
+        VDRest.config.setItem('start', 'Gui.Epg');
+        this.getModule('Gui.Menubar').getController('Default').initial = true;
+        this.initial = true;
+    }
 
     if (!this.initWithoutConfig) {
 
@@ -102,9 +112,7 @@ VDRest.App.prototype.run = function () {
 		}
 
         this.pollLocation();
-        $.event.trigger('dispatch.before');
 		this.dispatch(start);
-        $.event.trigger('dispatch.after');
 
 	} else {
 
@@ -243,7 +251,7 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
         }
 
         $.event.trigger({
-            "type":"dispatchBefore",
+            "type":"dispatch.before",
             "payload" : this.modules[this.current]
         });
 
@@ -255,7 +263,7 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 		this.current = moduleName;
 
         $.event.trigger({
-            "type":"dispatchAfter",
+            "type":"dispatch.after",
             "payload" : this.modules[this.current]
         });
 	}

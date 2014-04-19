@@ -73,15 +73,12 @@ VDRest.Lib.Config = function () {
  */
 VDRest.Lib.Config.prototype.defaults = {
     "lastEpg"           :   "now",
-    "start"             :   "Gui.Config",
     "debug"             :   false,
     "port"              :   "8002",
     "recordingStartGap" :   120,
     "recordingEndGap"   :   6000,
     "protocol"          :   "http",
-    "host"              :   "192.168.3.99",
     "pixelPerSecond"    :   2/60,
-    "streamdevHost"     :   "192.168.3.99",
     "streamdevPort"     :   "3000",
     "streamdevParams"   :   "EXT;QUALITY=SLOW"
 };

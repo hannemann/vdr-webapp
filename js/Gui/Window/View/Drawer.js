@@ -16,7 +16,13 @@ Gui.Window.View.Drawer.prototype.render = function () {
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 
-    this.triggerAnimation(true);
+    this.triggerAnimation(true, function () {
+
+        $.event.trigger({
+            "type" : "drawer.dispatched",
+            "payload" : true
+        });
+    });
 
     this.addButtons();
 };
@@ -63,5 +69,10 @@ Gui.Window.View.Drawer.prototype.destruct = function () {
         Gui.Window.View.Abstract.prototype.destruct.call(me);
 
         me.modalOverlay.remove();
+
+        $.event.trigger({
+            "type" : "drawer.dispatched",
+            "payload" : false
+        });
     });
 };

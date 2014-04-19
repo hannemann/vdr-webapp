@@ -3,6 +3,8 @@ Gui.Window.Controller.Drawer = function () {};
 
 Gui.Window.Controller.Drawer.prototype = new Gui.Window.Controller.Abstract();
 
+Gui.Window.Controller.Drawer.prototype.isDispatched = false;
+
 Gui.Window.Controller.Drawer.prototype.init = function () {
 
     this.eventPrefix = 'window.drawer';
@@ -18,14 +20,14 @@ Gui.Window.Controller.Drawer.prototype.init = function () {
 
 Gui.Window.Controller.Drawer.prototype.dispatchView = function () {
 
-    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+    if (!this.isDispatched) {
 
-    this.addObserver();
+        this.isDispatched = true;
 
-    $.event.trigger({
-        "type" : "drawer.dispatched",
-        "payload" : true
-    });
+        Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+
+        this.addObserver();
+    }
 };
 
 Gui.Window.Controller.Drawer.prototype.addObserver = function () {
@@ -39,26 +41,38 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
             this.view.buttons[i].one('click', function () {
 
                 var that = this;
-                $(document).one('drawer.dispatched', function () {
+                $(document).one('drawer.dispatched', function (e) {
+
+                    if (e.payload) {
+
+                        $(document).one('click', function () {
+
+                            history.back();
+                        });
+                    }
 
                     VDRest.app.dispatch($(that).attr('data-module'));
                 });
-                history.back();
             });
         }
     }
+    $(document).one('drawer.dispatched', function (e) {
+
+        if (e.payload) {
+
+            $(document).one('click', function () {
+
+                history.back();
+            });
+        }
+    });
 };
 
 Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
 
 };
 
-Gui.Window.Controller.Drawer.prototype.destructView = function () {
-
-    Gui.Window.Controller.Abstract.prototype.destructView.call(this);
-
-    $.event.trigger({
-        "type" : "drawer.dispatched",
-        "payload" : false
-    });
-};
+//Gui.Window.Controller.Drawer.prototype.destructView = function () {
+//
+//    Gui.Window.Controller.Abstract.prototype.destructView.call(this);
+//};

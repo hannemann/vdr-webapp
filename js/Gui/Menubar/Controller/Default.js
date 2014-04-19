@@ -16,13 +16,19 @@ Gui.Menubar.Controller.Default.prototype = new VDRest.Abstract.Controller();
 Gui.Menubar.Controller.Default.prototype.throbberCalls = 0;
 
 /**
+ * defer click on icon
+ * @type {boolean}
+ */
+Gui.Menubar.Controller.Default.prototype.deferIconClick = false;
+
+/**
  * initialize
  */
 Gui.Menubar.Controller.Default.prototype.init = function () {
 
     this.view = this.module.getView('Default');
 
-    $(document).on('dispatchAfter', $.proxy(this.view.setTitle, this.view));
+    $(document).on('dispatch.after', $.proxy(this.view.setTitle, this.view));
 
     this.view.setParentView({"node":$('body')});
 
@@ -83,11 +89,16 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
     $(document).on('drawer.dispatched', function (e) {
 
         me.drawerDispatched = !!e.payload;
+
+        me.deferIconClick = false;
     });
 
     $(document).on('drawer.animate', function () {
 
         var target = Math.floor(indicatorWidth / 2);
+
+        me.deferIconClick = true;
+
         if (me.drawerDispatched) {
 
             target = indicatorWidth;
@@ -99,33 +110,49 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
     this.view.titleWrapper.on('click', function () {
 
-        if (me.drawerDispatched) {
+        if (!me.deferIconClick) {
 
-            history.back()
+            if ("undefined" !== typeof me.initial) {
 
-        } else {
+                me.initial = undefined;
 
-            if (VDRest.config.getItem('start') != VDRest.app.getCurrent()) {
+                location.replace(
+                    location.href.replace(/#.*$/, '#' + VDRest.config.getItem('start'))
+                );
 
-                history.back();
+            } else if (me.drawerDispatched) {
+
+                history.back()
 
             } else {
 
-                $.event.trigger({
-                    "type" : 'window.request',
-                    "payload" : {
-                        "type" : "Drawer"
-                    }
-                });
+                if (!me.isStartPage()) {
 
+                    history.back();
+
+                } else {
+
+                    $.event.trigger({
+                        "type": 'window.request',
+                        "payload": {
+                            "type": "Drawer"
+                        }
+                    });
+
+                }
             }
         }
     });
 
-    $(document).on('dispatchBefore', $.proxy(this.showThrobber, this));
-    $(document).on('dispatchAfter', $.proxy(function () {
+    $(document).on('dispatch.before', $.proxy(this.showThrobber, this));
+    $(document).on('dispatch.after', $.proxy(function () {
 
-        this.view.decorateIndicator(VDRest.config.getItem('start') == VDRest.app.getCurrent());
+        this.view.decorateIndicator(me.isStartPage());
         this.hideThrobber();
     }, this));
+};
+
+Gui.Menubar.Controller.Default.prototype.isStartPage = function () {
+
+    return ( VDRest.config.getItem('start') === VDRest.app.getCurrent() ) || "undefined" !== typeof this.initial
 };
