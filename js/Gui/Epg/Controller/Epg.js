@@ -160,8 +160,13 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
  */
 Gui.Epg.Controller.Epg.prototype.setIsChannelView = function (e) {
 
+    var channels;
+
     if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
 
+        channels = this.module.getController('Channels');
+        channels.saveState();
+        channels.view.node.css({"top":0});
         this.module.getController('Broadcasts').saveState();
         this.view.node.addClass('channel-view');
         this.isChannelView = true;
@@ -170,6 +175,7 @@ Gui.Epg.Controller.Epg.prototype.setIsChannelView = function (e) {
 
         this.view.node.removeClass('channel-view');
         this.isChannelView = false;
+        this.module.getController('Channels').recoverState();
         this.module.getController('Broadcasts').recoverState();
     }
 

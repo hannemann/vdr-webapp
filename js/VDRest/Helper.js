@@ -39,7 +39,7 @@ VDRest.Helper.prototype.getDateString = function (date, fullYear) {
 /**
  * retrieve datetime string from date object
  * @param {Date} date
- * @param {Boolean} fullYear
+ * @param {Boolean} [fullYear]
  * @return {*}
  */
 VDRest.Helper.prototype.getDateTimeString = function (date, fullYear) {

@@ -50,9 +50,6 @@ Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
         this.isChannelView = true;
         this.mute('all');
         this.unmute(e.payload);
-        this.view.node.css({
-            "top" : 0
-        });
 
     } else {
 
@@ -100,6 +97,22 @@ Gui.Epg.Controller.Channels.prototype.unmute = function (channel) {
 
         channel.unmute();
     }
+};
+
+/**
+ * save current scroll position
+ */
+Gui.Epg.Controller.Channels.prototype.saveState = function () {
+
+    this.setData('top', this.view.node.position().top);
+};
+
+/**
+ * recover scroll position
+ */
+Gui.Epg.Controller.Channels.prototype.recoverState = function () {
+
+    this.view.node.css({"top" : this.getData('top') + "px"});
 };
 
 /**

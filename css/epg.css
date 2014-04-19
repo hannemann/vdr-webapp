@@ -128,26 +128,8 @@ div#time-line .ql.hour {
 	font-weight: bold;
 }
 
-.channel-view #broadcasts {
-    width: 100% !important;
-}
-.channel-view #broadcasts .broadcasts-list {
-    width: 100% !important;
-    height: auto;
-}
-.channel-view #broadcasts .broadcasts-list {
-    width: 100% !important;
-    height: auto;
-    display: none;
-}
-.channel-view #broadcasts .broadcast {
-    position: relative;
-    width: 100% !important;
-    left: 0 !important;
-}
-.channel-view #broadcasts .broadcasts-list.active {
-    display: block;
-}
+/* Channel view */
+
 .channel-view #epg-channels .channel.is-muted {
     background-color: black;
 }
@@ -172,4 +154,47 @@ div#time-line .ql.hour {
 }
 .channel-view #epg-channels .channel {
     display: inline-block;
+}
+
+.visible-channel-view {
+    display: none;
+}
+#broadcasts .broadcasts-list .broadcast .visible-channel-view * {
+    height: auto;
+}
+
+.channel-view .visible-channel-view {
+    display: block;
+}
+
+.channel-view #broadcasts {
+    width: 100% !important;
+}
+.channel-view #broadcasts .broadcasts-list.active {
+    display: block;
+}
+.channel-view #broadcasts .broadcasts-list {
+    width: 100% !important;
+    height: auto;
+    display: none;
+}
+.channel-view #broadcasts .broadcast {
+    position: relative;
+    width: 100% !important;
+    left: 0 !important;
+    height: auto !important;
+    background: #696969;
+}
+.channel-view #broadcasts .broadcast div {
+    height: auto !important;
+}
+.channel-view #broadcasts .broadcast .content {
+    margin: 0 10px;
+    border-bottom: 1px solid white;
+}
+.channel-view #broadcasts .broadcast .title {
+    font-size: 16px;
+}
+.channel-view #broadcasts .broadcast .visible-channel-view * {
+    font-size: 12px;
 }
