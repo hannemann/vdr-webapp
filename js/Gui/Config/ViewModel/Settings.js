@@ -26,7 +26,7 @@ Gui.Config.ViewModel.Settings.prototype.initViewMethods = function () {
         if (this.fields.hasOwnProperty(i)) {
 
             this.defineViewMethod(i, this.fields[i]);
-            this.fields[i].getter = this.data.view['get' + this.getMethodFragment(i)];
+            this.fields[i].getValue = this.data.view['get' + this.getMethodFragment(i)];
         }
     }
 };
@@ -60,7 +60,20 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
 
     this.data.view['get' + fragment] = function () {
 
-        return me.backend.getItem(name);
+        if ("boolean" === field.type) {
+
+            return eval(me.backend.getItem(name));
+        }
+
+        if ("string" === field.type) {
+
+            return me.backend.getItem(name).toString();
+        }
+
+        if ("number" === field.type) {
+
+            return parseFloat(me.backend.getItem(name));
+        }
     };
 
     this.data.view['set' + fragment] = function (v) {

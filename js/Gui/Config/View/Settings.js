@@ -62,44 +62,42 @@ Gui.Config.View.Settings.prototype.prepareField = function (id, field) {
 
 Gui.Config.View.Settings.prototype.getBoolean = function (id, field) {
 
-    var value = "true" === field.getter() ? true : false;
+    this.decorateField(id, field);
 
-    field.gui = $('<input type="checkbox" name="' + id + '" value="1">')
-        .prop('checked', value);
-
-    field.dom = $('<label id="' + id + '" class="clearer boolean">')
-        .text(field.label);
-
-    if (field.hasOwnProperty('info')) {
-
-        $('<span class="info">').text(field.info).appendTo(field.dom);
-    }
+    field.gui.attr('type', 'checkbox').prop('checked', field.getValue());
 
     field.dom.append(field.gui);
 };
 
 Gui.Config.View.Settings.prototype.getNumber = function (id, field) {
 
-    field.gui = $('<input type="number" name="' + id + '">')
-        .attr('readonly', true)
-        .val(field.getter());
+    this.decorateField(id, field);
 
-    field.dom = $('<label id="' + id + '" class="clearer number">')
-        .text(field.label);
-
-    if (field.hasOwnProperty('info')) {
-
-        $('<span class="info">').text(field.info).appendTo(field.dom);
-    }
+    field.gui.attr('type', 'number');
 
     field.dom.append(field.gui);
 };
 
 Gui.Config.View.Settings.prototype.getString = function (id, field) {
 
-    field.gui = $('<input type="text" name="' + id + '">')
+    this.decorateField(id, field);
+
+    field.gui.attr('type', 'text');
+
+    field.dom.append(field.gui);
+};
+
+// TODO: Implement Enum
+Gui.Config.View.Settings.prototype.getEnum = function (id, field) {
+
+    return false;
+};
+
+Gui.Config.View.Settings.prototype.decorateField = function (id, field) {
+
+    field.gui = $('<input name="' + id + '">')
         .attr('readonly', true)
-        .val(field.getter());
+        .val(field.getValue());
 
     field.dom = $('<label id="' + id + '" class="clearer text">')
         .text(field.label);
@@ -109,13 +107,20 @@ Gui.Config.View.Settings.prototype.getString = function (id, field) {
         $('<span class="info">').text(field.info).appendTo(field.dom);
     }
 
-    field.dom.append(field.gui);
-};
+    if ("undefined" !== typeof field.depends) {
 
-// TODO: Implement Enum
-Gui.Config.View.Settings.prototype.getEnum = function (id, field) {
+        if (!this.fields[field.depends].getValue()) {
 
-    return false;
+            field.dom.addClass('disabled');
+            field.disabled = true;
+        }
+
+    } else {
+
+        field.disabled = false;
+    }
+
+    return field;
 };
 
 Gui.Config.View.Settings.prototype.addToCategory = function (cat, field) {

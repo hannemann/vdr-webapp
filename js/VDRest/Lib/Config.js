@@ -167,17 +167,25 @@ VDRest.Lib.Config.prototype.fields = {
         "label" : "Recording follow up time",
         "info" : "Follow up time of recording after broadcast ends"
     },
+    "streamdevActive"    :   {
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Use StreamDev"
+    },
     "streamdevHost"    :   {
+        "depends" : "streamdevActive",
         "category" : "streaming",
         "type" : "string",
         "label" : "StreamDev host"
     },
     "streamdevPort"    :   {
+        "depends" : "streamdevActive",
         "category" : "streaming",
         "type" : "number",
         "label" : "StreamDev port"
     },
     "streamdevParams"  :   {
+        "depends" : "streamdevActive",
         "category" : "streaming",
         "type" : "string",
         "label" : "StreamDev parameter"

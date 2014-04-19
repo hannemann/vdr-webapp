@@ -11,6 +11,10 @@ Gui.Window.Controller.Drawer.prototype.init = function () {
 
     this.view = this.module.getView('Drawer', this.data);
 
+//    this.view.setParentView({
+//        "node" : $('body')
+//    });
+
     this.module.getViewModel('Drawer', {
         "view" : this.view
     });

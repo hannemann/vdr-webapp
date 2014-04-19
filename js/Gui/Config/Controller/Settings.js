@@ -27,14 +27,40 @@ Gui.Config.Controller.Settings.prototype.addObserver = function () {
 
     for (i in this.view.fields) {
 
-        if (this.view.fields.hasOwnProperty(i)
-            && this.view.fields[i].hasOwnProperty('dom')
-            && this.view.fields[i].type !== 'boolean'
-        ) {
+        if (this.view.fields.hasOwnProperty(i)) {
 
-            this.view.fields[i].dom.on('click', $.proxy(this.requestInput, this));
+            if (this.view.fields[i].hasOwnProperty('dom')
+                && this.view.fields[i].type !== 'boolean'
+            ) {
+
+                this.addClickHandler(this.view.fields[i]);
+            }
+
+            if (this.hasDependencies(i) && this.view.fields[i].type === 'boolean') {
+
+                this.addChangeHandler(this.view.fields[i], i);
+            }
         }
     }
+};
+Gui.Config.Controller.Settings.prototype.addClickHandler = function (field) {
+
+    var me = this;
+
+    field.dom.on('click', function (e) {
+
+        e.preventDefault();
+        me.requestInput(field);
+    });
+};
+Gui.Config.Controller.Settings.prototype.addChangeHandler = function (field, fieldName) {
+
+    var me = this;
+
+    field.gui.on('change', function () {
+
+        me.handleDependency(field, fieldName);
+    });
 };
 
 Gui.Config.Controller.Settings.prototype.removeObserver = function () {
@@ -50,17 +76,63 @@ Gui.Config.Controller.Settings.prototype.removeObserver = function () {
     }
 };
 
-Gui.Config.Controller.Settings.prototype.requestInput = function (e) {
+Gui.Config.Controller.Settings.prototype.hasDependencies = function (fieldName) {
 
-    e.preventDefault();
+    var i, depends;
 
-    $.event.trigger({
-        "type" : "window.request",
-        "payload" : {
-            "type" : "Input",
-            "data" : this.view.fields[e.currentTarget.id]
+    for (i in this.view.fields) {
+
+        if (this.view.fields.hasOwnProperty(i)) {
+
+            depends = this.view.fields[i].depends;
+            if ("undefined" !== typeof depends && depends === fieldName) {
+
+                return true;
+            }
         }
-    });
+    }
+    return false;
+};
+
+Gui.Config.Controller.Settings.prototype.handleDependency = function (field, fieldName) {
+
+    var i, depends;
+
+    for (i in this.view.fields) {
+
+        if (this.view.fields.hasOwnProperty(i)) {
+
+            depends = this.view.fields[i].depends;
+            if ("undefined" !== typeof depends && depends === fieldName) {
+
+                if (field.gui.prop('checked')) {
+
+                    this.view.fields[i].dom.removeClass('disabled');
+                    this.view.fields[i].disabled = false;
+
+                } else {
+
+                    this.view.fields[i].dom.addClass('disabled');
+                    this.view.fields[i].disabled = true;
+                }
+            }
+        }
+    }
+    return false;
+};
+
+Gui.Config.Controller.Settings.prototype.requestInput = function (field) {
+
+    if (false === field.disabled) {
+
+        $.event.trigger({
+            "type" : "window.request",
+            "payload" : {
+                "type" : "Input",
+                "data" : field
+            }
+        });
+    }
 };
 
 Gui.Config.Controller.Settings.prototype.destructView = function () {

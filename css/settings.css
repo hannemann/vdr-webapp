@@ -46,3 +46,7 @@
     outline: none;
     padding: 3px;
 }
+#settings .disabled,
+#settings .disabled * {
+    color: rgb(180, 180, 180);
+}

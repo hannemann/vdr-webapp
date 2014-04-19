@@ -21,15 +21,16 @@ ul#menubar #refresh {
     padding-top: 20px;
 	width: 65%;
 	overflow: visible;
-	height: calc(100% - 20px);
+	height: calc(100% - 70px);
 	position:absolute;
-	top: 0;
+	top: 50px;
 	left: -50%;
     background: rgba(0,0,0,0.8);
 	z-index: 1;
 	color: white;
 	box-shadow: 0 0 20px 0 black;
     border-right: 2px solid rgb(0,128,20);
+    border-bottom: none;
 }
 .window-drawer .navi-button {
 	padding:5px 10px;

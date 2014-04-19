@@ -62,7 +62,7 @@ Gui.Window.Controller.Input.prototype.ok = function () {
         this.setBoolean();
     }
 
-    history.back();
+    this.goBack();
 };
 
 Gui.Window.Controller.Input.prototype.setStringLike = function () {
@@ -79,5 +79,13 @@ Gui.Window.Controller.Input.prototype.setBoolean = function () {
 };
 
 Gui.Window.Controller.Input.prototype.cancel = function () {
+
+    this.goBack();
+};
+
+Gui.Window.Controller.Input.prototype.goBack = function () {
+
+    this.module.cache.invalidateClasses(this._class);
+
     history.back();
 };
