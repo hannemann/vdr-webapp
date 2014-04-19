@@ -63,27 +63,30 @@ Gui.Epg.Controller.TimeLine.prototype.handleScroll = function () {
     var scroll = this.broadcastsWrapper.scrollLeft * -1,
         ddOffset = this.broadcastsWrapper.offsetLeft, me = this;
 
-    this.view.node.css({"left": scroll + 'px'});
+    if (this.view.node.is(':visible')) {
 
-    this.view.node.find('*[data-date]').each(function (k, v) {
-        var d = $(v);
+        this.view.node.css({"left": scroll + 'px'});
 
-        if (d.offset().left + d.width() <= ddOffset) {
+        this.view.node.find('*[data-date]').each(function (k, v) {
+            var d = $(v);
 
-            me.currentDate = d.attr('data-date');
-        } else {
-            return false;
+            if (d.offset().left + d.width() <= ddOffset) {
+
+                me.currentDate = d.attr('data-date');
+            } else {
+                return false;
+            }
+        });
+
+        if (this.currentDate && this.currentDate !== this.menubarDate) {
+
+            this.view.setDate(new Date(parseInt(this.currentDate, 10)));
+            this.menubarDate = this.currentDate;
         }
-    });
 
-    if (this.currentDate && this.currentDate !== this.menubarDate) {
+        if (this.view.node.find('div:last').offset().left < this.epgController.getMetrics().win.width) {
 
-        this.view.setDate(new Date(parseInt(this.currentDate, 10)));
-        this.menubarDate = this.currentDate;
-    }
-
-    if (this.view.node.find('div:last').offset().left < this.epgController.getMetrics().win.width) {
-
-        this.view.renderTimeLine();
+            this.view.renderTimeLine();
+        }
     }
 };

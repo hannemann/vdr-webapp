@@ -1,8 +1,18 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Epg.Controller.Broadcasts = function () {};
 
+/**
+ *
+ * @type {VDRest.Abstract.Controller}
+ */
 Gui.Epg.Controller.Broadcasts.prototype = new VDRest.Abstract.Controller();
 
+/**
+ * initialize view and datamodel
+ */
 Gui.Epg.Controller.Broadcasts.prototype.init = function () {
 
     this.view = this.module.getView('Broadcasts');
@@ -11,6 +21,9 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
 };
 
+/**
+ * dispatch
+ */
 Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
@@ -24,6 +37,9 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
     }
 };
 
+/**
+ * add event listeners
+ */
 Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
@@ -31,11 +47,17 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
     $(this.view.wrapper).on('scroll', this.handleScroll);
 };
 
+/**
+ * remove event listeners
+ */
 Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
 
     $(this.view.wrapper).off('scroll', this.handleScroll);
 };
 
+/**
+ * handle scroll events
+ */
 Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function () {
 
     $.event.trigger({
@@ -43,6 +65,10 @@ Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function () {
     });
 };
 
+/**
+ * iterate channel list, buffer lists
+ * @param collection
+ */
 Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) {
 
     collection.iterate($.proxy(function (channelModel) {
@@ -58,6 +84,9 @@ Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) 
     this.dispatchChannels();
 };
 
+/**
+ * dispatch all lists
+ */
 Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 
     var i= 0, l=this.broadcastLists.length;
@@ -68,6 +97,29 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
     }
 };
 
+/**
+ * save current scroll position
+ */
+Gui.Epg.Controller.Broadcasts.prototype.saveState = function () {
+
+    this.setData('scrollTop', this.view.wrapper.scrollTop());
+
+    this.setData('scrollLeft', this.view.wrapper.scrollLeft());
+};
+
+/**
+ * recover scroll position
+ */
+Gui.Epg.Controller.Broadcasts.prototype.recoverState = function () {
+
+    this.view.wrapper.scrollTop(this.getData('scrollTop'));
+
+    this.view.wrapper.scrollLeft(this.getData('scrollLeft'));
+};
+
+/**
+ * DESTROY!
+ */
 Gui.Epg.Controller.Broadcasts.prototype.destructView = function () {
 
     var i= 0, l=this.broadcastLists.length;

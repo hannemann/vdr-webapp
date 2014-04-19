@@ -194,6 +194,23 @@ VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to) {
 };
 
 /**
+ * fetch all remaining events
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.getAllRemaining = function () {
+
+    var from = this.collection.length > 0
+        ? this.collection[this.collection.length-1].data.end_date
+        : this.getFromDate();
+
+    this.getResource()
+        .setUrl(from, 0)
+        .load({
+            "url" : 'broadcastsHourly',
+            "callback" : $.proxy(this.processCollection, this)
+        });
+};
+
+/**
  * retrieve broadcast resource model
  * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast.Resource}
  */

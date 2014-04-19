@@ -15,6 +15,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype = new VDRest.Abstract.Controller();
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.cacheKey = 'channel_id';
 
+Gui.Epg.Controller.Broadcasts.List.prototype.isChannelView = false;
+
 /**
  * get main controller, init collection, fetch view
  */
@@ -55,6 +57,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
 
 /**
  * retrieve store model
+ * @returns {VDRest.Epg.Model.Channels.Channel}
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.getStoreModel = function () {
 
@@ -75,6 +78,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
     this.getStoreModel().getNextBroadcasts();
 };
 
+/**
+ * poor orphaned piece of useless code
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.initList = function () {
 };
 
@@ -90,8 +96,13 @@ Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
     $(window).on('orientationchange', $.proxy(this.handleResize, this));
 
     $(window).on('resize', $.proxy(this.handleResize, this));
+
+    $(document).on('epg.channelview', $.proxy(this.handleChannelView, this));
 };
 
+/**
+ * remove event listeners
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
 
     $(document).off('broadcastsloaded-'+this.data.channel_id);
@@ -101,8 +112,36 @@ Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
     $(window).off('orientationchange', $.proxy(this.handleResize, this));
 
     $(window).off('resize', $.proxy(this.handleResize, this));
+
+    $(document).off('epg.channelview', $.proxy(this.handleChannelView, this));
 };
 
+/**
+ * handle channelview event
+ * @param {jQuery.Event} e
+ * @property {boolean|Gui.Epg.Channels.Channel} payload
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.handleChannelView = function (e) {
+
+    if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
+
+        this.isChannelView = true;
+        if (this.data.channel_id == e.payload.data.channel_id) {
+
+            this.view.node.addClass('active');
+            this.getStoreModel().getAllRemaining();
+        }
+    } else {
+
+        this.isChannelView = false;
+        this.view.node.removeClass('active');
+    }
+};
+
+/**
+ * iterate loaded broadcasts
+ * @param collection
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (collection) {
 
     var isInView = this.isInView(), me = this;
@@ -133,19 +172,28 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
 
 };
 
+/**
+ * handle scroll events
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
     var me = this;
 
     !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
 
-    this.scrollTimeout = setTimeout(function () {
+    if (!this.isChannelView) {
 
-        me.updateList.call(me);
+        this.scrollTimeout = setTimeout(function () {
 
-    }, 200);
+            me.updateList.call(me);
+
+        }, 200);
+    }
 };
 
+/**
+ * handle resize events
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.handleResize = function () {
 
     this.view.isRendered && this.updateList.call(this);
@@ -161,14 +209,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
         metrics,
         vOffset;
 
-    if (this.isInView()) {
+    if (!this.isChannelView && this.isInView()) {
 
         metrics = this.epgController.getMetrics();
         vOffset = this.view.node.offset();
 
         for (i; i < l; i++) {
 
-            // dispatch broadcast if is not but should be
+            // dispatch broadcast if its not but should be
             if (!this.broadcasts[i].view.isRendered
                 && this.broadcasts[i].view.getLeft() + vOffset.left < metrics.win.width
             ) {
@@ -186,7 +234,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
             }
 
             // adjust width of parentView
-            if (this.epgController.getBroadcasts().node.width() - metrics.win.width < this.broadcasts[l-1].view.getRight() ) {
+            if (
+                (this.epgController.getBroadcasts().node.width() - metrics.win.width)
+                < this.broadcasts[l-1].view.getRight()
+            ) {
 
                 this.epgController.getBroadcasts().node.width(metrics.win.width + this.broadcasts[l-1].view.getRight());
             }
@@ -210,6 +261,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
 
 };
 
+/**
+ * destruct
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.destructView = function () {
 
     var i= 0, l=this.broadcasts.length;

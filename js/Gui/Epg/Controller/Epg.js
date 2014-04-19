@@ -35,6 +35,11 @@ Gui.Epg.Controller.Epg = function () {};
 Gui.Epg.Controller.Epg.prototype = new VDRest.Abstract.Controller();
 
 /**
+ * @type {boolean}
+ */
+Gui.Epg.Controller.Epg.prototype.isChannelView = false;
+
+/**
  * retrieve epg items
  */
 Gui.Epg.Controller.Epg.prototype.init = function () {
@@ -149,12 +154,45 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
 };
 
 /**
+ * toggle channelview
+ * @param {jQuery.Event} e
+ * @returns {Gui.Epg.Controller.Epg}
+ */
+Gui.Epg.Controller.Epg.prototype.setIsChannelView = function (e) {
+
+    if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
+
+        this.module.getController('Broadcasts').saveState();
+        this.view.node.addClass('channel-view');
+        this.isChannelView = true;
+
+    } else {
+
+        this.view.node.removeClass('channel-view');
+        this.isChannelView = false;
+        this.module.getController('Broadcasts').recoverState();
+    }
+
+    return this;
+};
+
+/**
+ * determine is channelview
+ * @returns {boolean|*}
+ */
+Gui.Epg.Controller.Epg.prototype.getIsChannelView = function () {
+
+    return this.isChannelView;
+};
+
+/**
  * add handler to orientationchange and resize evente
  */
 Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 
     $(window).on('orientationchange', $.proxy(this.setMetrics, this));
     $(window).on('resize', $.proxy(this.setMetrics, this));
+    $(document).on('epg.channelview', $.proxy(this.setIsChannelView, this));
 };
 
 /**
@@ -164,8 +202,12 @@ Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
 
     $(window).off('orientationchange', $.proxy(this.setMetrics, this));
     $(window).off('resize', $.proxy(this.setMetrics, this));
+    $(document).off('epg.channelview', $.proxy(this.setIsChannelView, this));
 };
 
+/**
+ * destroy!
+ */
 Gui.Epg.Controller.Epg.prototype.destructView = function () {
 
     this.view.node.hide();

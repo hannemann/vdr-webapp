@@ -5,6 +5,8 @@ Gui.Epg.Controller.Channels.Channel.prototype = new VDRest.Abstract.Controller()
 
 Gui.Epg.Controller.Channels.Channel.prototype.cacheKey = 'channel_id';
 
+Gui.Epg.Controller.Channels.Channel.prototype.isMuted = false;
+
 Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
 
     this.view = this.module.getView('Channels.Channel', {
@@ -33,6 +35,27 @@ Gui.Epg.Controller.Channels.Channel.prototype.dispatchView = function () {
     this.addObserver();
 };
 
+/**
+ * mute channel
+ */
+Gui.Epg.Controller.Channels.Channel.prototype.mute = function () {
+
+    this.isMuted = true;
+    this.view.node.addClass('is-muted');
+};
+
+/**
+ * unmute channel
+ */
+Gui.Epg.Controller.Channels.Channel.prototype.unmute = function () {
+
+    this.isMuted = false;
+    this.view.node.removeClass('is-muted');
+};
+
+/**
+ * add handler for up and down events
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
 
     this.view.node
@@ -40,6 +63,9 @@ Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
         .on('mousedown', $.proxy(this.handleDown, this));
 };
 
+/**
+ * remove handler
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
 
     this.view.node
@@ -47,34 +73,64 @@ Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
         .off('mousedown', $.proxy(this.handleDown, this));
 };
 
+/**
+ * handle mouseup
+ * @param {jQuery.Event} e
+ * @returns {boolean}
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
 
     var channel = $(e.currentTarget).attr('data-channel-id');
 
-    if ("undefined" !== typeof this.preventClick) {
+    if (!this.isMuted) {
 
-        return false;
-    } else {
-        if ("undefined" !== typeof this.channelClickTimeout) {
-            window.clearTimeout(this.channelClickTimeout);
+        if ("undefined" === typeof this.preventClick) {
+
+            if ("undefined" !== typeof this.channelClickTimeout) {
+                window.clearTimeout(this.channelClickTimeout);
+            }
+
+            if (!this.module.getController('Epg').getIsChannelView()) {
+
+                $.event.trigger({
+                    "type" : "epg.channelview",
+                    "payload" : this
+                });
+
+//                this.module.getView('Broadcasts').setIsChannelView();
+//                this.module.getController('Channels').muteAll().view.setIsChannelView();
+//                this.module.getView('Broadcasts.List', this.keyInCache).setIsActive();
+//                this.view.setIsActive();
+
+            } else {
+
+                $.event.trigger({
+                    "type" : "epg.channelview",
+                    "payload" : false
+                });
+            }
         }
-//            main.modules.channel.next = me.channels[$(this).attr('data-channelsid')];
-//            main.dispatch('channel');
     }
-
 };
 
+/**
+ * handle mousedown
+ * @param {jQuery.Event} e
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
-    this.preventClick = undefined;
-    this.channelClickTimeout = window.setTimeout($.proxy(function () {
+    if (!this.isMuted) {
 
-        this.preventClick = true;
-        e.preventDefault();
+        this.preventClick = undefined;
+        this.channelClickTimeout = window.setTimeout($.proxy(function () {
 
-        if ("true" === VDRest.config.getItem('streamdevActive')) {
+            this.preventClick = true;
+            e.preventDefault();
 
-            window.location.href = this.streamUrl;
-        }
-    }, this), 1000);
+            if ("true" === VDRest.config.getItem('streamdevActive')) {
+
+                window.location.href = this.streamUrl;
+            }
+        }, this), 1000);
+    }
 };

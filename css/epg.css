@@ -127,3 +127,49 @@ div#time-line .ql.hour {
 	font-size: 12px;
 	font-weight: bold;
 }
+
+.channel-view #broadcasts {
+    width: 100% !important;
+}
+.channel-view #broadcasts .broadcasts-list {
+    width: 100% !important;
+    height: auto;
+}
+.channel-view #broadcasts .broadcasts-list {
+    width: 100% !important;
+    height: auto;
+    display: none;
+}
+.channel-view #broadcasts .broadcast {
+    position: relative;
+    width: 100% !important;
+    left: 0 !important;
+}
+.channel-view #broadcasts .broadcasts-list.active {
+    display: block;
+}
+.channel-view #epg-channels .channel.is-muted {
+    background-color: black;
+}
+.channel-view #epg-date,
+.channel-view #epg-timeline-right-gradient,
+.channel-view #time-line {
+    display: none;
+}
+.channel-view #broadcasts-wrapper {
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+}
+.channel-view #epg-channels {
+    top: 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    height: 39px;
+}
+.channel-view #epg-channels .channel {
+    display: inline-block;
+}

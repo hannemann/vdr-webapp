@@ -40,10 +40,9 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.init = function (
 
 /**
  * set url to retrieve broadcasts
- * in the hour after latest stored broadcast
  *
  * @param {Date} from
- * @param {Date} [to]
+ * @param {number|Date} [to]
  * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast.Resource}
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setUrl = function (from, to) {
@@ -57,10 +56,19 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setUrl = function
     /** @type {number} */
     _from = parseInt(from.getTime()/1000, 10);
 
-    /** @type {Date} */
-    to = to || new Date(from.getTime() + this.defaultTimeSpan);
+    if (to === 0) {
 
-    timeSpan = parseInt( ( to.getTime() - from.getTime() ) / 1000, 10 );
+        // 0 fetches all events in the future
+        timeSpan = 0;
+
+    } else {
+
+        /** @type {Date} */
+        to = to || new Date(from.getTime() + this.defaultTimeSpan);
+
+        timeSpan = parseInt( ( to.getTime() - from.getTime() ) / 1000, 10 );
+    }
+
 
     this.urls.broadcastsHourly =  this.baseUrl
         + "from=" + _from
