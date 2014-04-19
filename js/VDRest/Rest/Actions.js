@@ -19,7 +19,7 @@ VDRest.Rest.Actions.prototype.addTimer = function (obj) {
 //    start = helper.pad(start.getHours(), 2) + helper.pad(start.getMinutes(), 2);
 //    stop = helper.pad(stop.getHours(), 2) + helper.pad(stop.getMinutes(), 2);
 
-    url = 'http://'+VDRest.config.getItem('host')+':'+VDRest.config.getItem('port')+'/timers';
+    url = this.getBaseUrl() + '/timers';
 //                data = {
 //                    "file":encodeURIComponent(obj.event.title),
 //                    "stop":stop,

@@ -71,13 +71,6 @@
     margin-left: 5px;
 }
 
-/* deprecated stuff */
-/*.window.broadcast.timer-exists .window-header {*/
-    /*background-image: linear-gradient(135deg, #FF0000 20%, #FFFFFF 35%);*/
-    /*background-repeat: no-repeat;*/
-    /*background-size: 60px 60px;*/
-/*}*/
-
 .body .details {
 }
 
@@ -126,25 +119,28 @@
     bottom: auto;
     left: auto;
     right: auto;
-    padding: 20px 20px 0 20px;
-    width: calc(80% - 40px);
+    padding-top: 10px;
+    width: 80%;
     border-bottom: none;
     margin-left: 10%;
     margin-right: 10%;
+}
+.window-input .window-body {
+    padding: 0 20px;
 }
 .window-input .button {
     float: left;
     border: none;
     background: none;
     padding: 15px 0;
-    width: calc(50% + 20px);
+    width: 50%;
     border-top: 1px solid white;
     text-align: center;
-    margin: 10px 0 0 -20px;
+    margin: 10px 0 0 0;
 }
 .window-input .button-confirm {
-    margin: 10px -20px 0 0;
-    width: calc(50% + 19px);
+    margin: 10px 0 0 0;
+    width: calc(50% - 1px);
     border-left: 1px solid white;
 }
 

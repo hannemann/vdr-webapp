@@ -90,7 +90,23 @@ Gui.Config.View.Settings.prototype.getString = function (id, field) {
 // TODO: Implement Enum
 Gui.Config.View.Settings.prototype.getEnum = function (id, field) {
 
-    return false;
+    var values = field.values, selected;
+
+    if ("function" === typeof values) {
+
+        values = values();
+
+    }
+
+    selected = VDRest.config.getItem(id);
+
+    this.decorateField(id, field);
+
+    field.gui
+        .attr('type', 'text')
+        .val(values[selected].label);
+
+    field.dom.append(field.gui);
 };
 
 Gui.Config.View.Settings.prototype.decorateField = function (id, field) {
@@ -99,8 +115,8 @@ Gui.Config.View.Settings.prototype.decorateField = function (id, field) {
         .attr('readonly', true)
         .val(field.getValue());
 
-    field.dom = $('<label id="' + id + '" class="clearer text">')
-        .text(field.label);
+    field.dom = $('<label id="' + id + '" class="clearer text">');
+    $('<span>').text(field.label).appendTo(field.dom);
 
     if (field.hasOwnProperty('info')) {
 

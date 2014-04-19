@@ -68,8 +68,13 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
     this.preventClick = undefined;
     this.channelClickTimeout = window.setTimeout($.proxy(function () {
+
         this.preventClick = true;
         e.preventDefault();
-        window.location.href = this.streamUrl;
+
+        if ("true" === VDRest.config.getItem('streamdevActive')) {
+
+            window.location.href = this.streamUrl;
+        }
     }, this), 1000);
 };

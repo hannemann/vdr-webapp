@@ -42,6 +42,8 @@ Gui.Config.Controller.Settings.prototype.addObserver = function () {
             }
         }
     }
+
+    $(document).on('setting.changed', $.proxy(this.persist, this));
 };
 Gui.Config.Controller.Settings.prototype.addClickHandler = function (field) {
 
@@ -49,8 +51,15 @@ Gui.Config.Controller.Settings.prototype.addClickHandler = function (field) {
 
     field.dom.on('click', function (e) {
 
+        var type = 'Input';
+
+        if ("enum" ===field.type) {
+
+            type = 'Select';
+        }
+
         e.preventDefault();
-        me.requestInput(field);
+        me.requestInput(field, type);
     });
 };
 Gui.Config.Controller.Settings.prototype.addChangeHandler = function (field, fieldName) {
@@ -60,6 +69,8 @@ Gui.Config.Controller.Settings.prototype.addChangeHandler = function (field, fie
     field.gui.on('change', function () {
 
         me.handleDependency(field, fieldName);
+
+        me.persist();
     });
 };
 
@@ -121,23 +132,23 @@ Gui.Config.Controller.Settings.prototype.handleDependency = function (field, fie
     return false;
 };
 
-Gui.Config.Controller.Settings.prototype.requestInput = function (field) {
+Gui.Config.Controller.Settings.prototype.requestInput = function (field, type) {
 
     if (false === field.disabled) {
 
         $.event.trigger({
             "type" : "window.request",
             "payload" : {
-                "type" : "Input",
+                "type" : type,
                 "data" : field
             }
         });
     }
 };
 
-Gui.Config.Controller.Settings.prototype.destructView = function () {
+Gui.Config.Controller.Settings.prototype.persist = function () {
 
-    var i, value;
+    var i, n, value, values;
 
     for (i in this.view.fields) {
 
@@ -146,6 +157,27 @@ Gui.Config.Controller.Settings.prototype.destructView = function () {
             if (this.view.fields[i].type === "boolean") {
 
                 value = this.view.fields[i].gui.prop('checked');
+
+            } else if (this.view.fields[i].type === "enum") {
+
+                if ("function" === typeof this.view.fields[i].values) {
+
+                    values = this.view.fields[i].values();
+
+                } else {
+
+                    values = this.view.fields[i].values;
+
+                }
+
+                for (n in values) {
+
+                    if (values.hasOwnProperty(n) && values[n].label === this.view.fields[i].gui.val()) {
+
+                        value = values[n].value;
+                    }
+                }
+
             } else {
 
                 value = this.view.fields[i].gui.val();
@@ -154,6 +186,4 @@ Gui.Config.Controller.Settings.prototype.destructView = function () {
             VDRest.config.setItem(i, value);
         }
     }
-
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

@@ -80,7 +80,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "protocol"          :   "http",
     "pixelPerSecond"    :   2/60,
     "streamdevPort"     :   "3000",
-    "streamdevParams"   :   "EXT;QUALITY=SLOW"
+    "streamdevParams"   :   "EXT;QUALITY=SLOW",
+    "theme"             :   "default"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -108,32 +109,68 @@ VDRest.Lib.Config.prototype.categories = {
 VDRest.Lib.Config.prototype.fields = {
     "start"             :   {
         "category" : "gui",
+        "info" : "Needs reload of app",
         "type" : "enum",
+        "dataType" : "string",
         "label" : "Startpage",
+        /**
+         * @returns {{}}
+         */
         "values" : function () {
 
-            // TODO: read from app
-            return {
-                "epg" : {
-                    "label" : "EPG",
-                    "value" : "Gui.Epg"
-                },
-                "settings" : {
-                    "label" : "Settings",
-                    "value" : "settings"
+            var i, modules = VDRest.app.modules,
+                pages = {}, start = VDRest.config.getItem('start');
+
+            for (i in modules) {
+
+                if (
+                    modules.hasOwnProperty(i)
+                    && "Gui" === modules[i].namespace
+                    && "undefined" !== typeof modules[i].inDrawer
+                ) {
+                    pages[i] = {
+                        "label" : modules[i].headline,
+                        "value" : i,
+                        "selected" : start === i
+                    }
+
                 }
             }
+
+            if ("true" === VDRest.config.getItem('debug')) {
+
+                pages['Gui.Config'] = {
+                    "label" : "Configuration",
+                    "value" : "Gui.Config",
+                    "selected" : start === "Gui.Config"
+                };
+            }
+
+            return pages;
         }
     },
-    "debug"             :   {
-        "category" : "dev",
-        "type" : "boolean",
-        "label" : "Debugmode"
+    "theme"          :   {
+        "category" : "gui",
+        "type" : "enum",
+        "label" : "Theme",
+        "info" : "Needs reload of app",
+        "dataType" : "string",
+        "values" : {
+            "default" : {
+                "label" : "Default",
+                "value" : "default"
+            },
+            "black" : {
+                "label" : "Black",
+                "value" : "black"
+            }
+        }
     },
     "protocol"          :   {
         "category" : "server",
         "type" : "enum",
         "label" : "Prototcol",
+        "dataType" : "string",
         "values" : {
             "http" : {
                 "label" : "HTTP",
@@ -159,13 +196,13 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "timer",
         "type" : "number",
         "label" : "Recording lead time",
-        "info" : "Lead time of recording before broadcast starts"
+        "info" : "Lead time of recording before broadcast starts (seconds)"
     },
     "recordingEndGap"   :   {
         "category" : "timer",
         "type" : "number",
         "label" : "Recording follow up time",
-        "info" : "Follow up time of recording after broadcast ends"
+        "info" : "Follow up time of recording after broadcast ends (milliseconds)"
     },
     "streamdevActive"    :   {
         "category" : "streaming",
@@ -189,6 +226,11 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "string",
         "label" : "StreamDev parameter"
+    },
+    "debug"             :   {
+        "category" : "dev",
+        "type" : "boolean",
+        "label" : "Debugmode"
     }
 };
 

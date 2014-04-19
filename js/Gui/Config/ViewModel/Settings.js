@@ -50,27 +50,30 @@ Gui.Config.ViewModel.Settings.prototype.defineViewMethod = function (name, field
 
     if ("enum" === field.type) {
 
-        this.defineEnum(name, field);
+//        this.defineEnum(name, field);
+        this.definePrimitive(name, field);
     }
 };
 
 Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field) {
 
-    var fragment = this.getMethodFragment(name), me = this;
+    var fragment = this.getMethodFragment(name), me = this, dataType;
+
+    dataType = field.hasOwnProperty('dataType') ? field.dataType : field.type;
 
     this.data.view['get' + fragment] = function () {
 
-        if ("boolean" === field.type) {
+        if ("boolean" === dataType) {
 
             return eval(me.backend.getItem(name));
         }
 
-        if ("string" === field.type) {
+        if ("string" === dataType) {
 
             return me.backend.getItem(name).toString();
         }
 
-        if ("number" === field.type) {
+        if ("number" === dataType) {
 
             return parseFloat(me.backend.getItem(name));
         }
@@ -78,9 +81,9 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
 
     this.data.view['set' + fragment] = function (v) {
 
-        if (field.type !== typeof v) {
+        if (dataType !== typeof v) {
 
-            throw new TypeError('Value for ' + name + ' is not of type ' + field.type);
+            throw new TypeError('Value for ' + name + ' is not of type ' + dataType);
         }
 
         $.event.trigger({
@@ -100,7 +103,7 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
 
     this.data.view['has' + fragment] = function () {
 
-        return typeof me.backend.getItem(name) === field.type;
+        return typeof me.backend.getItem(name) === dataType;
     };
 
     this.data.view['uns' + fragment] = function () {
@@ -109,4 +112,7 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
     };
 };
 
-Gui.Config.ViewModel.Settings.prototype.defineEnum = function (name, field) {};
+//Gui.Config.ViewModel.Settings.prototype.defineEnum = function (name, field) {
+//
+//    var fragment = this.getMethodFragment(name), me = this;
+//};

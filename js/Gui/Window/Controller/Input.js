@@ -57,9 +57,9 @@ Gui.Window.Controller.Input.prototype.ok = function () {
         this.setStringLike();
     }
 
-    if ("boolean" === type) {
+    if ("enum" === type) {
 
-        this.setBoolean();
+        this.setEnum();
     }
 
     this.goBack();
@@ -72,10 +72,11 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
     );
 };
 
-Gui.Window.Controller.Input.prototype.setBoolean = function () {
+Gui.Window.Controller.Input.prototype.setEnum = function () {
 
-    this.data.gui.get(0).checked = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]')
-        .prop('checked');
+    this.data.gui.val(
+        this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked').val()
+    );
 };
 
 Gui.Window.Controller.Input.prototype.cancel = function () {
@@ -85,7 +86,9 @@ Gui.Window.Controller.Input.prototype.cancel = function () {
 
 Gui.Window.Controller.Input.prototype.goBack = function () {
 
-    this.module.cache.invalidateClasses(this._class);
+    $.event.trigger('setting.changed');
+
+    this.module.cache.invalidateClasses(this);
 
     history.back();
 };
