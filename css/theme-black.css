@@ -1,0 +1,41 @@
+body.black {
+    background: black;
+}
+
+.black .window-input label input,
+.black .window-input label select,
+.black #settings label input,
+.black #settings label select {
+    background-color: black;
+}
+.black .recordings-path .name:before {
+    content: url('/assets/black/folder.png');
+}
+.black .window {
+    background: black;
+    border-bottom-color: black;
+}
+.black .tabs {
+    background: #505050;
+}
+.black .tabs li.current {
+    background: black;
+}
+.black #epg-channels .channel {
+    background-color: black;
+}
+.black div#time-line {
+    background: black;
+}
+.black #epg-date {
+    background: linear-gradient(90deg, #000000 40%, transparent 90%);
+}
+.black #epg-timeline-right-gradient {
+    background: linear-gradient(90deg, transparent 10%, #000000 85%);
+}
+.black #broadcasts .broadcasts-list .broadcast {
+    background-image: linear-gradient(135deg, black 15%, #1A1A1A 85%);
+}
+.black .window-drawer {
+    background: rgba(50,50,50,0.8);
+}

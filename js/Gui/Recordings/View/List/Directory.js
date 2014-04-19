@@ -15,7 +15,13 @@ Gui.Recordings.View.List.Directory.prototype.init = function () {
 Gui.Recordings.View.List.Directory.prototype.render = function () {
 
     if ("root" !== this.getName()) {
+
         this.name.text(this.getName());
+
+    } else {
+
+        this.name.remove();
+        this.node.removeClass('recordings-path');
     }
 
     VDRest.Abstract.View.prototype.render.call(this);
