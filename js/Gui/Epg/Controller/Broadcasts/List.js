@@ -96,8 +96,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
     $(window).on('orientationchange', $.proxy(this.handleResize, this));
 
     $(window).on('resize', $.proxy(this.handleResize, this));
-
-    $(document).on('epg.channelview', $.proxy(this.handleChannelView, this));
 };
 
 /**
@@ -112,30 +110,25 @@ Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
     $(window).off('orientationchange', $.proxy(this.handleResize, this));
 
     $(window).off('resize', $.proxy(this.handleResize, this));
-
-    $(document).off('epg.channelview', $.proxy(this.handleChannelView, this));
 };
 
 /**
- * handle channelview event
- * @param {jQuery.Event} e
- * @property {boolean|Gui.Epg.Channels.Channel} payload
+ * handle channel view event
  */
-Gui.Epg.Controller.Broadcasts.List.prototype.handleChannelView = function (e) {
+Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
 
-    if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
+    this.isChannelView = true;
+    this.view.node.addClass('active');
+    this.getStoreModel().getAllRemaining();
+};
 
-        this.isChannelView = true;
-        if (this.data.channel_id == e.payload.data.channel_id) {
+/**
+ * remove from channelview
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.detachChannelView = function () {
 
-            this.view.node.addClass('active');
-            this.getStoreModel().getAllRemaining();
-        }
-    } else {
-
-        this.isChannelView = false;
-        this.view.node.removeClass('active');
-    }
+    this.isChannelView = false;
+    this.view.node.removeClass('active');
 };
 
 /**
@@ -181,7 +174,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
     !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
 
-    if (!this.isChannelView) {
+    if (!this.epgController.getIsChannelView()) {
 
         this.scrollTimeout = setTimeout(function () {
 

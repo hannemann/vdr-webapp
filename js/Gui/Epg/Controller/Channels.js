@@ -8,7 +8,11 @@ Gui.Epg.Controller.Channels = function () {};
  * @type {VDRest.Abstract.Controller}
  */
 Gui.Epg.Controller.Channels.prototype = new VDRest.Abstract.Controller();
-Gui.Epg.Controller.Channels.prototype.isChannelView = false;
+
+/**
+ * @type {Gui.Epg.View.Channels.Channel|boolean}
+ */
+Gui.Epg.Controller.Channels.prototype.channelView = false;
 
 /**
  * init view and channelslist
@@ -47,14 +51,21 @@ Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
 
     if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
 
-        this.isChannelView = true;
-        this.mute('all');
-        this.unmute(e.payload);
+        if (this.channelView) {
+
+            this.channelView.unsetIsActive();
+            this.module.getController('Broadcasts.List', this.channelView.keyInCache).detachChannelView();
+        }
+
+        this.channelView = e.payload.view;
+        this.module.getController('Broadcasts.List', this.channelView.keyInCache).attachChannelView();
+        this.channelView.setIsActive();
 
     } else {
 
-        this.isChannelView = false;
-        this.unmute('all');
+        this.channelView.unsetIsActive();
+        this.module.getController('Broadcasts.List', this.channelView.keyInCache).detachChannelView();
+        this.channelView = false;
         this.handleScroll();
     }
 };
@@ -172,7 +183,7 @@ Gui.Epg.Controller.Channels.prototype.handleScroll = function () {
 
     var scroll = this.broadcastsWrapper.scrollTop * -1;
 
-    if (!this.isChannelView) {
+    if (!this.channelView) {
 
         this.offsetTop = this.offsetTop || parseInt(this.view.node.css('top'), 10);
 

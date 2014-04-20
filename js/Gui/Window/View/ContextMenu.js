@@ -65,6 +65,9 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
     $('<div class="config-button">').text('Configuration')
         .appendTo(this.node);
 
+    $('<div class="reload-button">').text('Reload App')
+        .appendTo(this.node);
+
     return this;
 };
 

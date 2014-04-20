@@ -22,7 +22,7 @@
     width: 39px;
     height: 39px;
     border-bottom: 1px solid black;
-    background-size: 39px 39px;
+    background-size: 100%;
     background-color: white;
     color: #696969;
     font-size: 10px;
@@ -149,10 +149,10 @@ div#time-line .ql.hour {
     display: none;
 }
 .channel-view #broadcasts-wrapper {
-    top: 40px;
+    top: 66px;
     left: 0;
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(100% - 66px);
 }
 .channel-view #epg-channels {
     top: 0;
@@ -160,10 +160,19 @@ div#time-line .ql.hour {
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
-    height: 39px;
+    height: 65px;
+    background: white;
 }
 .channel-view #epg-channels .channel {
     display: inline-block;
+    border: none;
+    margin: 0 3px;
+    top: -13px;
+}
+.channel-view #epg-channels .channel.active {
+    width: 65px;
+    height: 65px;
+    top: 0;
 }
 
 .visible-channel-view {

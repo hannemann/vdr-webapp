@@ -1,12 +1,27 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Epg.Controller.Channels.Channel = function () {};
 
+/**
+ * @type {VDRest.Abstract.Controller}
+ */
 Gui.Epg.Controller.Channels.Channel.prototype = new VDRest.Abstract.Controller();
 
+/**
+ * @type {string}
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.cacheKey = 'channel_id';
 
+/**
+ * @type {boolean}
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.isMuted = false;
 
+/**
+ * initialize view, streamurl
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
 
     this.view = this.module.getView('Channels.Channel', {
@@ -28,6 +43,9 @@ Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
         + this.data.dataModel.data.stream;
 };
 
+/**
+ * dispatch view, add observer
+ */
 Gui.Epg.Controller.Channels.Channel.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
@@ -90,24 +108,10 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
                 window.clearTimeout(this.channelClickTimeout);
             }
 
-            // place click thingies here
+            if (this.module.getController('Epg').getIsChannelView()) {
 
-            this.helper().log('channel click');
-
-//            if (!this.module.getController('Epg').getIsChannelView()) {
-//
-//                $.event.trigger({
-//                    "type" : "epg.channelview",
-//                    "payload" : this
-//                });
-//
-//            } else {
-//
-//                $.event.trigger({
-//                    "type" : "epg.channelview",
-//                    "payload" : false
-//                });
-//            }
+                this.module.getController('Channels').handleChannelView({"payload" : this});
+            }
         }
     }
 };

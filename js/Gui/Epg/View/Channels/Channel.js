@@ -33,11 +33,11 @@ Gui.Epg.View.Channels.Channel.prototype.setAttributes = function () {
 
 Gui.Epg.View.Channels.Channel.prototype.addLogo = function () {
 
-    var image = this.getImage(), preload;
+    var image = this.getImage();
 
     if (image) {
 
-        preload = $('<img src="' + image + '">');
+        image.preload = $('<img src="' + image + '">');
 
         this.node.css({
             "background-image" : "url(" + image + ")"
@@ -47,7 +47,17 @@ Gui.Epg.View.Channels.Channel.prototype.addLogo = function () {
         this.node.text(this.getName());
     }
 
-    preload = undefined;
+    image.preload = undefined;
 
     return this;
+};
+
+Gui.Epg.View.Channels.Channel.prototype.setIsActive = function () {
+
+    this.node.addClass('active');
+};
+
+Gui.Epg.View.Channels.Channel.prototype.unsetIsActive = function () {
+
+    this.node.removeClass('active');
 };

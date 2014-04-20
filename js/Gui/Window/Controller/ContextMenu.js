@@ -57,6 +57,9 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
     this.view.node.find('.config-button')
         .one('mousedown', $.proxy(this.handleConfig, this));
 
+    this.view.node.find('.reload-button')
+        .one('mousedown', $.proxy(this.handleReload, this));
+
     this.view.modalOverlay.one('click', $.proxy(function () {
 
         if (!this.skipBack) {
@@ -90,4 +93,14 @@ Gui.Window.Controller.ContextMenu.prototype.handleConfig = function (e) {
     this.destructView();
 
     location.replace(location.href.replace(/#.*$/, '#' + config.namespace + '.' + config.name));
+};
+
+/**
+ * reload page
+ */
+Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
+
+    setTimeout(function () {
+        location.reload();
+    }, 100);
 };
