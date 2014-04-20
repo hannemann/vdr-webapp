@@ -97,6 +97,8 @@ VDRest.App.prototype.run = function () {
         this.initial = true;
     }
 
+    this.pollLocation();
+
     if (!this.initWithoutConfig) {
 
         this.initNoConfig();
@@ -111,7 +113,6 @@ VDRest.App.prototype.run = function () {
             }
 		}
 
-        this.pollLocation();
 		this.dispatch(start);
 
 	} else {
@@ -274,8 +275,8 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
  */
 VDRest.App.prototype.getConfig = function () {
 
-	this.modules['VDRest.Settings'].init();
-	this.dispatch('VDRest.Settings', $.proxy(this.run, this));
+//	this.modules['Gui.Config'].init();
+	this.dispatch('Gui.Config', $.proxy(this.run, this));
 };
 
 /**
@@ -295,9 +296,15 @@ VDRest.App.prototype.getModule = function (module) {
 
 /**
  * retrieve current dispatched module name
- * @return {*}
+ * @param {boolean} [asModule]
+ * @return {string|VDRest.Abstract.Module}
  */
-VDRest.App.prototype.getCurrent = function () {
+VDRest.App.prototype.getCurrent = function (asModule) {
+
+    if (asModule) {
+
+        return this.modules[this.current];
+    }
 
     return this.current;
 };

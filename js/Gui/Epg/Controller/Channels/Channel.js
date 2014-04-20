@@ -90,25 +90,24 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
                 window.clearTimeout(this.channelClickTimeout);
             }
 
-            if (!this.module.getController('Epg').getIsChannelView()) {
+            // place click thingies here
 
-                $.event.trigger({
-                    "type" : "epg.channelview",
-                    "payload" : this
-                });
+            this.helper().log('channel click');
 
-//                this.module.getView('Broadcasts').setIsChannelView();
-//                this.module.getController('Channels').muteAll().view.setIsChannelView();
-//                this.module.getView('Broadcasts.List', this.keyInCache).setIsActive();
-//                this.view.setIsActive();
-
-            } else {
-
-                $.event.trigger({
-                    "type" : "epg.channelview",
-                    "payload" : false
-                });
-            }
+//            if (!this.module.getController('Epg').getIsChannelView()) {
+//
+//                $.event.trigger({
+//                    "type" : "epg.channelview",
+//                    "payload" : this
+//                });
+//
+//            } else {
+//
+//                $.event.trigger({
+//                    "type" : "epg.channelview",
+//                    "payload" : false
+//                });
+//            }
         }
     }
 };

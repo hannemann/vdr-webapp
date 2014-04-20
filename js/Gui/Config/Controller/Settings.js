@@ -1,7 +1,17 @@
+/**
+ * @class
+ * @constructor
+ */
 Gui.Config.Controller.Settings = function () {};
 
+/**
+ * @type {VDRest.Abstract.Controller}
+ */
 Gui.Config.Controller.Settings.prototype = new VDRest.Abstract.Controller();
 
+/**
+ * initialize view
+ */
 Gui.Config.Controller.Settings.prototype.init = function () {
 
     VDRest.app.getModule('Gui.Viewport').getView('Default').node.addClass(this.module.name.toLowerCase());
@@ -14,6 +24,9 @@ Gui.Config.Controller.Settings.prototype.init = function () {
     });
 };
 
+/**
+ * dispatxh
+ */
 Gui.Config.Controller.Settings.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
@@ -21,6 +34,9 @@ Gui.Config.Controller.Settings.prototype.dispatchView = function () {
     this.addObserver();
 };
 
+/**
+ * add event listeners
+ */
 Gui.Config.Controller.Settings.prototype.addObserver = function () {
 
     var i;
@@ -45,6 +61,10 @@ Gui.Config.Controller.Settings.prototype.addObserver = function () {
 
     $(document).on('setting.changed', $.proxy(this.persist, this));
 };
+/**
+ * add click handler to field
+ * @param field
+ */
 Gui.Config.Controller.Settings.prototype.addClickHandler = function (field) {
 
     var me = this;
@@ -62,6 +82,12 @@ Gui.Config.Controller.Settings.prototype.addClickHandler = function (field) {
         me.requestInput(field, type);
     });
 };
+
+/**
+ * handle change events
+ * @param field
+ * @param fieldName
+ */
 Gui.Config.Controller.Settings.prototype.addChangeHandler = function (field, fieldName) {
 
     var me = this;
@@ -74,6 +100,9 @@ Gui.Config.Controller.Settings.prototype.addChangeHandler = function (field, fie
     });
 };
 
+/**
+ * remove event listeners
+ */
 Gui.Config.Controller.Settings.prototype.removeObserver = function () {
 
     var i;
@@ -87,6 +116,11 @@ Gui.Config.Controller.Settings.prototype.removeObserver = function () {
     }
 };
 
+/**
+ * in case of checkbox, check if field has dependencies to be activated
+ * @param fieldName
+ * @returns {boolean}
+ */
 Gui.Config.Controller.Settings.prototype.hasDependencies = function (fieldName) {
 
     var i, depends;
@@ -105,6 +139,12 @@ Gui.Config.Controller.Settings.prototype.hasDependencies = function (fieldName) 
     return false;
 };
 
+/**
+ * toggle dependent fields
+ * @param field
+ * @param fieldName
+ * @returns {boolean}
+ */
 Gui.Config.Controller.Settings.prototype.handleDependency = function (field, fieldName) {
 
     var i, depends;
@@ -132,6 +172,11 @@ Gui.Config.Controller.Settings.prototype.handleDependency = function (field, fie
     return false;
 };
 
+/**
+ * request input window
+ * @param field
+ * @param type
+ */
 Gui.Config.Controller.Settings.prototype.requestInput = function (field, type) {
 
     if (false === field.disabled) {
@@ -146,6 +191,9 @@ Gui.Config.Controller.Settings.prototype.requestInput = function (field, type) {
     }
 };
 
+/**
+ * persist settings
+ */
 Gui.Config.Controller.Settings.prototype.persist = function () {
 
     var i, n, value, values;

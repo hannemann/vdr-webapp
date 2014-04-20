@@ -57,6 +57,10 @@ Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
 
     this.modalOverlay = $('<div id="modal-overlay">').appendTo(parentView.node);
 
+    if (this.isModalTransparent) {
+        this.modalOverlay.addClass('transparent');
+    }
+
     this.parentView = {
         "node" : this.modalOverlay
     };
@@ -132,7 +136,9 @@ Gui.Window.View.Abstract.prototype.destruct = function () {
     if (this.hasHeader) {
         this.header.empty();
     }
-    this.body.empty();
+    if (this.hasOwnProperty('body')) {
+        this.body.empty();
+    }
     this.remove();
 
     if (this.isModal) {

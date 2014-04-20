@@ -50,7 +50,6 @@ Gui.Config.ViewModel.Settings.prototype.defineViewMethod = function (name, field
 
     if ("enum" === field.type) {
 
-//        this.defineEnum(name, field);
         this.definePrimitive(name, field);
     }
 };
@@ -63,19 +62,21 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
 
     this.data.view['get' + fragment] = function () {
 
+        var item = me.backend.getItem(name);
+
         if ("boolean" === dataType) {
 
-            return eval(me.backend.getItem(name));
+            return item ? eval(item) : false;
         }
 
         if ("string" === dataType) {
 
-            return me.backend.getItem(name).toString();
+            return item ? me.backend.getItem(name).toString() : '';
         }
 
         if ("number" === dataType) {
 
-            return parseFloat(me.backend.getItem(name));
+            return item ? parseFloat(me.backend.getItem(name)) : 0;
         }
     };
 
@@ -111,8 +112,3 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
         return me.backend.removeItem(name);
     };
 };
-
-//Gui.Config.ViewModel.Settings.prototype.defineEnum = function (name, field) {
-//
-//    var fragment = this.getMethodFragment(name), me = this;
-//};

@@ -13,6 +13,7 @@ Gui.Epg.View.Channels.Channel.prototype.cacheKey = 'channel_id';
 Gui.Epg.View.Channels.Channel.prototype.init = function () {
 
     this.node = $('<div class="channel">');
+    this.mute = $('<div class="mute">').appendTo(this.node);
 };
 
 Gui.Epg.View.Channels.Channel.prototype.render = function () {

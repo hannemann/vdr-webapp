@@ -34,6 +34,41 @@ Gui.Epg.prototype.inDrawer = true;
 Gui.Epg.prototype.headline = 'EPG';
 
 /**
+ * headline in menu bar
+ * @type {string}
+ */
+Gui.Epg.prototype.contextMenu = {
+
+    "Channelview" : {
+        "labels" : {
+            "off" : "Channelview",
+            "on" : "EPG View"
+        },
+        "state" : "off",
+        "scope" : 'Gui.Epg',
+        "fn" : function () {
+
+            if ("off" === this.contextMenu.Channelview.state) {
+
+                this.contextMenu.Channelview.state = "on";
+                $.event.trigger({
+                    "type" : "epg.channelview",
+                    "payload" : this.getController('Channels').channelsList[0]
+                });
+
+            } else {
+
+                this.contextMenu.Channelview.state = "off";
+                $.event.trigger({
+                    "type" : "epg.channelview",
+                    "payload" : false
+                });
+            }
+        }
+    }
+};
+
+/**
  * dispatch default view
  */
 Gui.Epg.prototype.dispatch = function () {
