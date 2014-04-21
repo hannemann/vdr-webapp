@@ -17,14 +17,16 @@ Gui.Epg.Controller.Broadcasts.List.prototype.cacheKey = 'channel_id';
 
 Gui.Epg.Controller.Broadcasts.List.prototype.isChannelView = false;
 
+Gui.Epg.Controller.Broadcasts.List.prototype.isVisible = true;
+
 /**
  * get main controller, init collection, fetch view
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
 
     this.epgController = this.module.getController('Epg');
+    this.broadcastsWrapper = this.epgController.getBroadcasts().wrapper;
     this.broadcasts = [];
-    this.toRender = [];
     this.view = this.module.getView('Broadcasts.List', {
         "channel_id" : this.data.channel_id
     });
@@ -32,6 +34,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', {
         "channel_id" : this.data.channel_id
     });
+    this.scrollLeft = 0;
+    this.firstVisible = 0;
+    this.lastVisible = 0;
+    this.initial = true;
 };
 
 /**
@@ -119,6 +125,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
 
     this.isChannelView = true;
     this.view.node.addClass('active');
+    this.view.setIsVisible('true');
     this.getStoreModel().getAllRemaining();
 };
 
@@ -137,7 +144,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.detachChannelView = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (collection) {
 
-    var isInView = this.isInView(), me = this;
+    var isInView = this.isInView();
 
     collection.iterate($.proxy(function (dataModel) {
 
@@ -160,9 +167,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
     // trigger update ONLY if collection.length is not 0!!!
     if (collection.collection.length > 0 && isInView) {
 
-        this.updateList.call(me);
+        this.updateList();
     }
-
 };
 
 /**
@@ -170,18 +176,31 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
-    var me = this;
+    var me = this, isInView = this.isInView();
 
     !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
+    !!this.visibleTimeout && clearTimeout(this.visibleTimeout);
 
-    if (!this.epgController.getIsChannelView()) {
+    if (!this.isChannelView && isInView) {
 
         this.scrollTimeout = setTimeout(function () {
 
             me.updateList.call(me);
 
         }, 200);
+
     }
+
+    if (me.isVisible != isInView) {
+
+        this.visibleTimeout = setTimeout(function () {
+
+            me.view.setIsVisible(isInView);
+            me.isVisible = isInView;
+
+        }, 200);
+    }
+
 };
 
 /**
@@ -189,7 +208,11 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.handleResize = function () {
 
-    this.view.isRendered && this.updateList.call(this);
+
+    if (!this.isChannelView && this.isInView()) {
+
+        this.updateList();
+    }
 };
 
 /**
@@ -202,7 +225,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
         metrics,
         vOffset;
 
-    if (!this.isChannelView && this.isInView()) {
+    if (l > 0) {
 
         metrics = this.epgController.getMetrics();
         vOffset = this.view.node.offset();
@@ -218,23 +241,94 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
             }
         }
 
-        if (l > 0) {
+        // load next events
+        if (this.broadcasts[l-1].view.getLeft() + vOffset.left < metrics.win.width) {
 
-            // load next events
-            if (this.broadcasts[l-1].view.getLeft() + vOffset.left < metrics.win.width) {
-
-                this.getBroadcasts();
-            }
-
-            // adjust width of parentView
-            if (
-                (this.epgController.getBroadcasts().node.width() - metrics.win.width)
-                < this.broadcasts[l-1].view.getRight()
-            ) {
-
-                this.epgController.getBroadcasts().node.width(metrics.win.width + this.broadcasts[l-1].view.getRight());
-            }
+            this.getBroadcasts();
         }
+
+        // adjust width of parentView
+        if (
+            (this.epgController.getBroadcasts().node.width() - metrics.win.width)
+            < this.broadcasts[l-1].view.getRight()
+        ) {
+
+            this.epgController.getBroadcasts().node.width(metrics.win.width + this.broadcasts[l-1].view.getRight());
+        }
+
+        this.toggleBroadcastsVisibility();
+    }
+};
+
+Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = function () {
+
+    var i,
+        l = this.broadcasts.length,
+        currentScrollLeft = this.broadcastsWrapper.scrollLeft();
+
+    if (l > 0) {
+
+        if (this.scrollLeft <= currentScrollLeft) {
+
+            i = this.firstVisible;
+            // search from firstVisible until element is visible
+            for (i; i < l; i++) {
+
+                if (this.broadcasts[i].isInView()) {
+
+                    this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
+                    this.broadcasts[i].view.node.addClass('first-visible');
+                    this.firstVisible = i;
+                    break;
+                }
+            }
+
+            // search from first visible next node until element is not visible
+
+            for (i; i < l; i++) {
+
+                if (!this.broadcasts[i].isInView() || i === this.broadcasts.length) {
+
+                    this.broadcasts[this.lastVisible].view.node.removeClass('last-visible');
+                    this.broadcasts[i - 1].view.node.addClass('last-visible');
+                    this.lastVisible = i - 1;
+                    break;
+                }
+            }
+
+        } else {
+
+            i = this.lastVisible;
+            i = i <= 0 ? this.broadcasts.length - 1 : i;
+            // search from lastVisible until element is visible
+            for (i; i >= 0; i--) {
+
+                if (this.broadcasts[i].isInView()) {
+
+                    this.broadcasts[this.lastVisible].view.node.removeClass('last-visible');
+                    this.broadcasts[i].view.node.addClass('last-visible');
+                    this.lastVisible = i;
+                    break;
+                }
+            }
+
+            // search from lastVisible until element is not visible
+            i--;
+            i = i <= 0 ? 0 : i;
+            for (i; i >= 0; i--) {
+
+                if (!this.broadcasts[i].isInView() || i === 0) {
+
+                    this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
+                    this.broadcasts[i].view.node.addClass('first-visible');
+                    this.firstVisible = i;
+                    break;
+                }
+            }
+
+        }
+
+        this.scrollLeft = currentScrollLeft;
     }
 };
 
@@ -248,9 +342,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
         top = offset.top,
         height = this.view.node.height(),
         bottom = top + height,
-        metrics = this.epgController.getMetrics();
+        metrics = this.epgController.getMetrics(),
+        threshold = 120;
 
-    return top < metrics.win.height && bottom > metrics.broadcasts.top;
+    return top - threshold < metrics.win.height && bottom + threshold > metrics.broadcasts.top;
 
 };
 

@@ -5,6 +5,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype = new VDRest.Abstract.Con
 
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.cacheKey = 'channel/id';
 
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isVisible = true;
+
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.epgController = this.module.getController('Epg');

@@ -44,7 +44,9 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
 
-    $(this.view.wrapper).on('scroll', this.handleScroll);
+//    $(this.view.wrapper).on('scroll', this.handleScroll);
+
+    this.view.wrapper.get(0).onscroll = this.handleScroll;
 };
 
 /**

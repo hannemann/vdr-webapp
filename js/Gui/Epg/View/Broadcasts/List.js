@@ -12,3 +12,11 @@ Gui.Epg.View.Broadcasts.List.prototype.init = function () {
 
     this.node = $('<div class="broadcasts-list">');
 };
+
+/**
+ * set list visibility
+ */
+Gui.Epg.View.Broadcasts.List.prototype.setIsVisible = function (visible) {
+
+        this.node.toggleClass('invisible', !visible);
+};

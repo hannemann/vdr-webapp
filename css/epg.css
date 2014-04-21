@@ -56,6 +56,10 @@
     color: white;
     font-family: Source Sans ProBold, sans-serif
 }
+#broadcasts .broadcasts-list .broadcast.invisible,
+#broadcasts .broadcasts-list.invisible .broadcast {
+    display: none !important;
+}
 #broadcasts .broadcasts-list .broadcast div {
     height: 35px;
     padding: 2px;
@@ -203,6 +207,8 @@ div#time-line .ql.hour {
     left: 0 !important;
     height: auto !important;
     background: #696969;
+    display: block !important;
+
 }
 .channel-view #broadcasts .broadcast div {
     height: auto !important;
@@ -216,4 +222,16 @@ div#time-line .ql.hour {
 }
 .channel-view #broadcasts .broadcast .visible-channel-view * {
     font-size: 12px;
+}
+
+
+
+
+#broadcasts .broadcasts-list .broadcast.first-visible,
+#broadcasts .broadcasts-list .broadcast.first-visible ~ .broadcast {
+    display: block;
+}
+#broadcasts .broadcasts-list .broadcast,
+#broadcasts .broadcasts-list .broadcast.last-visible ~ .broadcast {
+    display: none;
 }
