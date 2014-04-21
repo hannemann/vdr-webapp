@@ -37,7 +37,8 @@ Gui.Window.Controller.ContextMenu.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
 
-    var i;
+    var i,
+        config = VDRest.app.getModule('Gui.Config');
 
     for (i in this.data) {
 
@@ -54,8 +55,11 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
         }
     }
 
-    this.view.node.find('.config-button')
-        .one('mousedown', $.proxy(this.handleConfig, this));
+    if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
+
+        this.view.node.find('.config-button')
+            .one('mousedown', $.proxy(this.handleConfig, this));
+    }
 
     this.view.node.find('.reload-button')
         .one('mousedown', $.proxy(this.handleReload, this));
@@ -86,13 +90,13 @@ Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callba
  */
 Gui.Window.Controller.ContextMenu.prototype.handleConfig = function (e) {
 
-    var config = VDRest.app.getModule('Gui.Config');
-
     e.stopPropagation();
 
-    this.destructView();
+    history.back();
 
-    location.replace(location.href.replace(/#.*$/, '#' + config.namespace + '.' + config.name));
+    setTimeout(function () {
+        VDRest.app.dispatch('Gui.Config');
+    }, 100);
 };
 
 /**

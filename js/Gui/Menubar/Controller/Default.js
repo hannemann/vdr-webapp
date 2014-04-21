@@ -90,6 +90,8 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
     $(document).on('dispatch.before', $.proxy(this.showThrobber, this));
 
     $(document).on('dispatch.after', $.proxy(this.handlePostDispatch, this));
+
+    this.view.settingsButton.on('click', $.proxy(this.requestContextMenu, this));
 };
 
 /**
@@ -99,28 +101,23 @@ Gui.Menubar.Controller.Default.prototype.handlePostDispatch = function () {
 
     this.view.decorateIndicator(this.isStartPage());
 
-    this.addSettingsHandler();
-
     this.hideThrobber();
 };
 
 /**
- * handle settings button
+ * retrieve configuration for contextMenu
+ * @returns {object}
  */
-Gui.Menubar.Controller.Default.prototype.addSettingsHandler = function () {
+Gui.Menubar.Controller.Default.prototype.getContextMenu = function () {
 
     this.contextMenu = VDRest.app.getCurrent(true).contextMenu;
 
-    if ("undefined" !== typeof this.contextMenu) {
+    if ("undefined" === typeof this.contextMenu) {
 
-        this.view.settingsButton.off('click', this.dispatchConfiguration);
-        this.view.settingsButton.on('click', $.proxy(this.requestContextMenu, this));
-
-    } else {
-
-        this.view.settingsButton.off('click', $.proxy(this.requestContextMenu, this));
-        this.view.settingsButton.on('click', this.dispatchConfiguration);
+        this.contextMenu = {};
     }
+
+    return this.contextMenu
 };
 
 /**
@@ -132,7 +129,7 @@ Gui.Menubar.Controller.Default.prototype.requestContextMenu = function () {
         "type" : "window.request",
         "payload" : {
             "type" : "ContextMenu",
-            "data" : this.contextMenu
+            "data" : this.getContextMenu()
         }
     });
 };
@@ -144,14 +141,6 @@ Gui.Menubar.Controller.Default.prototype.requestContextMenu = function () {
 Gui.Menubar.Controller.Default.prototype.isStartPage = function () {
 
     return ( VDRest.config.getItem('start') === VDRest.app.getCurrent() ) || "undefined" !== typeof this.initial
-};
-
-/**
- * dispatch configuration page
- */
-Gui.Menubar.Controller.Default.prototype.dispatchConfiguration = function () {
-
-    VDRest.app.dispatch('Gui.Config');
 };
 
 /**
