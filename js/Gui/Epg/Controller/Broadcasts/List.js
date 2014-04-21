@@ -155,13 +155,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
             "dataModel" : dataModel
         }));
 
-        if (isInView) {
-
-            this.broadcasts[this.broadcasts.length -1].dispatchView();
-        } else {
-            // TODO: stack erstellen, der abgearbeitet wird, statt in update list immer alle durch zu gehen.
-//                this.toRender.push(me.broadcasts[me.broadcasts.length -1]);
-        }
     }, this));
     // runs in endless loop if previous collection had items but current not
     // trigger update ONLY if collection.length is not 0!!!
@@ -185,13 +178,13 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
         this.scrollTimeout = setTimeout(function () {
 
-            me.updateList.call(me);
+            me.updateList();
 
         }, 200);
 
     }
 
-    if (me.isVisible != isInView) {
+    if (this.isVisible != isInView) {
 
         this.visibleTimeout = setTimeout(function () {
 
@@ -220,7 +213,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleResize = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
-    var i = 0,
+    var i = this.lastVisible,
         l = this.broadcasts.length,
         metrics,
         vOffset;
@@ -260,6 +253,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
     }
 };
 
+/**
+ * hide broadcasts not in view
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = function () {
 
     var i,
