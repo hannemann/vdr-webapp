@@ -46,8 +46,11 @@ Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 /**
  * handle channelview event
  * @param {jQuery.Event} e
+ * @property {Gui.Epg.Controller.Channels.Channel|boolean} payload
  */
 Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
+
+    var i = 0, l = this.channelsList.length;
 
     if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
 
@@ -59,12 +62,24 @@ Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
 
         this.channelView = e.payload.view;
         this.module.getController('Broadcasts.List', this.channelView.keyInCache).attachChannelView();
+
+        for (i; i < l; i++) {
+
+            this.module.getController('Broadcasts.List', this.channelsList[i].keyInCache).isChannelView = true;
+        }
+
         this.channelView.setIsActive();
 
     } else {
 
         this.channelView.unsetIsActive();
         this.module.getController('Broadcasts.List', this.channelView.keyInCache).detachChannelView();
+
+        for (i; i < l; i++) {
+
+            this.module.getController('Broadcasts.List', this.channelsList[i].keyInCache).isChannelView = false;
+        }
+
         this.channelView = false;
         this.handleScroll();
     }

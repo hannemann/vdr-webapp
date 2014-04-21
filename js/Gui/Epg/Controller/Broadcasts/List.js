@@ -123,7 +123,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
 
-    this.isChannelView = true;
     this.view.node.addClass('active');
     this.view.setIsVisible('true');
     this.getStoreModel().getAllRemaining();
@@ -134,7 +133,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.detachChannelView = function () {
 
-    this.isChannelView = false;
     this.view.node.removeClass('active');
 };
 
@@ -155,6 +153,11 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
             "dataModel" : dataModel
         }));
 
+        if (isInView) {
+
+            this.broadcasts[this.broadcasts.length -1].dispatchView();
+        }
+
     }, this));
     // runs in endless loop if previous collection had items but current not
     // trigger update ONLY if collection.length is not 0!!!
@@ -169,29 +172,33 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
-    var me = this, isInView = this.isInView();
+    var me = this, isInView;
 
-    !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
-    !!this.visibleTimeout && clearTimeout(this.visibleTimeout);
+    if (!this.isChannelView) {
 
-    if (!this.isChannelView && isInView) {
+        isInView = this.isInView();
 
-        this.scrollTimeout = setTimeout(function () {
+        !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
+        !!this.visibleTimeout && clearTimeout(this.visibleTimeout);
 
-            me.updateList();
+        if (isInView) {
 
-        }, 200);
+            this.scrollTimeout = setTimeout(function () {
 
-    }
+                me.updateList();
 
-    if (this.isVisible != isInView) {
+            }, 200);
+        }
 
-        this.visibleTimeout = setTimeout(function () {
+        if (this.isVisible != isInView) {
 
-            me.view.setIsVisible(isInView);
-            me.isVisible = isInView;
+            this.visibleTimeout = setTimeout(function () {
 
-        }, 200);
+                me.view.setIsVisible(isInView);
+                me.isVisible = isInView;
+
+            }, 200);
+        }
     }
 
 };
@@ -218,7 +225,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
         metrics,
         vOffset;
 
-    if (l > 0) {
+    if (!this.isChannelView && l > 0) {
 
         metrics = this.epgController.getMetrics();
         vOffset = this.view.node.offset();
