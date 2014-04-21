@@ -125,6 +125,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
 
     this.view.node.addClass('active');
     this.view.setIsVisible('true');
+    // update list before trigger loading of remaining broadcasts
+    // to prevent already loaded broadcasts to reside at the end of the list
+    // if they hasn't been rendered yet
+    this.updateList();
     this.getStoreModel().getAllRemaining();
 };
 
@@ -225,7 +229,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
         metrics,
         vOffset;
 
-    if (!this.isChannelView && l > 0) {
+    if (l > 0) {
 
         metrics = this.epgController.getMetrics();
         vOffset = this.view.node.offset();
@@ -241,22 +245,24 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
             }
         }
 
-        // load next events
-        if (this.broadcasts[l-1].view.getLeft() + vOffset.left < metrics.win.width) {
+        if (!this.isChannelView) {
+            // load next events
+            if (this.broadcasts[l - 1].view.getLeft() + vOffset.left < metrics.win.width) {
 
-            this.getBroadcasts();
+                this.getBroadcasts();
+            }
+
+            // adjust width of parentView
+            if (
+                (this.epgController.getBroadcasts().node.width() - metrics.win.width)
+                < this.broadcasts[l - 1].view.getRight()
+            ) {
+
+                this.epgController.getBroadcasts().node.width(metrics.win.width + this.broadcasts[l - 1].view.getRight());
+            }
+
+            this.toggleBroadcastsVisibility();
         }
-
-        // adjust width of parentView
-        if (
-            (this.epgController.getBroadcasts().node.width() - metrics.win.width)
-            < this.broadcasts[l-1].view.getRight()
-        ) {
-
-            this.epgController.getBroadcasts().node.width(metrics.win.width + this.broadcasts[l-1].view.getRight());
-        }
-
-        this.toggleBroadcastsVisibility();
     }
 };
 
