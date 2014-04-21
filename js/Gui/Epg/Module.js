@@ -65,6 +65,18 @@ Gui.Epg.prototype.contextMenu = {
                 });
             }
         }
+    },
+
+    "Refresh" : {
+        "labels" : {
+            "on" : "Refresh"
+        },
+        "state" : "on",
+        "scope" : 'Gui.Epg',
+        "fn" : function () {
+
+            this.refresh();
+        }
     }
 };
 
@@ -82,8 +94,17 @@ Gui.Epg.prototype.dispatch = function () {
  */
 Gui.Epg.prototype.destruct = function () {
 
+    this.getController('Epg').destructView(true);
+};
+
+/**
+ * refresh default view
+ */
+Gui.Epg.prototype.refresh = function () {
+
     this.getController('Epg').destructView();
-//    this.cache.flush();
+    this.cache.flush();
+    this.dispatch();
 };
 
 /**

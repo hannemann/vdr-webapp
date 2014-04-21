@@ -214,15 +214,20 @@ Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
 /**
  * destroy!
  */
-Gui.Epg.Controller.Epg.prototype.destructView = function () {
+Gui.Epg.Controller.Epg.prototype.destructView = function (hideOnly) {
 
-    this.view.node.hide();
+    if (hideOnly) {
 
-    this.isHidden = true;
+        this.view.node.hide();
+        this.isHidden = true;
 
-//    this.timeLine.destructView();
-//    this.channels.destructView();
-//    this.broadcasts.destructView();
-//
-//    VDRest.Abstract.Controller.prototype.destructView.call(this);
+    } else {
+
+        this.timeLine.destructView();
+        this.channels.destructView();
+        this.broadcasts.destructView();
+
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+    }
+
 };
