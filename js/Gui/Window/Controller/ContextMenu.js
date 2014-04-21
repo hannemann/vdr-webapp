@@ -108,3 +108,18 @@ Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
         location.reload();
     }, 100);
 };
+
+/**
+ * reload page
+ */
+Gui.Window.Controller.ContextMenu.prototype.destructView = function () {
+
+    var me = this;
+    // apply animation
+    this.view.node.addClass('remove');
+    // remove on animation end
+    this.view.node.one('webkitAnimationEnd', function () {
+
+        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+    });
+};

@@ -125,10 +125,17 @@
 
         #testwindow {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
+            /*top: 20px;*/
+            /*left: 20px;*/
+            /*right: 20px;*/
+            /*bottom: 20px;*/
+
+            top: 512px;
+            left: 120px;
+            right: 160px;
+            bottom: 27px;
+
+
             overflow-y: scroll;
             background: yellow;
             z-index: 2;
@@ -144,10 +151,51 @@
             background-size: 20px 20px;
         }
 
-        #events-wrapper {
 
-            clip: rect(100px, 300px, 500px, 100px);
+        #testwindow.animated {
+            display: block;
+            animation-duration: 10s;
+            animation-name: grow;
+            -webkit-animation-duration: .2s;
+            -webkit-animation-name: grow;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+        }
 
+        @keyframes grow {
+
+            from {
+                top: 231px;
+                left: 120px;
+                right: 160px;
+                bottom: 307px;
+            }
+
+            to {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+
+        @-webkit-keyframes grow {
+
+            from {
+                top: 231px;
+                left: 120px;
+                right: 160px;
+                bottom: 307px;
+            }
+
+            to {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+            }
         }
 
     </style>
