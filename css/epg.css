@@ -133,6 +133,12 @@ div#time-line .ql.hour {
 	font-weight: bold;
 }
 
+.window.timer-active .window-header {
+    background-size: 60px 60px;
+    background-image: linear-gradient(135deg, red 0%, transparent 50%);
+    background-repeat: no-repeat;
+}
+
 /* Channel view */
 
 #epg-channels .channel .mute {
