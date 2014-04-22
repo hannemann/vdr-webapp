@@ -92,8 +92,6 @@ Gui.Window.Controller.ContextMenu.prototype.handleConfig = function (e) {
 
     e.stopPropagation();
 
-    history.back();
-
     setTimeout(function () {
         VDRest.app.dispatch('Gui.Config');
     }, 100);
