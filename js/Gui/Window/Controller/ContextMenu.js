@@ -82,15 +82,19 @@ Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callba
 
     history.back();
 
-    callback.call(scope);
+    setTimeout(function () {
+        callback.call(scope);
+    },100);
 };
 
 /**
  * call method defined as callback
  */
-Gui.Window.Controller.ContextMenu.prototype.handleConfig = function (e) {
+Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
 
-    e.stopPropagation();
+    this.skipBack = true;
+
+    history.back();
 
     setTimeout(function () {
         VDRest.app.dispatch('Gui.Config');
@@ -105,19 +109,4 @@ Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
     setTimeout(function () {
         location.reload();
     }, 100);
-};
-
-/**
- * reload page
- */
-Gui.Window.Controller.ContextMenu.prototype.destructView = function () {
-
-    var me = this;
-    // apply animation
-    this.view.node.addClass('remove');
-    // remove on animation end
-    this.view.node.one('webkitAnimationEnd', function () {
-
-        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
-    });
 };

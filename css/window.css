@@ -176,38 +176,6 @@ div.window.confirm li:first-child {
     background: #696969;
     top: 50px;
     opacity: 1;
-    -webkit-animation-duration: .15s;
-    -webkit-animation-name: contextMenuShow;
-    -webkit-transform: scale(1,1);
-}
-
-.context-menu.remove {
-    -webkit-animation-duration: .15s;
-    -webkit-animation-name: contextMenuHide;
-}
-
-@-webkit-keyframes contextMenuShow {
-    from {
-        opacity: 0;
-        -webkit-transform: scale(1,0);
-    }
-
-    to {
-        opacity: 1;
-        -webkit-transform: scale(1,1);
-    }
-}
-
-@-webkit-keyframes contextMenuHide {
-    from {
-        opacity: 1;
-        -webkit-transform: scale(1,1);
-    }
-
-    to {
-        opacity: 0;
-        -webkit-transform: scale(1,0);
-    }
 }
 
 .context-menu div {

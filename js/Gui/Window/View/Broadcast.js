@@ -24,6 +24,8 @@ Gui.Window.View.Broadcast.prototype.hasHeader = true;
 
 Gui.Window.View.Broadcast.prototype.isModal = true;
 
+Gui.Window.View.Broadcast.prototype.isModalTransparent = true;
+
 /**
  * @type {string}
  */
@@ -33,6 +35,8 @@ Gui.Window.View.Broadcast.prototype.hasCloseButton = true;
  * add components, call render method
  */
 Gui.Window.View.Broadcast.prototype.render = function () {
+
+    var me = this;
 
     this.addClasses();
 
@@ -50,7 +54,11 @@ Gui.Window.View.Broadcast.prototype.render = function () {
         this.addComponents()
     }
 
+    this.node.addClass('collapsed');
+
     Gui.Window.View.Abstract.prototype.render.call(this);
+
+    me.node.toggleClass('collapsed expand');
 };
 
 Gui.Window.View.Broadcast.prototype.addClasses = function () {
@@ -248,24 +256,17 @@ Gui.Window.View.Broadcast.prototype.addMainImage = function () {
  */
 Gui.Window.View.Broadcast.prototype.animateImage = function () {
 
-    var targetWidth, targetStatus, me = this;
-
-    me.node.toggleClass('image-expanded');
+    this.node.toggleClass('image-expanded');
 
     if (this.imageIsExpanded) {
 
-        targetWidth = '50%';
-        targetStatus = false;
+        this.image.toggleClass('expand contract');
+        this.imageIsExpanded = false;
     } else {
 
-        targetWidth = '100%';
-        targetStatus = true;
+        this.image.removeClass('contract').addClass('expand');
+        this.imageIsExpanded = true;
     }
-    this.image.animate({
-        "max-width" : targetWidth
-    }, function () {
-        me.imageIsExpanded = targetStatus;
-    });
 
     return this;
 };
@@ -339,4 +340,17 @@ Gui.Window.View.Broadcast.prototype.handleTimerActive = function (active) {
 
         this.node.removeClass('timer-active');
     }
+};
+
+Gui.Window.View.Broadcast.prototype.destruct = function () {
+
+    var me = this;
+    // apply animation
+    this.node.toggleClass('collapse expand');
+    // remove on animation end
+    this.node.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+
+        Gui.Window.View.Abstract.prototype.destruct.call(me);
+    });
+
 };

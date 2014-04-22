@@ -41,7 +41,7 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.calculateMetrics = functio
 
     var duration,
         from = this.module.getFromDate(),
-        width, left, right;
+        width, left, right, me = this;
 
     if (this.resource.start_date < from) {
 
@@ -80,6 +80,14 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.calculateMetrics = functio
     this.data.view.getRight = function () {
 
         return right;
+    };
+    /**
+     * retrieve offset of nodes relative to visible area
+     * @returns {object}
+     */
+    this.data.view.getOffset = function () {
+
+        return me.data.view.node.offset();
     };
 
     return this;

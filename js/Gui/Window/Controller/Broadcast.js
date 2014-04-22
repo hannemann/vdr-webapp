@@ -26,6 +26,7 @@ Gui.Window.Controller.Broadcast.prototype.init = function () {
         "view" : this.view,
         "resource" : this.data.dataModel
     });
+
 };
 
 Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {

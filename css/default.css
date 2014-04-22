@@ -40,6 +40,8 @@ ul {
 .clearer:after {
     content:"";
     display:table;
+    font-size: 0;
+    line-height: 0;
 }
 .clearer:after {
     clear:both;

@@ -12,11 +12,6 @@ Gui.Recordings.View.List.Recording.prototype.init = function () {
 
 Gui.Recordings.View.List.Recording.prototype.render = function () {
 
-    if ("undefined" === typeof this.module.figgi) {
-        this.module.figgi = 1;
-        console.log(this);
-    }
-
     this.name = $('<div class="name">')
         .text(this.getName())
         .appendTo(this.node);

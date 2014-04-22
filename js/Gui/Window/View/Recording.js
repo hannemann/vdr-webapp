@@ -16,8 +16,6 @@ Gui.Window.View.Recording.prototype.hasCloseButton = true;
 
 Gui.Window.View.Recording.prototype.render = function () {
 
-    console.log(this);
-
     this.addClasses().decorateHeader().decorateBody();
 
     Gui.Window.View.Abstract.prototype.render.call(this);

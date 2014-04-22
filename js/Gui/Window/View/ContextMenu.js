@@ -76,3 +76,18 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
     return this;
 };
 
+/**
+ * reload page
+ */
+Gui.Window.View.ContextMenu.prototype.destruct = function () {
+
+    var me = this;
+    // apply animation
+    this.node.addClass('remove');
+    // remove on animation end
+    this.node.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+
+            Gui.Window.View.Abstract.prototype.destruct.call(me);
+    });
+};
+
