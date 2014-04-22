@@ -183,12 +183,15 @@ div#time-line .ql.hour {
     display: inline-block;
     border: none;
     margin: 0 3px;
-    top: -13px;
+    top: -2px;
+    z-index: 0;
 }
 .channel-view #epg-channels .channel.active {
-    width: 65px;
-    height: 65px;
-    top: 0;
+    width: 55px;
+    height: 55px;
+    top: 5px;
+    box-shadow: 0 0 30px 5px rgba(0,0,0,0.5);
+    z-index: 1;
 }
 
 .visible-channel-view {
