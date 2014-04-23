@@ -24,7 +24,8 @@ ul#menubar #refresh {
 	height: calc(100% - 70px);
 	position:absolute;
 	top: 50px;
-	left: -65%;
+    left: auto;
+    right: auto;
     background: rgba(0,0,0,0.8);
 	z-index: 1;
 	color: white;

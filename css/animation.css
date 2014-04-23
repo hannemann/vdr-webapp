@@ -113,33 +113,35 @@
 .window-drawer.show {
     animation-duration: .2s;
     animation-name: drawerShow;
+    transform: translateX(0px);
     -webkit-animation-duration: .2s;
     -webkit-animation-name: drawerShow;
-    left: 0;
+    -webkit-transform: translateX(0px);
 }
 
 .window-drawer.hide {
     animation-duration: .2s;
     animation-name: drawerHide;
+    transform: translateX(-100%);
     -webkit-animation-duration: .2s;
     -webkit-animation-name: drawerHide;
-    left: -65%;
+    -webkit-transform: translateX(-100%);
 }
 @keyframes drawerShow {
-    from { left: -65%; }
-    to { left: 0 }
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0px); }
 }
 @keyframes drawerHide {
-    from { left: 0; }
-    to { left: -65% }
+    from { transform: translateX(0px); }
+    to { transform: translateX(-100%); }
 }
 @-webkit-keyframes drawerShow {
-    from { left: -65%; }
-    to { left: 0 }
+    from { -webkit-transform: translateX(-100%); }
+    to { -webkit-transform: translateX(0px); }
 }
 @-webkit-keyframes drawerHide {
-    from { left: 0; }
-    to { left: -65% }
+    from { -webkit-transform: translateX(0px); }
+    to { -webkit-transform: translateX(-100%); }
 }
 
 .drawer-indicator {
