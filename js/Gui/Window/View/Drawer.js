@@ -1,4 +1,7 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.View.Drawer = function () {};
 
 /**
@@ -6,36 +9,38 @@ Gui.Window.View.Drawer = function () {};
  */
 Gui.Window.View.Drawer.prototype = new Gui.Window.View.Abstract();
 
+/**
+ * is modal within viewport
+ * @type {boolean}
+ */
 Gui.Window.View.Drawer.prototype.isModalViewport = true;
 
+/**
+ * is transparent modal
+ * @type {boolean}
+ */
+Gui.Window.View.Drawer.prototype.isModalTransparent = true;
+
+Gui.Window.View.Drawer.prototype.hasHeader = true;
+
+/**
+ * draw
+ */
 Gui.Window.View.Drawer.prototype.render = function () {
+
+    this.header.text('Menu');
 
     this.buttons = [];
 
-    this.addClasses();
+    this.addClasses().addButtons();
 
     Gui.Window.View.Abstract.prototype.render.call(this);
-
-    this.triggerAnimation(true, function () {
-
-        $.event.trigger({
-            "type" : "drawer.dispatched",
-            "payload" : true
-        });
-    });
-
-    this.addButtons();
 };
 
-Gui.Window.View.Drawer.prototype.triggerAnimation = function (show, callback) {
-
-    $.event.trigger('drawer.animate');
-
-    this.node.animate({
-        "left" : show ? 0 : "-50%"
-    }, 'fast', callback);
-};
-
+/**
+ * add needed classes
+ * @returns {Gui.Window.View.Drawer}
+ */
 Gui.Window.View.Drawer.prototype.addClasses = function () {
 
     this.node.addClass('window-drawer clearer');
@@ -43,6 +48,10 @@ Gui.Window.View.Drawer.prototype.addClasses = function () {
     return this;
 };
 
+/**
+ * add Buttons
+ * @returns {Gui.Window.View.Drawer}
+ */
 Gui.Window.View.Drawer.prototype.addButtons = function () {
 
     this.getButtons().each($.proxy(function (module, options) {
@@ -52,27 +61,10 @@ Gui.Window.View.Drawer.prototype.addButtons = function () {
                 .attr('data-module', module)
                 .text(options.headline)
                 .addClass(options.current ? 'current' : '')
-                .appendTo(this.node)
+                .appendTo(this.body)
         );
 
     }, this));
 
     return this;
-};
-
-Gui.Window.View.Drawer.prototype.destruct = function () {
-
-    var me = this;
-
-    this.triggerAnimation(false, function () {
-
-        Gui.Window.View.Abstract.prototype.destruct.call(me);
-
-        me.modalOverlay.remove();
-
-        $.event.trigger({
-            "type" : "drawer.dispatched",
-            "payload" : false
-        });
-    });
 };

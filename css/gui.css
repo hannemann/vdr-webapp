@@ -24,13 +24,22 @@ ul#menubar #refresh {
 	height: calc(100% - 70px);
 	position:absolute;
 	top: 50px;
-	left: -50%;
+	left: -65%;
     background: rgba(0,0,0,0.8);
 	z-index: 1;
 	color: white;
 	box-shadow: 0 0 20px 0 black;
     border-right: 2px solid rgb(0,128,20);
     border-bottom: none;
+}
+.window-drawer .window-header {
+    width: calc(100% - 10px);
+    height: 30px;
+    background: rgba(255, 255, 255, 0.49);
+    font-family: Source Sans ProBold, sans-serif;
+    color: black;
+    line-height: 30px;
+    padding: 0 0 0 10px;
 }
 .window-drawer .navi-button {
 	padding:5px 10px;

@@ -44,8 +44,6 @@ Gui.Menubar.Controller.Default.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.indicatorWidth = this.view.drawerIndicator.width();
-
     this.addObserver();
 };
 
@@ -81,7 +79,7 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (force) {
  */
 Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
-    $(document).on('drawer.dispatched', $.proxy(this.onDrawerReady, this));
+    $(document).on('drawer.statechanged', $.proxy(this.onDrawerReady, this));
 
     $(document).on('drawer.animate', $.proxy(this.onDrawerAnimate, this));
 
@@ -123,15 +121,24 @@ Gui.Menubar.Controller.Default.prototype.getContextMenu = function () {
 /**
  * request context menu
  */
-Gui.Menubar.Controller.Default.prototype.requestContextMenu = function () {
+Gui.Menubar.Controller.Default.prototype.requestContextMenu = function (e) {
 
-    $.event.trigger({
-        "type" : "window.request",
-        "payload" : {
-            "type" : "ContextMenu",
-            "data" : this.getContextMenu()
-        }
-    });
+    e.stopPropagation();
+
+    if (this.drawerDispatched) {
+
+        history.back()
+
+    } else {
+
+        $.event.trigger({
+            "type" : "window.request",
+            "payload" : {
+                "type" : "ContextMenu",
+                "data" : this.getContextMenu()
+            }
+        });
+    }
 };
 
 /**
@@ -159,23 +166,24 @@ Gui.Menubar.Controller.Default.prototype.onDrawerReady = function (e) {
  */
 Gui.Menubar.Controller.Default.prototype.onDrawerAnimate = function () {
 
-    var target = Math.floor(this.indicatorWidth / 2);
-
     this.deferIconClick = true;
 
     if (this.drawerDispatched) {
 
-        target = this.indicatorWidth;
+        this.view.drawerIndicator.removeClass('collapse');
+
+    } else {
+
+        this.view.drawerIndicator.addClass('collapse');
     }
-    this.view.drawerIndicator.animate({
-        "width" : target + 'px'
-    }, 'fast');
 };
 
 /**
  * handle click on icon
  */
-Gui.Menubar.Controller.Default.prototype.onIconClick = function () {
+Gui.Menubar.Controller.Default.prototype.onIconClick = function (e) {
+
+    e.stopPropagation();
 
     if (!this.deferIconClick) {
 

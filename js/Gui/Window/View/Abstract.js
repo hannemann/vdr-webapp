@@ -141,7 +141,7 @@ Gui.Window.View.Abstract.prototype.destruct = function () {
     }
     this.remove();
 
-    if (this.isModal) {
+    if (this.isModal || this.isModalViewport) {
         this.modalOverlay.remove();
     }
 };

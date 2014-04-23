@@ -82,6 +82,7 @@
     to { -webkit-transform: scale(.5,.5); opacity: 0; }
 }
 
+/* viewport full-size window */
 .window.viewport-fullsize.expand {
     animation-name: viewportFullsizeExpand;
     -webkit-animation-name: viewportFullsizeExpand;
@@ -105,4 +106,45 @@
 @-webkit-keyframes viewportFullsizeCollapse {
     from { -webkit-transform: scale(1,1); opacity: 1; }
     to { -webkit-transform: scale(.5,.5); opacity: 0; }
+}
+
+/* drawer */
+
+.window-drawer.show {
+    animation-duration: .2s;
+    animation-name: drawerShow;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: drawerShow;
+    left: 0;
+}
+
+.window-drawer.hide {
+    animation-duration: .2s;
+    animation-name: drawerHide;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: drawerHide;
+    left: -65%;
+}
+@keyframes drawerShow {
+    from { left: -65%; }
+    to { left: 0 }
+}
+@keyframes drawerHide {
+    from { left: 0; }
+    to { left: -65% }
+}
+@-webkit-keyframes drawerShow {
+    from { left: -65%; }
+    to { left: 0 }
+}
+@-webkit-keyframes drawerHide {
+    from { left: 0; }
+    to { left: -65% }
+}
+
+.drawer-indicator {
+    transition: width .2s;
+}
+#menubar .drawer-indicator.collapse {
+    width: 5px;
 }
