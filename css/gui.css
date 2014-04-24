@@ -18,10 +18,9 @@ ul#menubar #refresh {
 }
 
 .window-drawer {
-    padding-top: 20px;
 	width: 65%;
 	overflow: visible;
-	height: calc(100% - 70px);
+	height: calc(100% - 50px);
 	position:absolute;
 	top: 50px;
     left: auto;
