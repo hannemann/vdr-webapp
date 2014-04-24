@@ -123,6 +123,8 @@ Gui.Config.View.Settings.prototype.decorateField = function (id, field) {
         $('<span class="info">').text(field.info).appendTo(field.dom);
     }
 
+    field.disabled = false;
+
     if ("undefined" !== typeof field.depends) {
 
         if (!this.fields[field.depends].getValue()) {
@@ -130,10 +132,6 @@ Gui.Config.View.Settings.prototype.decorateField = function (id, field) {
             field.dom.addClass('disabled');
             field.disabled = true;
         }
-
-    } else {
-
-        field.disabled = false;
     }
 
     return field;
