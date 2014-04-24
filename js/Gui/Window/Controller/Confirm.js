@@ -1,29 +1,55 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.Controller.Confirm = function () {};
 
+/**
+ * @type {Gui.Window.Controller.Input}
+ */
 Gui.Window.Controller.Confirm.prototype = new Gui.Window.Controller.Input();
 
+/**
+ * @type {string}
+ */
 Gui.Window.Controller.Confirm.prototype.cacheKey = 'id';
 
+/**
+ * initialize view
+ */
 Gui.Window.Controller.Confirm.prototype.init = function () {
 
     this.eventPrefix = 'window.confirm';
 
     this.view = this.module.getView('Confirm', this.data);
 
-    Gui.Window.Controller.Input.prototype.init.call(this);
+    Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
 
+/**
+ * add event listeners
+ */
 Gui.Window.Controller.Confirm.prototype.addObserver = function () {
 
-    this.view.ok.on('click', $.proxy(this.ok, this));
+    this.view.ok.one('click', $.proxy(this.okAction, this));
 
-    this.view.cancel.on('click', $.proxy(this.cancel, this));
+    this.view.cancel.one('click', $.proxy(this.cancel, this));
 
     $(window).on("resize", $.proxy(this.setPosition, this));
 };
 
-Gui.Window.Controller.Confirm.prototype.ok = function () {
+/**
+ * remove event listeners
+ */
+Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
+
+    $(window).off("resize", $.proxy(this.setPosition, this));
+};
+
+/**
+ * handle ok click
+ */
+Gui.Window.Controller.Confirm.prototype.okAction = function () {
 
     $.event.trigger({
         "type" : "window.confirm.confirm"

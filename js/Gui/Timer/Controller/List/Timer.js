@@ -42,5 +42,37 @@ Gui.Timer.Controller.List.Timer.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-//    this.addObserver();
+    this.addObserver();
+};
+
+/**
+ * add event listeners
+ */
+Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
+
+    this.view.node.on('click', $.proxy(this.editAction, this));
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
+
+    this.view.node.off('click');
+};
+
+/**
+ * request edit window
+ */
+Gui.Timer.Controller.List.Timer.prototype.editAction = function () {
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "TimerEdit",
+            "data" : {
+                "resource" : this.dataModel.data
+            }
+        }
+    })
 };

@@ -6,21 +6,44 @@ Gui.Window.View.Recording = function () {};
  */
 Gui.Window.View.Recording.prototype = new Gui.Window.View.Abstract();
 
+/**
+ * @type {string}
+ */
 Gui.Window.View.Recording.prototype.cacheKey = 'number';
 
+/**
+ * @type {boolean}
+ */
 Gui.Window.View.Recording.prototype.isModal = true;
 
+/**
+ * @type {boolean}
+ */
+Gui.Window.View.Recording.prototype.isModalTransparent = true;
+
+/**
+ * @type {boolean}
+ */
 Gui.Window.View.Recording.prototype.hasHeader = true;
 
-Gui.Window.View.Recording.prototype.hasCloseButton = true;
-
+/**
+ * render
+ */
 Gui.Window.View.Recording.prototype.render = function () {
 
-    this.addClasses().decorateHeader().decorateBody();
+    this.addClasses().decorateHeader();
+
+    this.node.addClass('collapsed');
 
     Gui.Window.View.Abstract.prototype.render.call(this);
+
+    this.node.toggleClass('collapsed expand');
 };
 
+/**
+ * add class names
+ * @returns {Gui.Window.View.Recording}
+ */
 Gui.Window.View.Recording.prototype.addClasses = function () {
 
     this.node.addClass('window-recording clearer');
@@ -28,6 +51,10 @@ Gui.Window.View.Recording.prototype.addClasses = function () {
     return this;
 };
 
+/**
+ * add title and details
+ * @returns {Gui.Window.View.Recording}
+ */
 Gui.Window.View.Recording.prototype.decorateHeader = function () {
 
     this.addTitle().addDetails();
@@ -35,6 +62,10 @@ Gui.Window.View.Recording.prototype.decorateHeader = function () {
     return this;
 };
 
+/**
+ * add Title
+ * @returns {Gui.Window.View.Recording}
+ */
 Gui.Window.View.Recording.prototype.addTitle = function () {
 
     this.title = $('<h2 class="window-title left">')
@@ -44,6 +75,10 @@ Gui.Window.View.Recording.prototype.addTitle = function () {
     return this;
 };
 
+/**
+ * add details
+ * @returns {Gui.Window.View.Recording}
+ */
 Gui.Window.View.Recording.prototype.addDetails = function () {
 
     this.details = $('<ul class="window-header-details">')
@@ -63,13 +98,6 @@ Gui.Window.View.Recording.prototype.addDetails = function () {
     $('<li>')
         .text(this.getDurationString())
         .appendTo(this.details);
-
-    return this;
-};
-
-Gui.Window.View.Recording.prototype.decorateBody = function () {
-
-
 
     return this;
 };
@@ -122,6 +150,10 @@ Gui.Window.View.Recording.prototype.renderToolsTab = function () {
     return Gui.Window.View.Broadcast.prototype.renderToolsTab.apply(this);
 };
 
+/**
+ * get web tab configuration
+ * @returns {*|{imdb: {dom: string, callback: string}}}
+ */
 Gui.Window.View.Recording.prototype.getWebConfig = function () {
 
     var webConfig = Gui.Window.View.Broadcast.prototype.getWebConfig.apply(this);
@@ -134,7 +166,7 @@ Gui.Window.View.Recording.prototype.getWebConfig = function () {
     return webConfig;
 };
 /**
- * render contents of tool tab
+ * render contents of web tab
  * return {jQuery}
  */
 Gui.Window.View.Recording.prototype.renderWebTab = function () {
@@ -142,6 +174,10 @@ Gui.Window.View.Recording.prototype.renderWebTab = function () {
     return Gui.Window.View.Broadcast.prototype.renderWebTab.apply(this);
 };
 
+/**
+ * retrieve tool tab configuration
+ * @returns {object}
+ */
 Gui.Window.View.Recording.prototype.getToolsConfig = function () {
 
     var deleteButton, deleteText, me = this;
@@ -161,25 +197,9 @@ Gui.Window.View.Recording.prototype.getToolsConfig = function () {
             },
             "callback":function () {
 
-              VDRest.Rest.actions.deleteRecording(me, $.proxy(me.handleDelete, me));
+                var controller = me.module.getController('Recording', me.keyInCache);
+                VDRest.Rest.actions.deleteRecording(me, $.proxy(controller.deleteAction, controller));
             }
         }
     }
-};
-
-Gui.Window.View.Recording.prototype.handleDelete = function () {
-
-    var model = VDRest.app.getModule('VDRest.Recordings').getModel(
-            'List.Recording',
-            this.keyInCache
-        ),
-        view = VDRest.app.getModule('Gui.Recordings').getView('List.Recording', this.keyInCache);
-
-    VDRest.app.getModule('VDRest.Recordings').cache.invalidateAllTypes(model);
-
-    VDRest.app.getModule('Gui.Recordings').cache.invalidateAllTypes(view);
-
-    view.destruct();
-
-    this.destruct();
 };

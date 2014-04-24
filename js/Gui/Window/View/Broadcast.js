@@ -22,21 +22,20 @@ Gui.Window.View.Broadcast.prototype.cacheKey = 'channel/id';
  */
 Gui.Window.View.Broadcast.prototype.hasHeader = true;
 
+/**
+ * @type {boolean}
+ */
 Gui.Window.View.Broadcast.prototype.isModal = true;
 
-Gui.Window.View.Broadcast.prototype.isModalTransparent = true;
-
 /**
- * @type {string}
+ * @type {boolean}
  */
-Gui.Window.View.Broadcast.prototype.hasCloseButton = true;
+Gui.Window.View.Broadcast.prototype.isModalTransparent = true;
 
 /**
  * add components, call render method
  */
 Gui.Window.View.Broadcast.prototype.render = function () {
-
-    var me = this;
 
     this.addClasses();
 
@@ -58,9 +57,13 @@ Gui.Window.View.Broadcast.prototype.render = function () {
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 
-    me.node.toggleClass('collapsed expand');
+    this.node.toggleClass('collapsed expand');
 };
 
+/**
+ * add class names
+ * @returns {Gui.Window.View.Broadcast}
+ */
 Gui.Window.View.Broadcast.prototype.addClasses = function () {
 
     var classNames = ['broadcast'];
@@ -117,7 +120,10 @@ Gui.Window.View.Broadcast.prototype.getTabConfig = function () {
     }
 };
 
-
+/**
+ * retrieve tools tab configuration
+ * @returns {{record: {dom: "dom", callback: "callback"}}}
+ */
 Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
 
     var recordButton, recordText, broadcast;
@@ -164,6 +170,10 @@ Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
     }
 };
 
+/**
+ * retrieve web tab configuration
+ * @returns {{imdb: {dom: "dom", callback: "callback"}}}
+ */
 Gui.Window.View.Broadcast.prototype.getWebConfig = function () {
 
     return {
@@ -206,6 +216,11 @@ Gui.Window.View.Broadcast.prototype.renderToolsTab = function () {
 
     return dom;
 };
+
+/**
+ * render contents of web tab
+ * @returns {jQuery}
+ */
 Gui.Window.View.Broadcast.prototype.renderWebTab = function () {
 
     var i, dom, button, config = this.getWebConfig();
@@ -320,6 +335,10 @@ Gui.Window.View.Broadcast.prototype.addComponents = function () {
     return this;
 };
 
+/**
+ * handle timer exists
+ * @param {bool} exists
+ */
 Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
 
     if (exists) {
@@ -331,6 +350,10 @@ Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
     }
 };
 
+/**
+ * handle timer active
+ * @param {bool} active
+ */
 Gui.Window.View.Broadcast.prototype.handleTimerActive = function (active) {
 
     if (active) {
@@ -340,17 +363,4 @@ Gui.Window.View.Broadcast.prototype.handleTimerActive = function (active) {
 
         this.node.removeClass('timer-active');
     }
-};
-
-Gui.Window.View.Broadcast.prototype.destruct = function () {
-
-    var me = this;
-    // apply animation
-    this.node.toggleClass('collapse expand');
-    // remove on animation end
-    this.node.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-
-        Gui.Window.View.Abstract.prototype.destruct.call(me);
-    });
-
 };

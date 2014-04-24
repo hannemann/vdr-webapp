@@ -1,6 +1,12 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.Controller.Broadcast = function () {};
 
+/**
+ * @type {Gui.Window.Controller.Abstract}
+ */
 Gui.Window.Controller.Broadcast.prototype = new Gui.Window.Controller.Abstract();
 
 /**
@@ -9,6 +15,9 @@ Gui.Window.Controller.Broadcast.prototype = new Gui.Window.Controller.Abstract()
  */
 Gui.Window.Controller.Broadcast.prototype.cacheKey = 'channel/id';
 
+/**
+ * initialize view and view model
+ */
 Gui.Window.Controller.Broadcast.prototype.init = function () {
 
     this.eventPrefix = 'window.broadcast.' + this.data.channel + '/' + this.data.id;
@@ -29,6 +38,9 @@ Gui.Window.Controller.Broadcast.prototype.init = function () {
 
 };
 
+/**
+ * dispatch
+ */
 Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
@@ -36,24 +48,55 @@ Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {
     this.addObserver();
 };
 
-// TODO: move logic to own methods
+/**
+ * add event listeners
+ */
 Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
-
-    var me = this;
 
     if (this.view.hasImages()) {
 
-        this.view.image.on('click', function () {
-
-            me.view.animateImage();
-        });
+        this.view.image.on('click', $.proxy(this.animateImageAction, this));
     }
 
-    $(document).on('timer-changed.' + this.keyInCache, function () {
-
-        me.view.handleTimerExists(me.data.dataModel.data.timer_exists);
-        me.view.handleTimerActive(me.data.dataModel.data.timer_active);
-    });
+    $(document).on('timer-changed.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
+};
+/**
+ * add event listeners
+ */
+Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
+
+    if (this.view.hasImages()) {
+
+        this.view.image.off('click');
+    }
+
+    $(document).off('timer-changed.' + this.keyInCache);
+};
+
+Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {
+
+    this.view.animateImage();
+};
+
+Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
+
+    this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
+    this.view.handleTimerActive(this.data.dataModel.data.timer_active);
+};
+
+/**
+ * Destroy
+ */
+Gui.Window.Controller.Broadcast.prototype.destructView = function () {
+
+    var me = this;
+    // apply animation
+    this.view.node.toggleClass('collapse expand');
+    // remove on animation end
+    this.view.node.one(this.animationEndEvents, function () {
+
+        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+    });
 };
