@@ -38,6 +38,8 @@ Gui.Window.Controller.Drawer.prototype.dispatchView = function () {
 
     if (!this.isDispatched) {
 
+        document.getElementsByTagName('BODY')[0].classList.add('drawer');
+
         Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
         this.addObserver();
@@ -55,12 +57,13 @@ Gui.Window.Controller.Drawer.prototype.triggerAnimation = function () {
 
     if (!this.isDispatched) {
 
-        this.view.node.addClass('show');
+        document.getElementsByTagName('BODY')[0].classList.add('show');
         this.isDispatched = true;
 
     } else {
 
-        this.view.node.toggleClass('show hide');
+        document.getElementsByTagName('BODY')[0].classList.remove('show');
+        document.getElementsByTagName('BODY')[0].classList.add('hide');
         this.isDispatched = false;
     }
 };
@@ -164,6 +167,10 @@ Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
+
+    document.getElementsByTagName('BODY')[0].classList.remove('hide');
+
+    document.getElementsByTagName('BODY')[0].classList.remove('drawer');
 
     $.event.trigger({
         "type" : "drawer.statechanged",

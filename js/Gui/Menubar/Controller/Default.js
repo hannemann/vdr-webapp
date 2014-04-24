@@ -167,15 +167,6 @@ Gui.Menubar.Controller.Default.prototype.onDrawerReady = function (e) {
 Gui.Menubar.Controller.Default.prototype.onDrawerAnimate = function () {
 
     this.deferIconClick = true;
-
-    if (this.drawerDispatched) {
-
-        this.view.drawerIndicator.removeClass('collapse');
-
-    } else {
-
-        this.view.drawerIndicator.addClass('collapse');
-    }
 };
 
 /**
