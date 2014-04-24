@@ -13,22 +13,6 @@
     -webkit-animation-duration: .15s;
     -webkit-animation-name: contextMenuHide;
 }
-@keyframes contextMenuShow {
-    from { opacity: 0; transform: scale(.5,.5); }
-    to { opacity: 1; transform: scale(1,1); }
-}
-@keyframes contextMenuHide {
-    from { opacity: 1; transform: scale(1,1); }
-    to { opacity: 0; transform: scale(.5,.5); }
-}
-@-webkit-keyframes contextMenuShow {
-    from { opacity: 0; -webkit-transform: scale(.5,.5); }
-    to { opacity: 1; -webkit-transform: scale(1,1); }
-}
-@-webkit-keyframes contextMenuHide {
-    from { opacity: 1; -webkit-transform: scale(1,1); }
-    to { opacity: 0; -webkit-transform: scale(.5,.5); }
-}
 
 /* Broadcast Image */
 .window-header-image {
@@ -43,6 +27,23 @@
     max-width: 50%;
 }
 
+/* dark modal overlay */
+.show-modal .modal-overlay.dark {
+    animation-duration: .2s;
+    animation-name: showModal;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: showModal;
+    background: rgba(0,0,0,0.5);
+}
+.hide-modal .modal-overlay.dark {
+    animation-duration: .2s;
+    animation-name: hideModal;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: hideModal;
+    background: rgba(0,0,0,0);
+}
+
+/* input, confirm window */
 /* almost full-size window */
 .window.collapsed {
     opacity: 0;
@@ -65,22 +66,6 @@
     -webkit-animation-name: collapse;
     -webkit-transform: scale(.5,.5);
 }
-@keyframes expand {
-    from { transform: scale(.5,.5); opacity: 0; }
-    to { transform: scale(1,1); opacity: 1; }
-}
-@keyframes collapse {
-    from { transform: scale(1,1); opacity: 1; }
-    to { transform: scale(.5,.5); opacity: 0; }
-}
-@-webkit-keyframes expand {
-    from { -webkit-transform: scale(.5,.5); opacity: 0; }
-    to { -webkit-transform: scale(1,1); opacity: 1; }
-}
-@-webkit-keyframes collapse {
-    from { -webkit-transform: scale(1,1); opacity: 1; }
-    to { -webkit-transform: scale(.5,.5); opacity: 0; }
-}
 
 /* viewport full-size window */
 .window.viewport-fullsize.expand {
@@ -91,25 +76,8 @@
     animation-name: viewportFullsizeCollapse;
     -webkit-animation-name: viewportFullsizeCollapse;
 }
-@keyframes viewportFullsizeExpand {
-    from { transform: scale(.5,.5); opacity: 0;  }
-    to { transform: scale(1,1); opacity: 1; }
-}
-@keyframes viewportFullsizeCollapse {
-    from { transform: scale(1,1); opacity: 1; }
-    to { transform: scale(.5,.5); opacity: 0; }
-}
-@-webkit-keyframes viewportFullsizeExpand {
-    from { -webkit-transform: scale(.5,.5); opacity: 0;  }
-    to { -webkit-transform: scale(1,1); opacity: 1; }
-}
-@-webkit-keyframes viewportFullsizeCollapse {
-    from { -webkit-transform: scale(1,1); opacity: 1; }
-    to { -webkit-transform: scale(.5,.5); opacity: 0; }
-}
 
 /* drawer */
-
 .drawer.show .window-drawer {
     animation-duration: .6s;
     animation-name: drawerShow;
@@ -118,7 +86,6 @@
     -webkit-animation-name: drawerShow;
     -webkit-transform: translateX(0px);
 }
-
 .drawer.hide .window-drawer {
     animation-duration: .6s;
     animation-name: drawerHide;
@@ -127,59 +94,26 @@
     -webkit-animation-name: drawerHide;
     -webkit-transform: translateX(-100%);
 }
-@keyframes drawerShow {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0px); }
-}
-@keyframes drawerHide {
-    from { transform: translateX(0px); }
-    to { transform: translateX(-100%); }
-}
-@-webkit-keyframes drawerShow {
-    from { -webkit-transform: translateX(-100%); }
-    to { -webkit-transform: translateX(0px); }
-}
-@-webkit-keyframes drawerHide {
-    from { -webkit-transform: translateX(0px); }
-    to { -webkit-transform: translateX(-100%); }
-}
-
 .drawer-indicator {
     transition: width .6s;
 }
 .drawer.show #menubar .drawer-indicator {
     width: 5px;
 }
-.drawer #modal-overlay {
+.drawer .modal-overlay {
     background: rgba(0,0,0,0);
 }
-.drawer.show #modal-overlay {
+.drawer.show .modal-overlay {
     animation-duration: .6s;
-    animation-name: drawerShowModal;
+    animation-name: showModal;
     -webkit-animation-duration: .6s;
-    -webkit-animation-name: drawerShowModal;
+    -webkit-animation-name: showModal;
     background: rgba(0,0,0,0.5);
 }
-.drawer.hide #modal-overlay {
+.drawer.hide .modal-overlay {
     animation-duration: .6s;
-    animation-name: drawerHideModal;
+    animation-name: hideModal;
     -webkit-animation-duration: .6s;
-    -webkit-animation-name: drawerHideModal;
+    -webkit-animation-name: hideModal;
     background: rgba(0,0,0,0);
-}
-@keyframes drawerShowModal {
-    from { background: rgba(0,0,0,0); }
-    to { background: rgba(0,0,0,0.5); }
-}
-@keyframes drawerHideModal {
-    from { background: rgba(0,0,0,0.5); }
-    to { background: rgba(0,0,0,0); }
-}
-@-webkit-keyframes drawerShowModal {
-    from { background: rgba(0,0,0,0); }
-    to { background: rgba(0,0,0,0.5); }
-}
-@-webkit-keyframes drawerHideModal {
-    from { background: rgba(0,0,0,0.5); }
-    to { background: rgba(0,0,0,0); }
 }

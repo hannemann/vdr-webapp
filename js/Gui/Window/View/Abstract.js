@@ -44,6 +44,11 @@ Gui.Window.View.Abstract.prototype.render = function () {
         this.addModalOverlay(VDRest.app.getModule('Gui.Viewport').getView('Default'));
     }
 
+    if (!this.isModalTransparent) {
+
+        $('body').addClass('show-modal');
+    }
+
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
@@ -55,10 +60,10 @@ Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
      */
     parentView = parentView || $('body');
 
-    this.modalOverlay = $('<div id="modal-overlay">').appendTo(parentView.node);
+    this.modalOverlay = $('<div class="modal-overlay dark">').appendTo(parentView.node);
 
     if (this.isModalTransparent) {
-        this.modalOverlay.addClass('transparent');
+        this.modalOverlay.toggleClass('dark transparent');
     }
 
     this.parentView = {
@@ -129,6 +134,8 @@ Gui.Window.View.Abstract.prototype.getToolButton = function (options) {
  */
 Gui.Window.View.Abstract.prototype.destruct = function () {
 
+    var me=this;
+
     $.event.trigger({
         "type" : "destruct.window-" + this.keyInCache
     });
@@ -142,6 +149,23 @@ Gui.Window.View.Abstract.prototype.destruct = function () {
     this.remove();
 
     if (this.isModal || this.isModalViewport) {
-        this.modalOverlay.remove();
+
+        if (!this.isModalTransparent) {
+
+            this.modalOverlay.on('webkitAnimationEnd MSAnimationEnd oanimationend animationend', function (e) {
+
+                if (e.target === me.modalOverlay.get(0)) {
+
+                    me.modalOverlay.remove();
+                    $('body').removeClass('hide-modal');
+                }
+            });
+
+            $('body').addClass('hide-modal show-modal');
+
+        } else {
+
+            this.modalOverlay.remove();
+        }
     }
 };

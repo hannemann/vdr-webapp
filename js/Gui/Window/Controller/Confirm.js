@@ -57,3 +57,18 @@ Gui.Window.Controller.Confirm.prototype.okAction = function () {
 
     history.back();
 };
+
+/**
+ * Destroy
+ */
+Gui.Window.Controller.Confirm.prototype.destructView = function () {
+
+    var me = this;
+    // apply animation
+    this.view.node.toggleClass('collapse expand');
+    // remove on animation end
+    this.view.node.one(this.animationEndEvents, function () {
+
+        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+    });
+};

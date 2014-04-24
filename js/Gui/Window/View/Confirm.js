@@ -14,7 +14,11 @@ Gui.Window.View.Confirm.prototype.render = function () {
 
     this.addClasses().addMessage().addButtons();
 
+    this.node.addClass('collapsed');
+
     Gui.Window.View.Abstract.prototype.render.call(this);
+
+    this.node.toggleClass('collapsed expand');
 };
 
 Gui.Window.View.Confirm.prototype.addMessage = function () {
