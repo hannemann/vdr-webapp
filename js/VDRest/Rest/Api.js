@@ -48,18 +48,18 @@ VDRest.Rest.Api.prototype.getBaseUrl = function () {
 
 /**
  * fetch data from VDRest.Rest.Api api
- * @param url {string}
- * @param [method] {string}
- * @param [callback] {Function}
+ * @param options {object}
  */
 VDRest.Rest.Api.prototype.load = function (options) {
 
     var url = "undefined" !== typeof options.url && "undefined" !== typeof this.urls[options.url] ?
-        this.urls[options.url] : this.urls.load, me=this,
+        this.urls[options.url] : this.urls.load, me=this, data,
 
         method = options.method || 'GET',
 
-        callback = options.callback || undefined;
+        callback = options.callback || undefined,
+
+        async = options.async !== false;
 
     VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
 
@@ -78,15 +78,48 @@ VDRest.Rest.Api.prototype.load = function (options) {
 
         this.cachedResponse = false;
         this.refreshCache = false;
+
+        if (!async) {
+
+            data = $.ajax({
+                "url": this.getBaseUrl() + url,
+                "method": method,
+                "async" : false
+            });
+
+            this.onComplete(data);
+
+            if (data.readyState === 4 && data.status === 200) {
+
+                me.responseCache[url] = data;
+                "function" === typeof callback && callback(data);
+
+                return data;
+
+            } else {
+
+                this.onError(data);
+
+                return false;
+            }
+        }
+
         $.ajax({
+
             "url": this.getBaseUrl() + url,
             "method": method
+
         }).done(function (result) {
+
             me.responseCache[url] = result;
             callback(result);
+
         }).fail(function () {
+
             me.onError.apply(me, arguments)
+
         }).always(function () {
+
             me.onComplete.apply(me, arguments)
         });
     }

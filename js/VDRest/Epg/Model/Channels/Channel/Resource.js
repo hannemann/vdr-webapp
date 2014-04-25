@@ -24,3 +24,15 @@ VDRest.Epg.Model.Channels.Channel.Resource.prototype.urls = {
 
     "channelList" : "channels/.json"
 };
+
+/**
+ * set url needed to load single channel
+ * @param channel
+ * @returns {VDRest.Epg.Model.Channels.Channel.Resource}
+ */
+VDRest.Epg.Model.Channels.Channel.Resource.prototype.setIdUrl = function (channel) {
+
+    this.urls.byId = 'channels/' + channel + '.json';
+
+    return this;
+};

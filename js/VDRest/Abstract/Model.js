@@ -129,6 +129,10 @@ VDRest.Abstract.Model.prototype.collectionIterator = function (callback) {
     }
 };
 
+/**
+ * delete model from collection
+ * @param model
+ */
 VDRest.Abstract.Model.prototype.deleteFromCollection = function (model) {
 
     var i = 0, l = this.collection.length;
@@ -142,6 +146,9 @@ VDRest.Abstract.Model.prototype.deleteFromCollection = function (model) {
     }
 };
 
+/**
+ * flush collection
+ */
 VDRest.Abstract.Model.prototype.flushCollection = function () {
 
     this.collection = [];
@@ -154,4 +161,45 @@ VDRest.Abstract.Model.prototype.flushCollection = function () {
 VDRest.Abstract.Model.prototype.getCollection = function () {
 
     return this.collection;
+};
+
+/**
+ * load single data set identified by cache key
+ * create collection model instance if not cached already
+ * @param cacheKey
+ * @returns {boolean}
+ */
+VDRest.Abstract.Model.prototype.loadCollectionItem = function (cacheKey) {
+
+    var model = false, data;
+
+    if ("undefined" !== typeof this.collectionItemModel) {
+
+        if (
+            "undefined" !== typeof this.cache[this.collectionItemModel]
+            && this.cache[this.collectionItemModel][cacheKey]
+        ) {
+
+            model = this.cache[this.collectionItemModel][cacheKey];
+
+        } else {
+
+            data = this.module.getResource(this.collectionItemModel, cacheKey)
+                .setIdUrl(cacheKey)
+                .load({
+                    "async" : false,
+                    "url" : "byId"
+                });
+
+            if (data) {
+
+                model = this.module.getModel(
+                    this.collectionItemModel,
+                    data.responseJSON[this.resultCollection][0]
+                );
+            }
+        }
+    }
+
+    return model;
 };

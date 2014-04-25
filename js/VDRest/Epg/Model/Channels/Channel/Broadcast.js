@@ -49,6 +49,11 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype._class = 'VDRest.Epg.Model
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.cacheKey = 'channel/id';
 
 /**
+ * @type {string}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.resultJSON = 'events';
+
+/**
  * indicates if object cache entry can be invalidated
  * @type {boolean}
  */

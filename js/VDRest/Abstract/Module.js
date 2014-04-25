@@ -35,6 +35,66 @@ VDRest.Abstract.Module.prototype.init = function () {
 /**
  * retrieve model
  * @param {String} type
+ * @param {Object} cacheKey
+ * @return {*}
+ */
+VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey) {
+
+    var cache = this.cache.getStore('Model', type),
+        path = this.namespace + '.' + this.name + '.Model.' + type,
+        constructor,
+        data,
+        model;
+
+    if ("undefined" !== typeof cache[cacheKey]) {
+
+        return cache[cacheKey];
+    }
+
+    constructor = VDRest.Lib.factory.getConstructor(path);
+
+    data = this.getResource(type, this.getResourceId(path, cacheKey))
+        .setIdUrl(cacheKey)
+        .load({
+            "async" : false,
+            "url" : "byId"
+        });
+
+    if (data) {
+
+        model = this.getModel(
+            type,
+            data.responseJSON[constructor.prototype.resultJSON][0]
+        );
+    }
+
+    return model;
+};
+
+/**
+ *
+ * @param path
+ * @param cacheKey
+ * @returns {string}
+ */
+VDRest.Abstract.Module.prototype.getResourceId = function (path, cacheKey) {
+
+    var resourcePath = path + '.Resource',
+        resourceConstructor,
+        resourceCacheKey;
+
+    resourceConstructor = VDRest.Lib.factory.getConstructor(resourcePath);
+    resourceCacheKey = resourceConstructor.prototype.cacheKey;
+
+    return cacheKey
+        .split(this.cache.cacheKeySeparator)
+        .slice(0, resourceCacheKey.split(this.cache.cacheKeySeparator).length)
+        .join(this.cache.cacheKeySeparator);
+};
+
+/**
+ * retrieve model
+ * @param {String} type
  * @param {Object} [data]
  * @return {*}
  */
@@ -44,7 +104,7 @@ VDRest.Abstract.Module.prototype.getModel = function (type, data) {
 };
 
 /**
- * retrieve viewmodel
+ * retrieve viewModel
  * @param {String} type
  * @param {Object} [data]
  * @return {*}
@@ -88,6 +148,21 @@ VDRest.Abstract.Module.prototype.getResource = function (type, data) {
 };
 
 /**
+ * retrieve uninitialized instance
+ * @param classType
+ * @param type
+ * @returns {*|_class}
+ */
+//VDRest.Abstract.Module.prototype.getRaw = function (classType, type) {
+//
+//    var path = this.namespace + '.' + this.name + '.' + classType + '.' + type,
+//        instance = VDRest.Lib.factory.getClass(path);
+//    instance.module = this;
+//
+//    return instance;
+//};
+
+/**
  * retrieve initialized instance
  * @param {String} classType
  * @param {String} type
@@ -126,7 +201,7 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
     var cache = this.cache.getStore(type),
         cacheKey = _class,
         path = this.namespace + '.' + this.name + '.' + type + '.' + _class,
-        constructor = VDRest.Lib.factory.getConstructor(path);
+        constructor = VDRest.Lib.factory.getConstructor(path), instance;
 
     if ("undefined" !== typeof constructor.prototype.cacheKey || (data && data.cacheKey)) {
 
@@ -143,13 +218,29 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
 
     if ("undefined" === typeof cache[cacheKey]) {
 
-        cache[cacheKey] = VDRest.Lib.factory.getClass(path);
-        cache[cacheKey].keyInCache = cacheKey;
-        cache[cacheKey].cache = cache;
-        cache[cacheKey]._class = _class;
+        instance = VDRest.Lib.factory.getClass(path);
+        cache = this.addToCache(cache, cacheKey, instance, _class);
     }
 
     return cache[cacheKey];
+};
+
+/**
+ * store instance in cache
+ * @param {object} cache
+ * @param {string} key
+ * @param {VDRest.Lib.Object} instance
+ * @param {string} _class
+ * @returns {*}
+ */
+VDRest.Abstract.Module.prototype.addToCache = function (cache, key, instance, _class) {
+
+    cache[key] = instance;
+    cache[key].keyInCache = key;
+    cache[key].cache = cache;
+    cache[key]._class = _class;
+
+    return cache;
 };
 
 /**
@@ -160,8 +251,8 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
  * a cacheKey property.
  * Usually an item of a collection
  *
- * @param {(string|number)} id
- * @param {string}          cacheKey
+ * @param {(string|number)}     id
+ * @param {string}              cacheKey
  * @returns {object}
  */
 VDRest.Abstract.Module.prototype.getInitData = function (id, cacheKey) {

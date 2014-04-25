@@ -20,7 +20,7 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype._class = 'VDRest.
  * key of model in cache
  * @type {string}
  */
-VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.cacheKey = 'channelId';
+VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.cacheKey = 'channel_id';
 
 /**
  * number of seconds to add to starting point of time if broadcasts are loaded
@@ -34,7 +34,7 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan =
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.init = function () {
 
-    this.baseUrl = "events/" + this.data.channelId + ".json?";
+    this.baseUrl = "events/" + this.data.channel_id + ".json?";
     this.urls = {};
 };
 
@@ -74,6 +74,20 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setUrl = function
         + "from=" + _from
         + "&start=0"
         + "&timespan=" + timeSpan;
+
+    return this;
+};
+
+/**
+ * set id and channel of requested broadcast
+ * @param {string} cacheKey
+ * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast.Resource}
+ */
+VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setIdUrl = function (cacheKey) {
+
+    var keys = cacheKey.split('/');
+
+    this.urls.byId = 'events/' + keys[0] + '/' + keys[1] + '.json';
 
     return this;
 };
