@@ -36,7 +36,7 @@ Gui.Window.ViewModel.Broadcast.prototype.init = function () {
     this.resource = this.data.resource.data;
     this.view = this.data.view;
 
-    this.initViewMethods(this.data.view, this.resource);
+    this.initViewMethods();
 
     this.view.getStartTime = function () {
 

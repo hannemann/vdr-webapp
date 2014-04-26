@@ -88,13 +88,14 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.setDates = function () {
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.setImages = function () {
 
-    var i = 0, l = this.data.images;
+    var i = 0, l = this.data.images, baseUrl;
     if (i < l) {
 
+        baseUrl = VDRest.Rest.Api.prototype.getBaseUrl();
         this.data.images = [];
         for (i;i<l;i++) {
 
-            this.data.images.push(this.data.channelObj.baseUrl + 'events/image/' + this.data.id + '/' + i);
+            this.data.images.push(baseUrl + 'events/image/' + this.data.id + '/' + i);
         }
     }
 };

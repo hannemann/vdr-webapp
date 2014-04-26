@@ -17,22 +17,36 @@ VDRest.Abstract.ViewModel.prototype = new VDRest.Lib.Object();
 
 /**
  * add magic methods to view
+ *
+ * @param {object} [resource] alternate resource
+ * @param {string} [prefix]  prefix for methods
  */
-VDRest.Abstract.ViewModel.prototype.initViewMethods = function () {
+VDRest.Abstract.ViewModel.prototype.initViewMethods = function (resource, prefix) {
 
-    var i, fragment, me = this;
+    var i, fragment, name;
 
-    for (i in this.resource) {
+    resource = resource || this.resource;
 
-        if (this.resource.hasOwnProperty(i)) {
+    for (i in resource) {
 
-            fragment = this.getMethodFragment(i);
+        if (resource.hasOwnProperty(i)) {
+
+            if (prefix) {
+
+                name = prefix + '_' + i;
+
+            } else {
+
+                name = i;
+            }
+
+            fragment = this.getMethodFragment(name);
 
             this.data.view['get' + fragment] = function (x) {
 
                 return function () {
 
-                    return me.resource[x];
+                    return resource[x];
                 }
             }(i);
 
@@ -40,17 +54,7 @@ VDRest.Abstract.ViewModel.prototype.initViewMethods = function () {
 
                 return function (value) {
 
-                    $.event.trigger({
-                        "type" : 'data-changed.' + me.data.resource.keyInCache,
-                        "payload" : {
-                            "key" : x,
-                            "new" : value,
-                            "old" : me.resource[x],
-                            "targetModel" : me.data.resource
-                        }
-                    });
-
-                    me.resource[x] = value;
+                    resource[x] = value;
 
                     return this;
                 }
@@ -60,7 +64,7 @@ VDRest.Abstract.ViewModel.prototype.initViewMethods = function () {
 
                 return function () {
 
-                    return !! me.resource[x];
+                    return !! resource[x];
                 }
             }(i);
         }

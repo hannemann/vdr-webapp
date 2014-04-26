@@ -31,7 +31,7 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.init = function () {
 
     VDRest.Helper.prototype.parseDescription.call(this, this.resource.description);
 
-    this.initViewMethods(this.data.view, this.data.resource);
+    this.initViewMethods();
 };
 
 /**
