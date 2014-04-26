@@ -72,6 +72,9 @@
 .window-header-components li {
     margin-left: 5px;
 }
+.window-header .additional-info {
+    clear: both;
+}
 
 .body .details {
 }

@@ -64,20 +64,7 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
 
         var item = me.backend.getItem(name);
 
-        if ("boolean" === dataType) {
-
-            return item ? eval(item) : false;
-        }
-
-        if ("string" === dataType) {
-
-            return item ? me.backend.getItem(name).toString() : '';
-        }
-
-        if ("number" === dataType) {
-
-            return item ? parseFloat(me.backend.getItem(name)) : 0;
-        }
+        return item;
     };
 
     this.data.view['set' + fragment] = function (v) {

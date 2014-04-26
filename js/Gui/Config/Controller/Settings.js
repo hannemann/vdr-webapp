@@ -52,7 +52,7 @@ Gui.Config.Controller.Settings.prototype.addObserver = function () {
                 this.addClickHandler(this.view.fields[i]);
             }
 
-            if (this.hasDependencies(i) && this.view.fields[i].type === 'boolean') {
+            if (this.view.fields[i].type === 'boolean') {
 
                 this.addChangeHandler(this.view.fields[i], i);
             }
@@ -94,7 +94,10 @@ Gui.Config.Controller.Settings.prototype.addChangeHandler = function (field, fie
 
     field.gui.on('change', function () {
 
-        me.handleDependency(field, fieldName);
+        if (me.hasDependencies(fieldName)) {
+
+            me.handleDependency(field, fieldName);
+        }
 
         me.persist();
     });

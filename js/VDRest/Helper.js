@@ -127,7 +127,7 @@ VDRest.Helper.prototype.log = function () {
 
     if (VDRest.config.getItem('debug')) {
 
-        console.log(arguments);
+        console.log.apply(console, arguments);
     }
 };
 

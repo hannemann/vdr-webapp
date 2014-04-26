@@ -38,10 +38,27 @@ VDRest.Lib.Config = function () {
      */
 	this.getItem = function (k) {
 
-		var value = storage.getItem(k);
+		var value = storage.getItem(k), type;
+
 		if (!value && typeof this.defaults[k] !== 'undefined') {
 			value = this.defaults[k];
 		}
+
+        if (this.fields[k]) {
+
+            type = this.fields[k].dataType || this.fields[k].type
+
+            if ("number" === type) {
+
+                value = parseFloat(value);
+            }
+
+            if ("boolean" === type) {
+
+                value = value === "true" ? true : false;
+            }
+        }
+
 		return value;
 	};
 
