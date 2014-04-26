@@ -218,9 +218,8 @@ VDRest.Epg.Model.Channels.Channel.prototype.getResource = function () {
 
     return this.module.getResource(this.collectionItemModel, {
 
-        /** add identifier and this to resource */
-        "channel_id":this.getData('channel_id'),
-        "channel" : this
+        /** add identifier to resource */
+        "channel_id":this.getData('channel_id')
 
     });
 };

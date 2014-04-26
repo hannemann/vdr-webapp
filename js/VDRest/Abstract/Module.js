@@ -53,7 +53,7 @@ VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey) {
 
     constructor = VDRest.Lib.factory.getConstructor(path);
 
-    data = this.getResource(type, this.getResourceId(path, cacheKey))
+    data = this.getResource(type, this.getResourceInitData(path, cacheKey))
         .setIdUrl(cacheKey)
         .load({
             "async" : false,
@@ -77,19 +77,22 @@ VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey) {
  * @param cacheKey
  * @returns {string}
  */
-VDRest.Abstract.Module.prototype.getResourceId = function (path, cacheKey) {
+VDRest.Abstract.Module.prototype.getResourceInitData = function (path, cacheKey) {
 
     var resourcePath = path + '.Resource',
         resourceConstructor,
-        resourceCacheKey;
+        resourceCacheKey,
+        resourceId;
 
     resourceConstructor = VDRest.Lib.factory.getConstructor(resourcePath);
     resourceCacheKey = resourceConstructor.prototype.cacheKey;
 
-    return cacheKey
+    resourceId = cacheKey
         .split(this.cache.cacheKeySeparator)
         .slice(0, resourceCacheKey.split(this.cache.cacheKeySeparator).length)
         .join(this.cache.cacheKeySeparator);
+
+    return this.getInitData(resourceId, resourceCacheKey);
 };
 
 /**
