@@ -28,6 +28,8 @@ VDRest.Rest.Actions.prototype.addTimer = function (obj) {
             obj.setData('timer_active', result.timers[0].is_active);
             obj.setData('timer_id', result.timers[0].id);
 
+            result.timers[0].event_id = obj.getData('id');
+
             model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', result.timers[0]);
 
             if (collection.length > 0) {
@@ -109,30 +111,60 @@ VDRest.Rest.Actions.prototype.updateTimer = function (obj) {
 
 VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
 
-    var url = this.getBaseUrl() + '/timers/' + obj.getData('timer_id');
+    var timer_id, url, broadcast;
 
-    $.ajax({
-        "url":url,
-        "type":"DELETE",
-        "success":$.proxy(function () {
+    if (obj instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
 
-            var timer_id = obj.getData('timer_id'),
-                model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', timer_id);
+        timer_id = obj.getData('timer_id');
+        broadcast = obj;
 
-            obj.setData('timer_exists', false);
-            obj.setData('timer_active', false);
-            obj.setData('timer_id', '');
+    } else if (obj instanceof Gui.Window.Controller.TimerEdit) {
 
-            VDRest.app.getModule('VDRest.Timer').getModel('List').deleteFromCollection(model);
-            delete model.cache[model.keyInCache];
+        timer_id = obj.keyInCache;
+        broadcast = obj.broadcast;
+    }
 
-            $.event.trigger({
-                "type" : 'timer-changed.' + obj.keyInCache
-            });
-        }, this),
-        "complete":function (result) {
-            VDRest.helper.log(obj, result);
+    url = this.getBaseUrl() + '/timers/' + timer_id;
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Confirm",
+            "data" : {
+                "message" : "Delete Timer?",
+                "id" : 'delete.timer' + timer_id
+            }
         }
+    });
+
+    $(document).one('window.confirm.confirm', function () {
+
+        setTimeout(function () {
+            $.ajax({
+                "url":url,
+                "type":"DELETE",
+                "success": function () {
+
+                    var model;
+
+                    broadcast.setData('timer_exists', false);
+                    broadcast.setData('timer_active', false);
+                    broadcast.setData('timer_id', '');
+
+                    model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', timer_id);
+                    VDRest.app.getModule('VDRest.Timer').getModel('List').deleteFromCollection(model);
+                    delete model.cache[model.keyInCache];
+
+                    $.event.trigger({
+                        "type" : 'timer-changed.' + obj.keyInCache,
+                        "state" : "deleted"
+                    });
+                },
+                "complete":function (result) {
+                    VDRest.helper.log(obj, result);
+                }
+            });
+        }, 100);
     });
 };
 

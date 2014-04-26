@@ -35,7 +35,7 @@ Gui.Timer.View.List.Timer.prototype.addStartDate = function () {
 
     var date = this.getStartDate(), string = '';
 
-    string += this.helper().getWeekDay(date) + ' ' + this.helper().getDateString(date);
+    string += this.helper().getWeekDay(date, true) + '. ' + this.helper().getDateString(date, true);
 
     return string;
 };

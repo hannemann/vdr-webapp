@@ -43,6 +43,10 @@ Gui.Window.Controller.Confirm.prototype.addObserver = function () {
  */
 Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
 
+    this.view.ok.off('click', $.proxy(this.okAction, this));
+
+    this.view.cancel.off('click', $.proxy(this.cancel, this));
+
     $(window).off("resize", $.proxy(this.setPosition, this));
 };
 
@@ -51,11 +55,21 @@ Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Confirm.prototype.okAction = function () {
 
+    history.back();
+
     $.event.trigger({
         "type" : "window.confirm.confirm"
     });
+};
+
+/**
+ * handle ok click
+ */
+Gui.Window.Controller.Confirm.prototype.cancel = function () {
 
     history.back();
+
+    $(document).off('window.confirm.confirm');
 };
 
 /**

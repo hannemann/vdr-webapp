@@ -71,8 +71,6 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
 
         this.view.image.off('click');
     }
-
-    $(document).off('timer-changed.' + this.keyInCache);
 };
 
 Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {

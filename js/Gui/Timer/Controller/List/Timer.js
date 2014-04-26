@@ -71,6 +71,7 @@ Gui.Timer.Controller.List.Timer.prototype.editAction = function () {
         "payload" : {
             "type" : "TimerEdit",
             "data" : {
+                "id" : this.dataModel.data.id,
                 "resource" : this.dataModel.data
             }
         }

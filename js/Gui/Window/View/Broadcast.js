@@ -159,10 +159,12 @@ Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
                 if (this.hasTimerExists()) {
 
                     VDRest.Rest.actions.deleteTimer(broadcast);
+                    recordText.text('Timer erstellen');
 
                 } else {
 
                     VDRest.Rest.actions.addTimer(broadcast);
+                    recordText.text('Timer löschen');
 
                 }
             }
@@ -266,8 +268,6 @@ Gui.Window.View.Broadcast.prototype.addMainImage = function () {
 /**
  * animate epg image on click
  * @returns {Gui.Window.View.Broadcast}
- *
- * // TODO: use CSS3
  */
 Gui.Window.View.Broadcast.prototype.animateImage = function () {
 
@@ -292,8 +292,7 @@ Gui.Window.View.Broadcast.prototype.animateImage = function () {
  */
 Gui.Window.View.Broadcast.prototype.addDetails = function () {
 
-    this.details = $('<ul class="window-header-details">')
-        .appendTo(this.header);
+    this.details = $('<ul class="window-header-details">');
 
     if (this.hasShortText()) {
 
