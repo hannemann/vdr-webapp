@@ -91,3 +91,17 @@
     from { -webkit-transform: scale(1,1); opacity: 1; }
     to { -webkit-transform: scale(.5,.5); opacity: 0; }
 }
+
+/* broadcast currently recording */
+
+@keyframes recording {
+    0% { color: white; }
+    50% { color: red; }
+    100% { color: white; }
+}
+
+@-webkit-keyframes recording {
+    0% { color: white; }
+    50% { color: red; }
+    100% { color: white; }
+}

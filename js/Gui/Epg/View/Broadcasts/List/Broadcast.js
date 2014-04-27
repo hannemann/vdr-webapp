@@ -62,6 +62,10 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
         this.handleTimerActive(true);
     }
 
+    if (this.getIsRecording()) {
+        this.handleIsRecording(true);
+    }
+
     if (rating) {
 
         this.info.addClass('rating-' + rating);
@@ -141,5 +145,20 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.handleTimerActive = function (a
     } else {
 
         this.node.removeClass('timer-active');
+    }
+};
+
+/**
+ * handle timer is recording
+ * @param recording
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.handleIsRecording = function (recording) {
+
+    if (recording) {
+
+        this.node.addClass('timer-recording');
+    } else {
+
+        this.node.removeClass('timer-recording');
     }
 };

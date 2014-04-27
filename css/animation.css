@@ -117,3 +117,15 @@
     -webkit-animation-name: hideModal;
     background: rgba(0,0,0,0);
 }
+
+/* recording */
+
+/** cpu fries at 90 % :-(
+
+TODO: create fancy animation that doesn't burn my device
+
+.broadcast.timer-recording .content .title {
+    animation: recording 2s infinite;
+    -webkit-animation: recording 2s infinite;
+}
+*/

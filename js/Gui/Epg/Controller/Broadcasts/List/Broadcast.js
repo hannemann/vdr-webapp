@@ -66,4 +66,5 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function ()
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);
+    this.view.handleIsRecording(this.view.getIsRecording());
 };
