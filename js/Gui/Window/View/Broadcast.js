@@ -137,7 +137,7 @@ Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
         "record":{
             "dom":function () {
 
-                var dom = $('<dl class="record-button"></dl>');
+                var dom = $('<dl class="window-button round record-button"></dl>');
                 recordButton = $('<dt>');
                 recordText = $('<dd>');
 
@@ -182,7 +182,7 @@ Gui.Window.View.Broadcast.prototype.getWebConfig = function () {
         "imdb":{
             "dom":function () {
 
-                var dom = $('<dl class="web-button imdb"></dl>'),
+                var dom = $('<dl class="window-button web-button imdb"></dl>'),
                     button = $('<dt><img src="/assets/imdb-logo.png" alt="">'),
                     text = $('<dd>');
 

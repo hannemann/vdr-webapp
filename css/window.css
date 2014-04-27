@@ -88,29 +88,40 @@
 .tools li:nth-child(2n+1) {
     margin-right: 20px;
 }
-.web-button,
-.record-button,
-.delete-button {
+.window-button {
     text-align: center;
+    margin-bottom: 20px;
 }
-.web-button dt,
-.record-button dt,
-.delete-button dt {
+.window-button dt {
     text-align: center;
     margin: 0 auto 5px;
     width: 60px;
     height:60px;
+    font-family: sans-serif;
+}
+.window-button.round dt {
+    border-radius: 30px;
+    background: #404040;
+    box-shadow: 0 0 5px 0 #404040, 0 0 5px #FFFFFF inset;
 }
 .delete-button dt,
 .record-button dt {
-    background: #404040;
-    border-radius: 30px;
     box-shadow: 0 0 5px 0 #FF0000, 0 0 5px #FFFFFF inset;
 }
-.delete-button dt {
-    font-size: 65px;
+.symbol-button dt {
+    font-size: 40px;
     line-height: 63px;
+}
+.delete-button.round dt {
     background: red;
+}
+.activate-button.round.is-active dt {
+    background: green;
+    box-shadow: 0 0 5px 0 green, 0 0 5px #FFFFFF inset;
+}
+.edit-button.round dt {
+    background: rgb(255, 163, 0);
+    box-shadow: 0 0 5px 0 rgb(255, 163, 0), 0 0 5px #FFFFFF inset;
 }
 .web-button dt img {
     width: 100%;

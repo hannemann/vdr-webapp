@@ -186,7 +186,7 @@ Gui.Window.View.Recording.prototype.getToolsConfig = function () {
         "delete":{
             "dom":function () {
 
-                var dom = $('<dl class="delete-button"></dl>');
+                var dom = $('<dl class="window-button round delete-button symbol-button"></dl>');
                 deleteButton = $('<dt>').html('&#10006;');
                 deleteText = $('<dd>');
 

@@ -12,15 +12,17 @@ VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (obj) {
 
     var url = this.getBaseUrl() + '/timers',
         data = new VDRest.Rest.TimerAdapter(obj),
-        method = 'PUT';
+        method = 'PUT',
+        event = 'updated';
 
     // set method
     if ("undefined" === typeof data.timer_id) {
 
-        method = 'POST'
+        method = 'POST';
+        event = 'created';
     }
 
-    VDRest.helper.log(data);
+//    VDRest.helper.log(data);
 
     $.ajax({
         "url" : url,
@@ -28,29 +30,14 @@ VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (obj) {
         "type" : method,
         "success":$.proxy(function (result) {
 
-            var model, collection = VDRest.app.getModule('VDRest.Timer').getModel('List').getCollection();
-
-            obj.setData('timer_exists', true);
-            obj.setData('timer_active', result.timers[0].is_active);
-            obj.setData('timer_id', result.timers[0].id);
-
-            result.timers[0].event_id = obj.getData('id');
-
-            model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', result.timers[0]);
-
-            if (collection.length > 0) {
-
-                collection.push(model);
-                collection.sort(VDRest.Timer.Model.List.prototype.sortByTime);
-            }
-
             $.event.trigger({
-                "type" : 'timer-changed.' + obj.keyInCache
+                "type" : 'timer-' + event + '.' + obj.keyInCache,
+                "payload" : result.timers[0]
             });
 
         }, this),
         "complete":function (result) {
-            VDRest.helper.log(obj, result);
+//            VDRest.helper.log(obj, result);
         }
     });
 };
@@ -90,6 +77,7 @@ VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
                 "url":url,
                 "type":"DELETE",
                 "success": function () {
+                    // TODO: remove logic to update Gui from here!!!!
 
                     var model;
 
@@ -102,26 +90,17 @@ VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
                     delete model.cache[model.keyInCache];
 
                     $.event.trigger({
-                        "type" : 'timer-changed.' + obj.keyInCache,
+                        "type" : 'timer-deleted.' + obj.keyInCache,
                         "state" : "deleted"
                     });
                 },
                 "complete":function (result) {
-                    VDRest.helper.log(obj, result);
+//                    VDRest.helper.log(obj, result);
                 }
             });
         }, 100);
     });
 };
-
-//VDRest.Rest.Actions.prototype.loadTimer = function (obj) {
-//    $.ajax({
-//        "url":"http://"+VDRest.config.getItem('host')+':'+VDRest.config.getItem('port')+"/timers/"+obj.getData('timer_id')+'.json',
-//        "success":function (result) {
-//            obj.timer = result.timers[0];
-//        }
-//    });
-//};
 
 VDRest.Rest.Actions.prototype.deleteRecording = function (obj, callback) {
 
@@ -152,7 +131,7 @@ VDRest.Rest.Actions.prototype.deleteRecording = function (obj, callback) {
                 }
             },
             "complete":function (result) {
-                VDRest.helper.log(obj, result);
+//                VDRest.helper.log(obj, result);
             }
         });
 

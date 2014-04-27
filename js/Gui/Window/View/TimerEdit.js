@@ -278,11 +278,31 @@ Gui.Window.View.TimerEdit.prototype.getToolsConfig = function () {
         "delete":{
             "dom":function () {
 
-                me.deleteButton = $('<dl class="delete-button"></dl>');
+                me.deleteButton = $('<dl class="window-button round delete-button symbol-button"></dl>');
                 button = $('<dt>').html('&#10006;');
                 text = $('<dd>').text('Delete Timer');
 
                 return me.deleteButton.append(button).append(text);
+            }
+        },
+        "edit":{
+            "dom":function () {
+
+                me.activateButton = $('<dl class="window-button round activate-button symbol-button"></dl>');
+                button = $('<dt>').html('&#10003;');
+                text = $('<dd>').text('Activate Timer');
+
+                return me.activateButton.append(button).append(text);
+            }
+        },
+        "activate":{
+            "dom":function () {
+
+                me.editButton = $('<dl class="window-button round edit-button symbol-button"></dl>');
+                button = $('<dt>').html('&#9998;');
+                text = $('<dd>').text('Edit Timer');
+
+                return me.editButton.append(button).append(text);
             }
         }
     }
@@ -298,7 +318,7 @@ Gui.Window.View.TimerEdit.prototype.getWebConfig = function () {
         "imdb":{
             "dom":function () {
 
-                var dom = $('<dl class="web-button imdb"></dl>'),
+                var dom = $('<dl class="window-button web-button imdb"></dl>'),
                     button = $('<dt><img src="/assets/imdb-logo.png" alt="">'),
                     text = $('<dd>');
 
@@ -355,4 +375,15 @@ Gui.Window.View.TimerEdit.prototype.renderWebTab = function () {
     }
 
     return dom;
+};
+
+/**
+ * toggle color and text of activate button
+ * @param active
+ */
+Gui.Window.View.TimerEdit.prototype.handleTimerActive = function (active) {
+
+    this.activateButton.toggleClass('is-active', active);
+
+    this.activateButton.find('dd').text(active ? 'Deactivate Timer' : 'Activate Timer');
 };

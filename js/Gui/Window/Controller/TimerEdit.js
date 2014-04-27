@@ -36,7 +36,7 @@ Gui.Window.Controller.TimerEdit.prototype.init = function () {
         this.view.setHasBroadcast();
     }
 
-    VDRest.helper.log(this.data.resource, this.broadcast);
+//    VDRest.helper.log(this.data.resource, this.broadcast);
 
     this.module.getViewModel('TimerEdit', {
         "id" : this.data.id,
@@ -56,6 +56,8 @@ Gui.Window.Controller.TimerEdit.prototype.dispatchView = function () {
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     this.addObserver();
+
+    this.timerActiveAction();
 };
 
 /**
@@ -70,7 +72,13 @@ Gui.Window.Controller.TimerEdit.prototype.addObserver = function () {
 
     this.view.deleteButton.on('click', $.proxy(this.deleteTimer, this));
 
-    $(document).one('timer-changed.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    this.view.activateButton.on('click', $.proxy(this.toggleActivateTimer, this));
+
+    this.view.editButton.on('click', $.proxy(this.editTimer, this));
+
+    $(document).one('timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+
+    $(document).one('timer-updated.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -87,7 +95,7 @@ Gui.Window.Controller.TimerEdit.prototype.removeObserver = function () {
 
     this.view.deleteButton.off('click', $.proxy(this.deleteTimer, this));
 
-    $(document).off('timer-changed.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    $(document).off('timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 };
 
 /**
@@ -100,6 +108,28 @@ Gui.Window.Controller.TimerEdit.prototype.deleteTimer = function () {
 };
 
 /**
+ * trigger timer activate
+ */
+Gui.Window.Controller.TimerEdit.prototype.toggleActivateTimer = function () {
+
+    this.data.resource.is_active = !this.data.resource.is_active;
+
+    this.timerActiveAction();
+
+    // TODO: für updates das event laden, damit die korrekte anfangzeit an den Adapter übergeben werden kann
+
+    VDRest.Rest.actions.addOrUpdateTimer(this);
+};
+
+/**
+ * trigger timer delete
+ */
+Gui.Window.Controller.TimerEdit.prototype.timerActiveAction = function () {
+
+    this.view.handleTimerActive(this.data.resource.is_active);
+};
+
+/**
  * trigger timer delete
  */
 Gui.Window.Controller.TimerEdit.prototype.destroyTimer = function () {
@@ -107,7 +137,7 @@ Gui.Window.Controller.TimerEdit.prototype.destroyTimer = function () {
     if (this.broadcast instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
 
         // tell epg to delete indicators
-        $.event.trigger('timer-changed.' + this.broadcast.keyInCache);
+        $.event.trigger('timer-deleted.' + this.broadcast.keyInCache);
     }
 
     // delete list entry

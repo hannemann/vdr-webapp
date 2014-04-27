@@ -58,7 +58,9 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
         this.view.image.on('click', $.proxy(this.animateImageAction, this));
     }
 
-    $(document).on('timer-changed.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).on('timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).on('timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).on('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -71,6 +73,9 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
 
         this.view.image.off('click');
     }
+    $(document).off('timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).off('timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).off('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
 };
 
 /**

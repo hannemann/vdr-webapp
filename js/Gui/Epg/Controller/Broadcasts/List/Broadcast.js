@@ -42,13 +42,17 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function () {
 
     this.view.node.on('click', $.proxy(this.handleClick, this));
-    $(document).on('timer-changed.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).on('timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).on('timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).on('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimer, this));
 };
 
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function () {
 
     this.view.node.off('click', $.proxy(this.handleClick, this));
-    $(document).off('timer-changed.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).off('timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).off('timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).off('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimer, this));
 };
 
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function () {
@@ -62,7 +66,29 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function ()
     })
 };
 
-Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function () {
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function (e) {
+
+    var timer = e.payload;
+    var model, collection;
+
+    if (timer) {
+
+        collection = VDRest.app.getModule('VDRest.Timer').getModel('List').getCollection();
+
+        timer.event_id = this.data.dataModel.data.id;
+
+        model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', timer);
+
+        if (collection.length > 0) {
+
+            collection.push(model);
+            collection.sort(VDRest.Timer.Model.List.prototype.sortByTime);
+        }
+
+        this.data.dataModel.data.timer_exists = true;
+        this.data.dataModel.data.timer_active = timer.is_active;
+        this.data.dataModel.data.timer_id = timer.id;
+    }
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);
