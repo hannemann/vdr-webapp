@@ -278,8 +278,8 @@ Gui.Window.View.TimerEdit.prototype.getToolsConfig = function () {
         "delete":{
             "dom":function () {
 
-                me.deleteButton = $('<dl class="record-button"></dl>');
-                button = $('<dt>');
+                me.deleteButton = $('<dl class="delete-button"></dl>');
+                button = $('<dt>').html('&#10006;');
                 text = $('<dd>').text('Delete Timer');
 
                 return me.deleteButton.append(button).append(text);

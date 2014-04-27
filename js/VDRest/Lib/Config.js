@@ -46,7 +46,7 @@ VDRest.Lib.Config = function () {
 
         if (this.fields[k]) {
 
-            type = this.fields[k].dataType || this.fields[k].type
+            type = this.fields[k].dataType || this.fields[k].type;
 
             if ("number" === type) {
 
@@ -55,7 +55,7 @@ VDRest.Lib.Config = function () {
 
             if ("boolean" === type) {
 
-                value = value === "true" ? true : false;
+                value = value === "true";
             }
         }
 
@@ -98,7 +98,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "pixelPerSecond"    :   2/60,
     "streamdevPort"     :   "3000",
     "streamdevParams"   :   "EXT;QUALITY=SLOW",
-    "theme"             :   "default"
+    "theme"             :   "default",
+    "autoVps"           :   false
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -219,7 +220,12 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "timer",
         "type" : "number",
         "label" : "Recording follow up time",
-        "info" : "Follow up time of recording after broadcast ends (milliseconds)"
+        "info" : "Follow up time of recording after broadcast ends (seconds)"
+    },
+    "autoVps"   :   {
+        "category" : "timer",
+        "type" : "boolean",
+        "label" : "Use VPS if available"
     },
     "streamdevActive"    :   {
         "category" : "streaming",

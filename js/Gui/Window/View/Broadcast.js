@@ -163,7 +163,7 @@ Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
 
                 } else {
 
-                    VDRest.Rest.actions.addTimer(broadcast);
+                    VDRest.Rest.actions.addOrUpdateTimer(broadcast);
                     recordText.text('Timer löschen');
 
                 }
