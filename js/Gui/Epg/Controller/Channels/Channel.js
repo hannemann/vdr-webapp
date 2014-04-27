@@ -130,7 +130,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
             this.preventClick = true;
             e.preventDefault();
 
-            if ("true" === VDRest.config.getItem('streamdevActive')) {
+            if (true === VDRest.config.getItem('streamdevActive')) {
 
                 window.location.href = this.streamUrl;
             }
