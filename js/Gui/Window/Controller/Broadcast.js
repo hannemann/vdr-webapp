@@ -73,11 +73,17 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
     }
 };
 
+/**
+ * trigger image animation
+ */
 Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {
 
     this.view.animateImage();
 };
 
+/**
+ * handle timer
+ */
 Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);

@@ -1,10 +1,23 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Timer.View.List.Timer = function () {};
 
+/**
+ *
+ * @type {VDRest.Abstract.View}
+ */
 Gui.Timer.View.List.Timer.prototype = new VDRest.Abstract.View();
 
+/**
+ * @type {string}
+ */
 Gui.Timer.View.List.Timer.prototype.cacheKey = 'id';
 
+/**
+ * initialize nodes
+ */
 Gui.Timer.View.List.Timer.prototype.init = function () {
 
     this.node = $('<div class="timer list-item clearer">');
@@ -18,6 +31,9 @@ Gui.Timer.View.List.Timer.prototype.init = function () {
     this.name = $('<div class="filename">').appendTo(this.node);
 };
 
+/**
+ * decorate and render
+ */
 Gui.Timer.View.List.Timer.prototype.render = function () {
 
     this.channel.text(this.getChannelName());
@@ -31,6 +47,10 @@ Gui.Timer.View.List.Timer.prototype.render = function () {
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
+/**
+ * retrieve start date as fancy string
+ * @returns {string}
+ */
 Gui.Timer.View.List.Timer.prototype.addStartDate = function () {
 
     var date = this.getStartDate(), string = '';
@@ -40,6 +60,10 @@ Gui.Timer.View.List.Timer.prototype.addStartDate = function () {
     return string;
 };
 
+/**
+ * retrieve time as string
+ * @returns {string}
+ */
 Gui.Timer.View.List.Timer.prototype.addTime = function () {
 
     var start = this.getStartDate(), end = this.getEndDate(), string = '';
