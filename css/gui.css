@@ -16,48 +16,46 @@ ul#menubar #refresh {
 .italic {
     font-style: italic;
 }
-#drawer-button {
-    height: 38px;
-    width: 38px;
-    background-image: linear-gradient(0deg, #696969 50%, white 50%);
-    background-size: 30px 4px;
-    background-position: center 3px;
-    background-repeat: repeat-y;
-    margin-right: 15px;
-}
-#drawer-button img {
-    height: 38px;
-    width: 38px;
-    margin-left: 15px;
-}
 
-#drawer {
-	width:0;
-	overflow: hidden;
-	height:100%;
-	position:fixed;
-	top: 0;
-	left: 0;
-	background: linear-gradient(90deg, #404040 50%, #707070 100%);
+.window-drawer {
+	width: 65%;
+	overflow: visible;
+	height: calc(100% - 50px);
+	position:absolute;
+	top: 50px;
+    left: auto;
+    right: auto;
+    background: rgba(0,0,0,0.8);
 	z-index: 1;
 	color: white;
 	box-shadow: 0 0 20px 0 black;
+    border-right: 2px solid rgb(0,128,20);
+    border-bottom: none;
 }
-#drawer .header {
-	background: #696969;
-	font-weight: bold;
-	font-family: serif;
-	padding:10px;
-	font-size: 25px;
-	position: relative;
+.window-drawer .window-header {
+    width: calc(100% - 10px);
+    height: 30px;
+    background: rgba(255, 255, 255, 0.49);
+    font-family: Source Sans ProBold, sans-serif;
+    color: black;
+    line-height: 30px;
+    padding: 0 0 0 10px;
 }
-#drawer .header .close {
-	position: absolute;
-}
-#drawer .navi-button {
+.window-drawer .navi-button {
 	padding:5px 10px;
 	font-size: 20px;
+    border-bottom: 1px solid rgb(95, 95, 95);
 }
-#drawer .navi-button.current {
-	background:  linear-gradient(90deg, #707070 50%, #404040 100%);
+
+/* simple list */
+.simple-list {
+    height: 100%;
+    overflow: auto;
+}
+
+.simple-list .list-item {
+    border-bottom: 1px solid white;
+    padding: 10px 5px;
+    margin: 0 10px;
+    font-size: 12px;
 }

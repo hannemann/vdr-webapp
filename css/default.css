@@ -1,72 +1,73 @@
+@font-face {
+    font-family: Source Sans Pro;
+    src: url(/assets/fonts/Source_Sans_Pro/SourceSansPro-Light.ttf);
+}
+@font-face {
+    font-family: Source Sans ProBold;
+    src: url(/assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf);
+}
+
+
 * {
-	font-family: sans-serif;
-	margin: 0;
-	padding: 0;
+    font-family: Source Sans Pro, sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
 }
+
 html {
-	height: 100%;
-	overflow: hidden;
-	background: dimgrey;
+    width: 100%;
+    height: 100%;
 }
+
 body {
-	height: calc(100% - 59px);
-	overflow-y: auto;
-	margin-top: 59px;
+    width: 100%;
+    height: 100%;
+    background: #696969;
+    position: relative;
+    z-index: 0;
 }
-.clearfix:before,
-.clearfix:after {
+
+ul {
+    list-style-type: none;
+}
+
+.shadow {
+    box-shadow: 0 3px 15px rgba(0,0,0,0.5);
+}
+
+.clearer:before,
+.clearer:after {
     content:"";
     display:table;
+    font-size: 0;
+    line-height: 0;
 }
-.clearfix:after {
+.clearer:after {
     clear:both;
 }
-ul {
-	list-style-type: none;
-}
-ul#menubar,
-dl {
-	background: dimgrey;
-}
-ul#menubar {
-	color: white;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	height:38px;
-}
-ul#menubar li {
-	float: left;
-}
-.content {
-	display: none;
-	color: white;
+
+#viewport {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    height: calc(100% - 50px);
+    width: 100%;
+    overflow: hidden;
+    z-index: 0;
 }
 
-div.window {
-	position: fixed;
-	top: 20px;
-	left: 20px;
-	bottom: 20px;
-	right: 20px;
-	background: dimgrey;
-	overflow: auto;
-	-webkit-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 1);
-	-moz-box-shadow:    0px 0px 20px 0px rgba(0, 0, 0, 1);
-	box-shadow:         0px 0px 20px 0px rgba(0, 0, 0, 1);
-	border-bottom: 20px solid dimgrey;
+.italic {
+    font-style: italic;
 }
 
-div.close {
-	position: absolute;
-	top: 2px;
-	right: 2px;
-	width: 20px;
-	height: 20px;
-	line-height: 20px;
-	font-size: 20px;
-	cursor: default;
+.left {
+    float: left;
 }
+.right {
+    float: right;
+}
+
 .button {
 	background: none repeat scroll 0 0 #FFA500;
 	border: 1px solid #000000;
@@ -74,4 +75,74 @@ div.close {
 	margin-left: 5px;
 	padding: 5px 10px;
 	cursor: default;
+}
+
+.list-item {
+    position: relative;
+}
+
+.list-item span {
+    width: calc(100% / 3);
+    display: block;
+    float: left;
+    border-bottom: 1px solid rgb(155,155,155);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.rating-1:after {
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-1:after {
+    content: '★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-2:after {
+    content: '★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-3:after {
+    content: '★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-4:after {
+    content: '★★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.rating-5:after {
+    content: '★★★★★';
+    position: absolute;
+    bottom: 0;
+    right: 25px;
+    color: #ffaf17;
+}
+
+.top-tipp:before {
+    content: '\1F44D';
+    position: absolute;
+    bottom: 1px;
+    right: 10px;
+    color: #ffaf17;
 }

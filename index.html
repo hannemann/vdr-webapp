@@ -5,7 +5,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta charset="utf-8">
+
+    <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="css/default.css" />
+    <link rel="stylesheet" type="text/css" href="css/menubar.css" />
     <link rel="stylesheet" type="text/css" href="css/epg.css" />
     <link rel="stylesheet" type="text/css" href="css/window.css" />
     <link rel="stylesheet" type="text/css" href="css/settings.css" />
@@ -13,36 +16,145 @@
     <link rel="stylesheet" type="text/css" href="css/gui-tree-view.css" />
     <link rel="stylesheet" type="text/css" href="css/tabs.css" />
     <link rel="stylesheet" type="text/css" href="css/channel.css" />
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-    <script type="text/javascript" src="js/Config.js"></script>
-    <script type="text/javascript" src="js/Rest.js"></script>
-    <script type="text/javascript" src="js/Main.js"></script>
-    <script type="text/javascript" src="js/Gui.js"></script>
-    <script type="text/javascript" src="js/Gui/Item.js"></script>
-    <script type="text/javascript" src="js/Gui/List.js"></script>
-    <script type="text/javascript" src="js/Gui/List/Item.js"></script>
-    <script type="text/javascript" src="js/Gui/ListView.js"></script>
-    <script type="text/javascript" src="js/Gui/TreeView.js"></script>
-    <script type="text/javascript" src="js/Gui/Window.js"></script>
-    <script type="text/javascript" src="js/Gui/Window/View.js"></script>
-    <script type="text/javascript" src="js/Gui/Confirm.js"></script>
-    <script type="text/javascript" src="js/Gui/Confirm/View.js"></script>
-    <script type="text/javascript" src="js/Rest/Actions.js"></script>
-    <script type="text/javascript" src="js/Tabs.js"></script>
-    <script type="text/javascript" src="js/Settings.js"></script>
-    <script type="text/javascript" src="js/Helper.js"></script>
-    <script type="text/javascript" src="js/epg.js"></script>
-    <script type="text/javascript" src="js/Event.js"></script>
-    <script type="text/javascript" src="js/Event/Window.js"></script>
-    <script type="text/javascript" src="js/Event/Window/View.js"></script>
-    <script type="text/javascript" src="js/channel.js"></script>
-    <script type="text/javascript" src="js/Recordings.js"></script>
-    <script type="text/javascript" src="js/Recording.js"></script>
-    <script type="text/javascript" src="js/Recording/Window.js"></script>
-    <script type="text/javascript" src="js/Timers.js"></script>
-    <script type="text/javascript" src="js/Timer.js"></script>
-    <script type="text/javascript" src="js/Drawer/List.js"></script>
-    <script type="text/javascript" src="js/Drawer/ListItem.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/timer.css" />
+    <link rel="stylesheet" type="text/css" href="css/recordings.css" />
+    <link rel="stylesheet" type="text/css" href="css/theme-black.css" />
+    <link rel="stylesheet" type="text/css" href="css/keyframes.css" />
+    <link rel="stylesheet" type="text/css" href="css/animation.css" />
+
+    <script type="text/javascript" src="js/VDRest/Lib/jquery-2.1.0.js"></script>
+    <!-- Core -->
+    <script type="text/javascript" src="js/VDRest/VDRest.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/Config.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/Factory.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/Object.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/Cache.js"></script>
+    <script type="text/javascript" src="js/VDRest/Abstract/Controller.js"></script>
+    <script type="text/javascript" src="js/VDRest/Abstract/Model.js"></script>
+    <script type="text/javascript" src="js/VDRest/Abstract/View.js"></script>
+    <script type="text/javascript" src="js/VDRest/Abstract/ViewModel.js"></script>
+    <script type="text/javascript" src="js/VDRest/Abstract/Module.js"></script>
+    <script type="text/javascript" src="js/VDRest/Rest/Api.js"></script>
+    <script type="text/javascript" src="js/VDRest/Rest/Actions.js"></script>
+    <script type="text/javascript" src="js/VDRest/Rest/TimerAdapter.js"></script>
+    <script type="text/javascript" src="js/VDRest/Rest/TimerAdapter/Abstract.js"></script>
+    <script type="text/javascript" src="js/VDRest/Rest/TimerAdapter/EpgBroadcast.js"></script>
+    <script type="text/javascript" src="js/VDRest/Rest/TimerAdapter/TimerEdit.js"></script>
+    <script type="text/javascript" src="js/VDRest/Helper.js"></script>
+
+    <!-- Backend -->
+    <!-- EPG -->
+    <script type="text/javascript" src="js/VDRest/Epg/Module.js"></script>
+    <script type="text/javascript" src="js/VDRest/Epg/Controller/Channels.js"></script>
+    <script type="text/javascript" src="js/VDRest/Epg/Model/Channels.js"></script>
+    <script type="text/javascript" src="js/VDRest/Epg/Model/Observer.js"></script>
+    <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel.js"></script>
+    <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel/Resource.js"></script>
+    <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel/Broadcast.js"></script>
+    <script type="text/javascript" src="js/VDRest/Epg/Model/Channels/Channel/Broadcast/Resource.js"></script>
+    <!-- Timers -->
+    <script type="text/javascript" src="js/VDRest/Timer/Module.js"></script>
+    <script type="text/javascript" src="js/VDRest/Timer/Controller/List.js"></script>
+    <script type="text/javascript" src="js/VDRest/Timer/Model/List.js"></script>
+    <script type="text/javascript" src="js/VDRest/Timer/Model/Observer.js"></script>
+    <script type="text/javascript" src="js/VDRest/Timer/Model/List/Timer.js"></script>
+    <script type="text/javascript" src="js/VDRest/Timer/Model/List/Timer/Resource.js"></script>
+    <!-- Recordings -->
+    <script type="text/javascript" src="js/VDRest/Recordings/Module.js"></script>
+    <script type="text/javascript" src="js/VDRest/Recordings/Controller/List.js"></script>
+    <script type="text/javascript" src="js/VDRest/Recordings/Model/List.js"></script>
+    <script type="text/javascript" src="js/VDRest/Recordings/Model/List/Recording.js"></script>
+    <script type="text/javascript" src="js/VDRest/Recordings/Model/List/Recording/Resource.js"></script>
+
+    <!-- Gui -->
+    <script type="text/javascript" src="js/Gui/Gui.js"></script>
+    <!-- Menubar -->
+    <script type="text/javascript" src="js/Gui/Menubar/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Menubar/Controller/Default.js"></script>
+    <script type="text/javascript" src="js/Gui/Menubar/View/Default.js"></script>
+    <!-- Viewport -->
+    <script type="text/javascript" src="js/Gui/Viewport/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Viewport/Controller/Default.js"></script>
+    <script type="text/javascript" src="js/Gui/Viewport/View/Default.js"></script>
+    <!-- Config -->
+    <script type="text/javascript" src="js/Gui/Config/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Config/Controller/Settings.js"></script>
+    <script type="text/javascript" src="js/Gui/Config/View/Settings.js"></script>
+    <script type="text/javascript" src="js/Gui/Config/ViewModel/Settings.js"></script>
+    <!-- Epg -->
+    <script type="text/javascript" src="js/Gui/Epg/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/Controller/Epg.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/Controller/TimeLine.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/ViewModel/TimeLine.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/View/TimeLine.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/Controller/Channels.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/Controller/Channels/Channel.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/Controller/Broadcasts.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/Controller/Broadcasts/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/Controller/Broadcasts/List/Broadcast.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/View/Epg.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/View/Channels.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/View/Channels/Channel.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/View/Broadcasts.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/View/Broadcasts/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/View/Broadcasts/List/Broadcast.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/ViewModel/Channels.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/ViewModel/Channels/Channel.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/ViewModel/Broadcasts.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/ViewModel/Broadcasts/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Epg/ViewModel/Broadcasts/List/Broadcast.js"></script>
+    <!-- Timer -->
+    <script type="text/javascript" src="js/Gui/Timer/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Timer/Controller/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Timer/Controller/List/Timer.js"></script>
+    <script type="text/javascript" src="js/Gui/Timer/ViewModel/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Timer/ViewModel/List/Timer.js"></script>
+    <script type="text/javascript" src="js/Gui/Timer/View/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Timer/View/List/Timer.js"></script>
+    <!-- Recordings -->
+    <script type="text/javascript" src="js/Gui/Recordings/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/Controller/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/Controller/List/Directory.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/Controller/List/Recording.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/ViewModel/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/ViewModel/List/Directory.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/ViewModel/List/Recording.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/View/List.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/View/List/Directory.js"></script>
+    <script type="text/javascript" src="js/Gui/Recordings/View/List/Recording.js"></script>
+    <!-- Window -->
+    <script type="text/javascript" src="js/Gui/Window/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Abstract.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Broadcast.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Input.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Confirm.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Select.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Drawer.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Directory.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/Recording.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/TimerEdit.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/Controller/ContextMenu.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Abstract.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Broadcast.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Input.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Confirm.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Select.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Drawer.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Directory.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/Recording.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/TimerEdit.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/View/ContextMenu.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/ViewModel/Broadcast.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/ViewModel/Drawer.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/ViewModel/Input.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/ViewModel/Recording.js"></script>
+    <script type="text/javascript" src="js/Gui/Window/ViewModel/TimerEdit.js"></script>
+    <!-- Tabs -->
+    <script type="text/javascript" src="js/Gui/Tabs/Module.js"></script>
+    <script type="text/javascript" src="js/Gui/Tabs/Controller/Abstract.js"></script>
+    <script type="text/javascript" src="js/Gui/Tabs/View/Abstract.js"></script>
+
+    <!-- Icons -->
     <link rel="shortcut icon" sizes="196x196" href="assets/icon-highres.png">
     <link rel="shortcut icon" sizes="128x128" href="assets/icon.png">
     <link rel="apple-touch-icon" sizes="128x128" href="assets/icon.png">
@@ -50,62 +162,5 @@
 </head>
 
 <body>
-<ul id="menubar">
-	<li>
-		<div id="drawer-button"><img src="assets/icon.png"></div>
-	</li>
-	<li>
-		<div class="content epg-wrapper">
-			<ul id="timeSelector">
-				<li class="now">Jetzt</li>
-				<li class="prime">20:15</li>
-			</ul>
-			<div class="date"></div>
-		</div>
-	</li>
-	<li class="content channel-wrapper"><div class="logo"></div><div class="info-wrapper"><div class="number"></div><div class="channel"></div><div class="date"></div></div></li>
-	<li id="refresh" class="right"><img src="assets/refresh.png" alt="" title=""></li>
-    <li id="throbber"><img src="assets/ajax-loader.gif" alt="" title=""></li>
-</ul>
-<div class="content settings-wrapper">
-	<form id="settings" name="settings" action="#">
-		<fieldset>
-			<legend>Remote</legend>
-			<label class="clearfix">
-				<span>Host:</span>
-				<input type="text" name="host">
-			</label>
-			<label class="clearfix">
-				<span>Port:</span>
-				<input type="number" name="port">
-			</label>
-		</fieldset>
-		<fieldset>
-			<legend>Sonstiges</legend>
-			<label class="clearfix">
-				<span>Startseite:</span>
-				<select name="start" data-attribute="optionName" data-provider="main.modules"></select>
-			</label>
-		</fieldset>
-		<fieldset class="buttons-set">
-			<div class="button submit">OK</div>
-			<div class="button cancel">Abbrechen</div>
-		</fieldset>
-	</form>
-</div>
-<div class="content epg-wrapper epg-body">
-	<div id="timeline" class="clearfix"></div>
-	<dl class="clearfix epg">
-		<dt>
-			<ul id="channels"></ul>
-		</dt>
-		<dd>
-			<ul id="events"></ul>
-		</dd>
-	</dl>
-</div>
-<div class="content item-list-wrapper">
-	<ul></ul>
-</div>
 </body>
 </html>

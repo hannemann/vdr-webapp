@@ -1,0 +1,62 @@
+
+#menubar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    padding: 5px 5px 5px 12px;
+    width: calc(100% - 17px);
+    height: 38px;
+    background-color: #638AC3;
+    border-bottom: 2px solid rgb(0,128,20);
+}
+
+#menubar .drawer-indicator {
+    position: absolute;
+    top: 18px;
+    left: 0;
+    height: 18px;
+    width: 11px;
+    background: linear-gradient(0deg, transparent 50%, rgba(255,255,255,0.5) 50%) repeat-y center top;
+    background-size: 100% 6px;
+    color: transparent;
+}
+#menubar .drawer-indicator.back {
+    background: none;
+    color: rgba(255,255,255,0.5);
+    top: 16px;
+    padding-left: 3px;
+    font-weight: bold;
+}
+
+#menubar .title-wrapper {
+    display: inline-block;
+}
+#menubar .icon {
+    width: 40px;
+    height: 40px;
+    float: left;
+}
+#menubar .menubar-header {
+    display: inline-block;
+    float: left;
+    font-family: Source Sans ProBold, sans-serif;
+}
+
+#menubar #throbber {
+    float: right;
+    margin: 4px 0;
+    display: none;
+}
+#header {
+    display: inline-block;
+    padding: 11px 0 5px;
+}
+#button-settings {
+    width: 32px;
+    height: 21px;
+    float: right;
+    margin: 10px 0;
+    background: linear-gradient(0deg, transparent 2px, rgba(255,255,255,0.5) 0) repeat-y center top;
+    background-size: 5px 7px;
+}

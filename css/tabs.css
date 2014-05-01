@@ -4,11 +4,14 @@
     width: 100%;
     background:#a9a9a9;
 }
-div.show-event .tab-content {
+.tab-contents {
+    padding: 20px 20px 0 20px;
+}
+.tab-content {
     display: none;
 }
 
-div.show-event .tab-content.current {
+.tab-content.current {
     display: block;
 }
 .tabs li {

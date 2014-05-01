@@ -1,87 +1,252 @@
-#timeSelector li {
-	font-size: 15px;
-	font-weight: bold;
-	line-height: 22px;
+#epg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    z-index: 0;
+    height: 100%;
 }
-#menubar .epg-wrapper .date {
-	font-size: 10px;
+
+#epg-channels {
+    width: 39px;
+    position: absolute;
+    left: 0;
+    top: 21px;
+    z-index: 1;
+    border-right: 1px solid black;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.5);
 }
-.epg-wrapper dt, .epg-wrapper dd {
-	float: left;
+
+#epg-channels .channel {
+    width: 39px;
+    height: 39px;
+    border-bottom: 1px solid black;
+    background-size: 100%;
+    background-color: white;
+    color: #696969;
+    font-size: 10px;
+    position: relative;
 }
-.epg-wrapper dd {
-	width: calc(100% - 40px); /* breite der Kanallogos abziehen */
-	overflow: auto;
-	background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
-	background-size: 100% 40px;
+
+#broadcasts-wrapper {
+    position: absolute;
+    width: calc(100% - 40px);
+    top: 21px;
+    left: 40px;
+    height: calc(100% - 21px);
+    overflow: auto;
 }
-.epg-wrapper div#timeline {
+#broadcasts {
+    width: 1000px;
+    overflow: auto;
+    background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
+    background-size: 100% 40px;
+}
+#broadcasts .broadcasts-list {
+    height: 40px;
+    position: relative;
+}
+#broadcasts .broadcasts-list .broadcast {
+    position: absolute;
+    top: 0;
+    height: 39px;
+    background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
+    font-size: 10px;
+    color: white;
+    font-family: Source Sans ProBold, sans-serif
+}
+#broadcasts .broadcasts-list .broadcast.invisible,
+#broadcasts .broadcasts-list.invisible .broadcast {
+    display: none !important;
+}
+#broadcasts .broadcasts-list .broadcast div {
+    height: 35px;
+    padding: 2px;
+    overflow: hidden;
+    /*text-overflow: ellipsis;*/
+}
+#broadcasts .broadcasts-list .broadcast.timer-exists div.content {
+    background: linear-gradient(135deg, #404040 30%, #939393 70%);
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+#broadcasts .broadcasts-list .broadcast.timer-active div.content {
+    background-image: linear-gradient(135deg, #404040 30%, #930000 70%);
+    background-size: 5px 5px;
+}
+.channel-view #broadcasts .broadcasts-list .broadcast.timer-active div.content {
+    background-image: linear-gradient(135deg, #696969 30%, #930000 70%);
+    background-size: 5px 5px;
+}
+
+#epg-date {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(90deg, #404040 40%, transparent 90%);
+    width: 100px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 10px;
+    padding: 2px 3px;
+    z-index: 3;
+}
+#epg-timeline-right-gradient {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: linear-gradient(90deg, transparent 10%, #404040 85%);
+    width: 100px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 10px;
+    padding: 2px 3px;
+    z-index: 3;
+    display: none;
+}
+div#time-line {
 	height: 20px;
-	border-bottom: 1px solid black;
-	color: white;
-	font-size: 9px;
 	padding-left: 40px;
-	background: #404040;
-	position: fixed;
-	top: 38px;
+	position: absolute;
+	top: 0;
+    left: 0;
 	width: 100%;
+    z-index: 2;
+    background: #404040;
+    border-bottom: 1px solid black;
+    color: white;
+    font-size: 9px;
 }
-.epg-wrapper div#timeline div {
+div#time-line div {
 	float: left;
 	width: 15px;
 	line-height: 20px;
 }
-.epg-wrapper div#timeline div.odd {
+div#time-line div.odd {
 	color: black;
 	background: white;
 }
-.epg-wrapper div#timeline .qr {
+div#time-line .qr {
 	text-align: left;
 }
-.epg-wrapper div#timeline .ql {
+div#time-line .ql {
 	text-align: right;
 }
-.epg-wrapper div#timeline .ql.hour {
+div#time-line .ql.hour {
 	font-size: 12px;
 	font-weight: bold;
 }
-.epg-wrapper li.channel,
-.epg-wrapper li.events {
-	margin-bottom: 1px;
-	height: 39px;
-	color: white;
+
+.window.timer-active .window-header {
+    background-size: 60px 60px;
+    background-image: linear-gradient(135deg, red 0%, transparent 50%);
+    background-repeat: no-repeat;
 }
-.epg-wrapper li.channel {
-	border-right: 1px solid black;
-    width: 39px;
-    height: 39px;
-	font-size: 10px;
-	color: dimgrey;
-    background-color: white;
-    background-size: 39px 39px;
+
+/* Channel view */
+
+#epg-channels .channel .mute {
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
-.epg-wrapper li.channel img,
-.epg-wrapper li.channel div {
-	width: 39px;
-	height: 39px;
+.channel-view #epg-channels .channel.is-muted .mute {
+    display: block;
 }
-.epg-wrapper li.events {
-	width: 100%;
+.channel-view #epg-date,
+.channel-view #epg-timeline-right-gradient,
+.channel-view #time-line {
+    display: none;
 }
-.epg-wrapper li.event {
-	float: left;
-	font-size: 9px;
-	height: 39px;
-	overflow: hidden;
-	background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
+.channel-view #broadcasts-wrapper {
+    top: 66px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 66px);
 }
-.epg-wrapper li.event div {
-	height: 35px;
-	padding: 2px;
+.channel-view #epg-channels {
+    top: 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    height: 65px;
+    background: white;
 }
-.epg-wrapper li.event.active-timer div {
-	background-image: linear-gradient(135deg, #404040 30%, #930000 70%);
-	background-size: 5px 5px;
-	background-position: right bottom;
-	background-repeat: no-repeat;
+.channel-view #epg-channels .channel {
+    display: inline-block;
+    border: none;
+    margin: 0 3px;
+    top: -2px;
+    z-index: 0;
+}
+.channel-view #epg-channels .channel.active {
+    width: 55px;
+    height: 55px;
+    top: 5px;
+    box-shadow: 0 0 30px 5px rgba(0,0,0,0.5);
+    z-index: 1;
+}
+
+.visible-channel-view {
+    display: none;
+}
+#broadcasts .broadcasts-list .broadcast .visible-channel-view * {
+    height: auto;
+}
+
+.channel-view .visible-channel-view {
+    display: block;
+}
+
+.channel-view #broadcasts {
+    width: 100% !important;
+}
+.channel-view #broadcasts .broadcasts-list.active {
+    display: block;
+}
+.channel-view #broadcasts .broadcasts-list {
+    width: 100% !important;
+    height: auto;
+    display: none;
+}
+.channel-view #broadcasts .broadcast {
+    position: relative;
+    width: 100% !important;
+    left: 0 !important;
+    height: auto !important;
+    background: #696969;
+    display: block !important;
+
+}
+.channel-view #broadcasts .broadcast div {
+    height: auto !important;
+}
+.channel-view #broadcasts .broadcast .content {
+    margin: 0 10px;
+    border-bottom: 1px solid white;
+}
+.channel-view #broadcasts .broadcast .title {
+    font-size: 16px;
+}
+.channel-view #broadcasts .broadcast .visible-channel-view * {
+    font-size: 12px;
+}
+
+
+
+
+#broadcasts .broadcasts-list .broadcast.first-visible,
+#broadcasts .broadcasts-list .broadcast.first-visible ~ .broadcast {
+    display: block;
+}
+#broadcasts .broadcasts-list .broadcast,
+#broadcasts .broadcasts-list .broadcast.last-visible ~ .broadcast {
+    display: none;
 }

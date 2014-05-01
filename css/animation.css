@@ -1,0 +1,131 @@
+/* Context menu */
+.context-menu {
+    animation-duration: .15s;
+    animation-name: contextMenuShow;
+    transform: scale(1,1);
+    -webkit-animation-duration: .15s;
+    -webkit-animation-name: contextMenuShow;
+    -webkit-transform: scale(1,1);
+}
+.context-menu.remove {
+    animation-duration: .15s;
+    animation-name: contextMenuHide;
+    -webkit-animation-duration: .15s;
+    -webkit-animation-name: contextMenuHide;
+}
+
+/* Broadcast Image */
+.window-header-image {
+    transition: max-width .15s;
+}
+
+.window-header-image.expand {
+    max-width: 100%;
+}
+
+.window-header-image.contract {
+    max-width: 50%;
+}
+
+/* dark modal overlay */
+.show-modal .modal-overlay.dark {
+    animation-duration: .2s;
+    animation-name: showModal;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: showModal;
+    background: rgba(0,0,0,0.5);
+}
+.hide-modal .modal-overlay.dark {
+    animation-duration: .2s;
+    animation-name: hideModal;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: hideModal;
+    background: rgba(0,0,0,0);
+}
+
+/* input, confirm window */
+/* almost full-size window */
+.window.collapsed {
+    opacity: 0;
+}
+.window.expand {
+    animation-duration: .2s;
+    animation-name: expand;
+    transform: scale(1,1);
+    opacity: 1;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: expand;
+    -webkit-transform: scale(1,1);
+}
+.window.collapse {
+    animation-duration: .2s;
+    animation-name: collapse;
+    transform: scale(.5,.5);
+    opacity: 0;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: collapse;
+    -webkit-transform: scale(.5,.5);
+}
+
+/* viewport full-size window */
+.window.viewport-fullsize.expand {
+    animation-name: viewportFullsizeExpand;
+    -webkit-animation-name: viewportFullsizeExpand;
+}
+.window.viewport-fullsize.collapse {
+    animation-name: viewportFullsizeCollapse;
+    -webkit-animation-name: viewportFullsizeCollapse;
+}
+
+/* drawer */
+.drawer.show .window-drawer {
+    animation-duration: .6s;
+    animation-name: drawerShow;
+    transform: translateX(0px);
+    -webkit-animation-duration: .6s;
+    -webkit-animation-name: drawerShow;
+    -webkit-transform: translateX(0px);
+}
+.drawer.hide .window-drawer {
+    animation-duration: .6s;
+    animation-name: drawerHide;
+    transform: translateX(-100%);
+    -webkit-animation-duration: .6s;
+    -webkit-animation-name: drawerHide;
+    -webkit-transform: translateX(-100%);
+}
+.drawer-indicator {
+    transition: width .6s;
+}
+.drawer.show #menubar .drawer-indicator {
+    width: 5px;
+}
+.drawer .modal-overlay {
+    background: rgba(0,0,0,0);
+}
+.drawer.show .modal-overlay {
+    animation-duration: .6s;
+    animation-name: showModal;
+    -webkit-animation-duration: .6s;
+    -webkit-animation-name: showModal;
+    background: rgba(0,0,0,0.5);
+}
+.drawer.hide .modal-overlay {
+    animation-duration: .6s;
+    animation-name: hideModal;
+    -webkit-animation-duration: .6s;
+    -webkit-animation-name: hideModal;
+    background: rgba(0,0,0,0);
+}
+
+/* recording */
+
+/** cpu fries at 90 % :-(
+
+TODO: create fancy animation that doesn't burn my device
+
+.broadcast.timer-recording .content .title {
+    animation: recording 2s infinite;
+    -webkit-animation: recording 2s infinite;
+}
+*/

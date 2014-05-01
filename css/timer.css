@@ -1,0 +1,14 @@
+
+.timer.list-item .channel {
+    text-align: center;
+}
+.timer.list-item .time {
+    text-align: right;
+}
+.timer.list-item .filename {
+    margin-top: 20px;
+    clear: left;
+}
+.timer-exists .record-button dt {
+    background: #FF0000;
+}

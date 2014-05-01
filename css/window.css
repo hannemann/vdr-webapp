@@ -1,87 +1,163 @@
-div.show-event .header.active-timer {
-    background-image: linear-gradient(135deg, #FF0000 20%, #FFFFFF 35%);
-    background-repeat: no-repeat;
-    background-size: 60px 60px;
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
 }
-div.confirm .header,
-div.show-event .header {
-	background: white;
-	color: black;
-	padding: 20px;
-}
-div.show-event .header h2 {
-	float: left;
-}
-div.show-event .header ul.details {
-    clear: left;
-}
-div.show-event .header ul.components {
-    clear: left;
-    float:right;
-}
-div.show-event .header ul.components li {
-    float:left;
-    margin-left: 5px;
-}
-div.show-event .header img.event-img {
-	max-width: 50%;
-}
-div.show-event .body {
-	color: white;
-	padding: 0 20px 20px;
+.modal-overlay.transparent {
+    background: rgba(0,0,0,0.01);
 }
 
-div.show-event .tabs {
-    width: calc(100% + 40px);
-    margin-left: -20px;
-}
-div.show-event .tab-contents {
-    padding-top: 20px;
+/** default window styles */
+
+.window {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+    background: #696969;
+    border-bottom: 20px solid #696969;
+    z-index: 2;
+    overflow: auto;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
 }
 
-div.show-event .body .details {
+.window-close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 20px;
+    cursor: default;
+}
+
+.window.has-header .window-close {
+    color: black;
+}
+
+.window-header {
+    background: white;
+    color: black;
+    padding: 20px;
+}
+
+.window-header * {
+    color: inherit;
+}
+
+.window-body {
     white-space: pre-wrap;
 }
 
-div.show-event .tools li,
-div.show-event .web li {
+/* Broadcast window related styles */
+
+.window-header-image {
+    max-width: 50%;
+}
+
+.window-header-details {
+    clear: left;
+    padding: 0;
+    margin-right: 20px;
+}
+
+.window.image-expanded .window-header-details {
+    width: calc(100% - 20px);
+}
+.window-header-components li {
+    margin-left: 5px;
+}
+.window-header .additional-info {
+    clear: both;
+}
+
+.body .details {
+}
+
+.tools li,
+.web li {
     width: calc(100% / 2 - 10px);
     float: left;
 }
-div.show-event .web li:nth-child(2n+1),
-div.show-event .tools li:nth-child(2n+1) {
+.web li:nth-child(2n+1),
+.tools li:nth-child(2n+1) {
     margin-right: 20px;
 }
-div.show-event .web-button,
-div.show-event .record-button,
-div.show-event .delete-button {
+.window-button {
     text-align: center;
+    margin-bottom: 20px;
 }
-div.show-event .web-button dt,
-div.show-event .record-button dt,
-div.show-event .delete-button dt {
+.window-button dt {
     text-align: center;
     margin: 0 auto 5px;
     width: 60px;
     height:60px;
+    font-family: sans-serif;
 }
-div.show-event .delete-button dt,
-div.show-event .record-button dt {
-    background: #FF0000;
+.window-button.round dt {
     border-radius: 30px;
+    background: #404040;
+    box-shadow: 0 0 5px 0 #404040, 0 0 5px #FFFFFF inset;
+}
+.delete-button dt,
+.record-button dt {
     box-shadow: 0 0 5px 0 #FF0000, 0 0 5px #FFFFFF inset;
 }
-div.show-event .delete-button dt {
-    font-size: 50px;
-    line-height: 60px;
+.symbol-button dt {
+    font-size: 40px;
+    line-height: 63px;
 }
-div.show-event .record-button dt.activate-timer {
-    background: #404040;
+.delete-button.round dt {
+    background: red;
 }
-div.show-event .web-button dt img {
+.activate-button.round.is-active dt {
+    background: green;
+    box-shadow: 0 0 5px 0 green, 0 0 5px #FFFFFF inset;
+}
+.edit-button.round dt {
+    background: rgb(255, 163, 0);
+    box-shadow: 0 0 5px 0 rgb(255, 163, 0), 0 0 5px #FFFFFF inset;
+}
+.web-button dt img {
     width: 100%;
     height: 100%;
     box-shadow: 0 0 5px 0 black;
+}
+
+/* Inpput Popup */
+.window-input {
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    padding-top: 10px;
+    width: 80%;
+    border-bottom: none;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.window-input .window-body {
+    padding: 0 20px;
+}
+.window-input .button {
+    float: left;
+    border: none;
+    background: none;
+    padding: 15px 0;
+    width: 50%;
+    border-top: 1px solid white;
+    text-align: center;
+    margin: 10px 0 0 0;
+}
+.window-input .button-confirm {
+    margin: 10px 0 0 0;
+    width: calc(50% - 1px);
+    border-left: 1px solid white;
 }
 
 /* Confirm Popup */
@@ -105,4 +181,17 @@ div.window.confirm li {
 div.window.confirm li:first-child {
     width: calc(50% - 1px);
     border-right: 1px solid white;
+}
+
+.context-menu {
+    position: absolute;
+    right: 10px;
+    background: #696969;
+    top: 50px;
+    opacity: 1;
+}
+
+.context-menu div {
+    border-top: 1px solid rgb(150, 150,150);
+    padding: 10px;
 }
