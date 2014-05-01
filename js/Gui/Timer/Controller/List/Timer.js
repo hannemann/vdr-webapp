@@ -69,7 +69,7 @@ Gui.Timer.Controller.List.Timer.prototype.editAction = function () {
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "TimerEdit",
+            "type" : "Timer",
             "data" : {
                 "id" : this.dataModel.data.id,
                 "resource" : this.dataModel.data

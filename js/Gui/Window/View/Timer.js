@@ -2,42 +2,42 @@
  * @class
  * @constructor
  */
-Gui.Window.View.TimerEdit = function () {};
+Gui.Window.View.Timer = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.TimerEdit.prototype = new Gui.Window.View.Abstract();
+Gui.Window.View.Timer.prototype = new Gui.Window.View.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.View.TimerEdit.prototype.cacheKey = 'id';
+Gui.Window.View.Timer.prototype.cacheKey = 'id';
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.TimerEdit.prototype.isModal = true;
+Gui.Window.View.Timer.prototype.isModal = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.TimerEdit.prototype.isModalTransparent = true;
+Gui.Window.View.Timer.prototype.isModalTransparent = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.TimerEdit.prototype.hasHeader = true;
+Gui.Window.View.Timer.prototype.hasHeader = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.TimerEdit.prototype.hasBroadcast = false;
+Gui.Window.View.Timer.prototype.hasBroadcast = false;
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.TimerEdit.prototype.init = function () {
+Gui.Window.View.Timer.prototype.init = function () {
 
     Gui.Window.View.Abstract.prototype.init.call(this);
 };
@@ -45,7 +45,7 @@ Gui.Window.View.TimerEdit.prototype.init = function () {
 /**
  * render
  */
-Gui.Window.View.TimerEdit.prototype.render = function () {
+Gui.Window.View.Timer.prototype.render = function () {
 
     this.addClasses().decorateHeader().decorateBody();
 
@@ -58,9 +58,9 @@ Gui.Window.View.TimerEdit.prototype.render = function () {
 
 /**
  * add classes to window
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.addClasses = function () {
+Gui.Window.View.Timer.prototype.addClasses = function () {
 
 
     return this;
@@ -68,9 +68,9 @@ Gui.Window.View.TimerEdit.prototype.addClasses = function () {
 
 /**
  * set view has a broadcast object
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.setHasBroadcast = function () {
+Gui.Window.View.Timer.prototype.setHasBroadcast = function () {
 
     this.hasBroadcast = true;
 
@@ -79,9 +79,9 @@ Gui.Window.View.TimerEdit.prototype.setHasBroadcast = function () {
 
 /**
  * decorate header with title subtitle and image if available
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.decorateHeader = function () {
+Gui.Window.View.Timer.prototype.decorateHeader = function () {
 
     this.details = $('<ul class="window-header-details">');
 
@@ -97,9 +97,9 @@ Gui.Window.View.TimerEdit.prototype.decorateHeader = function () {
 
 /**
  * decorate body with tabs
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.decorateBody = function () {
+Gui.Window.View.Timer.prototype.decorateBody = function () {
 
 
     return this;
@@ -107,9 +107,9 @@ Gui.Window.View.TimerEdit.prototype.decorateBody = function () {
 
 /**
  * add Title
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.addTitle = function () {
+Gui.Window.View.Timer.prototype.addTitle = function () {
 
     var title;
 
@@ -132,9 +132,9 @@ Gui.Window.View.TimerEdit.prototype.addTitle = function () {
 
 /**
  * add details list to header
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.addDetails = function () {
+Gui.Window.View.Timer.prototype.addDetails = function () {
 
     if (this.hasBroadcast && this.hasBroadcastShortText()) {
 
@@ -165,9 +165,9 @@ Gui.Window.View.TimerEdit.prototype.addDetails = function () {
 
 /**
  * add epg image to header
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.addMainImage = function () {
+Gui.Window.View.Timer.prototype.addMainImage = function () {
 
     if (this.hasBroadcast && this.hasBroadcastImages()) {
 
@@ -180,9 +180,9 @@ Gui.Window.View.TimerEdit.prototype.addMainImage = function () {
 
 /**
  * add filename to header
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.addFilename = function () {
+Gui.Window.View.Timer.prototype.addFilename = function () {
 
     $('<div class="additional-info">')
         .text('File: ' + this.getFilename())
@@ -193,9 +193,9 @@ Gui.Window.View.TimerEdit.prototype.addFilename = function () {
 
 /**
  * animate epg image on click
- * @returns {Gui.Window.View.TimerEdit}
+ * @returns {Gui.Window.View.Timer}
  */
-Gui.Window.View.TimerEdit.prototype.animateImage = function () {
+Gui.Window.View.Timer.prototype.animateImage = function () {
 
     this.node.toggleClass('image-expanded');
 
@@ -216,7 +216,7 @@ Gui.Window.View.TimerEdit.prototype.animateImage = function () {
  * retrieve tabs configuration
  * @type {Object}
  */
-Gui.Window.View.TimerEdit.prototype.getTabConfig = function () {
+Gui.Window.View.Timer.prototype.getTabConfig = function () {
 
     this.body.addClass('has-tabs');
 
@@ -270,7 +270,7 @@ Gui.Window.View.TimerEdit.prototype.getTabConfig = function () {
  * retrieve tools tab configuration
  * @returns {object}
  */
-Gui.Window.View.TimerEdit.prototype.getToolsConfig = function () {
+Gui.Window.View.Timer.prototype.getToolsConfig = function () {
 
     var button, text, me = this;
 
@@ -312,7 +312,7 @@ Gui.Window.View.TimerEdit.prototype.getToolsConfig = function () {
  * retrieve web tab configuration
  * @returns {object}
  */
-Gui.Window.View.TimerEdit.prototype.getWebConfig = function () {
+Gui.Window.View.Timer.prototype.getWebConfig = function () {
 
     return {
         "imdb":{
@@ -337,7 +337,7 @@ Gui.Window.View.TimerEdit.prototype.getWebConfig = function () {
  * render contents of tool tab
  * return {jQuery}
  */
-Gui.Window.View.TimerEdit.prototype.renderToolsTab = function () {
+Gui.Window.View.Timer.prototype.renderToolsTab = function () {
 
     var i, dom, button, config = this.getToolsConfig();
 
@@ -359,7 +359,7 @@ Gui.Window.View.TimerEdit.prototype.renderToolsTab = function () {
  * render contents of web tab
  * @returns {jQuery}
  */
-Gui.Window.View.TimerEdit.prototype.renderWebTab = function () {
+Gui.Window.View.Timer.prototype.renderWebTab = function () {
 
     var i, dom, button, config = this.getWebConfig();
 
@@ -381,7 +381,7 @@ Gui.Window.View.TimerEdit.prototype.renderWebTab = function () {
  * toggle color and text of activate button
  * @param active
  */
-Gui.Window.View.TimerEdit.prototype.handleTimerActive = function (active) {
+Gui.Window.View.Timer.prototype.handleTimerActive = function (active) {
 
     this.activateButton.toggleClass('is-active', active);
 

@@ -1,6 +1,6 @@
 /**
  * @param obj
- * @returns {VDRest.Api.TimerAdapter.EpgBroadcast|VDRest.Api.TimerAdapter.TimerEdit}
+ * @returns {VDRest.Api.TimerAdapter.EpgBroadcast|VDRest.Api.TimerAdapter.Timer}
  * @constructor
  */
 VDRest.Api.TimerAdapter = function (obj) {
@@ -10,8 +10,8 @@ VDRest.Api.TimerAdapter = function (obj) {
 
 /**
  * retrieve type instance
- * @param {VDRest.Epg.Model.Channels.Channel.Broadcast|Gui.Window.Controller.TimerEdit} obj
- * @returns {VDRest.Api.TimerAdapter.EpgBroadcast|VDRest.Api.TimerAdapter.TimerEdit}
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast|Gui.Window.Controller.Timer} obj
+ * @returns {VDRest.Api.TimerAdapter.EpgBroadcast|VDRest.Api.TimerAdapter.Timer}
  */
 VDRest.Api.TimerAdapter.prototype.getTypeInstance = function (obj) {
 
@@ -21,9 +21,9 @@ VDRest.Api.TimerAdapter.prototype.getTypeInstance = function (obj) {
 
         type = new VDRest.Api.TimerAdapter.EpgBroadcast();
 
-    } else if (obj instanceof Gui.Window.Controller.TimerEdit) {
+    } else if (obj instanceof Gui.Window.Controller.Timer) {
 
-        type = new VDRest.Api.TimerAdapter.TimerEdit();
+        type = new VDRest.Api.TimerAdapter.Timer();
 
     }
 

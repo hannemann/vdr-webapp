@@ -1,19 +1,19 @@
 /**
  * @constructor
  */
-VDRest.Api.TimerAdapter.TimerEdit = function () {};
+VDRest.Api.TimerAdapter.Timer = function () {};
 
 /**
  * @type {VDRest.Api.TimerAdapter.Abstract}
  */
-VDRest.Api.TimerAdapter.TimerEdit.prototype = new VDRest.Api.TimerAdapter.Abstract();
+VDRest.Api.TimerAdapter.Timer.prototype = new VDRest.Api.TimerAdapter.Abstract();
 
 /**
  * convert data
- * @param obj {Gui.Window.Controller.TimerEdit}
- * @returns {VDRest.Api.TimerAdapter.TimerEdit}
+ * @param obj {Gui.Window.Controller.Timer}
+ * @returns {VDRest.Api.TimerAdapter.Timer}
  */
-VDRest.Api.TimerAdapter.TimerEdit.prototype.normalize = function (obj) {
+VDRest.Api.TimerAdapter.Timer.prototype.normalize = function (obj) {
 
     var duration = new Date(
                 new Date(obj.data.resource.stop_timestamp).getTime() - VDRest.config.getItem('recordingEndGap') * 1000

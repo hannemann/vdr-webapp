@@ -2,28 +2,28 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.TimerEdit = function () {};
+Gui.Window.Controller.Timer = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.Controller.TimerEdit.prototype = new Gui.Window.Controller.Abstract();
+Gui.Window.Controller.Timer.prototype = new Gui.Window.Controller.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.Controller.TimerEdit.prototype.cacheKey = 'id';
+Gui.Window.Controller.Timer.prototype.cacheKey = 'id';
 
 /**
  * init view and viewmodel
  */
-Gui.Window.Controller.TimerEdit.prototype.init = function () {
+Gui.Window.Controller.Timer.prototype.init = function () {
 
     this.broadcast = new VDRest.Lib.Object();
 
-    this.eventPrefix = 'window.timeredit-' + this.data.id;
+    this.eventPrefix = 'window.timer-' + this.data.id;
 
-    this.view = this.module.getView('TimerEdit', this.data);
+    this.view = this.module.getView('Timer', this.data);
 
     if (this.data.resource.event_id > 0) {
 
@@ -38,7 +38,7 @@ Gui.Window.Controller.TimerEdit.prototype.init = function () {
 
 //    VDRest.helper.log(this.data.resource, this.broadcast);
 
-    this.module.getViewModel('TimerEdit', {
+    this.module.getViewModel('Timer', {
         "id" : this.data.id,
         "view" : this.view,
         "resource" : this.data.resource,
@@ -51,7 +51,7 @@ Gui.Window.Controller.TimerEdit.prototype.init = function () {
 /**
  * dispatch view
  */
-Gui.Window.Controller.TimerEdit.prototype.dispatchView = function () {
+Gui.Window.Controller.Timer.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -63,7 +63,7 @@ Gui.Window.Controller.TimerEdit.prototype.dispatchView = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.TimerEdit.prototype.addObserver = function () {
+Gui.Window.Controller.Timer.prototype.addObserver = function () {
 
     if (this.view.hasBroadcast && this.view.hasBroadcastImages()) {
 
@@ -74,7 +74,7 @@ Gui.Window.Controller.TimerEdit.prototype.addObserver = function () {
 
     this.view.activateButton.on('click', $.proxy(this.toggleActivateTimer, this));
 
-    this.view.editButton.on('click', $.proxy(this.editTimer, this));
+    this.view.editButton.on('click', $.proxy(this.editTimerAction, this));
 
     $(document).one('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
@@ -86,7 +86,7 @@ Gui.Window.Controller.TimerEdit.prototype.addObserver = function () {
 /**
  * remove event listeners
  */
-Gui.Window.Controller.TimerEdit.prototype.removeObserver = function () {
+Gui.Window.Controller.Timer.prototype.removeObserver = function () {
 
     if (this.view.hasBroadcast && this.view.hasBroadcastImages()) {
 
@@ -101,7 +101,7 @@ Gui.Window.Controller.TimerEdit.prototype.removeObserver = function () {
 /**
  * trigger timer delete
  */
-Gui.Window.Controller.TimerEdit.prototype.deleteTimer = function () {
+Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
 
     VDRest.Api.actions.deleteTimer(this.getAdapter());
 };
@@ -109,7 +109,7 @@ Gui.Window.Controller.TimerEdit.prototype.deleteTimer = function () {
 /**
  * trigger timer activate
  */
-Gui.Window.Controller.TimerEdit.prototype.toggleActivateTimer = function () {
+Gui.Window.Controller.Timer.prototype.toggleActivateTimer = function () {
 
     this.data.resource.is_active = !this.data.resource.is_active;
 
@@ -124,7 +124,7 @@ Gui.Window.Controller.TimerEdit.prototype.toggleActivateTimer = function () {
  * retrieve TimerAdapter
  * @returns {VDRest.Api.TimerAdapter}
  */
-Gui.Window.Controller.TimerEdit.prototype.getAdapter = function () {
+Gui.Window.Controller.Timer.prototype.getAdapter = function () {
 
     return new VDRest.Api.TimerAdapter(this);
 };
@@ -132,15 +132,29 @@ Gui.Window.Controller.TimerEdit.prototype.getAdapter = function () {
 /**
  * trigger timer delete
  */
-Gui.Window.Controller.TimerEdit.prototype.timerActiveAction = function () {
+Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
 
     this.view.handleTimerActive(this.data.resource.is_active);
 };
 
 /**
+ * request edit form
+ */
+Gui.Window.Controller.Timer.prototype.editTimerAction = function () {
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Timer.Edit",
+            "date" : this.data
+        }
+    });
+};
+
+/**
  * trigger timer delete
  */
-Gui.Window.Controller.TimerEdit.prototype.destroyTimer = function () {
+Gui.Window.Controller.Timer.prototype.destroyTimer = function () {
 
     // delete list entry
     VDRest.app.getModule('Gui.Timer').getController('List.Timer', this.keyInCache).destructView();
@@ -152,7 +166,7 @@ Gui.Window.Controller.TimerEdit.prototype.destroyTimer = function () {
 /**
  * trigger image animation
  */
-Gui.Window.Controller.TimerEdit.prototype.animateImageAction = function () {
+Gui.Window.Controller.Timer.prototype.animateImageAction = function () {
 
     this.view.animateImage();
 };
@@ -160,7 +174,7 @@ Gui.Window.Controller.TimerEdit.prototype.animateImageAction = function () {
 /**
  * Destroy
  */
-Gui.Window.Controller.TimerEdit.prototype.destructView = function () {
+Gui.Window.Controller.Timer.prototype.destructView = function () {
 
     var me = this;
     // apply animation

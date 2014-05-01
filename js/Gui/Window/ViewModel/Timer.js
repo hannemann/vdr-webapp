@@ -2,17 +2,17 @@
  * @class
  * @constructor
  */
-Gui.Window.ViewModel.TimerEdit = function () {};
+Gui.Window.ViewModel.Timer = function () {};
 
 /**
  * @type {VDRest.Abstract.ViewModel}
  */
-Gui.Window.ViewModel.TimerEdit.prototype = new Gui.Timer.ViewModel.List.Timer();
+Gui.Window.ViewModel.Timer.prototype = new Gui.Timer.ViewModel.List.Timer();
 
 /**
  * initialize resources
  */
-Gui.Window.ViewModel.TimerEdit.prototype.init = function () {
+Gui.Window.ViewModel.Timer.prototype.init = function () {
 
     this.resource = this.data.resource;
     this.broadcast = this.data.broadcast;
@@ -23,7 +23,7 @@ Gui.Window.ViewModel.TimerEdit.prototype.init = function () {
 /**
  * add magic methods
  */
-Gui.Window.ViewModel.TimerEdit.prototype.initViewMethods = function () {
+Gui.Window.ViewModel.Timer.prototype.initViewMethods = function () {
 
     var me = this;
 
