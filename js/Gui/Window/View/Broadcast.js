@@ -37,8 +37,6 @@ Gui.Window.View.Broadcast.prototype.isModalTransparent = true;
  */
 Gui.Window.View.Broadcast.prototype.render = function () {
 
-    this.addClasses();
-
     this.addTitle();
 
     if (this.hasImages()) {
@@ -56,6 +54,8 @@ Gui.Window.View.Broadcast.prototype.render = function () {
     this.node.addClass('collapsed');
 
     Gui.Window.View.Abstract.prototype.render.call(this);
+
+    this.addClasses();
 
     this.node.toggleClass('collapsed expand');
 };
@@ -126,47 +126,16 @@ Gui.Window.View.Broadcast.prototype.getTabConfig = function () {
  */
 Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
 
-    var recordButton, recordText, broadcast;
-
-    broadcast = VDRest.app.getModule('VDRest.Epg').getModel(
-        'Channels.Channel.Broadcast',
-        this.keyInCache
-    );
-
     return {
         "record":{
             "dom":function () {
 
                 var dom = $('<dl class="window-button round record-button"></dl>');
-                recordButton = $('<dt>');
-                recordText = $('<dd>');
+                this.recordButton = $('<dt>');
+                this.recordButtonText = $('<dd>');
 
-                if (this.hasTimerExists()) {
-
-                    recordText.text('Timer löschen');
-                    recordButton.removeClass('activate-timer');
-
-                } else {
-
-                    recordText.text('Timer erstellen');
-                    recordButton.addClass('activate-timer');
-                }
-
-                return dom.append(recordButton).append(recordText);
-            },
-            "callback":function () {
-
-                if (this.hasTimerExists()) {
-
-                    VDRest.Rest.actions.deleteTimer(broadcast);
-                    recordText.text('Timer erstellen');
-
-                } else {
-
-                    VDRest.Rest.actions.addOrUpdateTimer(broadcast);
-                    recordText.text('Timer löschen');
-
-                }
+                return dom.append(this.recordButton)
+                    .append(this.recordButtonText);
             }
         }
     }
@@ -343,9 +312,11 @@ Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
     if (exists) {
 
         this.node.addClass('timer-exists');
+        this.recordButtonText.text('Delete Timer');
     } else {
 
         this.node.removeClass('timer-exists');
+        this.recordButtonText.text('Add Timer');
     }
 };
 

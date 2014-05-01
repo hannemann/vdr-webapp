@@ -2,18 +2,18 @@ VDRest.Rest.Actions = function () {};
 
 VDRest.Rest.Actions.prototype = new VDRest.Rest.Api();
 
-VDRest.Rest.Actions.prototype.urls = {};
-
 /**
  * create or update timer
- * @param obj
+ * @param adapter
+ * @param {string} callerId     cacheKey id of broadcast
  */
-VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (obj) {
+VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (adapter, callerId) {
 
-    var url = this.getBaseUrl() + '/timers',
-        data = new VDRest.Rest.TimerAdapter(obj),
-        method = 'PUT',
-        event = 'updated';
+    var method = 'PUT',
+        event = 'updated',
+        data;
+
+    data = adapter.getData();
 
     // set method
     if ("undefined" === typeof data.timer_id) {
@@ -22,17 +22,18 @@ VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (obj) {
         event = 'created';
     }
 
-//    VDRest.helper.log(data);
-
     $.ajax({
-        "url" : url,
+        "url" : this.getBaseUrl() + '/timers',
         "data" : data,
         "type" : method,
         "success":$.proxy(function (result) {
 
             $.event.trigger({
-                "type" : 'timer-' + event + '.' + obj.keyInCache,
-                "payload" : result.timers[0]
+                "type" : 'vdrest-api-actions.timer-' + event,
+                "payload" : {
+                    "broadcastId" : callerId,
+                    "timer" : result.timers[0]
+                }
             });
 
         }, this),
@@ -42,22 +43,17 @@ VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (obj) {
     });
 };
 
-VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
+/**
+ * delete timer
+ * @param adapter
+ */
+VDRest.Rest.Actions.prototype.deleteTimer = function (adapter) {
 
-    var timer_id, url, broadcast;
+    var url, data;
 
-    if (obj instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
+    data = adapter.getData();
 
-        timer_id = obj.getData('timer_id');
-        broadcast = obj;
-
-    } else if (obj instanceof Gui.Window.Controller.TimerEdit) {
-
-        timer_id = obj.keyInCache;
-        broadcast = obj.broadcast;
-    }
-
-    url = this.getBaseUrl() + '/timers/' + timer_id;
+    url = this.getBaseUrl() + '/timers/' + data.timer_id;
 
     $.event.trigger({
         "type" : "window.request",
@@ -65,7 +61,7 @@ VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
             "type" : "Confirm",
             "data" : {
                 "message" : "Delete Timer?",
-                "id" : 'delete.timer' + timer_id
+                "id" : 'delete.timer' + data.timer_id
             }
         }
     });
@@ -74,34 +70,28 @@ VDRest.Rest.Actions.prototype.deleteTimer = function (obj) {
 
         setTimeout(function () {
             $.ajax({
-                "url":url,
-                "type":"DELETE",
+                "url" : url,
+                "type" : "DELETE",
                 "success": function () {
-                    // TODO: remove logic to update Gui from here!!!!
-
-                    var model;
-
-                    broadcast.setData('timer_exists', false);
-                    broadcast.setData('timer_active', false);
-                    broadcast.setData('timer_id', '');
-
-                    model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', timer_id);
-                    VDRest.app.getModule('VDRest.Timer').getModel('List').deleteFromCollection(model);
-                    delete model.cache[model.keyInCache];
 
                     $.event.trigger({
-                        "type" : 'timer-deleted.' + obj.keyInCache,
-                        "state" : "deleted"
+                        "type" : "vdrest-api-actions.timer-deleted",
+                        "payload" : data.timer_id
                     });
                 },
                 "complete":function (result) {
-//                    VDRest.helper.log(obj, result);
+//                    VDRest.helper.log(adapter, result);
                 }
             });
         }, 100);
     });
 };
 
+/**
+ * delete recording
+ * @param obj
+ * @param callback
+ */
 VDRest.Rest.Actions.prototype.deleteRecording = function (obj, callback) {
 
     var message = obj.getEventTitle();

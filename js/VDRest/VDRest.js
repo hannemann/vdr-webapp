@@ -110,6 +110,7 @@ VDRest.App.prototype.run = function () {
             if (this.modules.hasOwnProperty(i)) {
 
                 this.initModule(i);
+                this.initModuleLate(i);
             }
 		}
 
@@ -217,6 +218,22 @@ VDRest.App.prototype.initModule = function (module) {
 
         this.modules[module].init();
         this.modules[module].initialized = true;
+    }
+};
+
+/**
+ * call late init method of module
+ * @param {string} module name of module to be initialized
+ */
+VDRest.App.prototype.initModuleLate = function (module) {
+
+    if (
+        "undefined" === typeof this.modules[module].initializedLate
+        && "function" === typeof this.modules[module].initLate
+    ) {
+
+        this.modules[module].initLate();
+        this.modules[module].initializedLate = true;
     }
 };
 

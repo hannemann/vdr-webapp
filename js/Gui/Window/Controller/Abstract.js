@@ -26,8 +26,6 @@ Gui.Window.Controller.Abstract.prototype.init = function () {
  */
 Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
 
-    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-
     if (this.view.getTabConfig) {
 
         $.event.trigger({
@@ -35,6 +33,8 @@ Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
             "tabConfig" : this.view.getTabConfig()
         });
     }
+
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 };
 
 /**

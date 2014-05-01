@@ -36,6 +36,14 @@ VDRest.Epg.prototype.init = function () {
 };
 
 /**
+ * initialize observer
+ */
+VDRest.Epg.prototype.initLate = function () {
+
+    this.getModel('Observer');
+};
+
+/**
  * Modulename
  * @type {string}
  */

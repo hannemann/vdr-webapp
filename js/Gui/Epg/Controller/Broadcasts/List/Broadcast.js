@@ -1,12 +1,27 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast = function () {};
 
+/**
+ * @type {VDRest.Abstract.Controller}
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype = new VDRest.Abstract.Controller();
 
+/**
+ * @type {string}
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.cacheKey = 'channel/id';
 
+/**
+ * @type {boolean}
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isVisible = true;
 
+/**
+ * initialize view
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.epgController = this.module.getController('Epg');
@@ -29,6 +44,10 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
     this.addObserver();
 };
 
+/**
+ * determine if broadcast is currently visible
+ * @returns {boolean}
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
 
     var metrics = this.epgController.getMetrics(),
@@ -39,22 +58,38 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
     return left < metrics.win.width && right > metrics.broadcasts.left;
 };
 
+/**
+ * add event listeners
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function () {
 
     this.view.node.on('click', $.proxy(this.handleClick, this));
-    $(document).on('timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).on('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
     $(document).on('timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
-    $(document).on('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimer, this));
+
+    if (this.data.dataModel.data.timer_id) {
+
+        $(document).one('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimer, this));
+    }
 };
 
+/**
+ * remove event listeners
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function () {
 
     this.view.node.off('click', $.proxy(this.handleClick, this));
-    $(document).off('timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).off('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
     $(document).off('timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
-    $(document).off('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimer, this));
+
+    if (this.data.dataModel.data.timer_id) {
+        $(document).off('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimer, this));
+    }
 };
 
+/**
+ * handle click on node
+ */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function () {
 
     $.event.trigger({
@@ -66,28 +101,14 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function ()
     })
 };
 
-Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function (e) {
+/**
+ * handle click on timer add/delete button
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function () {
 
-    var timer = e.payload;
-    var model, collection;
+    if (this.data.dataModel.data.timer_id) {
 
-    if (timer) {
-
-        collection = VDRest.app.getModule('VDRest.Timer').getModel('List').getCollection();
-
-        timer.event_id = this.data.dataModel.data.id;
-
-        model = VDRest.app.getModule('VDRest.Timer').getModel('List.Timer', timer);
-
-        if (collection.length > 0) {
-
-            collection.push(model);
-            collection.sort(VDRest.Timer.Model.List.prototype.sortByTime);
-        }
-
-        this.data.dataModel.data.timer_exists = true;
-        this.data.dataModel.data.timer_active = timer.is_active;
-        this.data.dataModel.data.timer_id = timer.id;
+        $(document).one('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimer, this));
     }
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);

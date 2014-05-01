@@ -66,6 +66,11 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.prototype.init = function () {
 
     this.setDates();
     this.setImages();
+
+    if (this.data.timer_id) {
+
+        this.module.getModel('Observer').registerTimer(this);
+    }
 };
 
 /**

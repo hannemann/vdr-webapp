@@ -45,6 +45,8 @@ Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
+    this.handleTimerAction();
+
     this.addObserver();
 };
 
@@ -58,9 +60,10 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
         this.view.image.on('click', $.proxy(this.animateImageAction, this));
     }
 
-    $(document).on('timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).on('timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).on('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).on('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).on('gui.timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).one('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimerAction, this));
+    this.view.recordButton.on('click', $.proxy(this.toggleTimerAction, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -73,9 +76,10 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
 
         this.view.image.off('click');
     }
-    $(document).off('timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).off('timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).off('timer-deleted.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).off('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).off('gui.timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
+    $(document).off('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimerAction, this));
+    this.view.recordButton.off('click', $.proxy(this.toggleTimerAction, this));
 };
 
 /**
@@ -91,10 +95,40 @@ Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {
  */
 Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
 
+    if (this.data.dataModel.data.timer_exists) {
+
+        $(document).one(
+            'gui.timer-deleted.' + this.data.dataModel.data.timer_id,
+            $.proxy(this.handleTimerAction, this)
+        );
+    }
+
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);
 };
 
+/**
+ * toggle timer for broadcast
+ */
+Gui.Window.Controller.Broadcast.prototype.toggleTimerAction = function () {
+
+    var timer = new VDRest.Rest.TimerAdapter(
+        VDRest.app.getModule('VDRest.Epg').getModel(
+            'Channels.Channel.Broadcast',
+            this.keyInCache
+        )
+    );
+
+    if (this.data.dataModel.data.timer_exists) {
+
+        VDRest.Rest.actions.deleteTimer(timer);
+
+    } else {
+
+        VDRest.Rest.actions.addOrUpdateTimer(timer, this.keyInCache);
+
+    }
+};
 /**
  * Destroy
  */

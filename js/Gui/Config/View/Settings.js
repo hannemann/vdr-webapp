@@ -87,7 +87,6 @@ Gui.Config.View.Settings.prototype.getString = function (id, field) {
     field.dom.append(field.gui);
 };
 
-// TODO: Implement Enum
 Gui.Config.View.Settings.prototype.getEnum = function (id, field) {
 
     var values = field.values, selected;

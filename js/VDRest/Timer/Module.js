@@ -11,24 +11,21 @@ VDRest.Timer = function () {};
 VDRest.Timer.prototype = new VDRest.Abstract.Module();
 
 /**
- * Modulename
+ * Module name
  * @type {string}
  */
 VDRest.Timer.prototype.name = 'Timer';
 
 /**
- * not really implemented yet
- * @param type
- * @param broadcast
- * @returns {*|VDRest.Abstract.View}
+ * initialize observer
  */
-VDRest.Timer.prototype.dispatchView = function (type, timer) {
+VDRest.Timer.prototype.initLate = function () {
 
-    return this.getController(type, timer).dispatchView(type);
+    this.getModel('Observer');
 };
 
 /**
- * initialize channels controller
+ * initialize list controller
  */
 VDRest.Timer.prototype.initList = function () {
 

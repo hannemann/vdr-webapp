@@ -76,7 +76,7 @@ Gui.Window.Controller.TimerEdit.prototype.addObserver = function () {
 
     this.view.editButton.on('click', $.proxy(this.editTimer, this));
 
-    $(document).one('timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    $(document).one('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
     $(document).one('timer-updated.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
@@ -95,7 +95,7 @@ Gui.Window.Controller.TimerEdit.prototype.removeObserver = function () {
 
     this.view.deleteButton.off('click', $.proxy(this.deleteTimer, this));
 
-    $(document).off('timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    $(document).off('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 };
 
 /**
@@ -103,8 +103,7 @@ Gui.Window.Controller.TimerEdit.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.TimerEdit.prototype.deleteTimer = function () {
 
-
-    VDRest.Rest.actions.deleteTimer(this);
+    VDRest.Rest.actions.deleteTimer(this.getAdapter());
 };
 
 /**
@@ -118,7 +117,16 @@ Gui.Window.Controller.TimerEdit.prototype.toggleActivateTimer = function () {
 
     // TODO: für updates das event laden, damit die korrekte anfangzeit an den Adapter übergeben werden kann
 
-    VDRest.Rest.actions.addOrUpdateTimer(this);
+    VDRest.Rest.actions.addOrUpdateTimer(this.getAdapter(), this.keyInCache);
+};
+
+/**
+ * retrieve TimerAdapter
+ * @returns {VDRest.Rest.TimerAdapter}
+ */
+Gui.Window.Controller.TimerEdit.prototype.getAdapter = function () {
+
+    return new VDRest.Rest.TimerAdapter(this);
 };
 
 /**
@@ -133,12 +141,6 @@ Gui.Window.Controller.TimerEdit.prototype.timerActiveAction = function () {
  * trigger timer delete
  */
 Gui.Window.Controller.TimerEdit.prototype.destroyTimer = function () {
-
-    if (this.broadcast instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
-
-        // tell epg to delete indicators
-        $.event.trigger('timer-deleted.' + this.broadcast.keyInCache);
-    }
 
     // delete list entry
     VDRest.app.getModule('Gui.Timer').getController('List.Timer', this.keyInCache).destructView();
