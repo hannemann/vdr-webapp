@@ -112,7 +112,7 @@ Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
  */
 Gui.Window.Controller.Broadcast.prototype.toggleTimerAction = function () {
 
-    var timer = new VDRest.Rest.TimerAdapter(
+    var timer = new VDRest.Api.TimerAdapter(
         VDRest.app.getModule('VDRest.Epg').getModel(
             'Channels.Channel.Broadcast',
             this.keyInCache
@@ -121,11 +121,11 @@ Gui.Window.Controller.Broadcast.prototype.toggleTimerAction = function () {
 
     if (this.data.dataModel.data.timer_exists) {
 
-        VDRest.Rest.actions.deleteTimer(timer);
+        VDRest.Api.actions.deleteTimer(timer);
 
     } else {
 
-        VDRest.Rest.actions.addOrUpdateTimer(timer, this.keyInCache);
+        VDRest.Api.actions.addOrUpdateTimer(timer, this.keyInCache);
 
     }
 };

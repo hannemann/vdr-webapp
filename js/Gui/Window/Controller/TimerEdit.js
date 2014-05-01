@@ -103,7 +103,7 @@ Gui.Window.Controller.TimerEdit.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.TimerEdit.prototype.deleteTimer = function () {
 
-    VDRest.Rest.actions.deleteTimer(this.getAdapter());
+    VDRest.Api.actions.deleteTimer(this.getAdapter());
 };
 
 /**
@@ -117,16 +117,16 @@ Gui.Window.Controller.TimerEdit.prototype.toggleActivateTimer = function () {
 
     // TODO: für updates das event laden, damit die korrekte anfangzeit an den Adapter übergeben werden kann
 
-    VDRest.Rest.actions.addOrUpdateTimer(this.getAdapter(), this.keyInCache);
+    VDRest.Api.actions.addOrUpdateTimer(this.getAdapter(), this.keyInCache);
 };
 
 /**
  * retrieve TimerAdapter
- * @returns {VDRest.Rest.TimerAdapter}
+ * @returns {VDRest.Api.TimerAdapter}
  */
 Gui.Window.Controller.TimerEdit.prototype.getAdapter = function () {
 
-    return new VDRest.Rest.TimerAdapter(this);
+    return new VDRest.Api.TimerAdapter(this);
 };
 
 /**

@@ -1,6 +1,6 @@
-VDRest.Rest.TimerAdapter.Abstract = function () {};
+VDRest.Api.TimerAdapter.Abstract = function () {};
 
-VDRest.Rest.TimerAdapter.Abstract.prototype = {
+VDRest.Api.TimerAdapter.Abstract.prototype = {
 
     "errorMessage" : '',
 

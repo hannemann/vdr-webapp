@@ -5,9 +5,9 @@
 VDRest.Timer.Model.List.Timer.Resource = function () {};
 
 /**
- * @type {VDRest.Rest.Api}
+ * @type {VDRest.Api.Resource}
  */
-VDRest.Timer.Model.List.Timer.Resource.prototype = new VDRest.Rest.Api();
+VDRest.Timer.Model.List.Timer.Resource.prototype = new VDRest.Api.Resource();
 
 /**
  * class name

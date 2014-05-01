@@ -5,9 +5,9 @@
 VDRest.Recordings.Model.List.Recording.Resource = function () {};
 
 /**
- * @type {VDRest.Rest.Api}
+ * @type {VDRest.Api.Resource}
  */
-VDRest.Recordings.Model.List.Recording.Resource.prototype = new VDRest.Rest.Api();
+VDRest.Recordings.Model.List.Recording.Resource.prototype = new VDRest.Api.Resource();
 
 /**
  * class name

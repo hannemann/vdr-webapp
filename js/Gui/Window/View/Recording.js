@@ -198,7 +198,7 @@ Gui.Window.View.Recording.prototype.getToolsConfig = function () {
             "callback":function () {
 
                 var controller = me.module.getController('Recording', me.keyInCache);
-                VDRest.Rest.actions.deleteRecording(me, $.proxy(controller.deleteAction, controller));
+                VDRest.Api.actions.deleteRecording(me, $.proxy(controller.deleteAction, controller));
             }
         }
     }

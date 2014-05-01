@@ -1,13 +1,13 @@
-VDRest.Rest.Actions = function () {};
+VDRest.Api.Actions = function () {};
 
-VDRest.Rest.Actions.prototype = new VDRest.Rest.Api();
+VDRest.Api.Actions.prototype = new VDRest.Api.Resource();
 
 /**
  * create or update timer
  * @param adapter
  * @param {string} callerId     cacheKey id of broadcast
  */
-VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (adapter, callerId) {
+VDRest.Api.Actions.prototype.addOrUpdateTimer = function (adapter, callerId) {
 
     var method = 'PUT',
         event = 'updated',
@@ -47,7 +47,7 @@ VDRest.Rest.Actions.prototype.addOrUpdateTimer = function (adapter, callerId) {
  * delete timer
  * @param adapter
  */
-VDRest.Rest.Actions.prototype.deleteTimer = function (adapter) {
+VDRest.Api.Actions.prototype.deleteTimer = function (adapter) {
 
     var url, data;
 
@@ -92,7 +92,7 @@ VDRest.Rest.Actions.prototype.deleteTimer = function (adapter) {
  * @param obj
  * @param callback
  */
-VDRest.Rest.Actions.prototype.deleteRecording = function (obj, callback) {
+VDRest.Api.Actions.prototype.deleteRecording = function (obj, callback) {
 
     var message = obj.getEventTitle();
 
@@ -129,4 +129,4 @@ VDRest.Rest.Actions.prototype.deleteRecording = function (obj, callback) {
 
 };
 
-VDRest.Rest.actions = new VDRest.Rest.Actions();
+VDRest.Api.actions = new VDRest.Api.Actions();

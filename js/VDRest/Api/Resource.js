@@ -1,4 +1,4 @@
-VDRest.Rest.Api = function () {
+VDRest.Api.Resource = function () {
 
     /**
      * @type {Object}
@@ -21,36 +21,36 @@ VDRest.Rest.Api = function () {
     this.cachedResponse = false;
 };
 
-VDRest.Rest.Api.prototype = new VDRest.Lib.Object();
+VDRest.Api.Resource.prototype = new VDRest.Lib.Object();
 
 /**
  * @type {String}
  */
-VDRest.Rest.Api.prototype.host = VDRest.config.getItem('host');
+VDRest.Api.Resource.prototype.host = VDRest.config.getItem('host');
 
 /**
  * @type {int}
  */
-VDRest.Rest.Api.prototype.port = VDRest.config.getItem('port');
+VDRest.Api.Resource.prototype.port = VDRest.config.getItem('port');
 
 /**
  * @type {String}
  */
-VDRest.Rest.Api.prototype.protocol = VDRest.config.getItem('protocol');
+VDRest.Api.Resource.prototype.protocol = VDRest.config.getItem('protocol');
 
 /**
  * @type {string}
  */
-VDRest.Rest.Api.prototype.getBaseUrl = function () {
+VDRest.Api.Resource.prototype.getBaseUrl = function () {
 
     return this.protocol + '://' + this.host + ':' + this.port + '/';
 };
 
 /**
- * fetch data from VDRest.Rest.Api api
+ * fetch data from VDRest.Api.Resource api
  * @param options {object}
  */
-VDRest.Rest.Api.prototype.load = function (options) {
+VDRest.Api.Resource.prototype.load = function (options) {
 
     var url = "undefined" !== typeof options.url && "undefined" !== typeof this.urls[options.url] ?
         this.urls[options.url] : this.urls.load, me=this, data,
@@ -128,17 +128,17 @@ VDRest.Rest.Api.prototype.load = function (options) {
 /**
  * abstract request success handler
  */
-VDRest.Rest.Api.prototype.onSuccess = function () {};
+VDRest.Api.Resource.prototype.onSuccess = function () {};
 
 /**
  * abstract request error handler
  */
-VDRest.Rest.Api.prototype.onError = function () {};
+VDRest.Api.Resource.prototype.onError = function () {};
 
 /**
  * method to be called any time an request is complete
  */
-VDRest.Rest.Api.prototype.onComplete = function () {
+VDRest.Api.Resource.prototype.onComplete = function () {
 
     VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
 };

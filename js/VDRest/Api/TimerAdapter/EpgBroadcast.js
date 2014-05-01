@@ -1,19 +1,19 @@
 /**
  * @constructor
  */
-VDRest.Rest.TimerAdapter.EpgBroadcast = function () {};
+VDRest.Api.TimerAdapter.EpgBroadcast = function () {};
 
 /**
- * @type {VDRest.Rest.TimerAdapter.Abstract}
+ * @type {VDRest.Api.TimerAdapter.Abstract}
  */
-VDRest.Rest.TimerAdapter.EpgBroadcast.prototype = new VDRest.Rest.TimerAdapter.Abstract();
+VDRest.Api.TimerAdapter.EpgBroadcast.prototype = new VDRest.Api.TimerAdapter.Abstract();
 
 /**
  * convert data
  * @param {VDRest.Epg.Model.Channels.Channel.Broadcast} obj
- * @returns {VDRest.Rest.TimerAdapter.EpgBroadcast}
+ * @returns {VDRest.Api.TimerAdapter.EpgBroadcast}
  */
-VDRest.Rest.TimerAdapter.EpgBroadcast.prototype.normalize = function (obj) {
+VDRest.Api.TimerAdapter.EpgBroadcast.prototype.normalize = function (obj) {
 
 //    VDRest.helper.log(obj);
 

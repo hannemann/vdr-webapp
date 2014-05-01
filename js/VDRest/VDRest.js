@@ -16,7 +16,7 @@ VDRest.Lib = function () {};
 /**
  * @namespace
  */
-VDRest.Rest = function () {};
+VDRest.Api = function () {};
 
 /**
  * initialize main class
