@@ -36,6 +36,16 @@ Gui.Timer.View.List.Timer.prototype.init = function () {
  */
 Gui.Timer.View.List.Timer.prototype.render = function () {
 
+    this.decorate();
+
+    VDRest.Abstract.View.prototype.render.call(this);
+};
+
+/**
+ * decorate
+ */
+Gui.Timer.View.List.Timer.prototype.decorate = function () {
+
     this.channel.text(this.getChannelName());
 
     this.name.text(this.getFilename());
@@ -43,8 +53,14 @@ Gui.Timer.View.List.Timer.prototype.render = function () {
     this.date.text(this.addStartDate());
 
     this.time.text(this.addTime());
+};
 
-    VDRest.Abstract.View.prototype.render.call(this);
+/**
+ * decorate and render
+ */
+Gui.Timer.View.List.Timer.prototype.update = function () {
+
+    this.decorate();
 };
 
 /**

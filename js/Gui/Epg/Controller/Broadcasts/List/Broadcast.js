@@ -65,7 +65,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function ()
 
     this.view.node.on('click', $.proxy(this.handleClick, this));
     $(document).on('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
-    $(document).on('timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).on('gui.timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
 
     if (this.data.dataModel.data.timer_id) {
 
@@ -80,10 +80,10 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function
 
     this.view.node.off('click', $.proxy(this.handleClick, this));
     $(document).off('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimer, this));
-    $(document).off('timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
+    $(document).off('gui.timer-updated.' + this.keyInCache, $.proxy(this.handleTimer, this));
 
     if (this.data.dataModel.data.timer_id) {
-        $(document).off('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimer, this));
+        $(document).off('gui.timer-deleted.' + this.keyInCache, $.proxy(this.handleTimer, this));
     }
 };
 
@@ -108,7 +108,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function ()
 
     if (this.data.dataModel.data.timer_id) {
 
-        $(document).one('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimer, this));
+        $(document).off('gui.timer-deleted.' + this.keyInCache);
+        $(document).one('gui.timer-deleted.' + this.keyInCache, $.proxy(this.handleTimer, this));
     }
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);

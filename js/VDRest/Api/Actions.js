@@ -31,7 +31,7 @@ VDRest.Api.Actions.prototype.addOrUpdateTimer = function (adapter, callerId) {
             $.event.trigger({
                 "type" : 'vdrest-api-actions.timer-' + event,
                 "payload" : {
-                    "broadcastId" : callerId,
+                    "callerId" : callerId,
                     "timer" : result.timers[0]
                 }
             });

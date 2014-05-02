@@ -50,7 +50,9 @@ Gui.Timer.Controller.List.Timer.prototype.dispatchView = function () {
  */
 Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
 
-    this.view.node.on('click', $.proxy(this.editAction, this));
+    this.view.node.on('click', $.proxy(this.windowAction, this));
+
+    $(document).on('gui.timer-updated.' + this.keyInCache, $.proxy(this.update, this));
 };
 
 /**
@@ -59,12 +61,46 @@ Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
 Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
 
     this.view.node.off('click');
+
+    $(document).off('gui.timer-updated.' + this.keyInCache, $.proxy(this.update, this));
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Timer.Controller.List.Timer.prototype.update = function (e) {
+
+    var timer = e.payload, cache = this.module.cache.store;
+
+    this.data.id = timer.keyInCache;
+    this.view.data.id = timer.keyInCache;
+
+    delete cache.Controller['List.Timer'][this.keyInCache];
+    delete cache.View['List.Timer'][this.keyInCache];
+    delete cache.ViewModel['List.Timer'][this.keyInCache];
+
+    this.keyInCache = timer.keyInCache;
+    cache.Controller['List.Timer'][this.keyInCache] = this;
+
+    this.view.keyInCache = timer.keyInCache;
+    cache.View['List.Timer'][this.keyInCache] = this.view;
+
+    this.module.getViewModel('List.Timer', {
+        "id" : this.data.id,
+        "view" : this.view,
+        "resource" : this.dataModel.data
+    });
+
+    this.removeObserver();
+    this.addObserver();
+
+    this.view.update();
 };
 
 /**
  * request edit window
  */
-Gui.Timer.Controller.List.Timer.prototype.editAction = function () {
+Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
 
     $.event.trigger({
         "type" : "window.request",

@@ -52,8 +52,16 @@ Gui.Window.Controller.Abstract.prototype.addObserver = function () {
     }
 };
 
+/**
+ * destroy
+ */
 Gui.Window.Controller.Abstract.prototype.destructView = function () {
 
     VDRest.Abstract.Controller.prototype.destructView.call(this);
     this.module.cache.flushByClassKey(this);
+    $.event.trigger({
+        "type" : "destruct.window-" + this.keyInCache
+    });
+
+    $(document).off("destruct.window-" + this.keyInCache);
 };

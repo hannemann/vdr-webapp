@@ -75,17 +75,25 @@ Gui.Window.Controller.Input.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Input.prototype.okAction = function () {
 
-    var type = this.data.type;
+    var type = this.data.type, value;
 
     if ("string" === type || "number" === type) {
 
-        this.setStringLike();
+        value = this.setStringLike();
     }
 
     if ("enum" === type) {
 
-        this.setEnum();
+        value = this.setEnum();
     }
+
+    $.event.trigger({
+        "type" : 'setting.changed',
+        "payload" : {
+            "field" : this.data.gui.attr('name'),
+            "value" : value
+        }
+    });
 
     this.goBack();
 };
@@ -95,9 +103,11 @@ Gui.Window.Controller.Input.prototype.okAction = function () {
  */
 Gui.Window.Controller.Input.prototype.setStringLike = function () {
 
-    this.data.gui.val(
-        this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]').val()
-    );
+    var value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]').val();
+
+    this.data.gui.val(value);
+
+    return value;
 };
 
 /**
@@ -105,9 +115,11 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
  */
 Gui.Window.Controller.Input.prototype.setEnum = function () {
 
-    this.data.gui.val(
-        this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked').val()
-    );
+    var value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked').val();
+
+    this.data.gui.val(value);
+
+    return value;
 };
 
 /**
@@ -122,8 +134,6 @@ Gui.Window.Controller.Input.prototype.cancel = function () {
  * destroy, trigger change
  */
 Gui.Window.Controller.Input.prototype.goBack = function () {
-
-    $.event.trigger('setting.changed');
 
     this.module.cache.invalidateClasses(this);
 

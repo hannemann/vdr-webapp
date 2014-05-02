@@ -174,7 +174,7 @@ Gui.Window.View.Broadcast.prototype.renderToolsTab = function () {
 
     var i, dom, button, config = this.getToolsConfig();
 
-    dom = $('<ul>');
+    dom = $('<ul class="button-list">');
 
     for (i in config) {
 
@@ -196,7 +196,7 @@ Gui.Window.View.Broadcast.prototype.renderWebTab = function () {
 
     var i, dom, button, config = this.getWebConfig();
 
-    dom = $('<ul>');
+    dom = $('<ul class="button-list">');
 
     for (i in config) {
 

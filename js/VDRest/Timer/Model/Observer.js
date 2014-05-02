@@ -31,7 +31,7 @@ VDRest.Timer.Model.Observer.prototype.addTimer = function (e) {
 
     collection = this.module.getModel('List').getCollection();
 
-    timer.event_id = e.payload.broadcastId.split('/')[1];
+    timer.event_id = e.payload.callerId.split('/')[1];
 
     if (collection.length > 0) {
 
@@ -40,7 +40,7 @@ VDRest.Timer.Model.Observer.prototype.addTimer = function (e) {
     }
 
     $.event.trigger({
-        "type" : 'gui.timer-created.' + e.payload.broadcastId,
+        "type" : 'gui.timer-created.' + e.payload.callerId,
         "payload" : timer
     });
 };
@@ -51,11 +51,21 @@ VDRest.Timer.Model.Observer.prototype.addTimer = function (e) {
  */
 VDRest.Timer.Model.Observer.prototype.updateTimer = function (e) {
 
-    var timer = e.payload.timer;
+    var timer = e.payload.timer, model;
+
+    model = this.getTimer(e.payload.callerId);
+
+    model.data = timer;
+
+    delete this.module.cache.store.Model['List.Timer'][model.keyInCache];
+
+    model.keyInCache = timer.id;
+
+    this.module.cache.store.Model['List.Timer'][model.keyInCache] = model;
 
     $.event.trigger({
-        "type" : 'gui.timer-updated.' + e.payload.broadcastId,
-        "payload" : timer
+        "type" : 'gui.timer-updated.' + e.payload.callerId,
+        "payload" : model
     });
 };
 

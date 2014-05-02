@@ -74,11 +74,11 @@ Gui.Window.Controller.Timer.prototype.addObserver = function () {
 
     this.view.activateButton.on('click', $.proxy(this.toggleActivateTimer, this));
 
-    this.view.editButton.on('click', $.proxy(this.editTimerAction, this));
-
     $(document).one('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
-    $(document).one('timer-updated.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    $(document).one('gui.timer-updated.' + this.keyInCache, $.proxy(this.update, this));
+
+    $(document).on("persisttimerchange-" + this.keyInCache, $.proxy(this.updateTimer, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -96,6 +96,10 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
     this.view.deleteButton.off('click', $.proxy(this.deleteTimer, this));
 
     $(document).off('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+
+    $(document).off('gui.timer-updated.' + this.keyInCache, $.proxy(this.update, this));
+
+    $(document).off("persisttimerchange-" + this.keyInCache, $.proxy(this.updateTimer, this));
 };
 
 /**
@@ -104,6 +108,82 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
 Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
 
     VDRest.Api.actions.deleteTimer(this.getAdapter());
+};
+
+/**
+ * trigger timer update
+ */
+Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
+
+    var i, fields = e.payload;
+
+    for (i in fields) {
+
+        if (
+            fields.hasOwnProperty(i)
+            && this.data.resource.hasOwnProperty(i)
+            && "function" === typeof fields[i].getValue
+        ) {
+
+            this.data.resource[i] = fields[i].getValue();
+        }
+    }
+
+    VDRest.Api.actions.addOrUpdateTimer(this.getAdapter(), this.keyInCache);
+};
+
+/**
+ * trigger update view
+ */
+Gui.Window.Controller.Timer.prototype.update = function (e) {
+
+    var timer = e.payload,
+        cache = this.module.cache.store;
+
+    // update tabs
+    $.event.trigger({
+        "type" : "gui.tabs.update-" + this.keyInCache,
+        "payload" : {
+            "method" : "updateCacheKey",
+            "args" : [timer.keyInCache]
+        }
+    });
+
+    // update form
+    $.event.trigger({
+        "type" : "gui.form.update-" + this.keyInCache,
+        "payload" : {
+            "method" : "updateCacheKey",
+            "args" : [timer.keyInCache]
+        }
+    });
+
+    this.eventPrefix = 'window.timer-' + timer.id;
+
+    this.data.id = timer.keyInCache;
+    this.data.resource = timer.data;
+
+    delete cache.Controller['Timer'][this.keyInCache];
+    delete cache.View['Timer'][this.keyInCache];
+    delete cache.ViewModel['Timer'][this.keyInCache];
+
+    this.keyInCache = timer.keyInCache;
+    cache.Controller['Timer'][this.keyInCache] = this;
+
+    this.view.keyInCache = timer.keyInCache;
+    cache.View['Timer'][this.keyInCache] = this.view;
+
+    this.module.getViewModel('Timer', {
+        "id" : this.data.id,
+        "view" : this.view,
+        "resource" : this.data.resource,
+        "broadcast" : this.broadcast
+    });
+
+    this.removeObserver();
+    this.addObserver();
+
+    this.view.update();
 };
 
 /**
@@ -138,20 +218,6 @@ Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
 };
 
 /**
- * request edit form
- */
-Gui.Window.Controller.Timer.prototype.editTimerAction = function () {
-
-    $.event.trigger({
-        "type" : "window.request",
-        "payload" : {
-            "type" : "Timer.Edit",
-            "date" : this.data
-        }
-    });
-};
-
-/**
  * trigger timer delete
  */
 Gui.Window.Controller.Timer.prototype.destroyTimer = function () {
@@ -177,6 +243,7 @@ Gui.Window.Controller.Timer.prototype.animateImageAction = function () {
 Gui.Window.Controller.Timer.prototype.destructView = function () {
 
     var me = this;
+
     // apply animation
     this.view.node.toggleClass('collapse expand');
     // remove on animation end

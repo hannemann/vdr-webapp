@@ -29,17 +29,61 @@ Gui.Tabs.Controller.Abstract.prototype.dispatchView = function () {
 
 /**
  * add event handler
- * add destroyer to VDRest.app
  */
 Gui.Tabs.Controller.Abstract.prototype.addObserver = function () {
 
-    var me = this;
+    $(document).on("destruct.window-" + this.data.keyInCache, $.proxy(this.destruct, this));
 
-    $(document).one("destruct.window-" + this.data.keyInCache, function () {
+    $(document).on('gui.tabs.update-' + this.data.keyInCache, $.proxy(this.update, this));
+};
 
-        me.view.destruct();
-        me.module.cache.flushByClassKey(me);
-    });
+/**
+ * remove event handler
+ */
+Gui.Tabs.Controller.Abstract.prototype.removeObserver = function () {
+
+    $(document).off("destruct.window-" + this.data.keyInCache, $.proxy(this.destruct, this));
+
+    $(document).off('gui.tabs.update-' + this.data.keyInCache, $.proxy(this.update, this));
+};
+
+/**
+ * call update method
+ */
+Gui.Tabs.Controller.Abstract.prototype.update = function (e) {
+
+    var method = e.payload.method, args = e.payload.args;
+
+    if ("function" === typeof this[method]) {
+
+        this[method].apply(this, args);
+    }
+};
+
+/**
+ * call update method
+ */
+Gui.Tabs.Controller.Abstract.prototype.updateCacheKey = function (keyInCache) {
+
+    var keys = this.data.cacheKey.split('/'), values = keyInCache.split('/'), i = 0, l = keys.length;
+
+    this.module.cache.flushByClassKey(this);
+
+    this.keyInCache = keyInCache;
+    this.data.keyInCache = keyInCache;
+
+    for (i;i<l;i++) {
+
+        this.data[keys[i]] = values[i];
+    }
+
+    this.view.keyInCache = keyInCache;
+
+    this.removeObserver();
+    this.addObserver();
+
+    this.module.cache.store.Controller[this._class][keyInCache] = this;
+    this.module.cache.store.View[this._class][keyInCache] = this.view;
 };
 
 /**
@@ -65,4 +109,14 @@ Gui.Tabs.Controller.Abstract.prototype.addDomEvents = function () {
         });
 
     });
+};
+
+/**
+ * destruct view, remove from cache
+ */
+Gui.Tabs.Controller.Abstract.prototype.destruct = function () {
+
+    this.view.destruct();
+    this.module.cache.flushByClassKey(this);
+    this.removeObserver();
 };

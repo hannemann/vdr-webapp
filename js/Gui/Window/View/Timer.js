@@ -35,6 +35,11 @@ Gui.Window.View.Timer.prototype.hasHeader = true;
 Gui.Window.View.Timer.prototype.hasBroadcast = false;
 
 /**
+ * @type {boolean}
+ */
+Gui.Window.View.Timer.prototype.hasDataChanges = false;
+
+/**
  * @type {Gui.Window.Controller.Abstract}
  */
 Gui.Window.View.Timer.prototype.init = function () {
@@ -54,6 +59,16 @@ Gui.Window.View.Timer.prototype.render = function () {
     Gui.Window.View.Abstract.prototype.render.call(this);
 
     this.node.toggleClass('collapsed expand');
+};
+
+/**
+ * update
+ */
+Gui.Window.View.Timer.prototype.update = function () {
+
+    this.header.empty();
+
+    this.addClasses().decorateHeader();
 };
 
 /**
@@ -220,7 +235,7 @@ Gui.Window.View.Timer.prototype.getTabConfig = function () {
 
     this.body.addClass('has-tabs');
 
-    var me = this, tabs = {};
+    var me = this, tabs = {}, tabConfig = {};
 
     if (this.hasBroadcast && this.hasBroadcastDescription()) {
 
@@ -235,11 +250,11 @@ Gui.Window.View.Timer.prototype.getTabConfig = function () {
 
     }
 
-    tabs.tools = {
-        "label": "Tools",
+    tabs.edit = {
+        "label": "Edit",
         "content": function (content) {
 
-            $(content).append(me.renderToolsTab());
+            $(content).append(me.renderEditTab());
         }
     };
 
@@ -258,24 +273,26 @@ Gui.Window.View.Timer.prototype.getTabConfig = function () {
         tabs.tools.default = true;
     }
 
-    return {
-        "keyInCache": this.keyInCache,
-        "parentView" : this.body,
-        "cacheKey" : this.cacheKey,
-        "tabs" : tabs
-    }
+    tabConfig["keyInCache"] = this.keyInCache;
+    tabConfig["parentView"] = this.body;
+    tabConfig["cacheKey"] = this.cacheKey;
+    tabConfig["id"] = this.getId();
+    tabConfig["tabs"] = tabs;
+
+    return tabConfig;
 };
 
 /**
  * retrieve tools tab configuration
  * @returns {object}
  */
-Gui.Window.View.Timer.prototype.getToolsConfig = function () {
+Gui.Window.View.Timer.prototype.getEditConfig = function () {
 
     var button, text, me = this;
 
     return {
         "delete":{
+            "type" : "button",
             "dom":function () {
 
                 me.deleteButton = $('<dl class="window-button round delete-button symbol-button"></dl>');
@@ -285,7 +302,8 @@ Gui.Window.View.Timer.prototype.getToolsConfig = function () {
                 return me.deleteButton.append(button).append(text);
             }
         },
-        "edit":{
+        "activate":{
+            "type" : "button",
             "dom":function () {
 
                 me.activateButton = $('<dl class="window-button round activate-button symbol-button"></dl>');
@@ -295,14 +313,21 @@ Gui.Window.View.Timer.prototype.getToolsConfig = function () {
                 return me.activateButton.append(button).append(text);
             }
         },
-        "activate":{
-            "dom":function () {
-
-                me.editButton = $('<dl class="window-button round edit-button symbol-button"></dl>');
-                button = $('<dt>').html('&#9998;');
-                text = $('<dd>').text('Edit Timer');
-
-                return me.editButton.append(button).append(text);
+        "editForm" : {
+            "categories" : {
+                "file" : {
+                    "label" : "File"
+                }
+            },
+            "fields" : {
+                "filename" : {
+                    "type" : "string",
+                    "category" : "file",
+                    "label" : "Filename",
+                    "getValue" : function () {
+                        return me.getFilename();
+                    }
+                }
             }
         }
     }
@@ -337,20 +362,52 @@ Gui.Window.View.Timer.prototype.getWebConfig = function () {
  * render contents of tool tab
  * return {jQuery}
  */
-Gui.Window.View.Timer.prototype.renderToolsTab = function () {
+Gui.Window.View.Timer.prototype.renderEditTab = function () {
 
-    var i, dom, button, config = this.getToolsConfig();
+    var i, dom, buttonList, button, config = this.getEditConfig();
 
-    dom = $('<ul>');
+    dom = $('<div>');
+
+    buttonList = $('<ul class="button-list clearer">');
 
     for (i in config) {
 
         if (config.hasOwnProperty(i)) {
 
-            button = this.getToolButton(config[i]);
-            dom.append(button);
+            if ("button" === config[i].type) {
+                button = this.getToolButton(config[i]);
+                buttonList.append(button);
+            }
         }
     }
+
+    dom.append(buttonList);
+
+    $.event.trigger({
+        "type" : "form.request",
+        "config" : {
+            "parentView" : {
+                "node" : dom
+            },
+            "cacheKey" : this.cacheKey,
+            "keyInCache" : this.keyInCache,
+            "id" : this.getId(),
+            "catConfig" : config.editForm.categories,
+            "fields" : config.editForm.fields,
+            "hasSubmit" : true,
+            "changed" : $.proxy(function (e) {
+
+                config.editForm.fields[e.payload.field].getValue = function () {
+                    return e.payload.value;
+                };
+
+                $.event.trigger({
+                    "type" : "persisttimerchange-" + this.keyInCache,
+                    "payload" : config.editForm.fields
+                });
+            }, this)
+        }
+    });
 
     return dom;
 };
@@ -363,7 +420,7 @@ Gui.Window.View.Timer.prototype.renderWebTab = function () {
 
     var i, dom, button, config = this.getWebConfig();
 
-    dom = $('<ul>');
+    dom = $('<ul class="button-list">');
 
     for (i in config) {
 

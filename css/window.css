@@ -79,13 +79,11 @@
 .body .details {
 }
 
-.tools li,
-.web li {
+.button-list li {
     width: calc(100% / 2 - 10px);
     float: left;
 }
-.web li:nth-child(2n+1),
-.tools li:nth-child(2n+1) {
+.button-list li:nth-child(2n+1) {
     margin-right: 20px;
 }
 .window-button {

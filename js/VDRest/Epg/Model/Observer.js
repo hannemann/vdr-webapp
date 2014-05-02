@@ -22,6 +22,8 @@ VDRest.Epg.Model.Observer.prototype.init = function () {
 
     $(document).on('vdrest-api-actions.timer-created', $.proxy(this.handleTimerCreated, this));
 
+    $(document).on('vdrest-api-actions.timer-updated', $.proxy(this.handleTimerUpdated, this));
+
 };
 
 /**
@@ -52,6 +54,40 @@ VDRest.Epg.Model.Observer.prototype.handleTimerDeleted = function (e) {
             model.data.timer_exists = false;
             model.data.timer_active = false;
             model.data.timer_id = '';
+
+            $.event.trigger({
+                "type" : 'gui.timer-deleted.' + model.keyInCache,
+                "payload" : model
+            });
+        }
+    }
+};
+
+/**
+ * handle updated timer
+ * @param e
+ */
+VDRest.Epg.Model.Observer.prototype.handleTimerUpdated = function (e) {
+
+    var model = this.getBroadcast(e.payload.callerId);
+
+    if (this.timers[e.payload.callerId]) {
+
+        model = this.getBroadcast(this.timers[e.payload.callerId]);
+
+        delete this.timers[e.payload.callerId];
+
+        if (model) {
+
+            model.data.timer_active = e.payload.timer.is_active;
+            model.data.timer_id = e.payload.timer.id;
+
+            this.timers[e.payload.timer.id] = model.keyInCache;
+
+            $.event.trigger({
+                "type" : 'gui.timer-updated.' + model.keyInCache,
+                "payload" : model
+            });
         }
     }
 };
@@ -62,13 +98,16 @@ VDRest.Epg.Model.Observer.prototype.handleTimerDeleted = function (e) {
  */
 VDRest.Epg.Model.Observer.prototype.handleTimerCreated = function (e) {
 
-    var model = this.getBroadcast(e.payload.broadcastId);
+    var model = this.getBroadcast(e.payload.callerId);
 
-    model.data.timer_exists = true;
-    model.data.timer_active = e.payload.timer.is_active;
-    model.data.timer_id = e.payload.timer.id;
+    if (model) {
 
-    this.timers[e.payload.timer.id] = model.keyInCache;
+        model.data.timer_exists = true;
+        model.data.timer_active = e.payload.timer.is_active;
+        model.data.timer_id = e.payload.timer.id;
+
+        this.timers[e.payload.timer.id] = model.keyInCache;
+    }
 };
 
 /**

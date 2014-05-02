@@ -10,6 +10,11 @@ Gui.Window.ViewModel.Timer = function () {};
 Gui.Window.ViewModel.Timer.prototype = new Gui.Timer.ViewModel.List.Timer();
 
 /**
+ * @type {string}
+ */
+Gui.Window.ViewModel.Timer.prototype.cacheKey = 'id';
+
+/**
  * initialize resources
  */
 Gui.Window.ViewModel.Timer.prototype.init = function () {
