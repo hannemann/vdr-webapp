@@ -32,9 +32,11 @@ VDRest.Api.TimerAdapter.Abstract.prototype = {
         var times = {}, day = [], start, stop;
 
         // if not vps add gaps
-        if (1==2 && obj.vps > 0 && VDRest.config.getItem('autoVps')) {
+        if (obj.vps > 0 && VDRest.config.getItem('autoVps')) {
 
-            times.start = new Date(obj.vps * 1000);
+            start = new Date(obj.vps * 1000);
+
+            stop = new Date(obj.start_time.getTime() + obj.duration * 1000);
 
         } else {
 
@@ -43,13 +45,13 @@ VDRest.Api.TimerAdapter.Abstract.prototype = {
                 - 1000 * parseInt(VDRest.config.getItem('recordingStartGap'), 10)
             );
 
-            times.start = VDRest.helper.pad(start.getHours(), 2) + VDRest.helper.pad(start.getMinutes(), 2);
+            stop = new Date(
+                obj.start_time.getTime() + obj.duration * 1000
+                + 1000 * parseInt(VDRest.config.getItem('recordingEndGap'), 10)
+            );
         }
 
-        stop = new Date(
-            obj.start_time.getTime() + obj.duration * 1000
-            + 1000 * parseInt(VDRest.config.getItem('recordingEndGap'), 10)
-        );
+        times.start = VDRest.helper.pad(start.getHours(), 2) + VDRest.helper.pad(start.getMinutes(), 2);
 
         times.stop = VDRest.helper.pad(stop.getHours(), 2) + VDRest.helper.pad(stop.getMinutes(), 2);
 
@@ -63,16 +65,15 @@ VDRest.Api.TimerAdapter.Abstract.prototype = {
         return times;
     },
 
-    "getFlags" : function (obj) {
+    "getFlags" : function () {
 
-        flags = 0;
+        var flags = VDRest.Timer.Model.List.Timer.prototype.flags.inactive,
+            is_active = VDRest.Timer.Model.List.Timer.prototype.flags.is_active,
+            vps = VDRest.Timer.Model.List.Timer.prototype.flags.uses_vps;
 
-        flags += obj.is_active ? 1 : 0;
+        flags = this.timer.is_active && flags | is_active || flags;
 
-        flags += obj.vps > 0 ? 4 : 0;
-
-        // i guess its not needed here
-//        flags += obj.is_recording ? 8 : 0;
+        flags = (this.broadcast && this.broadcast.vps > 0 && VDRest.config.getItem('autoVps')) && flags | vps || flags;
 
         return flags;
     },
@@ -103,5 +104,10 @@ VDRest.Api.TimerAdapter.Abstract.prototype = {
         data.aux = this.aux;
 
         return data;
+    },
+
+    "getVpsSet" : function () {
+
+        return this.timer.flags & VDRest.Timer.Model.List.Timer.prototype.flags.uses_vps;
     }
 };

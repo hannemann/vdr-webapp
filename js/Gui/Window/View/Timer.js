@@ -270,7 +270,7 @@ Gui.Window.View.Timer.prototype.getTabConfig = function () {
 
     if (!(this.hasBroadcast && this.hasBroadcastDescription())) {
 
-        tabs.tools.default = true;
+        tabs.edit.default = true;
     }
 
     tabConfig["keyInCache"] = this.keyInCache;

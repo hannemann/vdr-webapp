@@ -9,31 +9,43 @@ VDRest.Api.TimerAdapter.EpgBroadcast = function () {};
 VDRest.Api.TimerAdapter.EpgBroadcast.prototype = new VDRest.Api.TimerAdapter.Abstract();
 
 /**
+ * add relevant data
+ * @param client
+ */
+VDRest.Api.TimerAdapter.EpgBroadcast.prototype.setData = function (client) {
+
+    this.timer = {
+        "id" : client.data.timer_id,
+        "is_active" : !client.data.timer_id,
+        "channel" : client.data.channel
+    };
+    this.broadcast = client.data;
+
+    return this;
+};
+
+/**
  * convert data
- * @param {VDRest.Epg.Model.Channels.Channel.Broadcast} obj
  * @returns {VDRest.Api.TimerAdapter.EpgBroadcast}
  */
-VDRest.Api.TimerAdapter.EpgBroadcast.prototype.normalize = function (obj) {
+VDRest.Api.TimerAdapter.EpgBroadcast.prototype.normalize = function () {
 
 //    VDRest.helper.log(obj);
 
     var times = this.getTimes({
 
-        "start_time" : new Date(obj.getData('start_date')),
+        "start_time" : this.broadcast.start_date,
 
-        "vps" : 0, // TODO: read from object as soon as available
+        "vps" : this.broadcast.vps,
 
-        "duration" : obj.getData('duration')
+        "duration" : this.broadcast.duration
     });
 
-    this.flags = this.getFlags({
-        "is_active" : 1,
-        "vps" : 0 //obj.data.resource.vps
-    });
+    this.flags = this.getFlags();
 
     this.weekdays = '-------';
 
-    this.timer_id = obj.getData('timer_id');
+    this.timer_id = this.broadcast.timer_id;
 
     this.start = times.start;
 
@@ -41,11 +53,11 @@ VDRest.Api.TimerAdapter.EpgBroadcast.prototype.normalize = function (obj) {
 
     this.day = times.day;
 
-    this.file = obj.getData('title');
+    this.file = this.broadcast.title;
 
-    this.channel = obj.getData('channel');
+    this.channel = this.broadcast.channel;
 
-    this.aux = obj.keyInCache;
+    this.aux = this.broadcast.channel + '/' + this.broadcast.id + ':';
 
     return this;
 };

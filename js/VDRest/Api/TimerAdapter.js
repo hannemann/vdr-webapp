@@ -1,31 +1,32 @@
 /**
- * @param obj
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast|Gui.Window.Controller.Timer} client
  * @returns {VDRest.Api.TimerAdapter.EpgBroadcast|VDRest.Api.TimerAdapter.Timer}
  * @constructor
  */
-VDRest.Api.TimerAdapter = function (obj) {
+VDRest.Api.TimerAdapter = function (client) {
 
-    return this.getTypeInstance(obj);
+    this.client = client;
+
+    return this.getTypeInstance();
 };
 
 /**
  * retrieve type instance
- * @param {VDRest.Epg.Model.Channels.Channel.Broadcast|Gui.Window.Controller.Timer} obj
  * @returns {VDRest.Api.TimerAdapter.EpgBroadcast|VDRest.Api.TimerAdapter.Timer}
  */
-VDRest.Api.TimerAdapter.prototype.getTypeInstance = function (obj) {
+VDRest.Api.TimerAdapter.prototype.getTypeInstance = function () {
 
     var type;
 
-    if (obj instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
+    if (this.client instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
 
         type = new VDRest.Api.TimerAdapter.EpgBroadcast();
 
-    } else if (obj instanceof Gui.Window.Controller.Timer) {
+    } else if (this.client instanceof Gui.Window.Controller.Timer) {
 
         type = new VDRest.Api.TimerAdapter.Timer();
 
     }
 
-    return type.normalize(obj);
+    return type.setData(this.client).normalize(this.client);
 };

@@ -15,26 +15,15 @@ Gui.Window.Controller.Timer.prototype = new Gui.Window.Controller.Abstract();
 Gui.Window.Controller.Timer.prototype.cacheKey = 'id';
 
 /**
- * init view and viewmodel
+ * init view and view model
  */
 Gui.Window.Controller.Timer.prototype.init = function () {
-
-    this.broadcast = new VDRest.Lib.Object();
 
     this.eventPrefix = 'window.timer-' + this.data.id;
 
     this.view = this.module.getView('Timer', this.data);
 
-    if (this.data.resource.event_id > 0) {
-
-        this.broadcast = VDRest.app.getModule('VDRest.Epg')
-            .loadModel(
-            'Channels.Channel.Broadcast',
-            this.data.resource.channel + '/' + this.data.resource.event_id
-        );
-
-        this.view.setHasBroadcast();
-    }
+    this.getBroadcast();
 
 //    VDRest.helper.log(this.data.resource, this.broadcast);
 
@@ -46,6 +35,71 @@ Gui.Window.Controller.Timer.prototype.init = function () {
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
+};
+
+/**
+ * load broadcast
+ */
+Gui.Window.Controller.Timer.prototype.getBroadcast = function () {
+
+    var channel, me = this,
+        broadcastHelper = VDRest.app.getModule('VDRest.Timer').getHelper('Broadcast');
+
+    if (this.data.resource.event_id > 0) {
+
+        this.broadcast = VDRest.app.getModule('VDRest.Epg')
+            .loadModel(
+            'Channels.Channel.Broadcast',
+            this.data.resource.channel + '/' + this.data.resource.event_id
+        );
+
+    } else {
+
+        $(document).one('broadcastsloaded-' + this.data.resource.channel, function (e) {
+
+            var duration = 0, candidate = null;
+
+            e.iterate(function (broadcast) {
+
+                if (broadcastHelper.match(me.data.resource, broadcast.data)) {
+
+                    me.broadcast = broadcast;
+
+                    return false;
+                }
+
+                // match by longest duration as alternative
+                if (duration < broadcast.data.duration) {
+
+                    candidate = broadcast;
+                    duration = broadcast.data.duration;
+                }
+            });
+
+            if (!me.broadcast) {
+
+                me.broadcast = candidate;
+            }
+        });
+
+        channel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', this.data.resource.channel);
+
+        channel.getByTime(
+            new Date(this.data.resource.start_timestamp),
+            new Date(this.data.resource.stop_timestamp),
+            false
+        );
+    }
+
+    if (this.broadcast instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
+
+        this.view.setHasBroadcast();
+        this.data.resource.event_id = this.broadcast.getData('id');
+
+    } else {
+
+        this.broadcast = new VDRest.Lib.Object();
+    }
 };
 
 /**
@@ -94,6 +148,8 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
     }
 
     this.view.deleteButton.off('click', $.proxy(this.deleteTimer, this));
+
+    this.view.activateButton.off('click', $.proxy(this.toggleActivateTimer, this));
 
     $(document).off('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
@@ -158,7 +214,7 @@ Gui.Window.Controller.Timer.prototype.update = function (e) {
         }
     });
 
-    this.eventPrefix = 'window.timer-' + timer.id;
+    this.eventPrefix = 'window.timer-' + timer.keyInCache;
 
     this.data.id = timer.keyInCache;
     this.data.resource = timer.data;
@@ -182,6 +238,7 @@ Gui.Window.Controller.Timer.prototype.update = function (e) {
 
     this.removeObserver();
     this.addObserver();
+    this.timerActiveAction();
 
     this.view.update();
 };
@@ -192,10 +249,6 @@ Gui.Window.Controller.Timer.prototype.update = function (e) {
 Gui.Window.Controller.Timer.prototype.toggleActivateTimer = function () {
 
     this.data.resource.is_active = !this.data.resource.is_active;
-
-    this.timerActiveAction();
-
-    // TODO: für updates das event laden, damit die korrekte anfangzeit an den Adapter übergeben werden kann
 
     VDRest.Api.actions.addOrUpdateTimer(this.getAdapter(), this.keyInCache);
 };

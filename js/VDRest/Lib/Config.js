@@ -221,12 +221,12 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "number",
         "label" : "Recording follow up time",
         "info" : "Follow up time of recording after broadcast ends (seconds)"
-    },/*
+    },
     "autoVps"   :   {
         "category" : "timer",
         "type" : "boolean",
         "label" : "Use VPS if available"
-    },*/
+    },
     "streamdevActive"    :   {
         "category" : "streaming",
         "type" : "boolean",

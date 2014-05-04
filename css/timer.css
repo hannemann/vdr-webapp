@@ -8,6 +8,7 @@
 .timer.list-item .filename {
     margin-top: 20px;
     clear: left;
+    font-size: 16px;
 }
 .timer-exists .record-button dt {
     background: #FF0000;

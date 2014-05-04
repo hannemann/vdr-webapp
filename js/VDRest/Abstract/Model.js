@@ -107,11 +107,15 @@ VDRest.Abstract.Model.prototype.triggerCollectionLoaded = function () {
  */
 VDRest.Abstract.Model.prototype.resultIterator = function (callback) {
 
-    var i = 0, l = this.currentResult.length;
+    var i = 0, l = this.currentResult.length, n = true;
 
     for (i;i<l;i++) {
 
-        callback(this.currentResult[i]);
+        n = callback(this.currentResult[i]);
+
+        if (n === false) {
+            break;
+        }
     }
 };
 

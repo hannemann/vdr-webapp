@@ -9,51 +9,40 @@ VDRest.Api.TimerAdapter.Timer = function () {};
 VDRest.Api.TimerAdapter.Timer.prototype = new VDRest.Api.TimerAdapter.Abstract();
 
 /**
+ * add relevant data
+ * @param client
+ */
+VDRest.Api.TimerAdapter.Timer.prototype.setData = function (client) {
+
+    this.timer = client.data.resource;
+    this.broadcast = client.broadcast.data;
+
+    return this;
+};
+
+/**
  * convert data
- * @param obj {Gui.Window.Controller.Timer}
  * @returns {VDRest.Api.TimerAdapter.Timer}
  */
-VDRest.Api.TimerAdapter.Timer.prototype.normalize = function (obj) {
+VDRest.Api.TimerAdapter.Timer.prototype.normalize = function () {
 
-    var duration = new Date(
-                new Date(obj.data.resource.stop_timestamp).getTime() - VDRest.config.getItem('recordingEndGap') * 1000
-                - new Date(obj.data.resource.start_timestamp).getTime() + VDRest.config.getItem('recordingStartGap') * 1000
-            ).getTime() / 1000,
+    this.weekdays = this.timer.weekdays;
 
-        times = this.getTimes({
+    this.timer_id = this.timer.id;
 
-            "start_time" : new Date(
-                new Date(obj.data.resource.start_timestamp).getTime()
-                + VDRest.config.getItem('recordingStartGap') * 1000
-            ),
+    this.start = this.timer.start;
 
-            "vps" : 0, // TODO: read from object as soon as available
+    this.stop = this.timer.stop;
 
-            "duration" : duration
-        }),
+    this.day = this.timer.day;
 
-        flags = this.getFlags({
-            "is_active" : obj.data.resource.is_active,
-            "vps" : 0 //obj.data.resource.vps
-        });
+    this.file = this.timer.filename;
 
-    this.weekdays = obj.data.resource.weekdays;
+    this.channel = this.timer.channel;
 
-    this.timer_id = obj.data.resource.id;
+    this.flags = this.getFlags();
 
-    this.start = times.start;
-
-    this.stop = times.stop;
-
-    this.day = times.day;
-
-    this.file = obj.data.resource.filename;
-
-    this.channel = obj.data.resource.channel;
-
-    this.flags = flags;
-
-    this.aux = '';
+    this.aux = this.broadcast.channel && this.broadcast.channel + '/' + this.broadcast.id + ':' || '';
 
     return this;
 };

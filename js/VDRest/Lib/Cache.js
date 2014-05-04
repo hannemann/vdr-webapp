@@ -12,7 +12,8 @@ VDRest.Lib.Cache = function () {
         "Model" : {},
         "View" : {},
         "ViewModel" : {},
-        "Controller" : {}
+        "Controller" : {},
+        "Helper" : {}
     };
 };
 
