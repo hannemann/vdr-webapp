@@ -87,7 +87,7 @@ VDRest.Abstract.Module.prototype.getResourceInitData = function (path, cacheKey)
         resourceId;
 
     resourceConstructor = VDRest.Lib.factory.getConstructor(resourcePath);
-    resourceCacheKey = resourceConstructor.prototype.cacheKey;
+    resourceCacheKey = resourceConstructor.prototype.cacheKey || '';
 
     resourceId = cacheKey
         .split(this.cache.cacheKeySeparator)

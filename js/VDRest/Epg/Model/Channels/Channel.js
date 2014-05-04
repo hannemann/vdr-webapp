@@ -66,6 +66,11 @@ VDRest.Epg.Model.Channels.Channel.prototype.collectionItemModel = 'Channels.Chan
 VDRest.Epg.Model.Channels.Channel.prototype.resultCollection = 'events';
 
 /**
+ * @type {string}
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.resultJSON = 'channels';
+
+/**
  * name of property that holds parent object
  * @type {string}
  */

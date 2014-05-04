@@ -27,8 +27,6 @@ Gui.Timer.View.List.Timer.prototype.init = function () {
     this.channel = $('<span class="channel">').appendTo(this.node);
 
     this.time = $('<span class="time">').appendTo(this.node);
-
-    this.name = $('<div class="filename">').appendTo(this.node);
 };
 
 /**
@@ -48,11 +46,13 @@ Gui.Timer.View.List.Timer.prototype.decorate = function () {
 
     this.channel.text(this.getChannelName());
 
-    this.name.text(this.getFilename());
+    this.addPath().addFilename();
 
     this.date.text(this.addStartDate());
 
     this.time.text(this.addTime());
+
+    this.addClasses();
 };
 
 /**
@@ -87,4 +87,51 @@ Gui.Timer.View.List.Timer.prototype.addTime = function () {
     string += this.helper().getTimeString(start) +' - '+ this.helper().getTimeString(end);
 
     return string;
+};
+
+/**
+ * add path node
+ */
+Gui.Timer.View.List.Timer.prototype.addPath = function () {
+
+    var path = this.getFilename().split('~').slice(0, -1);
+
+    if (path.length > 1) {
+
+        if (!this.path) {
+
+            this.path = $('<div class="path">').appendTo(this.node);
+        }
+
+        this.path.text(path.join('/'));
+    }
+
+    return this;
+};
+
+/**
+ * add filename node
+ */
+Gui.Timer.View.List.Timer.prototype.addFilename = function () {
+
+    if (!this.filename) {
+
+        this.filename = $('<div class="filename">').appendTo(this.node);
+    }
+
+    this.filename.text(this.getFilename().split('~').pop());
+
+    return this;
+};
+
+/**
+ * add filename node
+ */
+Gui.Timer.View.List.Timer.prototype.addClasses = function () {
+
+    this.node.toggleClass('active', this.getIsActive());
+
+    this.node.toggleClass('recording', this.getIsRecording());
+
+    return this;
 };

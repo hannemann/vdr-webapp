@@ -5,8 +5,41 @@
 .timer.list-item .time {
     text-align: right;
 }
+.timer.list-item .path {
+    clear: left;
+}
+
+.timer.list-item .filename:after {
+    content: '✓';
+    background: rgb(80,80,80);
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    bottom: 12px;
+    right: 0;
+    text-align: center;
+    font-family: sans-serif;
+    line-height: 16px;
+    font-size: 14px;
+    position:absolute;
+}
+
+.timer.list-item.active .filename:after {
+    background: green;
+}
+
+.timer.list-item .path:before {
+    content: '';
+    background: #ffb62a url('/assets/folder.png');
+    background-size: 14px 14px;
+    display: block;
+    float: left;
+    margin-right: 3px;
+    width: 14px;
+    height: 14px;
+}
 .timer.list-item .filename {
-    margin-top: 20px;
+    margin-top: 5px;
     clear: left;
     font-size: 16px;
 }

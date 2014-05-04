@@ -82,7 +82,7 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function () {
             }
         });
 
-        channel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', this.data.resource.channel);
+        channel = VDRest.app.getModule('VDRest.Epg').loadModel('Channels.Channel', this.data.resource.channel);
 
         channel.getByTime(
             new Date(this.data.resource.start_timestamp),
