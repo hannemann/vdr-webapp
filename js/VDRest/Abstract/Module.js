@@ -27,6 +27,8 @@ VDRest.Abstract.Module.prototype.init = function () {
 
     window[this.namespace][this.name].Controller = function () {};
 
+    window[this.namespace][this.name].Helper = function () {};
+
     this.cache = new VDRest.Lib.Cache();
 
     this.cache.module = this;
@@ -137,6 +139,29 @@ VDRest.Abstract.Module.prototype.getView = function (type, data) {
 VDRest.Abstract.Module.prototype.getController = function (type, data) {
 
     return this.getAndInitialize('Controller', type, data);
+};
+
+/**
+ * retrieve helper
+ * @param {String} type
+ * @return {*}
+ */
+VDRest.Abstract.Module.prototype.getHelper = function (type) {
+
+    var cache = this.cache.getStore('Helper'),
+        path;
+
+    type = type || 'Default';
+
+    if ("undefined" !== typeof cache[type]) {
+
+        return cache[type];
+    }
+
+    path = this.namespace + '.' + this.name + '.Helper.' + type;
+
+    return VDRest.Lib.factory.getClass(path);
+
 };
 
 /**
