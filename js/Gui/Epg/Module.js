@@ -75,7 +75,30 @@ Gui.Epg.prototype.contextMenu = {
         "scope" : 'Gui.Epg',
         "fn" : function () {
 
-            this.refresh();
+            this.refresh(VDRest.config.getItem('lastEpg'));
+        }
+    },
+
+    "Primetime" : {
+        "labels" : {
+            "on" : "Now",
+            "off" : "Primetime"
+        },
+        "state" : VDRest.config.getItem('lastEpg') === 'now' ? "off" : "on",
+        "scope" : 'Gui.Epg',
+        "fn" : function () {
+
+            if ("off" === this.contextMenu.Primetime.state) {
+
+                this.contextMenu.Primetime.state = 'on';
+                this.refresh('prime')
+
+            } else {
+
+                this.contextMenu.Primetime.state = 'off';
+                this.refresh('now')
+
+            }
         }
     }
 };
@@ -100,11 +123,16 @@ Gui.Epg.prototype.destruct = function () {
 /**
  * refresh default view
  */
-Gui.Epg.prototype.refresh = function () {
+Gui.Epg.prototype.refresh = function (time) {
 
-    this.getController('Epg').destructView();
-    this.cache.flush();
-    this.dispatch();
+    var me = this;
+    setTimeout(function () {
+        me.getController('Epg').destructView();
+        me.cache.flush();
+        VDRest.app.getModule('VDRest.Epg').cache.flush();
+        VDRest.config.setItem('lastEpg', time);
+        me.dispatch();
+    }, 150);
 };
 
 /**
