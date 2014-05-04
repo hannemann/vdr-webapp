@@ -53,7 +53,7 @@ VDRest.Api.Resource.prototype.getBaseUrl = function () {
 VDRest.Api.Resource.prototype.load = function (options) {
 
     var url = "undefined" !== typeof options.url && "undefined" !== typeof this.urls[options.url] ?
-        this.urls[options.url] : this.urls.load, me=this, data,
+        this.urls[options.url] : this.urls.load, me=this, data, request = {},
 
         method = options.method || 'GET',
 
@@ -79,13 +79,18 @@ VDRest.Api.Resource.prototype.load = function (options) {
         this.cachedResponse = false;
         this.refreshCache = false;
 
+        request.url = this.getBaseUrl() + url;
+        request.method = method;
+
+        if (options.data) {
+            request.data = options.data;
+        }
+
         if (!async) {
 
-            data = $.ajax({
-                "url": this.getBaseUrl() + url,
-                "method": method,
-                "async" : false
-            });
+            request.async = false;
+
+            data = $.ajax(request);
 
             this.onComplete(data);
 
@@ -104,12 +109,9 @@ VDRest.Api.Resource.prototype.load = function (options) {
             }
         }
 
-        $.ajax({
-
-            "url": this.getBaseUrl() + url,
-            "method": method
-
-        }).done(function (result) {
+        $.ajax(
+            request
+        ).done(function (result) {
 
             me.responseCache[url] = result;
             callback(result);
