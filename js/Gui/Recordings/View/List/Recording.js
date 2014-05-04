@@ -12,24 +12,31 @@ Gui.Recordings.View.List.Recording.prototype.init = function () {
 
 Gui.Recordings.View.List.Recording.prototype.render = function () {
 
-    this.name = $('<div class="name">')
-        .text(this.getName())
-        .appendTo(this.node);
 
-    if (this.hasEventShortText()) {
+    if (! this.name) {
+        this.name = $('<div class="name">')
+            .text(this.getName())
+            .appendTo(this.node);
 
-        $('<div class="shortText italic">')
+    }
+    if (!this.shortText && this.hasEventShortText()) {
+
+        this.shortText = $('<div class="shortText italic">')
             .text(this.getEventShortText())
             .appendTo(this.name);
     }
 
-    this.date = $('<span class="date">')
-        .text(this.getStartDate())
-        .appendTo(this.node);
+    if (!this.date) {
+        this.date = $('<span class="date">')
+            .text(this.getStartDate())
+            .appendTo(this.node);
+    }
 
-    this.duration = $('<span class="time">')
-        .text(this.getDurationString())
-        .appendTo(this.node);
+    if (!this.duration) {
+        this.duration = $('<span class="time">')
+            .text(this.getDurationString())
+            .appendTo(this.node);
+    }
 
     this.addClasses();
 
