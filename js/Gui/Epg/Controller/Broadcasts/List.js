@@ -154,7 +154,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
             'channel' : dataModel.data.channel,
             'id' : dataModel.data.id,
             "parent" : this,
-            "dataModel" : dataModel
+            "dataModel" : dataModel,
+            "position" : this.broadcasts.length
         }));
 
         if (isInView) {

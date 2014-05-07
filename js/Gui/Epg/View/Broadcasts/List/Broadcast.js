@@ -19,9 +19,40 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.cacheKey = 'channel/id';
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
 
-    this.node = $('<div class="broadcast"></div>');
+    this.node = $('<div class="broadcast" data-position="' + this.getData('position') + '"></div>');
 
     this.info = $('<div class="content">').appendTo(this.node);
+};
+
+/**
+ * render dom
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
+
+    var me = this;
+
+    this.node.attr('data-right', this.getRight());
+
+    if (0 === this.getData('position')) {
+
+        this.parentView.node.prepend(this.node);
+
+    }
+    else {
+
+        this.parentView.node.find('div.broadcast').each(function () {
+
+            if (me.getLeft() >= parseInt($(this).attr('data-right'), 10)) {
+
+                me.node.insertAfter(this);
+            }
+        });
+
+    }
+
+
+//    VDRest.Abstract.View.prototype.render.call(this);
+        this.isRendered = !this.isRendered;
 };
 
 /**

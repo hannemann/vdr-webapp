@@ -30,7 +30,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.view = this.module.getView('Broadcasts.List.Broadcast', {
         "id" : this.data.id,
-        "channel" : this.data.channel
+        "channel" : this.data.channel,
+        "position" : this.getData('position')
     });
     this.view.setParentView(this.data.parent.view);
 
