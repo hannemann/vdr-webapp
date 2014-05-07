@@ -20,6 +20,8 @@ Gui.Window.Controller.Broadcast.prototype.cacheKey = 'channel/id';
  */
 Gui.Window.Controller.Broadcast.prototype.init = function () {
 
+    this.eventNameSpace = this.module.namespace + '-' + this.module.name;
+
     this.eventPrefix = 'window.broadcast.' + this.data.channel + '/' + this.data.id;
 
     this.view = this.module.getView('Broadcast', {
@@ -60,9 +62,15 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
         this.view.image.on('click', $.proxy(this.animateImageAction, this));
     }
 
-    $(document).on('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).on('gui.timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).one('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimerAction, this));
+    $(document).on('gui-timer-created.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
+    $(document).on('gui-timer-updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
+    $(document).one(
+        'gui-timer-deleted.'
+        + this.data.dataModel.data.timer_id
+        + '.' + this.eventNameSpace,
+
+        $.proxy(this.handleTimerAction, this)
+    );
     this.view.recordButton.on('click', $.proxy(this.toggleTimerAction, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
@@ -76,10 +84,10 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
 
         this.view.image.off('click');
     }
-    $(document).off('gui.timer-created.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).off('gui.timer-updated.' + this.keyInCache, $.proxy(this.handleTimerAction, this));
-    $(document).off('gui.timer-deleted.' + this.data.dataModel.data.timer_id, $.proxy(this.handleTimerAction, this));
-    this.view.recordButton.off('click', $.proxy(this.toggleTimerAction, this));
+    this.view.recordButton.off('click');
+    $(document).off('gui-timer-created.' + this.eventNameSpace);
+    $(document).off('gui-timer-updated.' + this.eventNameSpace);
+    $(document).off('gui-timer-deleted.' + this.eventNameSpace);
 };
 
 /**
@@ -98,7 +106,7 @@ Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
     if (this.data.dataModel.data.timer_exists) {
 
         $(document).one(
-            'gui.timer-deleted.' + this.data.dataModel.data.timer_id,
+            'gui-timer-deleted.' + this.keyInCache + '.' + this.eventNameSpace,
             $.proxy(this.handleTimerAction, this)
         );
     }

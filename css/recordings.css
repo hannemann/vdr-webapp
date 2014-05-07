@@ -2,13 +2,6 @@
     margin: 0;
     padding: 0;
 }
-div.window.recordings {
-    box-shadow: none;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
 .recordings-path .name,
 .recording.list-item .name {
     font-size: 16px;

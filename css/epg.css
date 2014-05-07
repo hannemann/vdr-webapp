@@ -66,6 +66,7 @@
     overflow: hidden;
     /*text-overflow: ellipsis;*/
 }
+.epg-search-view  .broadcast.timer-exists div.content,
 #broadcasts .broadcasts-list .broadcast.timer-exists div.content {
     background: linear-gradient(135deg, #404040 30%, #939393 70%);
     background-size: 5px 5px;
@@ -76,6 +77,7 @@
     background-image: linear-gradient(135deg, #404040 30%, #930000 70%);
     background-size: 5px 5px;
 }
+.epg-search-view  .broadcast.timer-active div.content,
 .channel-view #broadcasts .broadcasts-list .broadcast.timer-active div.content {
     background-image: linear-gradient(135deg, #696969 30%, #930000 70%);
     background-size: 5px 5px;
@@ -145,7 +147,20 @@ div#time-line .ql.hour {
     background-repeat: no-repeat;
 }
 
-/* Channel view */
+/* Channel view, EPG Searchresults */
+
+.epg-search-view {
+    overflow: auto;
+    height: 100%;
+}
+
+.epg-search-view form {
+    padding: 0 5px;
+}
+
+.epg-search-view form label.disabled {
+    display: none;
+}
 
 #epg-channels .channel .mute {
     display: none;
@@ -201,6 +216,11 @@ div#time-line .ql.hour {
     height: auto;
 }
 
+.epg-search-view .broadcast {
+    position: relative;
+}
+
+.epg-search-view .visible-channel-view,
 .channel-view .visible-channel-view {
     display: block;
 }
@@ -228,13 +248,16 @@ div#time-line .ql.hour {
 .channel-view #broadcasts .broadcast div {
     height: auto !important;
 }
+.epg-search-view .broadcast .content,
 .channel-view #broadcasts .broadcast .content {
     margin: 0 10px;
     border-bottom: 1px solid white;
 }
+.epg-search-view .broadcast .title,
 .channel-view #broadcasts .broadcast .title {
     font-size: 16px;
 }
+.epg-search-view .broadcast .visible-channel-view *,
 .channel-view #broadcasts .broadcast .visible-channel-view * {
     font-size: 12px;
 }

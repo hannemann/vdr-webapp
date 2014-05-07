@@ -40,7 +40,7 @@ VDRest.Timer.Model.Observer.prototype.addTimer = function (e) {
     }
 
     $.event.trigger({
-        "type" : 'gui.timer-created.' + e.payload.callerId,
+        "type" : 'gui-timer-created.' + e.payload.callerId,
         "payload" : timer
     });
 };
@@ -64,7 +64,7 @@ VDRest.Timer.Model.Observer.prototype.updateTimer = function (e) {
     this.module.cache.store.Model['List.Timer'][model.keyInCache] = model;
 
     $.event.trigger({
-        "type" : 'gui.timer-updated.' + e.payload.callerId,
+        "type" : 'gui-timer-updated.' + e.payload.callerId,
         "payload" : model
     });
 };
@@ -86,7 +86,7 @@ VDRest.Timer.Model.Observer.prototype.deleteTimer = function (e) {
     }
 
     $.event.trigger({
-        "type" : 'gui.timer-deleted.' + e.payload,
+        "type" : 'gui-timer-deleted.' + e.payload,
         "payload" : false
     });
 };

@@ -193,3 +193,10 @@ div.window.confirm li:first-child {
     border-top: 1px solid rgb(150, 150,150);
     padding: 10px;
 }
+div.window.viewport-fullsize {
+    box-shadow: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

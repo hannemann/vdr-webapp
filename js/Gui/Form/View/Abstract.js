@@ -113,7 +113,7 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 
     }
 
-    selected = VDRest.Form.getItem(id);
+    selected = field.getValue();
 
     this.decorateField(id, field);
 
@@ -126,9 +126,9 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 
 Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
 
-    field.gui = $('<input name="' + id + '">')
+    field.gui = $('<input name="' + (field.name ? field.name : id) + '">')
         .attr('readonly', true)
-        .val(field.getValue());
+        .val((field.value ? field.value : field.getValue()));
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
     $('<span>').text(field.label).appendTo(field.dom);
@@ -142,7 +142,7 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
 
     if ("undefined" !== typeof field.depends) {
 
-        if (!this.fields[field.depends].getValue()) {
+        if (!this.data.fields[field.depends].getValue()) {
 
             field.dom.addClass('disabled');
             field.disabled = true;

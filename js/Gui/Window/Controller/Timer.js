@@ -128,9 +128,9 @@ Gui.Window.Controller.Timer.prototype.addObserver = function () {
 
     this.view.activateButton.on('click', $.proxy(this.toggleActivateTimer, this));
 
-    $(document).one('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    $(document).one('gui-timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
-    $(document).one('gui.timer-updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).one('gui-timer-updated.' + this.keyInCache, $.proxy(this.update, this));
 
     $(document).on("persisttimerchange-" + this.keyInCache, $.proxy(this.updateTimer, this));
 
@@ -151,9 +151,9 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
 
     this.view.activateButton.off('click', $.proxy(this.toggleActivateTimer, this));
 
-    $(document).off('gui.timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    $(document).off('gui-timer-deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
 
-    $(document).off('gui.timer-updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).off('gui-timer-updated.' + this.keyInCache, $.proxy(this.update, this));
 
     $(document).off("persisttimerchange-" + this.keyInCache, $.proxy(this.updateTimer, this));
 };

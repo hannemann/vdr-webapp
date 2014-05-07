@@ -33,7 +33,7 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
 
     var me = this, i;
 
-    $(document).on("destruct.window-" + this.keyInCache, function () {
+    $(document).on("destruct.form-" + this.keyInCache + " destruct.window-" + this.keyInCache, function () {
 
         me.view.destruct();
         me.module.cache.flushByClassKey(me);
@@ -76,13 +76,16 @@ Gui.Form.Controller.Abstract.prototype.addClickHandler = function (field) {
 
         var type = 'Input';
 
-        if ("enum" ===field.type) {
-
-            type = 'Select';
-        }
-
         e.preventDefault();
-        me.requestInput(field, type);
+
+        if (!field.disabled) {
+
+            if ("enum" ===field.type) {
+
+                type = 'Select';
+            }
+            me.requestInput(field, type);
+        }
     });
 };
 
@@ -111,13 +114,13 @@ Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
 
     var i;
 
-    for (i in this.view.fields) {
+    for (i in this.data.fields) {
 
-        if (this.view.fields.hasOwnProperty(i) && this.view.fields[i].hasOwnProperty('dom')) {
+        if (this.data.fields.hasOwnProperty(i) && this.data.fields[i].hasOwnProperty('dom')) {
 
-            this.view.fields[i].dom.off('click');
+            this.data.fields[i].dom.off('click');
 
-            this.view.fields[i].gui.off('change');
+            this.data.fields[i].gui.off('change');
         }
     }
 
@@ -135,11 +138,11 @@ Gui.Form.Controller.Abstract.prototype.hasDependencies = function (fieldName) {
 
     var i, depends;
 
-    for (i in this.view.fields) {
+    for (i in this.data.fields) {
 
-        if (this.view.fields.hasOwnProperty(i)) {
+        if (this.data.fields.hasOwnProperty(i)) {
 
-            depends = this.view.fields[i].depends;
+            depends = this.data.fields[i].depends;
             if ("undefined" !== typeof depends && depends === fieldName) {
 
                 return true;
@@ -159,22 +162,22 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
 
     var i, depends;
 
-    for (i in this.view.fields) {
+    for (i in this.data.fields) {
 
-        if (this.view.fields.hasOwnProperty(i)) {
+        if (this.data.fields.hasOwnProperty(i)) {
 
-            depends = this.view.fields[i].depends;
+            depends = this.data.fields[i].depends;
             if ("undefined" !== typeof depends && depends === fieldName) {
 
                 if (field.gui.prop('checked')) {
 
-                    this.view.fields[i].dom.removeClass('disabled');
-                    this.view.fields[i].disabled = false;
+                    this.data.fields[i].dom.removeClass('disabled');
+                    this.data.fields[i].disabled = false;
 
                 } else {
 
-                    this.view.fields[i].dom.addClass('disabled');
-                    this.view.fields[i].disabled = true;
+                    this.data.fields[i].dom.addClass('disabled');
+                    this.data.fields[i].disabled = true;
                 }
             }
         }

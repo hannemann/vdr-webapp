@@ -45,6 +45,8 @@ VDRest.Epg.Model.Search.prototype.send = function (options) {
         throw new Error('EPG search query not set.');
     }
 
+    this.flushCollection();
+
     this.getResource().load({
         "url" : "search",
         "method" : "POST",

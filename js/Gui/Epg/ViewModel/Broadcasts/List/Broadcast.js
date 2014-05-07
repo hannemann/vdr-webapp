@@ -34,6 +34,36 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.init = function () {
     this.initViewMethods();
 };
 
+Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.initViewMethods = function () {
+
+    VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this);
+
+    /**
+     * determine if is currently recording
+     * @returns {object}
+     */
+    this.data.view.getIsRecording = function () {
+
+        var date = new Date(), recordingStartDate, recordingEndDate;
+
+        if (this.getTimerExists() && this.getTimerActive()) {
+
+            recordingStartDate = this.getVps() > 0 && VDRest.config.getItem('autoVps')
+                ? new Date(this.getVps() * 1000)
+                : new Date((this.getStartTime() - VDRest.config.getItem('recordingStartGap')) * 1000);
+
+            recordingEndDate = new Date((this.getEndTime() + VDRest.config.getItem('recordingEndGap')) * 1000);
+
+            if (date > recordingStartDate && date < recordingEndDate) {
+
+                return true;
+            }
+        }
+
+        return  false;
+    };
+};
+
 /**
  * decorate view with methods to retrieve its metrics
  */
@@ -88,30 +118,6 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.calculateMetrics = functio
     this.data.view.getOffset = function () {
 
         return me.data.view.node.offset();
-    };
-    /**
-     * determine if is currently recording
-     * @returns {object}
-     */
-    this.data.view.getIsRecording = function () {
-
-        var date = new Date(), recordingStartDate, recordingEndDate;
-
-        if (this.getTimerExists() && this.getTimerActive()) {
-
-            recordingStartDate = this.getVps() > 0 && VDRest.config.getItem('autoVps')
-                ? new Date(this.getVps() * 1000)
-                : new Date((this.getStartTime() - VDRest.config.getItem('recordingStartGap')) * 1000);
-
-            recordingEndDate = new Date((this.getEndTime() + VDRest.config.getItem('recordingEndGap')) * 1000);
-
-            if (date > recordingStartDate && date < recordingEndDate) {
-
-                return true;
-            }
-        }
-
-        return  false;
     };
 
     return this;

@@ -47,6 +47,11 @@ form input[type="number"] {
     outline: none;
     padding: 3px;
 }
+.window-input input[type="text"],
+.window-input input[type="number"] {
+    text-align: left;
+}
+
 form .disabled,
 form .disabled * {
     color: rgb(180, 180, 180);
