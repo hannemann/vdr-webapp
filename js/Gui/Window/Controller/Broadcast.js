@@ -62,15 +62,9 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
         this.view.image.on('click', $.proxy(this.animateImageAction, this));
     }
 
-    $(document).on('gui-timer-created.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
-    $(document).on('gui-timer-updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
-    $(document).one(
-        'gui-timer-deleted.'
-        + this.data.dataModel.data.timer_id
-        + '.' + this.eventNameSpace,
-
-        $.proxy(this.handleTimerAction, this)
-    );
+    $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
+    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
+    $(document).on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
     this.view.recordButton.on('click', $.proxy(this.toggleTimerAction, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
@@ -85,9 +79,7 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
         this.view.image.off('click');
     }
     this.view.recordButton.off('click');
-    $(document).off('gui-timer-created.' + this.eventNameSpace);
-    $(document).off('gui-timer-updated.' + this.eventNameSpace);
-    $(document).off('gui-timer-deleted.' + this.eventNameSpace);
+    $(document).off('gui-timer.' + this.eventNameSpace);
 };
 
 /**
@@ -102,14 +94,6 @@ Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {
  * handle timer
  */
 Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
-
-    if (this.data.dataModel.data.timer_exists) {
-
-        $(document).one(
-            'gui-timer-deleted.' + this.keyInCache + '.' + this.eventNameSpace,
-            $.proxy(this.handleTimerAction, this)
-        );
-    }
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);

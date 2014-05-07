@@ -52,7 +52,7 @@ Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
 
     this.view.node.on('click', $.proxy(this.windowAction, this));
 
-    $(document).on('gui-timer-updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).on('gui-timer.updated.' + this.keyInCache, $.proxy(this.update, this));
 };
 
 /**
@@ -62,7 +62,7 @@ Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
 
     this.view.node.off('click');
 
-    $(document).off('gui-timer-updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).off('gui-timer.updated.' + this.keyInCache, $.proxy(this.update, this));
 };
 
 /**
