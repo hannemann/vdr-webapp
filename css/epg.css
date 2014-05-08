@@ -262,6 +262,13 @@ div#time-line .ql.hour {
     font-size: 12px;
 }
 
+.epg-search-view .broadcast .content {
+    padding: 5px 0;
+}
+.epg-search-view .broadcast .visible-channel-view .channel {
+    margin-left: 1em;
+}
+
 
 
 

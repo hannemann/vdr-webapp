@@ -37,8 +37,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
         this.parentView.node.prepend(this.node);
 
-    }
-    else {
+    } else {
 
         this.parentView.node.find('div.broadcast').each(function () {
 
@@ -50,9 +49,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
     }
 
-
-//    VDRest.Abstract.View.prototype.render.call(this);
-        this.isRendered = !this.isRendered;
+    this.isRendered = !this.isRendered;
 };
 
 /**
@@ -128,13 +125,13 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTitle = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function () {
 
-    var channelView = $('<div class="visible-channel-view">');
+    this.channelView = $('<div class="visible-channel-view">');
 
     if (this.hasShortText()) {
 
         $('<div class="short-text italic">')
             .text(this.getShortText())
-            .appendTo(channelView);
+            .appendTo(this.channelView);
     }
 
     $('<span class="time">')
@@ -142,9 +139,9 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
             this.helper().getDateTimeString(new Date(this.getStartTime() * 1000))
             + ' (' + this.helper().getDurationAsString(this.getDuration()) + ')'
         )
-        .appendTo(channelView);
+        .appendTo(this.channelView);
 
-    channelView.appendTo(this.info);
+    this.channelView.appendTo(this.info);
 
     return this;
 };
