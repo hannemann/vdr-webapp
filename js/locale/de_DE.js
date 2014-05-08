@@ -32,7 +32,6 @@ VDRest.app.de_DE = {
     "Search IMDB" : "IMDB durchsuchen",
     "Cancel" : "Abbrechen",
     "Custom Time" : "Eigene Zeit",
-    "Please enter desired time in format [h]hmm" : "Bitte die gewünschte Zeit im Format [s]smm eingeben",
-    "[h]hmm" : "[s]smm"
+    "Please enter desired time in format [h]hmm (2015 for 20:15 o'clock)" : "Bitte die gewünschte Zeit im Format [s]smm eingeben (2015 für 20:15 Uhr)"
 
 };
