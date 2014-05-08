@@ -20,7 +20,22 @@ VDRest.Epg.prototype.init = function () {
     // call parent init method
     VDRest.Abstract.Module.prototype.init.apply(this);
 
+    if ('custom' === VDRest.config.getItem('lastEpg')) {
+
+        VDRest.config.setItem('lastEpg', 'now');
+    }
+
+    this.initTimes();
+};
+
+/**
+ * init date objects
+ */
+VDRest.Epg.prototype.initTimes = function (custom) {
+
     this.now = new Date();
+
+    this.custom = custom || this.now;
 
     this.prime = new Date(
         this.now.getFullYear(),
@@ -33,6 +48,8 @@ VDRest.Epg.prototype.init = function () {
 
         this.prime.setTime(this.prime.getTime() + 24 * 60 * 60 * 1000);
     }
+
+    return this;
 };
 
 /**

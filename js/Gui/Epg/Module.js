@@ -100,6 +100,35 @@ Gui.Epg.prototype.contextMenu = {
 
             }
         }
+    },
+
+    "CustomTime" : {
+        "labels" : {
+            "on" : "Set Time"
+        },
+        "state" : "on",
+        "scope" : 'Gui.Epg',
+        "fn" : function () {
+
+            var data = {
+                "type": "string",
+                "dom": $('<label class="clearer text"><span>Custom Time</span></label>')
+            };
+
+            $('<span class="info">Please enter desired time in format [h]hmm</span>').appendTo(data.dom);
+
+            data.gui = $('<input type="text" name="custom-time" value="[h]hmm">').appendTo(data.dom);
+
+            $(document).one('setting.changed', $.proxy(this.setCustomTime, this));
+
+            $.event.trigger({
+                "type" : "window.request",
+                "payload" : {
+                    "type" : "Input",
+                    "data" : data
+                }
+            });
+        }
     }
 };
 
@@ -122,14 +151,16 @@ Gui.Epg.prototype.destruct = function () {
 
 /**
  * refresh default view
+ * @param {string} time date object to be used (now|prime|custom)
+ * @param {Date} [custom] custom Date object
  */
-Gui.Epg.prototype.refresh = function (time) {
+Gui.Epg.prototype.refresh = function (time, custom) {
 
     var me = this;
     setTimeout(function () {
         me.getController('Epg').destructView();
         me.cache.flush();
-        VDRest.app.getModule('VDRest.Epg').cache.flush();
+        VDRest.app.getModule('VDRest.Epg').initTimes(custom).cache.flush();
         VDRest.config.setItem('lastEpg', time);
         me.dispatch();
     }, 150);
@@ -142,6 +173,39 @@ Gui.Epg.prototype.refresh = function (time) {
 Gui.Epg.prototype.getFromDate = function () {
 
     return this.store[VDRest.config.getItem('lastEpg')];
+};
+
+/**
+ * calc custom time, call refresh
+ */
+Gui.Epg.prototype.setCustomTime = function (e) {
+
+    var now, custom, reg = new RegExp('([0-9]{1,2})([0-9]{1,2})');
+
+    if (e.payload.value.length === 3) {
+
+        reg = new RegExp('([0-9]{1})([0-9]{1,2})');
+    }
+
+    if (reg.test(e.payload.value)) {
+
+        now = new Date();
+
+        custom = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            RegExp.$1, RegExp.$2, 0
+        );
+
+        if (custom < now) {
+
+            custom.setTime(custom.getTime() + 24 * 60 * 60 * 1000);
+        }
+
+        this.refresh('custom', custom);
+    }
+
 };
 
 /**
