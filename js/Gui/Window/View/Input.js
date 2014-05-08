@@ -40,7 +40,7 @@ Gui.Window.View.Input.prototype.addInput = function () {
 
 Gui.Window.View.Input.prototype.addButtons = function () {
 
-    this.cancel = $('<div class="button button-cancel">').text('Cancel').appendTo(this.node);
+    this.cancel = $('<div class="button button-cancel">').text(VDRest.app.translate('Cancel')).appendTo(this.node);
 
     this.ok = $('<div class="button button-confirm">').text('OK').appendTo(this.node);
 

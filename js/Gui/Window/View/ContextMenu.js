@@ -58,7 +58,7 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
 
             label = this.data[i].labels[this.data[i].state];
 
-            this.data[i].button = $('<div class="menu-button">').text(label)
+            this.data[i].button = $('<div class="menu-button">').text(VDRest.app.translate(label))
                 .appendTo(this.node);
         }
     }
@@ -66,11 +66,11 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
 
     if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
 
-        $('<div class="config-button">').text('Configuration')
+        $('<div class="config-button">').text(VDRest.app.translate('Configuration'))
             .appendTo(this.node);
     }
 
-    $('<div class="reload-button">').text('Reload App')
+    $('<div class="reload-button">').text(VDRest.app.translate('Reload App'))
         .appendTo(this.node);
 
     return this;

@@ -190,7 +190,7 @@ Gui.Window.View.Recording.prototype.getToolsConfig = function () {
                 deleteButton = $('<dt>').html('&#10006;');
                 deleteText = $('<dd>');
 
-                deleteText.text('Delete Recording');
+                deleteText.text(VDRest.app.translate('Delete Recording'));
                 deleteButton.removeClass('activate-timer');
 
                 return dom.append(deleteButton).append(deleteText);

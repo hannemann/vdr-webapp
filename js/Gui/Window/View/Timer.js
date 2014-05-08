@@ -200,7 +200,7 @@ Gui.Window.View.Timer.prototype.addMainImage = function () {
 Gui.Window.View.Timer.prototype.addFilename = function () {
 
     $('<div class="additional-info">')
-        .text('File: ' + this.getFilename())
+        .text(VDRest.app.translate('File') + ': ' + this.getFilename())
         .appendTo(this.header);
 
     return this;
@@ -297,7 +297,7 @@ Gui.Window.View.Timer.prototype.getEditConfig = function () {
 
                 me.deleteButton = $('<dl class="window-button round delete-button symbol-button"></dl>');
                 button = $('<dt>').html('&#10006;');
-                text = $('<dd>').text('Delete Timer');
+                text = $('<dd>').text(VDRest.app.translate('Delete Timer'));
 
                 return me.deleteButton.append(button).append(text);
             }
@@ -308,7 +308,7 @@ Gui.Window.View.Timer.prototype.getEditConfig = function () {
 
                 me.activateButton = $('<dl class="window-button round activate-button symbol-button"></dl>');
                 button = $('<dt>').html('&#10003;');
-                text = $('<dd>').text('Activate Timer');
+                text = $('<dd>').text(VDRest.app.translate('Activate Timer'));
 
                 return me.activateButton.append(button).append(text);
             }
@@ -316,14 +316,14 @@ Gui.Window.View.Timer.prototype.getEditConfig = function () {
         "editForm" : {
             "categories" : {
                 "file" : {
-                    "label" : "File"
+                    "label" : VDRest.app.translate("File")
                 }
             },
             "fields" : {
                 "filename" : {
                     "type" : "string",
                     "category" : "file",
-                    "label" : "Filename",
+                    "label" : VDRest.app.translate("Filename"),
                     "getValue" : function () {
                         return me.getFilename();
                     }
@@ -347,7 +347,7 @@ Gui.Window.View.Timer.prototype.getWebConfig = function () {
                     button = $('<dt><img src="/assets/imdb-logo.png" alt="">'),
                     text = $('<dd>');
 
-                text.text('Search IMDB');
+                text.text(VDRest.app.translate('Search IMDB'));
 
                 return dom.append(button).append(text);
             },
@@ -442,5 +442,6 @@ Gui.Window.View.Timer.prototype.handleTimerActive = function (active) {
 
     this.activateButton.toggleClass('is-active', active);
 
-    this.activateButton.find('dd').text(active ? 'Deactivate Timer' : 'Activate Timer');
+    this.activateButton.find('dd')
+        .text(active ? VDRest.app.translate('Deactivate Timer') : VDRest.app.translate('Activate Timer'));
 };

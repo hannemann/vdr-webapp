@@ -59,7 +59,7 @@ Gui.Window.View.Drawer.prototype.addButtons = function () {
         this.buttons.push(
             $('<div class="navi-button">')
                 .attr('data-module', module)
-                .text(options.headline)
+                .text(VDRest.app.translate(options.headline))
                 .addClass(options.current ? 'current' : '')
                 .appendTo(this.body)
         );

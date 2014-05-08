@@ -99,7 +99,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "streamdevPort"     :   "3000",
     "streamdevParams"   :   "EXT;QUALITY=SLOW",
     "theme"             :   "default",
-    "autoVps"           :   false
+    "autoVps"           :   false,
+    "language"          :   "en_US"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -184,6 +185,23 @@ VDRest.Lib.Config.prototype.fields = {
             }
         }
     },
+    "language" : {
+        "category" : "gui",
+        "type" : "enum",
+        "label" : "Language",
+        "dataType" : "string",
+        "info" : "Needs reload of app",
+        "values" : {
+            "de_DE" : {
+                "label" : "Deutsch (Deutschland)",
+                "value" : "de_DE"
+            },
+            "en_US" : {
+                "label" : "English (United States)",
+                "value" : "en_US"
+            }
+        }
+    },
     "protocol"          :   {
         "category" : "server",
         "type" : "enum",
@@ -258,3 +276,8 @@ VDRest.Lib.Config.prototype.fields = {
 };
 
 VDRest.config = new VDRest.Lib.Config();
+
+if ("en_US" !== VDRest.config.getItem('language')) {
+
+    $('head').prepend('<script type="text/javascript" src="js/locale/' + VDRest.config.getItem('language') + '.js">');
+}

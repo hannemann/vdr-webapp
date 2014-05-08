@@ -101,7 +101,7 @@ Gui.Menubar.View.Default.prototype.setTitle = function (e) {
 
     if (e instanceof jQuery.Event && e.payload && e.payload.headline) {
 
-        this.getHeader().text(e.payload.headline);
+        this.getHeader().text(VDRest.app.translate(e.payload.headline));
     }
 
     return this;

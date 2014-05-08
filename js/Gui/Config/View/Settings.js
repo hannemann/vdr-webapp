@@ -115,11 +115,11 @@ Gui.Config.View.Settings.prototype.decorateField = function (id, field) {
         .val(field.getValue());
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
-    $('<span>').text(field.label).appendTo(field.dom);
+    $('<span>').text(VDRest.app.translate(field.label)).appendTo(field.dom);
 
     if (field.hasOwnProperty('info')) {
 
-        $('<span class="info">').text(field.info).appendTo(field.dom);
+        $('<span class="info">').text(VDRest.app.translate(field.info)).appendTo(field.dom);
     }
 
     field.disabled = false;
@@ -149,7 +149,7 @@ Gui.Config.View.Settings.prototype.getCategory = function (cat) {
             '<div class="category category-'
             + cat
             + '"><h2>'
-            + this.catConfig[cat].label
+            + VDRest.app.translate(this.catConfig[cat].label)
             + '</h2></div>'
         );
     }

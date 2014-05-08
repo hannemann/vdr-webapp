@@ -86,6 +86,7 @@ VDRest.App.prototype.run = function () {
 	var start = 'Gui.Config', i,
         startConfig = VDRest.config.getItem('start');
 
+    this.language = VDRest.config.getItem('language');
 
     if (this.isRegistered(startConfig)) {
 
@@ -324,6 +325,23 @@ VDRest.App.prototype.getCurrent = function (asModule) {
     }
 
     return this.current;
+};
+
+/**
+ * get localized string if available
+ * printf syntax is supported
+ */
+VDRest.App.prototype.translate = function () {
+
+    var args = Array.prototype.slice.apply(arguments),
+        key = args.shift();
+
+    if (this[this.language] && this[this.language][key]) {
+
+        return sprintf(this[this.language][key], args);
+    }
+
+    return key;
 };
 
 VDRest.app = new VDRest.App();

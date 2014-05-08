@@ -112,12 +112,16 @@ Gui.Epg.prototype.contextMenu = {
 
             var data = {
                 "type": "string",
-                "dom": $('<label class="clearer text"><span>Custom Time</span></label>')
+                "dom": $('<label class="clearer text">')
             };
 
-            $('<span class="info">Please enter desired time in format [h]hmm</span>').appendTo(data.dom);
+            $('<span>').text(VDRest.app.translate('Custom Time')).appendTo(data.dom);
+            $('<span class="info">')
+                .text(VDRest.app.translate('Please enter desired time in format [h]hmm'))
+                .appendTo(data.dom);
 
-            data.gui = $('<input type="text" name="custom-time" value="[h]hmm">').appendTo(data.dom);
+            data.gui = $('<input type="text" name="custom-time" value="' + VDRest.app.translate('[h]hmm') + '">')
+                .appendTo(data.dom);
 
             $(document).one('setting.changed', $.proxy(this.setCustomTime, this));
 

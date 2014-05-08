@@ -155,7 +155,7 @@ Gui.Window.View.Broadcast.prototype.getWebConfig = function () {
                     button = $('<dt><img src="/assets/imdb-logo.png" alt="">'),
                     text = $('<dd>');
 
-                text.text('Search IMDB');
+                text.text(VDRest.app.translate('Search IMDB'));
 
                 return dom.append(button).append(text);
             },
@@ -312,11 +312,11 @@ Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
     if (exists) {
 
         this.node.addClass('timer-exists');
-        this.recordButtonText.text('Delete Timer');
+        this.recordButtonText.text(VDRest.app.translate('Delete Timer'));
     } else {
 
         this.node.removeClass('timer-exists');
-        this.recordButtonText.text('Add Timer');
+        this.recordButtonText.text(VDRest.app.translate('Add Timer'));
     }
 };
 
