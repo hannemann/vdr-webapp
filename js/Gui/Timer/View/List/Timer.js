@@ -96,7 +96,7 @@ Gui.Timer.View.List.Timer.prototype.addPath = function () {
 
     var path = this.getFilename().split('~').slice(0, -1);
 
-    if (path.length > 1) {
+    if (path.length > 0) {
 
         if (!this.path) {
 
