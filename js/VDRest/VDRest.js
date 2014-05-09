@@ -86,6 +86,8 @@ VDRest.App.prototype.run = function () {
 	var start = 'Gui.Config', i,
         startConfig = VDRest.config.getItem('start');
 
+    document.getElementById('splash').parentNode.removeChild(document.getElementById('splash'));
+
     this.language = VDRest.config.getItem('language');
 
     if (this.isRegistered(startConfig)) {

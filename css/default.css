@@ -28,6 +28,19 @@ body {
     z-index: 0;
 }
 
+#splash {
+    margin-top: 20px;
+}
+
+#splash img {
+    margin: 0 auto;
+    display: block;
+}
+
+#splash * {
+    text-align: center;
+}
+
 ul {
     list-style-type: none;
 }
