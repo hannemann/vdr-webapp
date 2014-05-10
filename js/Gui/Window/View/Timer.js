@@ -35,11 +35,6 @@ Gui.Window.View.Timer.prototype.hasHeader = true;
 Gui.Window.View.Timer.prototype.hasBroadcast = false;
 
 /**
- * @type {boolean}
- */
-Gui.Window.View.Timer.prototype.hasDataChanges = false;
-
-/**
  * @type {Gui.Window.Controller.Abstract}
  */
 Gui.Window.View.Timer.prototype.init = function () {
@@ -324,9 +319,7 @@ Gui.Window.View.Timer.prototype.getEditConfig = function () {
                     "type" : "string",
                     "category" : "file",
                     "label" : VDRest.app.translate("Filename"),
-                    "getValue" : function () {
-                        return me.getFilename();
-                    }
+                    "value" : this.getFilename()
                 }
             }
         }
@@ -395,11 +388,7 @@ Gui.Window.View.Timer.prototype.renderEditTab = function () {
             "catConfig" : config.editForm.categories,
             "fields" : config.editForm.fields,
             "hasSubmit" : true,
-            "changed" : $.proxy(function (e) {
-
-                config.editForm.fields[e.payload.field].getValue = function () {
-                    return e.payload.value;
-                };
+            "changed" : $.proxy(function () {
 
                 $.event.trigger({
                     "type" : "persisttimerchange-" + this.keyInCache,

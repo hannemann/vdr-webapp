@@ -100,10 +100,23 @@ Gui.Timer.View.List.Timer.prototype.addPath = function () {
 
         if (!this.path) {
 
-            this.path = $('<div class="path">').appendTo(this.node);
+            this.path = $('<div class="path">');
+
+            if (this.filename) {
+
+                this.path.insertBefore(this.filename);
+
+            } else {
+                this.path.appendTo(this.node);
+            }
         }
 
         this.path.text(path.join('/'));
+
+    } else if (this.path) {
+
+        this.path.remove();
+        this.path = undefined;
     }
 
     return this;
