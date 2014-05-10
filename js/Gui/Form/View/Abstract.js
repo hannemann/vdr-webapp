@@ -74,6 +74,11 @@ Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
 
         this.getEnum(id, field);
     }
+
+    if ("channel" === field.type) {
+
+        this.getChannel(id, field);
+    }
 };
 
 Gui.Form.View.Abstract.prototype.getBoolean = function (id, field) {
@@ -120,6 +125,15 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
     field.gui
         .attr('type', 'text')
         .val(selected.label);
+
+    field.dom.append(field.gui);
+};
+
+Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
+
+    this.decorateField(id, field);
+
+    field.gui.attr('type', 'text');
 
     field.dom.append(field.gui);
 };

@@ -57,6 +57,7 @@ form .disabled * {
     color: rgb(180, 180, 180);
 }
 
+.window-input.channel-chooser,
 .window-input.select {
     height: calc(100% - 80px);
     overflow-y: hidden;
@@ -81,4 +82,11 @@ form .disabled * {
 .window-input.select label {
     padding-top: 10px;
     padding-bottom: 10px;
+}
+.window-input.select label img {
+    width: 30px;
+    display: inline-block;
+    margin-right: 5px;
+    background: white;
+    float: left;
 }

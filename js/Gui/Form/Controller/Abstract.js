@@ -83,9 +83,14 @@ Gui.Form.Controller.Abstract.prototype.addClickHandler = function (field) {
 
         if (!field.disabled) {
 
-            if ("enum" ===field.type) {
+            if ("enum" === field.type) {
 
                 type = 'Select';
+            }
+
+            if ("channel" === field.type) {
+
+                type = 'ChannelChooser';
             }
             me.requestInput(field, type);
         }
@@ -120,7 +125,7 @@ Gui.Form.Controller.Abstract.prototype.addChangeHandler = function (field, field
  */
 Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
 
-    if (field.type === 'enum') {
+    if (field.type === 'enum' || field.type === 'channel') {
 
         field.getValue = function () {
 
@@ -135,6 +140,7 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
                     }
                 }
             }
+            return {"value" : null};
         }
     } else if (field.type === 'string' || field.type === 'number') {
 
@@ -142,6 +148,7 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
 
             return this.gui.val();
         }
+
     } else if (field.type === 'boolean') {
 
         field.getValue = function () {

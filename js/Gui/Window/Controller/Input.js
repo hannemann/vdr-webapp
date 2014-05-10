@@ -82,7 +82,7 @@ Gui.Window.Controller.Input.prototype.okAction = function () {
         value = this.setStringLike();
     }
 
-    if ("enum" === type) {
+    if ("enum" === type || "channel" === type) {
 
         value = this.setEnum();
     }

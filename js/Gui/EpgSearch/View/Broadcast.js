@@ -34,7 +34,9 @@ Gui.EpgSearch.View.Broadcast.prototype.setWidth = function () {
  */
 Gui.EpgSearch.View.Broadcast.prototype.addChannel = function () {
 
-    this.channel = $('<span class="channel">')
-        .text(this.getChannelName())
-        .appendTo(this.channelView);
+    if (!this.channel) {
+        this.channel = $('<span class="channel">')
+            .text(this.getChannelName())
+            .appendTo(this.channelView);
+    }
 };

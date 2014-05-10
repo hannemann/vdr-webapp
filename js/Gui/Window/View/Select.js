@@ -52,14 +52,22 @@ Gui.Window.View.Select.prototype.addValues = function () {
 
 Gui.Window.View.Select.prototype.prepareValue = function (value) {
 
-    var name = this.data.gui.attr('name');
+    var name = this.data.gui.attr('name'), html = '';
 
-    value.dom = $('<label>').text(value.label);
+    value.dom = $('<label>');
+
+    if (value.image) {
+        html += '<img src="' + value.image + '">';
+    }
+
+    html += value.label;
+
+    value.dom.html(html);
 
     value.gui = $('<input name="' + name + '" value="' + value.label + '" type="radio">')
         .appendTo(value.dom);
 
-    if (value.selected || VDRest.config.getItem(name) === value.value) {
+    if (value.selected || this.data.gui.val() === value.label || VDRest.config.getItem(name) === value.value) {
 
         value.gui.prop('checked', true);
     }

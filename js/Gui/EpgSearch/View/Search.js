@@ -70,6 +70,12 @@ Gui.EpgSearch.View.Search.prototype.addFields = function () {
                     "label" : VDRest.app.translate("Advanced"),
                     "checked" : false
                 },
+                "channel" : {
+                    "type" : "channel",
+                    "category" : "search",
+                    "depends" : "advanced",
+                    "label" : "Channel"
+                },
                 "mode" : {
                     "type" : "enum",
                     "name" : "mode",
@@ -121,14 +127,18 @@ Gui.EpgSearch.View.Search.prototype.addFields = function () {
             "hasSubmit" : true,
             "changed" : $.proxy(function (fields) {
 
-                VDRest.app.getModule('VDRest.Epg').getModel('Search').send({
-                    "query" : fields.query.getValue(),
-                    "mode" : fields.mode.getValue().value,
-                    "channelid" : null,
-                    "use_title" : fields.use_title.getValue(),
-                    "use_subtitle" : fields.use_subtitle.getValue(),
-                    "use_description" : fields.use_description.getValue()
-                });
+                var query = fields.query.getValue();
+
+                if ('' !== query) {
+                    VDRest.app.getModule('VDRest.Epg').getModel('Search').send({
+                        "query" : query,
+                        "mode" : fields.mode.getValue().value,
+                        "channelid" : fields.channel.getValue().value,
+                        "use_title" : fields.use_title.getValue(),
+                        "use_subtitle" : fields.use_subtitle.getValue(),
+                        "use_description" : fields.use_description.getValue()
+                    });
+                }
 
             }, this)
         }
