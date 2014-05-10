@@ -87,13 +87,7 @@ Gui.Window.Controller.Input.prototype.okAction = function () {
         value = this.setEnum();
     }
 
-    $.event.trigger({
-        "type" : 'setting.changed',
-        "payload" : {
-            "field" : this.data.gui.attr('name'),
-            "value" : value
-        }
-    });
+    this.data.gui.change();
 
     this.goBack();
 };
@@ -115,9 +109,19 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
  */
 Gui.Window.Controller.Input.prototype.setEnum = function () {
 
-    var value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked').val();
+    var i, value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked').val();
 
     this.data.gui.val(value);
+
+    for (i in this.data.values) {
+
+        if (this.data.values.hasOwnProperty(i)) {
+
+            this.data.values[i].selected = false;
+
+            this.data.values[i].selected = (this.data.values[i].label === value);
+        }
+    }
 
     return value;
 };

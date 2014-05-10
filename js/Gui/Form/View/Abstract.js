@@ -80,7 +80,7 @@ Gui.Form.View.Abstract.prototype.getBoolean = function (id, field) {
 
     this.decorateField(id, field);
 
-    field.gui.attr('type', 'checkbox').prop('checked', field.getValue());
+    field.gui.attr('type', 'checkbox').prop('checked', field.checked);
 
     field.dom.append(field.gui);
 };
@@ -119,7 +119,7 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 
     field.gui
         .attr('type', 'text')
-        .val(values[selected].label);
+        .val(selected.label);
 
     field.dom.append(field.gui);
 };
@@ -128,7 +128,7 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
 
     field.gui = $('<input name="' + (field.name ? field.name : id) + '">')
         .attr('readonly', true)
-        .val((field.value ? field.value : field.getValue()));
+        .val((field.value ? field.value : ''));
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
     $('<span>').text(field.label).appendTo(field.dom);

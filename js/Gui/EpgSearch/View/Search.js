@@ -55,88 +55,79 @@ Gui.EpgSearch.View.Search.prototype.addFields = function () {
             "search" : 'Search',
             "catConfig" : {
                 "search" : {
-                    "label" : "Search"
+                    "label" : VDRest.app.translate("Search")
                 }
             },
             "fields" : {
                 "query" : {
                     "type" : "string",
                     "category" : "search",
-                    "label" : "Query",
-                    "getValue" : function () {
-                        return '';
-                    }
+                    "label" : VDRest.app.translate("Query")
                 },
                 "advanced" : {
                     "type" : "boolean",
                     "category" : "search",
-                    "label" : "Advanced",
-                    "getValue" : function () {
-                        return false;
-                    }
+                    "label" : VDRest.app.translate("Advanced"),
+                    "checked" : false
                 },
                 "mode" : {
                     "type" : "enum",
                     "name" : "mode",
-                    "label" : "Mode",
+                    "label" : VDRest.app.translate("Mode"),
                     "depends" : "advanced",
                     "category" : "search",
                     "values" : {
                         "phrase" : {
-                            "label" : "Phrase",
-                            "value" : "0"
+                            "label" : VDRest.app.translate("Phrase"),
+                            "value" : "0",
+                            "selected" : true
                         },
                         "and" : {
-                            "label" : "AND",
+                            "label" : VDRest.app.translate("AND"),
                             "value" : "1"
                         },
                         "or" : {
-                            "label" : "OR",
+                            "label" : VDRest.app.translate("OR"),
                             "value" : "2"
                         },
                         "regex" : {
-                            "label" : "RegEx",
+                            "label" : VDRest.app.translate("RegEx"),
                             "value" : "3"
                         }
-                    },
-                    "getValue" : function () {
-
-                        return "phrase";
                     }
                 },
                 "use_title" : {
                     "type" : "boolean",
-                    "label" : "Use Title",
+                    "label" : VDRest.app.translate("Search Title"),
                     "depends" : "advanced",
                     "category" : "search",
-                    "getValue" : function () {
-                        return true;
-                    }
+                    "checked" : true
                 },
                 "use_subtitle" : {
                     "type" : "boolean",
-                    "label" : "Use Subtitle",
+                    "label" : VDRest.app.translate("Search Subtitle"),
                     "depends" : "advanced",
                     "category" : "search",
-                    "getValue" : function () {
-                        return false;
-                    }
+                    "checked" : false
                 },
                 "use_description" : {
                     "type" : "boolean",
-                    "label" : "Use Description",
+                    "label" : VDRest.app.translate("Search Description"),
                     "depends" : "advanced",
                     "category" : "search",
-                    "getValue" : function () {
-                        return false;
-                    }
+                    "checked" : false
                 }
             },
             "hasSubmit" : true,
-            "changed" : $.proxy(function (e) {
+            "changed" : $.proxy(function (fields) {
 
                 VDRest.app.getModule('VDRest.Epg').getModel('Search').send({
-                    "query" : e.payload.value
+                    "query" : fields.query.getValue(),
+                    "mode" : fields.mode.getValue().value,
+                    "channelid" : null,
+                    "use_title" : fields.use_title.getValue(),
+                    "use_subtitle" : fields.use_subtitle.getValue(),
+                    "use_description" : fields.use_description.getValue()
                 });
 
             }, this)

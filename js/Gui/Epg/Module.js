@@ -123,7 +123,7 @@ Gui.Epg.prototype.contextMenu = {
             data.gui = $('<input type="number" name="custom-time">')
                 .appendTo(data.dom);
 
-            $(document).one('setting.changed', $.proxy(this.setCustomTime, this));
+            data.gui.on('change', $.proxy(this.setCustomTime, this));
 
             $.event.trigger({
                 "type" : "window.request",
@@ -184,14 +184,14 @@ Gui.Epg.prototype.getFromDate = function () {
  */
 Gui.Epg.prototype.setCustomTime = function (e) {
 
-    var now, custom, reg = new RegExp('([0-9]{1,2})([0-9]{1,2})');
+    var now, custom, reg = new RegExp('([0-9]{1,2})([0-9]{1,2})'), value = e.target.value;
 
-    if (e.payload.value.length === 3) {
+    if (value.length === 3) {
 
         reg = new RegExp('([0-9]{1})([0-9]{1,2})');
     }
 
-    if (reg.test(e.payload.value)) {
+    if (reg.test(value)) {
 
         now = new Date();
 

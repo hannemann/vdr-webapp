@@ -21,6 +21,16 @@ Gui.Form.Controller.Abstract.prototype.init = function () {
  */
 Gui.Form.Controller.Abstract.prototype.dispatchView = function () {
 
+    var i;
+
+    for (i in this.view.data.fields) {
+
+        if (this.view.data.fields.hasOwnProperty(i)) {
+
+            this.addGetter(this.view.data.fields[i]);
+        }
+    }
+
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
     this.addObserver();
@@ -51,15 +61,8 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
                 this.addClickHandler(this.view.data.fields[i]);
             }
 
-            if (this.view.data.fields[i].type === 'boolean') {
-
-                this.addChangeHandler(this.view.data.fields[i], i);
-            }
+            this.addChangeHandler(this.view.data.fields[i], i);
         }
-    }
-
-    if ("function" === typeof this.data.changed) {
-        $(document).on('setting.changed', this.data.changed);
     }
 
     $(document).on('gui.form.update-' + this.keyInCache, $.proxy(this.update, this));
@@ -104,7 +107,48 @@ Gui.Form.Controller.Abstract.prototype.addChangeHandler = function (field, field
 
             me.handleDependency(field, fieldName);
         }
+
+        if ("function" === typeof me.data.changed) {
+            me.data.changed(me.data.fields);
+        }
     });
+};
+
+/**
+ * add value getters to fields
+ * @param field
+ */
+Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
+
+    if (field.type === 'enum') {
+
+        field.getValue = function () {
+
+            var i;
+
+            for (i in this.values) {
+
+                if (this.values.hasOwnProperty(i)) {
+
+                    if (this.values[i].selected) {
+                        return this.values[i];
+                    }
+                }
+            }
+        }
+    } else if (field.type === 'string' || field.type === 'number') {
+
+        field.getValue = function () {
+
+            return this.gui.val();
+        }
+    } else if (field.type === 'boolean') {
+
+        field.getValue = function () {
+
+            return this.gui.prop('checked');
+        }
+    }
 };
 
 /**
@@ -123,8 +167,6 @@ Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
             this.data.fields[i].gui.off('change');
         }
     }
-
-    $(document).off('setting.changed');
 
     $(document).on('gui.form.update-' + this.keyInCache);
 };
