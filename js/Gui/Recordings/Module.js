@@ -28,6 +28,12 @@ Gui.Recordings.prototype.name = 'Recordings';
 Gui.Recordings.prototype.inDrawer = true;
 
 /**
+ * start page capable
+ * @type {string}
+ */
+Gui.Recordings.prototype.startPage = true;
+
+/**
  * headline in menu bar
  * @type {string}
  */

@@ -145,7 +145,7 @@ VDRest.Lib.Config.prototype.fields = {
                 if (
                     modules.hasOwnProperty(i)
                     && "Gui" === modules[i].namespace
-                    && "undefined" !== typeof modules[i].inDrawer
+                    && "undefined" !== typeof modules[i].startPage
                 ) {
                     pages[i] = {
                         "label" : modules[i].headline,

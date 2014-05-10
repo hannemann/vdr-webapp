@@ -28,6 +28,12 @@ Gui.Timer.prototype.name = 'Timer';
 Gui.Timer.prototype.inDrawer = true;
 
 /**
+ * start page capable
+ * @type {string}
+ */
+Gui.Timer.prototype.startPage = true;
+
+/**
  * headline in menu bar
  * @type {string}
  */

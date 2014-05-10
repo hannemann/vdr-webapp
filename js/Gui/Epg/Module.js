@@ -28,6 +28,12 @@ Gui.Epg.prototype.name = 'Epg';
 Gui.Epg.prototype.inDrawer = true;
 
 /**
+ * start page capable
+ * @type {string}
+ */
+Gui.Epg.prototype.startPage = true;
+
+/**
  * headline in menu bar
  * @type {string}
  */
