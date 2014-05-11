@@ -1,13 +1,3 @@
-@font-face {
-    font-family: Source Sans Pro;
-    src: url(/assets/fonts/Source_Sans_Pro/SourceSansPro-Light.ttf);
-}
-@font-face {
-    font-family: Source Sans ProBold;
-    src: url(/assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf);
-}
-
-
 * {
     font-family: Source Sans Pro, sans-serif;
     color: white;

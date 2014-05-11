@@ -9,7 +9,8 @@ body.black {
     background-color: black;
 }
 .black .recordings-path .name:before {
-    content: url('/assets/black/folder.png');
+    /*content: url('/assets/black/folder.png');*/
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gQTBzId2PWnYwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAC/SURBVDjL5ZS7DQIxDEBfAOk6ZrjQQM8ALAIVHRuwAROwDAvQsAINLQUl4j6miSUr4iROZyosWZFi+SX+BkBwlBHO8nPgAZgDi6Qr4NEXKkbHH+xT4ARUQA28gGfSKvMXC2wGRHpXziT76RnQu5C0Kyo9W6BQgzpfgGNHyN9IA+yApb6ycSjwGhCtcnQAlrZtZg7AaIHRC6g5vDkAr4AE0wJhIFDy0Su8Z7kcWmHb2AD71Nx9N1ALbDF5+7MF+wYlcSuaM2J4IwAAAABJRU5ErkJggg==);
 }
 .black .window {
     background: black;
