@@ -15,8 +15,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype = new VDRest.Abstract.Controller();
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.cacheKey = 'channel_id';
 
+/**
+ * @type {boolean}
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.isChannelView = false;
 
+/**
+ * @type {boolean}
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.isVisible = true;
 
 /**
@@ -127,7 +133,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
     this.view.setIsVisible('true');
     // update list before trigger loading of remaining broadcasts
     // to prevent already loaded broadcasts to reside at the end of the list
-    // if they hasn't been rendered yet
+    // if they haven't been rendered yet
     this.updateList();
     this.getStoreModel().getAllRemaining();
 };

@@ -5,7 +5,7 @@
 Gui.Epg.Controller.TimeLine = function () {};
 
 /**
- * @type {VDRest.Lib.Cache.store.Controller}
+ * @type {VDRest.Abstract.Controller}
  */
 Gui.Epg.Controller.TimeLine.prototype = new VDRest.Abstract.Controller();
 

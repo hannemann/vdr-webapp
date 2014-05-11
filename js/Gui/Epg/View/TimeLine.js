@@ -14,7 +14,7 @@ Gui.Epg.View.TimeLine = function () {};
 Gui.Epg.View.TimeLine.prototype = new VDRest.Abstract.View();
 
 /**
- * initialize node
+ * initialize nodes
  */
 Gui.Epg.View.TimeLine.prototype.init = function () {
 
@@ -36,6 +36,10 @@ Gui.Epg.View.TimeLine.prototype.render = function () {
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
+/**
+ * set date text node
+ * @param date
+ */
 Gui.Epg.View.TimeLine.prototype.setDate = function (date) {
 
     var dateString = VDRest.helper.getWeekDay(date, true) + ', ' + VDRest.helper.getDateString(date);
@@ -106,6 +110,9 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
     this.node.width(width).append(markup);
 };
 
+/**
+ * destroy timeline
+ */
 Gui.Epg.View.TimeLine.prototype.destruct = function () {
 
     this.date.remove();

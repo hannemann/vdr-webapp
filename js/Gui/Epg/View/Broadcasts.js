@@ -1,6 +1,12 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Epg.View.Broadcasts = function () {};
 
+/**
+ * @type {VDRest.Abstract.View}
+ */
 Gui.Epg.View.Broadcasts.prototype = new VDRest.Abstract.View();
 
 /**

@@ -40,15 +40,15 @@ Gui.Epg.prototype.startPage = true;
 Gui.Epg.prototype.headline = 'EPG';
 
 /**
- * headline in menu bar
- * @type {string}
+ * context menu definition
+ * @type {{}}
  */
 Gui.Epg.prototype.contextMenu = {
 
     "Channelview" : {
         "labels" : {
-            "off" : "Channelview",
-            "on" : "EPG View"
+            "off" : VDRest.app.translate("Channelview"),
+            "on" : VDRest.app.translate("EPG View")
         },
         "state" : "off",
         "scope" : 'Gui.Epg',
@@ -75,7 +75,7 @@ Gui.Epg.prototype.contextMenu = {
 
     "Refresh" : {
         "labels" : {
-            "on" : "Refresh"
+            "on" : VDRest.app.translate("Refresh")
         },
         "state" : "on",
         "scope" : 'Gui.Epg',
@@ -87,8 +87,8 @@ Gui.Epg.prototype.contextMenu = {
 
     "Primetime" : {
         "labels" : {
-            "on" : "Now",
-            "off" : "Primetime"
+            "on" : VDRest.app.translate("Now"),
+            "off" : VDRest.app.translate("Primetime")
         },
         "state" : VDRest.config.getItem('lastEpg') === 'now' ? "off" : "on",
         "scope" : 'Gui.Epg',
@@ -110,7 +110,7 @@ Gui.Epg.prototype.contextMenu = {
 
     "CustomTime" : {
         "labels" : {
-            "on" : "Set Time"
+            "on" : VDRest.app.translate("Set Time")
         },
         "state" : "on",
         "scope" : 'Gui.Epg',
@@ -152,7 +152,7 @@ Gui.Epg.prototype.dispatch = function () {
 };
 
 /**
- * dispatch default view
+ * destroy view
  */
 Gui.Epg.prototype.destruct = function () {
 

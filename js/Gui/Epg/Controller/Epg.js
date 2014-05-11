@@ -40,7 +40,7 @@ Gui.Epg.Controller.Epg.prototype = new VDRest.Abstract.Controller();
 Gui.Epg.Controller.Epg.prototype.isChannelView = false;
 
 /**
- * retrieve epg items
+ * initialize components
  */
 Gui.Epg.Controller.Epg.prototype.init = function () {
 

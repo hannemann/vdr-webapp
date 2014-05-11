@@ -156,8 +156,8 @@ Gui.Epg.Controller.Channels.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Channels.prototype.removeObserver = function () {
 
-    $(document).off('epg.scroll', $.proxy(this.handleScroll, this));
-    $(document).off('epg.channelview', $.proxy(this.handleChannelView, this));
+    $(document).off('epg.scroll');
+    $(document).off('epg.channelview');
 };
 
 /**

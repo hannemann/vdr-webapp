@@ -17,10 +17,19 @@
  */
 Gui.Epg.ViewModel.Channels.Channel = function () {};
 
+/**
+ * @type {VDRest.Abstract.ViewModel}
+ */
 Gui.Epg.ViewModel.Channels.Channel.prototype = new VDRest.Abstract.ViewModel();
 
+/**
+ * @type {string}
+ */
 Gui.Epg.ViewModel.Channels.Channel.prototype.cacheKey = 'channel_id';
 
+/**
+ * initialize
+ */
 Gui.Epg.ViewModel.Channels.Channel.prototype.init = function () {
 
     this.resource = this.data.resource.data;

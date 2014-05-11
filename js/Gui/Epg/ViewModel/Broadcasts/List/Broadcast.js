@@ -34,6 +34,9 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.init = function () {
     this.initViewMethods();
 };
 
+/**
+ * decorate view with magic methods
+ */
 Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.initViewMethods = function () {
 
     VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this);
