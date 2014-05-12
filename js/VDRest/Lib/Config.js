@@ -33,6 +33,12 @@ VDRest.Lib.Config.prototype.init = function () {
 	this.setItem = function (k, v) {
 
 		storage.setItem(k, v);
+
+        if (this.fields[k]) {
+
+            this.setFieldValue(k, v);
+        }
+
 		return this;
 	};
 
@@ -127,6 +133,33 @@ VDRest.Lib.Config.prototype.initFieldValues = function () {
         }
     }
 };
+
+/**
+ * @param {string} k
+ * @param v
+ */
+VDRest.Lib.Config.prototype.setFieldValue = function (k, v) {
+
+    var type = this.fields[k].type;
+
+    if ('string' === type || 'number' === type) {
+
+        this.fields[k].value = v;
+    }
+
+    if ('boolean' === type) {
+
+        this.fields[k].checked = v
+    }
+
+    if ('enum' === type) {
+
+        if ('function' !== typeof this.fields[k].values) {
+
+            this.fields[k].values[v].selected = true;
+        }
+    }
+};
 /**
  * Default values
  * @type {Object}
@@ -143,7 +176,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "streamdevParams"   :   "EXT;QUALITY=SLOW",
     "theme"             :   "default",
     "autoVps"           :   false,
-    "language"          :   "en_US"
+    "language"          :   "en_US",
+    "showRadio"          :   false
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -152,6 +186,9 @@ VDRest.Lib.Config.prototype.categories = {
     },
     "server" : {
         "label" : 'Server Settings'
+    },
+    "channels" : {
+        "label" : 'Channel Settings'
     },
     "timer" : {
         "label" : 'Timer Settings'
@@ -270,6 +307,11 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "server",
         "type" : "number",
         "label" : "Port"
+    },
+    "showRadio" :   {
+        "category" : "channels",
+        "type" : "boolean",
+        "label" : "Show radio channels"
     },
     "recordingStartGap" :   {
         "category" : "timer",

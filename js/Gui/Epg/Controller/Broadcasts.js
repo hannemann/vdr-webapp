@@ -73,6 +73,11 @@ Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) 
 
     collection.iterate($.proxy(function (channelModel) {
 
+        if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
+
+            return true;
+        }
+
         this.broadcastLists.push(this.module.getController('Broadcasts.List', {
             "channel_id" : channelModel.data.channel_id,
             "parent" : this,

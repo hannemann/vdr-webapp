@@ -41,6 +41,7 @@ VDRest.app.de_DE = {
     "Search Description" : "In Beschreibung suchen",
     "Mode" : "Modus",
     "AND" : "UND",
-    "OR" : "ODER"
+    "OR" : "ODER",
+    "Show radio channels" : "Zeige Radio Kanäle"
 
 };
