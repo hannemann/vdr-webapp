@@ -1,7 +1,17 @@
+/**
+ * @class
+ * @constructor
+ */
 Gui.Form.View.Abstract = function () {};
 
+/**
+ * @type {VDRest.Abstract.View}
+ */
 Gui.Form.View.Abstract.prototype = new VDRest.Abstract.View();
 
+/**
+ * initialize node and categories
+ */
 Gui.Form.View.Abstract.prototype.init = function () {
 
     this.node = $('<form>');
@@ -34,6 +44,9 @@ Gui.Form.View.Abstract.prototype.addSubmit = function () {
 
 };
 
+/**
+ * prepare data fields, add to category
+ */
 Gui.Form.View.Abstract.prototype.prepareFields = function () {
 
     var i;
@@ -50,9 +63,13 @@ Gui.Form.View.Abstract.prototype.prepareFields = function () {
             }
         }
     }
-
 };
 
+/**
+ * get dom according to type of data
+ * @param {string} id
+ * @param {{}} field
+ */
 Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
 
     if ("boolean" === field.type) {
@@ -81,6 +98,11 @@ Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
     }
 };
 
+/**
+ * set type checkbox
+ * @param {string} id
+ * @param {{}} field
+ */
 Gui.Form.View.Abstract.prototype.getBoolean = function (id, field) {
 
     this.decorateField(id, field);
@@ -90,6 +112,11 @@ Gui.Form.View.Abstract.prototype.getBoolean = function (id, field) {
     field.dom.append(field.gui);
 };
 
+/**
+ * set typ number
+ * @param {string} id
+ * @param {{}} field
+ */
 Gui.Form.View.Abstract.prototype.getNumber = function (id, field) {
 
     this.decorateField(id, field);
@@ -99,6 +126,11 @@ Gui.Form.View.Abstract.prototype.getNumber = function (id, field) {
     field.dom.append(field.gui);
 };
 
+/**
+ * set type text
+ * @param {string} id
+ * @param {{}} field
+ */
 Gui.Form.View.Abstract.prototype.getString = function (id, field) {
 
     this.decorateField(id, field);
@@ -108,17 +140,14 @@ Gui.Form.View.Abstract.prototype.getString = function (id, field) {
     field.dom.append(field.gui);
 };
 
+/**
+ * set type text, add value
+ * @param {string} id
+ * @param {{}} field
+ */
 Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 
-    var values = field.values, selected;
-
-    if ("function" === typeof values) {
-
-        values = values();
-
-    }
-
-    selected = field.getValue();
+    var selected = field.getValue();
 
     this.decorateField(id, field);
 
@@ -129,6 +158,11 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
     field.dom.append(field.gui);
 };
 
+/**
+ * set type text
+ * @param {string} id
+ * @param {{}} field
+ */
 Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
 
     this.decorateField(id, field);
@@ -138,6 +172,12 @@ Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
     field.dom.append(field.gui);
 };
 
+/**
+ * decorate data with dom according to type
+ * @param {string} id
+ * @param {{}} field
+ * @returns {*}
+ */
 Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
 
     field.gui = $('<input name="' + (field.name ? field.name : id) + '">')
@@ -145,11 +185,11 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
         .val((field.value ? field.value : ''));
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
-    $('<span>').text(field.label).appendTo(field.dom);
+    $('<span>').text(VDRest.app.translate(field.label)).appendTo(field.dom);
 
     if (field.hasOwnProperty('info')) {
 
-        $('<span class="info">').text(field.info).appendTo(field.dom);
+        $('<span class="info">').text(VDRest.app.translate(field.info)).appendTo(field.dom);
     }
 
     field.disabled = false;
@@ -166,11 +206,21 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
     return field;
 };
 
+/**
+ * add field to category
+ * @param {string} cat
+ * @param {{}} field
+ */
 Gui.Form.View.Abstract.prototype.addToCategory = function (cat, field) {
 
     this.getCategory(cat).append(field.dom);
 };
 
+/**
+ * retriev category by name
+ * @param {string} cat
+ * @returns {*}
+ */
 Gui.Form.View.Abstract.prototype.getCategory = function (cat) {
 
     if ("undefined" === typeof this.categories[cat]) {
@@ -179,7 +229,7 @@ Gui.Form.View.Abstract.prototype.getCategory = function (cat) {
             '<div class="category category-'
             + cat
             + '"><h2>'
-            + this.data.catConfig[cat].label
+            + VDRest.app.translate(this.data.catConfig[cat].label)
             + '</h2></div>'
         );
     }
@@ -187,6 +237,9 @@ Gui.Form.View.Abstract.prototype.getCategory = function (cat) {
     return this.categories[cat];
 };
 
+/**
+ * add categories to node
+ */
 Gui.Form.View.Abstract.prototype.renderCategories = function () {
 
     var i;
