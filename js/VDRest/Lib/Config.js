@@ -1,8 +1,14 @@
 /**
-* read from and write to localStorage
-* @constructor
-*/
-VDRest.Lib.Config = function () {
+ * read from and write to localStorage
+ * @constructor
+ */
+VDRest.Lib.Config = function () {};
+
+/**
+ * read from and write to localStorage
+ * @constructor
+ */
+VDRest.Lib.Config.prototype.init = function () {
 
 	var storage = null;
 
@@ -82,8 +88,45 @@ VDRest.Lib.Config = function () {
 		storage.clear();
 		return this;
 	};
+
+    this.initFieldValues();
+
+    return this;
 };
 
+/**
+ * add values to fields
+ */
+VDRest.Lib.Config.prototype.initFieldValues = function () {
+
+    var i, type;
+
+    for (i in this.fields) {
+
+        if (this.fields.hasOwnProperty(i)) {
+
+            type = this.fields[i].type;
+
+            if ('string' === type || 'number' === type) {
+
+                this.fields[i].value = this.getItem(i);
+            }
+
+            if ('boolean' === type) {
+
+                this.fields[i].checked = this.getItem(i)
+            }
+
+            if ('enum' === type) {
+
+                if ('function' !== typeof this.fields[i].values) {
+
+                    this.fields[i].values[this.getItem(i)].selected = true;
+                }
+            }
+        }
+    }
+};
 /**
  * Default values
  * @type {Object}
@@ -276,6 +319,8 @@ VDRest.Lib.Config.prototype.fields = {
 };
 
 VDRest.config = new VDRest.Lib.Config();
+
+VDRest.config.init();
 
 if ("en_US" !== VDRest.config.getItem('language')) {
 

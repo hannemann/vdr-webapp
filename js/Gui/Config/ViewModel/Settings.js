@@ -1,7 +1,17 @@
+/**
+ * @class
+ * @constructor
+ */
 Gui.Config.ViewModel.Settings = function () {};
 
+/**
+ * @type {VDRest.Abstract.ViewModel}
+ */
 Gui.Config.ViewModel.Settings.prototype = new VDRest.Abstract.ViewModel();
 
+/**
+ * initialize date
+ */
 Gui.Config.ViewModel.Settings.prototype.init = function  () {
 
     this.backend = this.module.store;
@@ -10,13 +20,16 @@ Gui.Config.ViewModel.Settings.prototype.init = function  () {
 
     this.categories = this.backend.categories;
 
-    this.data.view.fields = this.fields;
+    this.data.view.data.fields = this.fields;
 
-    this.data.view.catConfig = this.categories;
+    this.data.view.data.catConfig = this.categories;
 
     this.initViewMethods();
 };
 
+/**
+ * add specific methods to view
+ */
 Gui.Config.ViewModel.Settings.prototype.initViewMethods = function () {
 
     var i;
@@ -26,11 +39,14 @@ Gui.Config.ViewModel.Settings.prototype.initViewMethods = function () {
         if (this.fields.hasOwnProperty(i)) {
 
             this.defineViewMethod(i, this.fields[i]);
-            this.fields[i].getValue = this.data.view['get' + this.getMethodFragment(i)];
         }
     }
 };
 
+/**
+ * @param name
+ * @param field
+ */
 Gui.Config.ViewModel.Settings.prototype.defineViewMethod = function (name, field) {
 
     if ("number" === field.type) {
@@ -54,6 +70,11 @@ Gui.Config.ViewModel.Settings.prototype.defineViewMethod = function (name, field
     }
 };
 
+/**
+ * set configuration
+ * @param name
+ * @param field
+ */
 Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field) {
 
     var fragment = this.getMethodFragment(name), me = this, dataType;
@@ -62,9 +83,7 @@ Gui.Config.ViewModel.Settings.prototype.definePrimitive = function (name, field)
 
     this.data.view['get' + fragment] = function () {
 
-        var item = me.backend.getItem(name);
-
-        return item;
+        return me.backend.getItem(name);
     };
 
     this.data.view['set' + fragment] = function (v) {

@@ -129,14 +129,19 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
 
         field.getValue = function () {
 
-            var i;
+            var i, values = this.values;
 
-            for (i in this.values) {
+            if ("function" === typeof this.values) {
 
-                if (this.values.hasOwnProperty(i)) {
+                values = this.values();
+            }
 
-                    if (this.values[i].selected) {
-                        return this.values[i];
+            for (i in values) {
+
+                if (values.hasOwnProperty(i)) {
+
+                    if (values[i].selected) {
+                        return values[i];
                     }
                 }
             }
