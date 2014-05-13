@@ -9,11 +9,22 @@ Gui.Window.ViewModel.Drawer = function () {};
  */
 Gui.Window.ViewModel.Drawer.prototype = new VDRest.Abstract.ViewModel();
 
+/**
+ * initialize view
+ */
 Gui.Window.ViewModel.Drawer.prototype.init = function () {
 
-    var me = this;
-
     this.view = this.data.view;
+
+    this.initViewMethods();
+};
+
+/**
+ * add view specific methods
+ */
+Gui.Window.ViewModel.Drawer.prototype.initViewMethods = function () {
+
+    var me = this;
 
     this.view.getButtons = function () {
 

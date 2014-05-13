@@ -5,7 +5,6 @@
 Gui.Timer.View.List.Timer = function () {};
 
 /**
- *
  * @type {VDRest.Abstract.View}
  */
 Gui.Timer.View.List.Timer.prototype = new VDRest.Abstract.View();
@@ -56,7 +55,7 @@ Gui.Timer.View.List.Timer.prototype.decorate = function () {
 };
 
 /**
- * decorate and render
+ * call decorator
  */
 Gui.Timer.View.List.Timer.prototype.update = function () {
 
@@ -138,7 +137,7 @@ Gui.Timer.View.List.Timer.prototype.addFilename = function () {
 };
 
 /**
- * add filename node
+ * add class names
  */
 Gui.Timer.View.List.Timer.prototype.addClasses = function () {
 

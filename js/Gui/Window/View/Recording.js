@@ -1,4 +1,7 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.View.Recording = function () {};
 
 /**

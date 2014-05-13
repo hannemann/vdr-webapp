@@ -21,6 +21,9 @@ Gui.Window.View.Drawer.prototype.isModalViewport = true;
  */
 Gui.Window.View.Drawer.prototype.isModalTransparent = true;
 
+/**
+ * @type {boolean}
+ */
 Gui.Window.View.Drawer.prototype.hasHeader = true;
 
 /**

@@ -9,10 +9,13 @@ Gui.Timer.Controller.List.Timer = function () {};
  */
 Gui.Timer.Controller.List.Timer.prototype = new VDRest.Abstract.Controller();
 
+/**
+ * @type {string}
+ */
 Gui.Timer.Controller.List.Timer.prototype.cacheKey = 'id';
 
 /**
- * retrieve view
+ * initialize view
  */
 Gui.Timer.Controller.List.Timer.prototype.init = function () {
 
@@ -66,7 +69,7 @@ Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
 };
 
 /**
- * remove event listeners
+ * update data, cache, view
  */
 Gui.Timer.Controller.List.Timer.prototype.update = function (e) {
 

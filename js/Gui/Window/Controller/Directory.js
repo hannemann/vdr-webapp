@@ -1,10 +1,22 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.Controller.Directory = function () {};
 
+/**
+ * @type {Gui.Window.Controller.Abstract}
+ */
 Gui.Window.Controller.Directory.prototype = new Gui.Window.Controller.Abstract();
 
+/**
+ * @type {string}
+ */
 Gui.Window.Controller.Directory.prototype.cacheKey = 'path';
 
+/**
+ * initialize view
+ */
 Gui.Window.Controller.Directory.prototype.init = function () {
 
     this.eventPrefix = 'window.directory.' + this.data.path.replace(/\s/g, '.');
@@ -18,6 +30,9 @@ Gui.Window.Controller.Directory.prototype.init = function () {
     );
 };
 
+/**
+ * destroy
+ */
 Gui.Window.Controller.Directory.prototype.destructView = function () {
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);

@@ -1,7 +1,17 @@
+/**
+ * @class
+ * @constructor
+ */
 Gui.Recordings.ViewModel.List = function () {};
 
+/**
+ * @type {VDRest.Abstract.ViewModel}
+ */
 Gui.Recordings.ViewModel.List.prototype = new VDRest.Abstract.ViewModel();
 
+/**
+ * initialize data
+ */
 Gui.Recordings.ViewModel.List.prototype.init = function () {
 
     var me = this;
@@ -21,6 +31,9 @@ Gui.Recordings.ViewModel.List.prototype.init = function () {
     }
 };
 
+/**
+ * init tree
+ */
 Gui.Recordings.ViewModel.List.prototype.getTree = function () {
 
     if (!this.tree) {
@@ -44,6 +57,11 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
     }
 };
 
+/**
+ * add file to tree recursively
+ * @param filename
+ * @param parentDir
+ */
 Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDir) {
 
     var paths = filename.split('~'), name, childNode;
@@ -75,6 +93,13 @@ Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDi
     }
 };
 
+/**
+ * get directory controller
+ * @param path
+ * @param parent
+ * @param name
+ * @returns {*}
+ */
 Gui.Recordings.ViewModel.List.prototype.getDirectory = function (path, parent, name) {
 
     return this.module.getController('List.Directory', {
@@ -84,6 +109,13 @@ Gui.Recordings.ViewModel.List.prototype.getDirectory = function (path, parent, n
     });
 };
 
+/**
+ * get recordings controller
+ * @param path
+ * @param parent
+ * @param name
+ * @returns {*}
+ */
 Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) {
 
     return this.module.getController('List.Recording', {
@@ -93,9 +125,15 @@ Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) 
     });
 };
 
+/**
+ * search child
+ * @param n
+ * @param h
+ * @returns {boolean}
+ */
 Gui.Recordings.ViewModel.List.prototype.hasChild = function (n, h) {
 
-    var i=0; l = h.length;
+    var i= 0, l = h.length;
 
     for (i;i<l;i++) {
         if (n === h[i].data.name) {

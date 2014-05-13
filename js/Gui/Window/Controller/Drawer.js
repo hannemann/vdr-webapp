@@ -5,7 +5,6 @@
 Gui.Window.Controller.Drawer = function () {};
 
 /**
- *
  * @type {Gui.Window.Controller.Abstract}
  */
 Gui.Window.Controller.Drawer.prototype = new Gui.Window.Controller.Abstract();

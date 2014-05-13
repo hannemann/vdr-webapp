@@ -72,6 +72,9 @@ Gui.Timer.Controller.List.prototype.iterateTimers = function (collection) {
     this.dispatchList();
 };
 
+/**
+ * dispatch timers
+ */
 Gui.Timer.Controller.List.prototype.dispatchList = function () {
 
     this.timerList.each(function () {
@@ -80,13 +83,22 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
     });
 };
 
+/**
+ * add event listeners
+ */
 Gui.Timer.Controller.List.prototype.addObserver = function () {
 
     $(document).one('timersloaded', $.proxy(this.iterateTimers, this));
 };
 
+/**
+ * remove event listeners
+ */
 Gui.Timer.Controller.List.prototype.removeObserver = function () {};
 
+/**
+ * destroy
+ */
 Gui.Timer.Controller.List.prototype.destructView = function () {
 
     this.timerList.each(function () {

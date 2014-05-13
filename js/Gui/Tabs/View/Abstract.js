@@ -5,7 +5,7 @@
 Gui.Tabs.View.Abstract = function () {};
 
 /**
- * @type {VDRest.Lib.Cache.store.View}
+ * @type {VDRest.Abstract.View}
  */
 Gui.Tabs.View.Abstract.prototype = new VDRest.Abstract.View();
 

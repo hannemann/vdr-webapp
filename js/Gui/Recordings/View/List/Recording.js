@@ -1,15 +1,30 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Recordings.View.List.Recording = function () {};
 
+/**
+ * @type {VDRest.Abstract.View}
+ */
 Gui.Recordings.View.List.Recording.prototype = new VDRest.Abstract.View();
 
+/**
+ * @type {string}
+ */
 Gui.Recordings.View.List.Recording.prototype.cacheKey = 'number';
 
+/**
+ * initialize node
+ */
 Gui.Recordings.View.List.Recording.prototype.init = function () {
 
     this.node = $('<div class="recording list-item clearer">');
 };
 
+/**
+ * render
+ */
 Gui.Recordings.View.List.Recording.prototype.render = function () {
 
 
@@ -43,6 +58,10 @@ Gui.Recordings.View.List.Recording.prototype.render = function () {
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
+/**
+ * add classes to node
+ * @returns {Gui.Recordings.View.List.Recording}
+ */
 Gui.Recordings.View.List.Recording.prototype.addClasses = function () {
 
     var classNames = [], rating = this.getRating();

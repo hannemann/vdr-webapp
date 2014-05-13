@@ -24,7 +24,7 @@ Gui.EpgSearch.View.Search.prototype.render = function () {
 
     VDRest.Abstract.View.prototype.render.call(this);
 
-    this.addFields();
+    this.requestForm();
 
     this.node.addClass('viewport-fullsize collapsed');
 
@@ -32,20 +32,9 @@ Gui.EpgSearch.View.Search.prototype.render = function () {
 };
 
 /**
- * render
+ * request form
  */
-Gui.EpgSearch.View.Search.prototype.addFields = function () {
-
-
-//    "query" : options.query,
-//        "mode" : options.mode || 0,
-//        "channelid" : options.channelid || null,
-//        "use_title" : options.use_title || true,
-//        "use_subtitle" : options.use_subtitle || false,
-//        "use_description" : options.use_description || false
-
-
-
+Gui.EpgSearch.View.Search.prototype.requestForm = function () {
 
     $.event.trigger({
         "type" : "form.request",

@@ -47,6 +47,7 @@ VDRest.Api.Resource.prototype.getBaseUrl = function () {
 };
 
 /**
+ * todo: split into generic, synced and async
  * fetch data from VDRest.Api.Resource api
  * @param options {object}
  */

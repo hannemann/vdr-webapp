@@ -1,13 +1,25 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Recordings.View.List = function () {};
 
+/**
+ * @type {VDRest.Abstract.View}
+ */
 Gui.Recordings.View.List.prototype = new VDRest.Abstract.View();
 
+/**
+ * initialize node
+ */
 Gui.Recordings.View.List.prototype.init = function () {
 
     this.node = $('<div class="recordings-list simple-list clearer">');
 };
 
+/**
+ * render first directory level
+ */
 Gui.Recordings.View.List.prototype.renderFirstLevel = function () {
 
     var i= 0, l;

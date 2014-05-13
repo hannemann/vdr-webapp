@@ -56,6 +56,9 @@ Gui.Recordings.prototype.destruct = function () {
     this.getController('List').destructView();
 };
 
+/**
+ * refresh
+ */
 Gui.Recordings.prototype.refresh = function () {
 
     VDRest.app.getModule('Gui.Viewport').getView('Default').node.empty();

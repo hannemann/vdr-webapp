@@ -63,7 +63,7 @@ Gui.Window.Controller.Confirm.prototype.okAction = function () {
 };
 
 /**
- * handle ok click
+ * handle cancel click
  */
 Gui.Window.Controller.Confirm.prototype.cancel = function () {
 

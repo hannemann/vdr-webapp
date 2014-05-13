@@ -52,6 +52,10 @@ Gui.Window.View.Abstract.prototype.render = function () {
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
+/**
+ * add modal overlay, set as parentView
+ * @param parentView
+ */
 Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
 
     /**

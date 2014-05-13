@@ -58,7 +58,7 @@ Gui.Menubar.View.Default.prototype.addContent = function () {
 
 /**
  * retrieve header
- * @returns {*|jQuery|HTMLElement}
+ * @returns {jQuery}
  */
 Gui.Menubar.View.Default.prototype.getHeader = function () {
 

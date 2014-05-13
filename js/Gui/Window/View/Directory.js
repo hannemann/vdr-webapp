@@ -1,4 +1,7 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.View.Directory = function () {};
 
 /**
@@ -6,8 +9,14 @@ Gui.Window.View.Directory = function () {};
  */
 Gui.Window.View.Directory.prototype = new Gui.Window.View.Abstract();
 
+/**
+ * @type {string}
+ */
 Gui.Window.View.Directory.prototype.cacheKey = 'path';
 
+/**
+ * decorate and render
+ */
 Gui.Window.View.Directory.prototype.render = function () {
 
     this.data.node.setParentView(this);
@@ -21,6 +30,10 @@ Gui.Window.View.Directory.prototype.render = function () {
     this.node.toggleClass('collapsed expand');
 };
 
+/**
+ * add classes
+ * @returns {Gui.Window.View.Directory}
+ */
 Gui.Window.View.Directory.prototype.addClasses = function () {
 
     var classNames = ['recordings', 'viewport-fullsize', 'collapsed'];
@@ -31,6 +44,9 @@ Gui.Window.View.Directory.prototype.addClasses = function () {
     return this;
 };
 
+/**
+ * destroy window
+ */
 Gui.Window.View.Directory.prototype.destruct = function () {
 
     var me = this;

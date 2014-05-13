@@ -9,6 +9,9 @@ Gui.Recordings.Controller.List.Recording = function () {};
  */
 Gui.Recordings.Controller.List.Recording.prototype = new VDRest.Abstract.Controller();
 
+/**
+ * @type {string}
+ */
 Gui.Recordings.Controller.List.Recording.prototype.cacheKey = 'number';
 
 /**

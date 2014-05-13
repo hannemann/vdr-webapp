@@ -81,6 +81,7 @@ Gui.Window.View.Broadcast.prototype.addClasses = function () {
 };
 
 /**
+ * retrieve tabs configuration
  * @type {Object}
  */
 Gui.Window.View.Broadcast.prototype.getTabConfig = function () {

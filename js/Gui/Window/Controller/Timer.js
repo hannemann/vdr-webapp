@@ -25,8 +25,6 @@ Gui.Window.Controller.Timer.prototype.init = function () {
 
     this.getBroadcast();
 
-//    VDRest.helper.log(this.data.resource, this.broadcast);
-
     this.module.getViewModel('Timer', {
         "id" : this.data.id,
         "view" : this.view,
@@ -263,7 +261,7 @@ Gui.Window.Controller.Timer.prototype.getAdapter = function () {
 };
 
 /**
- * trigger timer delete
+ * toggle timer active
  */
 Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
 
@@ -271,7 +269,7 @@ Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
 };
 
 /**
- * trigger timer delete
+ * destroy timer
  */
 Gui.Window.Controller.Timer.prototype.destroyTimer = function () {
 

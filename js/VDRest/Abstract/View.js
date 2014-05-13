@@ -33,6 +33,9 @@ VDRest.Abstract.View.prototype.render = function () {
     this.isRendered = !this.isRendered;
 };
 
+/**
+ * remove node
+ */
 VDRest.Abstract.View.prototype.remove = function () {
 
     this.node.remove();
@@ -40,6 +43,9 @@ VDRest.Abstract.View.prototype.remove = function () {
     this.isRendered = !this.isRendered;
 };
 
+/**
+ * default destructor
+ */
 VDRest.Abstract.View.prototype.destruct = function () {
 
     this.remove();

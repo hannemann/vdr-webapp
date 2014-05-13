@@ -1,5 +1,13 @@
+/**
+ * Abstract TimerAdapter
+ * @constructor
+ */
 VDRest.Api.TimerAdapter.Abstract = function () {};
 
+/**
+ *
+ * @type {{errorMessage: string, weekdays: RegExp, timer_id: RegExp, start: RegExp, stop: RegExp, day: RegExp, file: string, channel: RegExp, flags: number, aux: string, validateProperties: Function, getTimes: Function, getFlags: Function, getData: Function, getVpsSet: Function}}
+ */
 VDRest.Api.TimerAdapter.Abstract.prototype = {
 
     "errorMessage" : '',

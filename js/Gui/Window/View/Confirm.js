@@ -1,15 +1,27 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.View.Confirm = function () {};
 
 /**
- * @type {Gui.Window.Controller.Abstract}
+ * @type {Gui.Window.View.Input}
  */
 Gui.Window.View.Confirm.prototype = new Gui.Window.View.Input();
 
+/**
+ * @type {boolean}
+ */
 Gui.Window.View.Confirm.prototype.isModal = true;
 
+/**
+ * @type {string}
+ */
 Gui.Window.View.Confirm.prototype.cacheKey = 'id';
 
+/**
+ * decorate and render
+ */
 Gui.Window.View.Confirm.prototype.render = function () {
 
     this.addClasses().addMessage().addButtons();
@@ -21,6 +33,10 @@ Gui.Window.View.Confirm.prototype.render = function () {
     this.node.toggleClass('collapsed expand');
 };
 
+/**
+ * add message
+ * @returns {Gui.Window.View.Confirm}
+ */
 Gui.Window.View.Confirm.prototype.addMessage = function () {
 
     $('<div class="confirm-message">').text(this.data.message).appendTo(this.body);

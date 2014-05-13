@@ -1,5 +1,13 @@
+/**
+ * todo: move to Resource as generic methods
+ * @class
+ * @constructor
+ */
 VDRest.Api.Actions = function () {};
 
+/**
+ * @type {VDRest.Api.Resource}
+ */
 VDRest.Api.Actions.prototype = new VDRest.Api.Resource();
 
 /**

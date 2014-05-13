@@ -5,12 +5,12 @@
 Gui.Tabs.Controller.Abstract = function () {};
 
 /**
- * @type {VDRest.Lib.Cache.store.Controller}
+ * @type {VDRest.Abstract.Controller}
  */
 Gui.Tabs.Controller.Abstract.prototype = new VDRest.Abstract.Controller();
 
 /**
- * init parentView
+ * initialize
  */
 Gui.Tabs.Controller.Abstract.prototype.init = function () {
 
@@ -19,7 +19,7 @@ Gui.Tabs.Controller.Abstract.prototype.init = function () {
     this.addObserver();
 };
 /**
- * init parentView
+ * dispatch
  */
 Gui.Tabs.Controller.Abstract.prototype.dispatchView = function () {
 
@@ -61,7 +61,7 @@ Gui.Tabs.Controller.Abstract.prototype.update = function (e) {
 };
 
 /**
- * call update method
+ * update cache
  */
 Gui.Tabs.Controller.Abstract.prototype.updateCacheKey = function (keyInCache) {
 

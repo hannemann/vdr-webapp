@@ -213,6 +213,7 @@ Gui.Window.View.Timer.prototype.animateImage = function () {
 
         this.image.toggleClass('expand contract');
         this.imageIsExpanded = false;
+
     } else {
 
         this.image.removeClass('contract').addClass('expand');

@@ -1,10 +1,22 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Recordings.View.List.Directory = function () {};
 
+/**
+ * @type {VDRest.Abstract.View}
+ */
 Gui.Recordings.View.List.Directory.prototype = new VDRest.Abstract.View();
 
+/**
+ * @type {string}
+ */
 Gui.Recordings.View.List.Directory.prototype.cacheKey = 'path';
 
+/**
+ * init nodes
+ */
 Gui.Recordings.View.List.Directory.prototype.init = function () {
 
     this.node = $('<div class="recordings-path list-item clearer">');
@@ -12,6 +24,9 @@ Gui.Recordings.View.List.Directory.prototype.init = function () {
     this.name = $('<div class="name">').appendTo(this.node);
 };
 
+/**
+ * render
+ */
 Gui.Recordings.View.List.Directory.prototype.render = function () {
 
     if ("root" !== this.getName()) {
@@ -27,7 +42,9 @@ Gui.Recordings.View.List.Directory.prototype.render = function () {
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
-
+/**
+ * render items
+ */
 Gui.Recordings.View.List.Directory.prototype.renderItems = function () {
 
     var i = 0, l,

@@ -10,14 +10,14 @@ Gui.Form.Controller.Abstract = function () {};
 Gui.Form.Controller.Abstract.prototype = new VDRest.Abstract.Controller();
 
 /**
- * init parentView
+ * init view
  */
 Gui.Form.Controller.Abstract.prototype.init = function () {
 
     this.view = this.module.getView('Abstract', this.data);
 };
 /**
- * init parentView
+ * dispatch
  */
 Gui.Form.Controller.Abstract.prototype.dispatchView = function () {
 

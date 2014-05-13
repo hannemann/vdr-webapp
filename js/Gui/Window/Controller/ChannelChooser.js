@@ -1,8 +1,17 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.Controller.ChannelChooser = function () {};
 
+/**
+ * @type {Gui.Window.Controller.Select}
+ */
 Gui.Window.Controller.ChannelChooser.prototype = new Gui.Window.Controller.Select();
 
+/**
+ * retrieve channels, initialize view
+ */
 Gui.Window.Controller.ChannelChooser.prototype.init = function () {
 
     this.eventPrefix = 'window.channelChooser';
@@ -14,6 +23,9 @@ Gui.Window.Controller.ChannelChooser.prototype.init = function () {
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
 
+/**
+ * fetch channels and add them to data object
+ */
 Gui.Window.Controller.ChannelChooser.prototype.getChannels = function () {
 
     var collection = VDRest.app.getModule('VDRest.Epg').getModel('Channels').getCollection(),

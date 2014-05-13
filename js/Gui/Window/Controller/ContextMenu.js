@@ -88,7 +88,7 @@ Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callba
 };
 
 /**
- * call method defined as callback
+ * request configuration page
  */
 Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
 

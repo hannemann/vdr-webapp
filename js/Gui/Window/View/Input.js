@@ -1,4 +1,7 @@
-
+/**
+ * @class
+ * @constructor
+ */
 Gui.Window.View.Input = function () {};
 
 /**
@@ -6,8 +9,14 @@ Gui.Window.View.Input = function () {};
  */
 Gui.Window.View.Input.prototype = new Gui.Window.View.Abstract();
 
+/**
+ * @type {boolean}
+ */
 Gui.Window.View.Input.prototype.isModal = true;
 
+/**
+ * decorate and render
+ */
 Gui.Window.View.Input.prototype.render = function () {
 
     var type = this.data.type;
@@ -22,6 +31,10 @@ Gui.Window.View.Input.prototype.render = function () {
     }
 };
 
+/**
+ * add classes
+ * @returns {Gui.Window.View.Input}
+ */
 Gui.Window.View.Input.prototype.addClasses = function () {
 
     this.node.addClass('window-input clearer');
@@ -29,6 +42,10 @@ Gui.Window.View.Input.prototype.addClasses = function () {
     return this;
 };
 
+/**
+ * add form field
+ * @returns {Gui.Window.View.Input}
+ */
 Gui.Window.View.Input.prototype.addInput = function () {
 
     this.input = this.data.dom.clone().appendTo(this.body);
@@ -38,6 +55,10 @@ Gui.Window.View.Input.prototype.addInput = function () {
     return this;
 };
 
+/**
+ * add buttons
+ * @returns {Gui.Window.View.Input}
+ */
 Gui.Window.View.Input.prototype.addButtons = function () {
 
     this.cancel = $('<div class="button button-cancel">').text(VDRest.app.translate('Cancel')).appendTo(this.node);

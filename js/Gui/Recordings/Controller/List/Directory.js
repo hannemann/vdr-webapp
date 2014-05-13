@@ -9,6 +9,9 @@ Gui.Recordings.Controller.List.Directory = function () {};
  */
 Gui.Recordings.Controller.List.Directory.prototype = new VDRest.Abstract.Controller();
 
+/**
+ * @type {string}
+ */
 Gui.Recordings.Controller.List.Directory.prototype.cacheKey = 'path';
 
 /**

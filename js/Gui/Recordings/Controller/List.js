@@ -64,6 +64,9 @@ Gui.Recordings.Controller.List.prototype.iterateRecordings = function (collectio
     this.dispatchList();
 };
 
+/**
+ * dispatch first directory level
+ */
 Gui.Recordings.Controller.List.prototype.dispatchList = function () {
 
     this.module.getViewModel('List', {
@@ -74,13 +77,22 @@ Gui.Recordings.Controller.List.prototype.dispatchList = function () {
     this.view.renderFirstLevel();
 };
 
+/**
+ * add event listeners
+ */
 Gui.Recordings.Controller.List.prototype.addObserver = function () {
 
     $(document).one('recordingsloaded', $.proxy(this.iterateRecordings, this));
 };
 
+/**
+ * remove event listeners
+ */
 Gui.Recordings.Controller.List.prototype.removeObserver = function () {};
 
+/**
+ * Destroy
+ */
 Gui.Recordings.Controller.List.prototype.destructView = function () {
 
     this.isHidden = true;

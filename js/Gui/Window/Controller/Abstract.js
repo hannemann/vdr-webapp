@@ -5,7 +5,7 @@
 Gui.Window.Controller.Abstract = function () {};
 
 /**
- * @type {VDRest.Lib.Cache.store.Controller}
+ * @type {VDRest.Abstract.Controller}
  */
 Gui.Window.Controller.Abstract.prototype = new VDRest.Abstract.Controller();
 

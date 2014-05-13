@@ -5,7 +5,7 @@
 Gui.Window.Controller.Recording = function () {};
 
 /**
- * @type {Gui.Tabs.Controller.Abstract}
+ * @type {Gui.Window.Controller.Abstract}
  */
 Gui.Window.Controller.Recording.prototype = new Gui.Window.Controller.Abstract();
 
@@ -15,7 +15,7 @@ Gui.Window.Controller.Recording.prototype = new Gui.Window.Controller.Abstract()
 Gui.Window.Controller.Recording.prototype.cacheKey = 'number';
 
 /**
- * initialize view and viewmodel
+ * initialize view and viewModel
  */
 Gui.Window.Controller.Recording.prototype.init = function () {
 
@@ -39,19 +39,7 @@ Gui.Window.Controller.Recording.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-//    this.addObserver();
 };
-
-/**
- * add event listeners
- */
-//Gui.Window.Controller.Recording.prototype.addObserver = function () {
-//
-////    var me = this;
-//
-//    Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
-//};
-
 
 /**
  * handle delete
