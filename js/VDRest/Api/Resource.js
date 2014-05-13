@@ -47,14 +47,13 @@ VDRest.Api.Resource.prototype.getBaseUrl = function () {
 };
 
 /**
- * todo: split into generic, synced and async
- * fetch data from VDRest.Api.Resource api
+ * fetch data from VDR
  * @param options {object}
  */
 VDRest.Api.Resource.prototype.load = function (options) {
 
     var url = "undefined" !== typeof options.url && "undefined" !== typeof this.urls[options.url] ?
-        this.urls[options.url] : this.urls.load, me=this, data, request = {},
+        this.urls[options.url] : this.urls.load, request = {},
 
         method = options.method || 'GET',
 
@@ -89,32 +88,28 @@ VDRest.Api.Resource.prototype.load = function (options) {
 
         if (!async) {
 
-            request.async = false;
-
-            data = $.ajax(request);
-
-            this.onComplete(data);
-
-            if (data.readyState === 4 && data.status === 200) {
-
-                me.responseCache[url] = data;
-                "function" === typeof callback && callback(data);
-
-                return data;
-
-            } else {
-
-                this.onError(data);
-
-                return false;
-            }
+            return this.fetchSync(request, callback);
         }
 
-        $.ajax(
-            request
-        ).done(function (result) {
+        this.fetchAsync(request, callback);
+    }
+};
 
-            me.responseCache[url] = result;
+/**
+ * fetch data asynchronous, fire callback on success
+ * @param {{}} request
+ * @param {Function} callback
+ */
+VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
+
+    var me = this;
+
+    $.ajax(
+        request
+    )
+        .done(function (result) {
+
+            me.responseCache[request.url] = result;
             callback(result);
 
         }).fail(function () {
@@ -125,6 +120,34 @@ VDRest.Api.Resource.prototype.load = function (options) {
 
             me.onComplete.apply(me, arguments)
         });
+};
+
+/**
+ * fetch data synchronous, return data and fire callback if requested
+ * @returns {{}|boolean}
+ */
+VDRest.Api.Resource.prototype.fetchSync = function (request, callback) {
+
+    var data;
+
+    request.async = false;
+
+    data = $.ajax(request);
+
+    this.onComplete(data);
+
+    if (data.readyState === 4 && data.status === 200) {
+
+        this.responseCache[request.url] = data;
+        "function" === typeof callback && callback(data);
+
+        return data;
+
+    } else {
+
+        this.onError(data);
+
+        return false;
     }
 };
 
