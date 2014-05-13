@@ -113,12 +113,16 @@ VDRest.Helper.prototype.getWeekDay = function (date, abbr) {
 
 	if (date instanceof Date) {
 
-		return abbr ? this.weekDays[date.getDay()].substr(0,2) : this.weekDays[date.getDay()];
+		return abbr
+            ? VDRest.app.translate(this.weekDays[date.getDay()]).substr(0,2)
+            : VDRest.app.translate(this.weekDays[date.getDay()]);
 	}
 	return false;
 };
 
-VDRest.Helper.prototype.weekDays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+VDRest.Helper.prototype.weekDays = [
+    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+];
 
 /**
  * log to console in debug mode

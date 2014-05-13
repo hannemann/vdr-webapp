@@ -43,6 +43,13 @@ VDRest.app.de_DE = {
     "AND" : "UND",
     "OR" : "ODER",
     "Show radio channels" : "Zeige Radio Kanäle",
-    "Channel" : "Kanal"
+    "Channel" : "Kanal",
+    "Sunday" : "Sonntag",
+    "Monday" : "Montag",
+    "Tuesday" : "Dienstag",
+    "Wednesday" : "Mittwoch",
+    "Thursday" : "Donnerstag",
+    "Friday" : "Freitag",
+    "Saturday" : "Samstag"
 
 };

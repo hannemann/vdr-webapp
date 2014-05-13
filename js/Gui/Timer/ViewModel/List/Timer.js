@@ -15,7 +15,6 @@ Gui.Timer.ViewModel.List.Timer.prototype = new VDRest.Abstract.ViewModel();
 Gui.Timer.ViewModel.List.Timer.prototype.cacheKey = 'id';
 
 /**
- * todo: create helper
  * date regex
  * @type {RegExp}
  */
