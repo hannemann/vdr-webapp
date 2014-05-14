@@ -12,14 +12,12 @@ VDRest.Timer.Model.List.Timer.prototype = new VDRest.Abstract.Model();
 /**
  * class name
  * @type {string}
- * @private
  */
 VDRest.Timer.Model.List.Timer.prototype._class = 'VDRest.Timer.Model.List.Timer';
 
 /**
- * class name
- * @type {string}
- * @private
+ * flags
+ * @type {{}}
  */
 VDRest.Timer.Model.List.Timer.prototype.flags = {
 

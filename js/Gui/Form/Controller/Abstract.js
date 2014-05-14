@@ -170,17 +170,17 @@ Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
 
     var i;
 
-    for (i in this.data.fields) {
+    for (i in this.view.data.fields) {
 
-        if (this.data.fields.hasOwnProperty(i) && this.data.fields[i].hasOwnProperty('dom')) {
+        if (this.view.data.fields.hasOwnProperty(i) && this.view.data.fields[i].hasOwnProperty('dom')) {
 
-            this.data.fields[i].dom.off('click');
+            this.view.data.fields[i].dom.off('click');
 
-            this.data.fields[i].gui.off('change');
+            this.view.data.fields[i].gui.off('change');
         }
     }
 
-    $(document).on('gui.form.update-' + this.keyInCache);
+    $(document).off('gui.form.update-' + this.keyInCache);
 };
 
 /**
@@ -192,11 +192,11 @@ Gui.Form.Controller.Abstract.prototype.hasDependencies = function (fieldName) {
 
     var i, depends;
 
-    for (i in this.data.fields) {
+    for (i in this.view.data.fields) {
 
-        if (this.data.fields.hasOwnProperty(i)) {
+        if (this.view.data.fields.hasOwnProperty(i)) {
 
-            depends = this.data.fields[i].depends;
+            depends = this.view.data.fields[i].depends;
             if ("undefined" !== typeof depends && depends === fieldName) {
 
                 return true;
@@ -216,22 +216,22 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
 
     var i, depends;
 
-    for (i in this.data.fields) {
+    for (i in this.view.data.fields) {
 
-        if (this.data.fields.hasOwnProperty(i)) {
+        if (this.view.data.fields.hasOwnProperty(i)) {
 
-            depends = this.data.fields[i].depends;
+            depends = this.view.data.fields[i].depends;
             if ("undefined" !== typeof depends && depends === fieldName) {
 
                 if (field.gui.prop('checked')) {
 
-                    this.data.fields[i].dom.removeClass('disabled');
-                    this.data.fields[i].disabled = false;
+                    this.view.data.fields[i].dom.removeClass('disabled');
+                    this.view.data.fields[i].disabled = false;
 
                 } else {
 
-                    this.data.fields[i].dom.addClass('disabled');
-                    this.data.fields[i].disabled = true;
+                    this.view.data.fields[i].dom.addClass('disabled');
+                    this.view.data.fields[i].disabled = true;
                 }
             }
         }

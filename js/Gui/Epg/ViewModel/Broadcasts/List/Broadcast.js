@@ -53,9 +53,9 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.initViewMethods = function
 
             recordingStartDate = this.getVps() > 0 && VDRest.config.getItem('autoVps')
                 ? new Date(this.getVps() * 1000)
-                : new Date((this.getStartTime() - VDRest.config.getItem('recordingStartGap')) * 1000);
+                : new Date((this.getStartTime() - VDRest.config.getItem('recordingStartMargin')) * 1000);
 
-            recordingEndDate = new Date((this.getEndTime() + VDRest.config.getItem('recordingEndGap')) * 1000);
+            recordingEndDate = new Date((this.getEndTime() + VDRest.config.getItem('recordingEndMargin')) * 1000);
 
             if (date > recordingStartDate && date < recordingEndDate) {
 

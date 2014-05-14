@@ -50,12 +50,12 @@ VDRest.Api.TimerAdapter.Abstract.prototype = {
 
             start = new Date(
                 obj.start_time.getTime()
-                - 1000 * parseInt(VDRest.config.getItem('recordingStartGap'), 10)
+                - 1000 * parseInt(VDRest.config.getItem('recordingStartMargin'), 10)
             );
 
             stop = new Date(
                 obj.start_time.getTime() + obj.duration * 1000
-                + 1000 * parseInt(VDRest.config.getItem('recordingEndGap'), 10)
+                + 1000 * parseInt(VDRest.config.getItem('recordingEndMargin'), 10)
             );
         }
 

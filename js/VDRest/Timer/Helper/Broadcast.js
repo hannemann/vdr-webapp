@@ -53,7 +53,7 @@ VDRest.Timer.Helper.Broadcast.prototype.matchByEventId = function (timer, broadc
             && new Date(timer.start_timestamp)
             || new Date(
                 new Date(timer.start_timestamp).getTime()
-                + VDRest.config.getItem('recordingStartGap') * 1000
+                + VDRest.config.getItem('recordingStartMargin') * 1000
             ),
 
         stopNormalized =
@@ -61,7 +61,7 @@ VDRest.Timer.Helper.Broadcast.prototype.matchByEventId = function (timer, broadc
             && new Date(timer.stop_timestamp)
             || new Date(
                 new Date(timer.stop_timestamp).getTime()
-                - VDRest.config.getItem('recordingEndGap') * 1000
+                - VDRest.config.getItem('recordingEndMargin') * 1000
             );
 
     return (

@@ -165,19 +165,19 @@ VDRest.Lib.Config.prototype.setFieldValue = function (k, v) {
  * @type {Object}
  */
 VDRest.Lib.Config.prototype.defaults = {
-    "lastEpg"           :   "now",
-    "debug"             :   false,
-    "port"              :   "8002",
-    "recordingStartGap" :   120,
-    "recordingEndGap"   :   600,
-    "protocol"          :   "http",
-    "pixelPerSecond"    :   2/60,
-    "streamdevPort"     :   "3000",
-    "streamdevParams"   :   "EXT;QUALITY=SLOW",
-    "theme"             :   "default",
-    "autoVps"           :   false,
-    "language"          :   "en_US",
-    "showRadio"          :   false
+    "lastEpg"               :   "now",
+    "debug"                 :   false,
+    "port"                  :   "8002",
+    "recordingStartMargin"  :   120,
+    "recordingEndMargin"    :   600,
+    "protocol"              :   "http",
+    "pixelPerSecond"        :   2/60,
+    "streamdevPort"         :   "3000",
+    "streamdevParams"       :   "EXT;QUALITY=SLOW",
+    "theme"                 :   "default",
+    "autoVps"               :   false,
+    "language"              :   "en_US",
+    "showRadio"             :   false
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -313,13 +313,13 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "boolean",
         "label" : "Show radio channels"
     },
-    "recordingStartGap" :   {
+    "recordingStartMargin" :   {
         "category" : "timer",
         "type" : "number",
         "label" : "Recording lead time",
         "info" : "Lead time of recording before broadcast starts (seconds)"
     },
-    "recordingEndGap"   :   {
+    "recordingEndMargin"   :   {
         "category" : "timer",
         "type" : "number",
         "label" : "Recording follow up time",
