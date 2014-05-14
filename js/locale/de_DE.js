@@ -50,6 +50,7 @@ VDRest.app.de_DE = {
     "Wednesday" : "Mittwoch",
     "Thursday" : "Donnerstag",
     "Friday" : "Freitag",
-    "Saturday" : "Samstag"
+    "Saturday" : "Samstag",
+    "Channel Settings" : "Kanal Einstellungen"
 
 };

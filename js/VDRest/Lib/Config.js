@@ -363,8 +363,3 @@ VDRest.Lib.Config.prototype.fields = {
 VDRest.config = new VDRest.Lib.Config();
 
 VDRest.config.init();
-
-if ("en_US" !== VDRest.config.getItem('language')) {
-
-    $('head').prepend('<script type="text/javascript" src="js/locale/' + VDRest.config.getItem('language') + '.js">');
-}
