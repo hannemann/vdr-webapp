@@ -51,6 +51,9 @@ VDRest.app.de_DE = {
     "Thursday" : "Donnerstag",
     "Friday" : "Freitag",
     "Saturday" : "Samstag",
-    "Channel Settings" : "Kanal Einstellungen"
-
+    "Channel Settings" : "Kanal Einstellungen",
+    "Max. Channels" : "Max. Kanäle",
+    "Max. number of channels to be displayed in EPG (0 = no limit)" : "Max. Anzahl an Kanälen, die im EPG angezeigt werden (0 = ohne Limit)",
+    "First channel" : "Erster Kanal",
+    "Number of first channel to be loaded (starts with 1)" : "Nummer des ersten Kanals (beginnend mit 1)"
 };

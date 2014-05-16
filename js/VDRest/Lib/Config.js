@@ -177,7 +177,9 @@ VDRest.Lib.Config.prototype.defaults = {
     "theme"                 :   "default",
     "autoVps"               :   false,
     "language"              :   "en_US",
-    "showRadio"             :   false
+    "showRadio"             :   false,
+    "channelLimit"          :   100,
+    "startChannel"          :   1
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -307,6 +309,18 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "server",
         "type" : "number",
         "label" : "Port"
+    },
+    "startChannel"              :   {
+        "category" : "server",
+        "type" : "number",
+        "label" : "First channel",
+        "info" : "Number of first channel to be loaded (starts with 1)"
+    },
+    "channelLimit"              :   {
+        "category" : "server",
+        "type" : "number",
+        "label" : "Max. Channels",
+        "info" : "Max. number of channels to be displayed in EPG (0 = no limit)"
     },
     "showRadio" :   {
         "category" : "channels",

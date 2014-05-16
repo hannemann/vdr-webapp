@@ -56,7 +56,9 @@ VDRest.Epg.Model.Channels.prototype.init = function () {
  */
 VDRest.Epg.Model.Channels.prototype.initChannels = function () {
 
-    this.module.getResource(this.collectionItemModel).load({
+    this.module.getResource(this.collectionItemModel)
+        .setChannelLimit()
+        .load({
         "url" : 'channelList',
         "callback" : $.proxy(this.processCollection, this)
     });
