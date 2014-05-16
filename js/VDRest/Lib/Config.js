@@ -310,22 +310,22 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "number",
         "label" : "Port"
     },
+    "showRadio" :   {
+        "category" : "channels",
+        "type" : "boolean",
+        "label" : "Show radio channels"
+    },
     "startChannel"              :   {
-        "category" : "server",
+        "category" : "channels",
         "type" : "number",
         "label" : "First channel",
         "info" : "Number of first channel to be loaded (starts with 1)"
     },
     "channelLimit"              :   {
-        "category" : "server",
+        "category" : "channels",
         "type" : "number",
         "label" : "Max. Channels",
         "info" : "Max. number of channels to be displayed in EPG (0 = no limit)"
-    },
-    "showRadio" :   {
-        "category" : "channels",
-        "type" : "boolean",
-        "label" : "Show radio channels"
     },
     "recordingStartMargin" :   {
         "category" : "timer",
