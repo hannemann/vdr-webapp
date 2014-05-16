@@ -100,6 +100,8 @@ VDRest.App.prototype.run = function () {
         this.initial = true;
     }
 
+    this.setLocationHash('');
+
     this.pollLocation();
 
     if (!this.initWithoutConfig) {
@@ -117,7 +119,13 @@ VDRest.App.prototype.run = function () {
             }
 		}
 
-		this.dispatch(start);
+        $(document).one('infoupdate', $.proxy(function () {
+
+            this.dispatch(start);
+
+        }, this));
+
+        $.event.trigger('updateinfo');
 
 	} else {
 

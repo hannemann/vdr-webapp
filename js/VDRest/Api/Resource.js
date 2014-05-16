@@ -61,7 +61,9 @@ VDRest.Api.Resource.prototype.load = function (options) {
 
         async = options.async !== false;
 
-    VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+    if (!this.noThrobber) {
+        VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+    }
 
     if ("function" !== typeof callback) {
 
@@ -166,5 +168,8 @@ VDRest.Api.Resource.prototype.onError = function () {};
  */
 VDRest.Api.Resource.prototype.onComplete = function () {
 
-    VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
+    if (!this.noThrobber) {
+
+        VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
+    }
 };
