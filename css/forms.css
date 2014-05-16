@@ -52,6 +52,12 @@ form input[type="number"] {
     text-align: left;
 }
 
+form .form-field-boolean {
+    padding: 5px 0 10px 0;
+    border-bottom: 1px solid white;
+    margin-bottom: 5px;
+}
+
 form .disabled,
 form .disabled * {
     color: rgb(180, 180, 180);

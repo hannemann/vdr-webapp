@@ -109,7 +109,7 @@ Gui.Form.View.Abstract.prototype.getBoolean = function (id, field) {
 
     field.gui.attr('type', 'checkbox').prop('checked', field.checked);
 
-    field.dom.append(field.gui);
+    field.dom.addClass('form-field-boolean').append(field.gui);
 };
 
 /**
