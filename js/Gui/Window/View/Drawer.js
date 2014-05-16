@@ -35,7 +35,7 @@ Gui.Window.View.Drawer.prototype.render = function () {
 
     this.buttons = [];
 
-    this.addClasses().addButtons();
+    this.addClasses().addButtons().addInfo();
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 };
@@ -70,4 +70,34 @@ Gui.Window.View.Drawer.prototype.addButtons = function () {
     }, this));
 
     return this;
+};
+
+/**
+ * add info to drawer
+ */
+Gui.Window.View.Drawer.prototype.addInfo = function () {
+
+    var info = VDRest.app.getModule('VDRest.Info').getModel('Info'),
+        channel, onAir = $('<div class="onAir clearer">');
+
+    channel = VDRest.app.getModule('VDRest.Epg').loadModel('Channels.Channel', info.getData('channel'));
+
+    this.info = $('<div class="info"><div class="header">Info</div></div>');
+
+    if (channel.hasData('image')) {
+
+        $('<img>').attr('src', channel.getData('image')).appendTo(onAir);
+
+    } else {
+
+        $('<div>').text(channel.getData('name') + ' - ').appendTo(onAir)
+    }
+
+    $('<span>').text(info.getData('title')).appendTo(onAir);
+
+    onAir.appendTo(this.info);
+
+    $('<div class="info-item">').text(info.getData('diskusage').description_localized).appendTo(this.info);
+
+    this.info.appendTo(this.body);
 };
