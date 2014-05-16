@@ -29,6 +29,11 @@ VDRest.Info.prototype.init = function () {
 
         me.getModel('Info').load();
     });
+
+    setInterval(function () {
+
+        $.event.trigger('updateinfo');
+    }, 60000);
 };
 
 /**
