@@ -48,7 +48,11 @@ Gui.Window.View.Input.prototype.addClasses = function () {
  */
 Gui.Window.View.Input.prototype.addInput = function () {
 
-    this.input = this.data.dom.clone().appendTo(this.body);
+    this.input = this.data.dom.clone();
+
+    this.input.find('.info').remove();
+
+    this.input.appendTo(this.body);
 
     this.body.find('input').attr('readonly', null);
 

@@ -10,6 +10,7 @@ VDRest.app.de_DE = {
     "Reload App" : "Neu Laden",
     "EPG Search" : "EPG Suche",
     "User Interface" : "Oberfläche",
+    "Language" : "Sprache",
     "Startpage" : "Startseite",
     "Needs reload of app" : "App muss neu geladen werden",
     "Server Settings" : "Server Einstellungen",
@@ -55,5 +56,7 @@ VDRest.app.de_DE = {
     "Max. Channels" : "Max. Kanäle",
     "Max. number of channels to be displayed in EPG (0 = no limit)" : "Max. Anzahl an Kanälen, die im EPG angezeigt werden (0 = ohne Limit)",
     "First channel" : "Erster Kanal",
-    "Number of first channel to be loaded (starts with 1)" : "Nummer des ersten Kanals (beginnend mit 1)"
+    "Number of first channel to be loaded (starts with 1)" : "Nummer des ersten Kanals (beginnend mit 1)",
+    "Please make sure that your device is connected to the Network and that host and port settings are set properly" : "Bitte überpfüfe, ob dein Gerät über eine Netzwerkverbindung verfügt und das die Host und Port Einstellungen korrekt sind",
+    "Error loading resource" : "Fehler beim laden der Resource"
 };

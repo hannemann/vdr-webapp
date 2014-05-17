@@ -289,6 +289,7 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "enum",
         "label" : "Prototcol",
         "dataType" : "string",
+        "info" : "Needs reload of app",
         "values" : {
             "http" : {
                 "label" : "HTTP",
@@ -303,12 +304,14 @@ VDRest.Lib.Config.prototype.fields = {
     "host"              :   {
         "category" : "server",
         "type" : "string",
-        "label" : "Host"
+        "label" : "Host",
+        "info" : "Needs reload of app"
     },
     "port"              :   {
         "category" : "server",
         "type" : "number",
-        "label" : "Port"
+        "label" : "Port",
+        "info" : "Needs reload of app"
     },
     "showRadio" :   {
         "category" : "channels",

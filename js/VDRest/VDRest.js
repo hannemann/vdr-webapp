@@ -177,18 +177,12 @@ VDRest.App.prototype.pollLocation = function () {
 
         }
 
-        // Humbug?
-        /*else if (hash === this.current && this.destroyer.length > 0) {
-
-            this.destroy();
-        }*/
-
     }, this), 100);
 };
 
 VDRest.App.prototype.observe = function (hash) {
 
-    this.observeHash.push(hash || this.getLocationHash());
+    this.observeHash.push(hash || this.getLocationHash() || VDRest.config.getItem('start'));
 };
 
 /**

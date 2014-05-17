@@ -200,3 +200,7 @@ div.window.viewport-fullsize {
     right: 0;
     bottom: 0;
 }
+
+.alert-info {
+    font-size: 12px;
+}

@@ -41,15 +41,20 @@ Gui.Window.prototype.init = function () {
  */
 Gui.Window.prototype.dispatch = function (payload) {
 
-    var me = this, suffix = payload.type;
+    var me = this, suffix = payload.type, controller;
 
-    VDRest.app.observe();
+    controller = me.getController(payload.type, payload.data);
 
-    suffix += payload.hashSuffix ? payload.hashSuffix : '';
+    if (!(controller.singleton && controller.view.isRendered)) {
 
-    VDRest.app.setLocationHash(this.name + '-' + suffix );
+        VDRest.app.observe();
 
-    me.getController(payload.type, payload.data).dispatchView();
+        suffix += payload.hashSuffix ? payload.hashSuffix : '';
+
+        VDRest.app.setLocationHash(this.name + '-' + suffix );
+
+        controller.dispatchView();
+    }
 };
 
 /**

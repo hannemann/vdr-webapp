@@ -161,7 +161,24 @@ VDRest.Api.Resource.prototype.onSuccess = function () {};
 /**
  * abstract request error handler
  */
-VDRest.Api.Resource.prototype.onError = function () {};
+VDRest.Api.Resource.prototype.onError = function (e) {
+
+    console.log(e);
+
+    if (0 === e.readyState && 0 === e.status) {
+
+        $.event.trigger({
+            "type": "window.request",
+            "payload": {
+                "type": "Alert",
+                "data": {
+                    "message": "Error loading resource",
+                    "info": "Please make sure that your device is connected to the Network and that host and port settings are set properly"
+                }
+            }
+        });
+    }
+};
 
 /**
  * method to be called any time an request is complete
