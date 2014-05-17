@@ -161,7 +161,9 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
 
-    VDRest.Api.actions.deleteTimer(this.getAdapter());
+    VDRest.app.getModule('VDRest.Timer')
+        .getResource('List.Timer')
+        .deleteTimer(this.getAdapter());
 };
 
 /**
@@ -169,21 +171,50 @@ Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
  */
 Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
 
-    var i, fields = e.payload;
+    var i, fields = e.payload,
+        me = this,
+        updateData = {
+            "type" : "generic",
+            "data":{},
+            "broadcast" : this.broadcast,
+            "resource" : this.data.resource
+        },
+        adapter;
+
+    // todo: rollback user input in case of an error
 
     for (i in fields) {
 
         if (
             fields.hasOwnProperty(i)
-            && this.data.resource.hasOwnProperty(i)
+            && me.data.resource.hasOwnProperty(i)
             && "function" === typeof fields[i].getValue
         ) {
 
-            this.data.resource[i] = fields[i].getValue();
+            updateData.data[i] = fields[i].getValue();
         }
     }
 
-    VDRest.Api.actions.addOrUpdateTimer(this.getAdapter(), this.keyInCache);
+    updateData.data.is_active = this.data.resource.is_active;
+
+    adapter = new VDRest.Api.TimerAdapter(updateData);
+
+    VDRest.app.getModule('VDRest.Timer')
+        .getResource('List.Timer')
+        .addOrUpdateTimer(adapter, this.keyInCache, function () {
+
+            for (i in fields) {
+
+                if (
+                    fields.hasOwnProperty(i)
+                    && me.data.resource.hasOwnProperty(i)
+                    && "function" === typeof fields[i].getValue
+                ) {
+
+                    me.data.resource[i] = fields[i].getValue();
+                }
+            }
+        });
 };
 
 /**
@@ -248,7 +279,9 @@ Gui.Window.Controller.Timer.prototype.toggleActivateTimer = function () {
 
     this.data.resource.is_active = !this.data.resource.is_active;
 
-    VDRest.Api.actions.addOrUpdateTimer(this.getAdapter(), this.keyInCache);
+    VDRest.app.getModule('VDRest.Timer')
+        .getResource('List.Timer')
+        .addOrUpdateTimer(this.getAdapter(), this.keyInCache);
 };
 
 /**

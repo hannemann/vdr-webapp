@@ -25,3 +25,89 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.urls = {
     "delete" : "timers",
     "timerList" : "timers.json"
 };
+
+/**
+ * create or update timer
+ * @param adapter
+ * @param {string} callerId     cacheKey id of broadcast
+ * @param {function} [callback]
+ */
+VDRest.Timer.Model.List.Timer.Resource.prototype.addOrUpdateTimer = function (adapter, callerId, callback) {
+
+    var method = 'PUT',
+        event = 'updated',
+        data, request = {};
+
+    data = adapter.getData();
+
+    // set method
+    if ("undefined" === typeof data.timer_id) {
+
+        method = 'POST';
+        event = 'created';
+    }
+
+    request.url = this.getBaseUrl() + '/timers';
+    request.method = method;
+    request.data = data;
+
+    this.fetchAsync(request, function (result) {
+
+        VDRest.helper.log(result);
+
+        $.event.trigger({
+            "type" : 'vdrest-api-actions.timer-' + event,
+            "payload" : {
+                "callerId" : callerId,
+                "timer" : result.timers[0]
+            }
+        });
+
+        if ("function" === typeof callback) {
+
+            callback();
+        }
+    });
+};
+
+/**
+ * delete timer
+ * @param adapter
+ */
+VDRest.Timer.Model.List.Timer.Resource.prototype.deleteTimer = function (adapter) {
+
+    var url, data, request = {}, me = this;
+
+    data = adapter.getData();
+
+    url = this.getBaseUrl() + '/timers/' + data.timer_id;
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Confirm",
+            "data" : {
+                "message" : "Delete Timer?",
+                "id" : 'delete.timer' + data.timer_id
+            }
+        }
+    });
+
+    $(document).one('window.confirm.confirm', function () {
+
+        request.url = url;
+        request.method = 'DELETE';
+
+        setTimeout(function () {
+
+            me.fetchAsync(request, function () {
+
+                $.event.trigger({
+                    "type" : "vdrest-api-actions.timer-deleted",
+                    "payload" : data.timer_id
+                });
+            });
+
+        }, 100);
+    });
+};

@@ -26,6 +26,9 @@ VDRest.Api.TimerAdapter.prototype.getTypeInstance = function () {
 
         type = new VDRest.Api.TimerAdapter.Timer();
 
+    } else if ("undefined" !== typeof this.client.type && this.client.type === 'generic') {
+
+        type = new VDRest.Api.TimerAdapter.Generic();
     }
 
     return type.setData(this.client).normalize(this.client);

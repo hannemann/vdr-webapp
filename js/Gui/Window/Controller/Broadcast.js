@@ -109,15 +109,15 @@ Gui.Window.Controller.Broadcast.prototype.toggleTimerAction = function () {
             'Channels.Channel.Broadcast',
             this.keyInCache
         )
-    );
+    ), resource = VDRest.app.getModule('VDRest.Timer').getResource('List.Timer');
 
     if (this.data.dataModel.data.timer_exists) {
 
-        VDRest.Api.actions.deleteTimer(timer);
+        resource.deleteTimer(timer);
 
     } else {
 
-        VDRest.Api.actions.addOrUpdateTimer(timer, this.keyInCache);
+        resource.addOrUpdateTimer(timer, this.keyInCache);
 
     }
 };

@@ -14,11 +14,6 @@ VDRest.Api.Resource = function () {
      * @type {Boolean}
      */
     this.refreshCache = false;
-
-    /**
-     * @type {Boolean}
-     */
-    this.cachedResponse = false;
 };
 
 VDRest.Api.Resource.prototype = new VDRest.Lib.Object();
@@ -72,13 +67,11 @@ VDRest.Api.Resource.prototype.load = function (options) {
 
     if (!this.refreshCache && this.cacheResponse && "undefined" !== typeof this.responseCache[url]) {
 
-        this.cachedResponse = true;
         callback(this.responseCache[url]);
         this.onComplete();
 
     } else {
 
-        this.cachedResponse = false;
         this.refreshCache = false;
 
         request.url = this.getBaseUrl() + url;
@@ -163,7 +156,7 @@ VDRest.Api.Resource.prototype.onSuccess = function () {};
  */
 VDRest.Api.Resource.prototype.onError = function (e) {
 
-    console.log(e);
+    VDRest.helper.log(e);
 
     if (0 === e.readyState && 0 === e.status) {
 
@@ -174,6 +167,19 @@ VDRest.Api.Resource.prototype.onError = function (e) {
                 "data": {
                     "message": "Error loading resource",
                     "info": "Please make sure that your device is connected to the Network and that host and port settings are set properly"
+                }
+            }
+        });
+    }
+
+    if (4 === e.readyState && ( 502 === e.status || 403 === e.status )) {
+
+        $.event.trigger({
+            "type": "window.request",
+            "payload": {
+                "type": "Alert",
+                "data": {
+                    "message": e.statusText
                 }
             }
         });

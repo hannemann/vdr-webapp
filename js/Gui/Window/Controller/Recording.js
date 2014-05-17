@@ -39,12 +39,41 @@ Gui.Window.Controller.Recording.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
+    this.addObserver();
+};
+
+/**
+ * add event listeners
+ */
+Gui.Window.Controller.Recording.prototype.addObserver = function () {
+
+    this.view.deleteButton.on('click', $.proxy(this.deleteRecordingAction, this));
+
+    Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
+};
+/**
+ * add event listeners
+ */
+Gui.Window.Controller.Recording.prototype.removeObserver = function () {
+
+    this.view.deleteButton.off('click');
+    $(document).off('gui-timer.' + this.eventNameSpace);
+};
+
+/**
+ * trigger deletion of recording
+ */
+Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
+
+    VDRest.app.getModule('VDRest.Recordings')
+        .getResource('List.Recording')
+        .deleteRecording(this.view, $.proxy(this.afterDeleteAction, this));
 };
 
 /**
  * handle delete
  */
-Gui.Window.Controller.Recording.prototype.deleteAction = function () {
+Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
 
     var model = VDRest.app.getModule('VDRest.Recordings').getModel(
             'List.Recording',

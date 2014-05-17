@@ -183,25 +183,15 @@ Gui.Window.View.Recording.prototype.renderWebTab = function () {
  */
 Gui.Window.View.Recording.prototype.getToolsConfig = function () {
 
-    var deleteButton, deleteText, me = this;
-
     return {
         "delete":{
             "dom":function () {
 
                 var dom = $('<dl class="window-button round delete-button symbol-button"></dl>');
-                deleteButton = $('<dt>').html('&#10006;');
-                deleteText = $('<dd>');
+                this.deleteButton = $('<dt>').html('&#10006;');
 
-                deleteText.text(VDRest.app.translate('Delete Recording'));
-                deleteButton.removeClass('activate-timer');
-
-                return dom.append(deleteButton).append(deleteText);
-            },
-            "callback":function () {
-
-                var controller = me.module.getController('Recording', me.keyInCache);
-                VDRest.Api.actions.deleteRecording(me, $.proxy(controller.deleteAction, controller));
+                return dom.append(this.deleteButton)
+                    .append($('<dd>').text(VDRest.app.translate('Delete Recording')));
             }
         }
     }
