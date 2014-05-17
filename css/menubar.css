@@ -47,6 +47,8 @@
     float: right;
     margin: 4px 0;
     display: none;
+    width: 32px;
+    height: 32px;
 }
 #header {
     display: inline-block;

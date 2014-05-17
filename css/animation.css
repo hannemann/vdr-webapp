@@ -118,6 +118,12 @@
     background: rgba(0,0,0,0);
 }
 
+/* throbber */
+#throbber {
+    animation: animateThrobber 1.2s steps(12) infinite;
+    -webkit-animation: animateThrobber 1.2s steps(12) infinite;
+}
+
 /* recording */
 
 /** cpu fries at 90 % :-(

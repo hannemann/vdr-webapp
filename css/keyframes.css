@@ -105,3 +105,15 @@
     50% { color: red; }
     100% { color: white; }
 }
+
+/* Throbber */
+
+@keyframes animateThrobber {
+    from { background-position: 0; }
+    to { background-position: -384px; }
+}
+
+@-webkit-keyframes animateThrobber {
+    from { background-position: 0; }
+    to { background-position: -384px; }
+}
