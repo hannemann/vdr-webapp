@@ -93,12 +93,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
 
 /**
  * handle mouseup
- * @param {jQuery.Event} e
- * @returns {boolean}
  */
-Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
-
-    var channel = $(e.currentTarget).attr('data-channel-id');
+Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
 
     if (!this.isMuted) {
 

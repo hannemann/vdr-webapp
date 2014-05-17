@@ -45,7 +45,7 @@ Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 
 /**
  * handle channelview event
- * @param {jQuery.Event} e
+ * @param {object} e
  * @property {Gui.Epg.Controller.Channels.Channel|boolean} payload
  */
 Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
