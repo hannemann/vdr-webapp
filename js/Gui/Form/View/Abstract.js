@@ -96,6 +96,11 @@ Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
 
         this.getChannel(id, field);
     }
+
+    if ("directory" === field.type) {
+
+        this.getDirectory(id, field);
+    }
 };
 
 /**
@@ -164,6 +169,20 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
  * @param {{}} field
  */
 Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
+
+    this.decorateField(id, field);
+
+    field.gui.attr('type', 'text');
+
+    field.dom.append(field.gui);
+};
+
+/**
+ * set type text
+ * @param {string} id
+ * @param {{}} field
+ */
+Gui.Form.View.Abstract.prototype.getDirectory = function (id, field) {
 
     this.decorateField(id, field);
 

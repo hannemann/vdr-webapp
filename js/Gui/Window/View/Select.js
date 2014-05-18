@@ -68,7 +68,7 @@ Gui.Window.View.Select.prototype.addValues = function () {
 };
 
 /**
- * prepare valu object
+ * prepare value object
  * @param value
  */
 Gui.Window.View.Select.prototype.prepareValue = function (value) {

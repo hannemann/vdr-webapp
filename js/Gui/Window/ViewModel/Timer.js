@@ -54,7 +54,19 @@ Gui.Window.ViewModel.Timer.prototype.initViewMethods = function () {
         return VDRest.helper.getTimeString(new Date(me.resource.stop_timestamp))
     };
 
+    this.data.view.getDirName = function () {
+
+        return me.resource.filename.split('~').slice(0, -1).join('~');
+    };
+
     VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this, this.broadcast.data, 'broadcast');
 
     VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this);
+
+    this.data.view.getFilename = function () {
+
+        var wholename = me.resource.filename;
+
+        return wholename.split('~').pop();
+    };
 };

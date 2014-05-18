@@ -12,6 +12,24 @@ form label {
     display: block;
     width: 100%;
 }
+.window-input label label {
+    display: none;
+    padding-left: 10px;
+    width: calc(100% - 10px);
+}
+.window-input label.expand > label {
+    display: block;
+}
+
+.directory-chooser label:before {
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gQTBygLnAzo6QAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAADLSURBVDjL3ZQ9CsJAEIW/GCEHsBVM0mjvAfQmFlbPGwgewNYmc4DU3sPGA3gHC2shic0GlpDGZG0ceCyzxcc85ieS1BAwJgSOnwPPwBJYOW2A1zfAaSc/mVnl5Q9JC+AKbIEIqJ0A4i4j8ppSm1k8xKakJzDrVthIunl/kVNfNN5bA0nX8h0onIUhUQEHYN0CL2ZWjumupDdQtl3OAkxM6o9NHgCY+cAsNDAPbXkeukIkJaF3OR0xMmnfLh8lFQMuUA3s+4A7pz8/sB9yuiuA0s3U1QAAAABJRU5ErkJggg==);
+    background: #ffb62a;
+    display: block;
+    float: left;
+    margin-right: 3px;
+    width: 20px;
+    height: 20px;
+}
 .window-input label span {
     display: block;
     border-bottom: 1px solid rgb(150, 150, 150);

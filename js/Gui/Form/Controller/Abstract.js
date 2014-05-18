@@ -92,6 +92,11 @@ Gui.Form.Controller.Abstract.prototype.addClickHandler = function (field) {
 
                 type = 'ChannelChooser';
             }
+
+            if ("directory" === field.type) {
+
+                type = 'DirectoryChooser';
+            }
             me.requestInput(field, type);
         }
     });
@@ -147,7 +152,7 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
             }
             return {"value" : null};
         }
-    } else if (field.type === 'string' || field.type === 'number') {
+    } else if (field.type === 'string' || field.type === 'number' || field.type === 'directory') {
 
         field.getValue = function () {
 

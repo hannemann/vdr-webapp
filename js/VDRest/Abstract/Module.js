@@ -143,13 +143,13 @@ VDRest.Abstract.Module.prototype.getController = function (type, data) {
 
 /**
  * retrieve helper
- * @param {String} type
+ * @param {String} [type]
  * @return {*}
  */
 VDRest.Abstract.Module.prototype.getHelper = function (type) {
 
     var cache = this.cache.getStore('Helper'),
-        path;
+        path, instance;
 
     type = type || 'Default';
 
@@ -160,7 +160,10 @@ VDRest.Abstract.Module.prototype.getHelper = function (type) {
 
     path = this.namespace + '.' + this.name + '.Helper.' + type;
 
-    return VDRest.Lib.factory.getClass(path);
+    instance = VDRest.Lib.factory.getClass(path);
+    instance.module = this;
+
+    return instance;
 
 };
 

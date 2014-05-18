@@ -195,6 +195,11 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
         }
     }
 
+    if (fields.dirname.getValue() !== '') {
+
+        updateData.data.filename = fields.dirname.getValue() + '~' + fields.filename.getValue();
+    }
+
     updateData.data.is_active = this.data.resource.is_active;
 
     adapter = new VDRest.Api.TimerAdapter(updateData);
@@ -214,6 +219,7 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
                     me.data.resource[i] = fields[i].getValue();
                 }
             }
+            me.data.resource.filename = updateData.data.filename;
         });
 };
 

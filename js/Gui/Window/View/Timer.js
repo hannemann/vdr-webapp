@@ -321,6 +321,12 @@ Gui.Window.View.Timer.prototype.getEditConfig = function () {
                     "category" : "file",
                     "label" : VDRest.app.translate("Filename"),
                     "value" : this.getFilename()
+                },
+                "dirname" : {
+                    "type" : "directory",
+                    "category" : "file",
+                    "label" : VDRest.app.translate("Folder"),
+                    "value" : this.getDirName()
                 }
             }
         }

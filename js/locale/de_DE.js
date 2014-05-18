@@ -59,5 +59,6 @@ VDRest.app.de_DE = {
     "Number of first channel to be loaded (starts with 1)" : "Nummer des ersten Kanals (beginnend mit 1)",
     "Please make sure that your device is connected to the Network and that host and port settings are set properly" : "Bitte überpfüfe, ob dein Gerät über eine Netzwerkverbindung verfügt und das die Host und Port Einstellungen korrekt sind",
     "Error loading resource" : "Fehler beim laden der Resource",
-    "Timers are being edited - try again later" : "Timer werden gerade bearbeitet - Bitte probiere es später noch ein mal"
+    "Timers are being edited - try again later" : "Timer werden gerade bearbeitet - Bitte probiere es später noch ein mal",
+    "Folder" : "Ordner"
 };
