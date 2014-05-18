@@ -32,7 +32,7 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.addObserver();
+    VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
 
     if (this.isHidden) {
 
@@ -40,7 +40,16 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
         this.view.node.show();
     } else {
 
-        this.dataModel.initList();
+        if (this.dataModel.hasCollection) {
+
+            this.iterateRecordings();
+        } else {
+
+            $(document).one(this.dataModel.events.collectionloaded, $.proxy(function () {
+
+                this.iterateRecordings();
+            }, this))
+        }
     }
 
     $.event.trigger('recordingslist.dispatched');
@@ -48,11 +57,10 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
 /**
  * iterate data model collection
- * @param {object} collection
  */
-Gui.Recordings.Controller.List.prototype.iterateRecordings = function (collection) {
+Gui.Recordings.Controller.List.prototype.iterateRecordings = function () {
 
-    collection.iterate($.proxy(function (recordingsModel) {
+    this.dataModel.collectionIterator($.proxy(function (recordingsModel) {
 
         this.recordingsList.setData(
             recordingsModel.data.number,
@@ -75,20 +83,9 @@ Gui.Recordings.Controller.List.prototype.dispatchList = function () {
     });
 
     this.view.renderFirstLevel();
+
+    VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
 };
-
-/**
- * add event listeners
- */
-Gui.Recordings.Controller.List.prototype.addObserver = function () {
-
-    $(document).one('recordingsloaded', $.proxy(this.iterateRecordings, this));
-};
-
-/**
- * remove event listeners
- */
-Gui.Recordings.Controller.List.prototype.removeObserver = function () {};
 
 /**
  * Destroy

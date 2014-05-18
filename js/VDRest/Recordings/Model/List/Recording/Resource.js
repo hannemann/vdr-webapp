@@ -17,6 +17,11 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype = new VDRest.Api.Resou
 VDRest.Recordings.Model.List.Recording.Resource.prototype._class = 'VDRest.Recordings.Model.List.Recording.Resource';
 
 /**
+ * @type {boolean}
+ */
+VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
+
+/**
  * url store
  * @type {{channelList: string}}
  */

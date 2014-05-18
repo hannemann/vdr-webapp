@@ -29,6 +29,11 @@ VDRest.Recordings.Model.List.prototype.collectionItemModel = 'List.Recording';
 VDRest.Recordings.Model.List.prototype.resultCollection = 'recordings';
 
 /**
+ * @type {boolean}
+ */
+VDRest.Recordings.Model.List.prototype.hasCollection = false;
+
+/**
  * event to trigger when collection is loaded
  * @type {{collectionloaded: string}}
  */
@@ -52,6 +57,11 @@ VDRest.Recordings.Model.List.prototype.init = function () {
  * fire callback afterwards
  */
 VDRest.Recordings.Model.List.prototype.initList = function () {
+
+    $(document).one(this.events.collectionloaded, $.proxy(function () {
+
+        this.hasCollection = true;
+    }, this));
 
     this.module.getResource(this.collectionItemModel).load({
         "url" : 'recordingList',

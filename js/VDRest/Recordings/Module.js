@@ -17,22 +17,11 @@ VDRest.Recordings.prototype = new VDRest.Abstract.Module();
 VDRest.Recordings.prototype.name = 'Recordings';
 
 /**
- * not really implemented yet
- * @param type
- * @param broadcast
- * @returns {*|VDRest.Abstract.View}
+ * preload recordings
  */
-VDRest.Recordings.prototype.dispatchView = function (type, timer) {
+VDRest.Recordings.prototype.initLate = function () {
 
-    return this.getController(type, timer).dispatchView(type);
-};
-
-/**
- * initialize channels controller
- */
-VDRest.Recordings.prototype.initList = function () {
-
-    this.getController('List');
+    this.getModel('List').initList();
 };
 
 /**
