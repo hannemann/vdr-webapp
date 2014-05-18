@@ -329,6 +329,17 @@ Gui.Window.View.Timer.prototype.getEditConfig = function () {
                     "value" : this.getDirName()
                 }
             }
+        },
+        "subToFilename":{
+            "type" : "button",
+            "dom":function () {
+
+                me.subToFilenameButton = $('<dl class="window-button round symbol-button generate-button"></dl>');
+                button = $('<dt>').html('&#9734;');
+                text = $('<dd>').text(VDRest.app.translate('Subtitle to Filename'));
+
+                return me.subToFilenameButton.append(button).append(text);
+            }
         }
     }
 };
@@ -389,6 +400,8 @@ Gui.Window.View.Timer.prototype.renderEditTab = function () {
             "parentView" : {
                 "node" : dom
             },
+            "owner" : this,
+            "reference" : "editForm",
             "cacheKey" : this.cacheKey,
             "keyInCache" : this.keyInCache,
             "id" : this.getId(),
@@ -406,6 +419,16 @@ Gui.Window.View.Timer.prototype.renderEditTab = function () {
     });
 
     return dom;
+};
+
+/**
+ * generate filename from title and subtitle of broadcast
+ */
+Gui.Window.View.Timer.prototype.subToFilename = function () {
+
+    this.editForm.filename.gui.val(this.getBroadcastTitle() + '~' + this.getBroadcastShortText());
+
+    this.editForm.filename.gui.change();
 };
 
 /**

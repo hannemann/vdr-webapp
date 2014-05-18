@@ -147,6 +147,13 @@ div#time-line .ql.hour {
     background-repeat: no-repeat;
 }
 
+.window.broadcast .list-item-edit-button {
+    display: none;
+}
+.window.broadcast.timer-exists .list-item-edit-button {
+    display: block;
+}
+
 /* Channel view, EPG Searchresults */
 
 .epg-search-view {

@@ -19,6 +19,8 @@ Gui.Timer.Controller.List.Timer.prototype.cacheKey = 'id';
  */
 Gui.Timer.Controller.List.Timer.prototype.init = function () {
 
+    this.eventNameSpace = this.module.namespace + this.module.name;
+
     this.view = this.module.getView('List.Timer', {
         "id" : this.data.id
     });
@@ -55,7 +57,7 @@ Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
 
     this.view.node.on('click', $.proxy(this.windowAction, this));
 
-    $(document).on('gui-timer.updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.update, this));
 };
 
 /**
@@ -65,7 +67,7 @@ Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
 
     this.view.node.off('click');
 
-    $(document).off('gui-timer.updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 };
 
 /**

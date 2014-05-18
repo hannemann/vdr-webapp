@@ -60,5 +60,7 @@ VDRest.app.de_DE = {
     "Please make sure that your device is connected to the Network and that host and port settings are set properly" : "Bitte überpfüfe, ob dein Gerät über eine Netzwerkverbindung verfügt und das die Host und Port Einstellungen korrekt sind",
     "Error loading resource" : "Fehler beim laden der Resource",
     "Timers are being edited - try again later" : "Timer werden gerade bearbeitet - Bitte probiere es später noch ein mal",
-    "Folder" : "Ordner"
+    "Folder" : "Ordner",
+    "Subtitle to Filename" : "Untertitel zu Dateiname",
+    "Edit Timer" : "Timer bearbeiten"
 };

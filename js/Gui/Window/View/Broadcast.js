@@ -131,12 +131,25 @@ Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
         "record":{
             "dom":function () {
 
-                var dom = $('<dl class="window-button round record-button"></dl>');
+                var dom = $('<dl class="window-button round record-button symbol-button"></dl>');
                 this.recordButton = $('<dt>');
                 this.recordButtonText = $('<dd>');
 
                 return dom.append(this.recordButton)
                     .append(this.recordButtonText);
+            }
+        },
+        "edit":{
+            "type" : "button",
+            "listItemClass" : "list-item-edit-button",
+            "dom":function () {
+
+                var dom = $('<dl class="window-button round edit-button symbol-button"></dl>');
+                this.editButton = $('<dt>').html('&#9998;');
+                this.editButtonText = $('<dd>').text(VDRest.app.translate('Edit Timer'));
+
+                return dom.append(this.editButton)
+                    .append(this.editButtonText);
             }
         }
     }
@@ -183,6 +196,11 @@ Gui.Window.View.Broadcast.prototype.renderToolsTab = function () {
 
             button = this.getToolButton(config[i]);
             dom.append(button);
+
+            if (config[i].listItemClass) {
+
+                button.addClass(config[i].listItemClass);
+            }
         }
     }
 
@@ -313,10 +331,12 @@ Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
     if (exists) {
 
         this.node.addClass('timer-exists');
+        this.recordButton.html('&#10006;');
         this.recordButtonText.text(VDRest.app.translate('Delete Timer'));
     } else {
 
         this.node.removeClass('timer-exists');
+        this.recordButton.html('');
         this.recordButtonText.text(VDRest.app.translate('Add Timer'));
     }
 };

@@ -110,6 +110,9 @@
     font-size: 40px;
     line-height: 63px;
 }
+.window-button.generate-button dt {
+    background-color: rgb(27, 91, 160);
+}
 .delete-button.round dt {
     background: red;
 }

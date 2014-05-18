@@ -16,6 +16,11 @@ VDRest.Timer.Model.List.Timer.prototype = new VDRest.Abstract.Model();
 VDRest.Timer.Model.List.Timer.prototype._class = 'VDRest.Timer.Model.List.Timer';
 
 /**
+ * @type {string}
+ */
+VDRest.Timer.Model.List.Timer.prototype.resultJSON = 'timers';
+
+/**
  * flags
  * @type {{}}
  */

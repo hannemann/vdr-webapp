@@ -21,6 +21,8 @@ Gui.Window.Controller.Timer.prototype.init = function () {
 
     this.eventPrefix = 'window.timer-' + this.data.id;
 
+    this.eventNameSpace = this.module.namespace + '-' + this.module.name;
+
     this.view = this.module.getView('Timer', this.data);
 
     this.getBroadcast();
@@ -126,9 +128,11 @@ Gui.Window.Controller.Timer.prototype.addObserver = function () {
 
     this.view.activateButton.on('click', $.proxy(this.toggleActivateTimer, this));
 
-    $(document).one('gui-timer.deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    this.view.subToFilenameButton.on('click', $.proxy(this.view.subToFilename, this.view));
 
-    $(document).one('gui-timer.updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).one('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.destroyTimer, this));
+
+    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.update, this));
 
     $(document).on("persisttimerchange-" + this.keyInCache, $.proxy(this.updateTimer, this));
 
@@ -145,15 +149,15 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
         this.view.image.off('click');
     }
 
-    this.view.deleteButton.off('click', $.proxy(this.deleteTimer, this));
+    this.view.deleteButton.off('click');
 
-    this.view.activateButton.off('click', $.proxy(this.toggleActivateTimer, this));
+    this.view.activateButton.off('click');
 
-    $(document).off('gui-timer.deleted.' + this.keyInCache, $.proxy(this.destroyTimer, this));
+    this.view.subToFilenameButton.off('click');
 
-    $(document).off('gui-timer.updated.' + this.keyInCache, $.proxy(this.update, this));
+    $(document).off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 
-    $(document).off("persisttimerchange-" + this.keyInCache, $.proxy(this.updateTimer, this));
+    $(document).off("persisttimerchange-" + this.keyInCache);
 };
 
 /**
@@ -167,7 +171,7 @@ Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
 };
 
 /**
- * trigger timer update
+ * trigger timer update at vdr
  */
 Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
 
@@ -224,7 +228,7 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
 };
 
 /**
- * trigger update view
+ * trigger update of involved models in cache etc.
  */
 Gui.Window.Controller.Timer.prototype.update = function (e) {
 

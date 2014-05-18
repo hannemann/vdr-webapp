@@ -66,6 +66,7 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
     $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
     $(document).on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
     this.view.recordButton.on('click', $.proxy(this.toggleTimerAction, this));
+    this.view.editButton.on('click', $.proxy(this.editTimerAction, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -97,6 +98,26 @@ Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);
+};
+
+/**
+ * edit timer
+ */
+Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
+
+    var timer = VDRest.app.getModule('VDRest.Timer')
+        .loadModel('List.Timer', this.data.dataModel.data.timer_id);
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Timer",
+            "data" : {
+                "id" : timer.data.id,
+                "resource" : timer.data
+            }
+        }
+    });
 };
 
 /**

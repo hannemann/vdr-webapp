@@ -33,6 +33,11 @@ Gui.Form.View.Abstract.prototype.render = function () {
         this.addSubmit();
     }
 
+    if (this.data.owner && this.data.reference) {
+
+        this.data.owner[this.data.reference] = this.data.fields;
+    }
+
     this.node.appendTo(this.data.parentView.node);
 };
 

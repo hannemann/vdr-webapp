@@ -111,3 +111,15 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.deleteTimer = function (adapter
         }, 100);
     });
 };
+
+/**
+ * set url needed to retrieve specific timer
+ * @param id
+ * @returns {VDRest.Timer.Model.List.Timer.Resource}
+ */
+VDRest.Timer.Model.List.Timer.Resource.prototype.setIdUrl = function (id) {
+
+    this.urls.byId = 'timers/' + id + '.json';
+
+    return this;
+};
