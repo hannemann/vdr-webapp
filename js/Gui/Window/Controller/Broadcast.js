@@ -114,7 +114,8 @@ Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
             "type" : "Timer",
             "data" : {
                 "id" : timer.data.id,
-                "resource" : timer.data
+                "resource" : timer.data,
+                "activeTab" : 'edit'
             }
         }
     });

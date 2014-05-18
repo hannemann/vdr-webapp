@@ -26,11 +26,28 @@ Gui.Window.Controller.Abstract.prototype.init = function () {
  */
 Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
 
+    var tabConfig, i;
+
     if (this.view.getTabConfig) {
+
+        tabConfig = this.view.getTabConfig();
+
+        if (this.data.activeTab) {
+
+            for (i in tabConfig.tabs) {
+
+                if (tabConfig.tabs.hasOwnProperty(i)) {
+
+                    delete tabConfig.tabs[i].default;
+                }
+            }
+
+            tabConfig.tabs[this.data.activeTab].default = true;
+        }
 
         $.event.trigger({
             "type" : "tabs.request",
-            "tabConfig" : this.view.getTabConfig()
+            "tabConfig" : tabConfig
         });
     }
 
