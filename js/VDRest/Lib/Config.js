@@ -54,9 +54,6 @@ VDRest.Lib.Config.prototype.init = function () {
 
 		if (!value && typeof this.defaults[k] !== 'undefined') {
 
-
-            // Todo: debuggen warum defaults falsch geladen werden, wenn es ein feld gibt
-
 			value = this.defaults[k];
 		}
 
@@ -165,26 +162,26 @@ VDRest.Lib.Config.prototype.setFieldValue = function (k, v) {
     }
 };
 /**
- * Default values
+ * Default values (as string or number)
  * @type {Object}
  */
 VDRest.Lib.Config.prototype.defaults = {
     "lastEpg"               :   "now",
-    "debug"                 :   false,
+    "debug"                 :   "false",
     "port"                  :   "8002",
-    "recordingStartMargin"  :   120,
-    "recordingEndMargin"    :   600,
+    "recordingStartMargin"  :   "120",
+    "recordingEndMargin"    :   "600",
     "protocol"              :   "http",
     "pixelPerSecond"        :   2/60,
     "streamdevPort"         :   "3000",
     "streamdevParams"       :   "EXT;QUALITY=SLOW",
     "theme"                 :   "default",
-    "autoVps"               :   false,
+    "autoVps"               :   "false",
     "language"              :   "en_US",
-    "showRadio"             :   false,
-    "channelLimit"          :   100,
-    "startChannel"          :   1,
-    "useSlowServerStrategy" :   true
+    "showRadio"             :   "false",
+    "channelLimit"          :   "100",
+    "startChannel"          :   "1",
+    "useSlowServerStrategy" :   "true"
 };
 
 VDRest.Lib.Config.prototype.categories = {
