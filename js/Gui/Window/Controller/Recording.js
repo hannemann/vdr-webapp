@@ -51,6 +51,8 @@ Gui.Window.Controller.Recording.prototype.addObserver = function () {
 
     this.view.deleteButton.on('click', $.proxy(this.deleteRecordingAction, this));
 
+    this.view.watchButton.on('click', $.proxy(this.watchRecordingAction, this));
+
     $(document).on('persistrecordingschange-' + this.keyInCache, $.proxy(this.updateRecordingAction, this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
@@ -63,6 +65,8 @@ Gui.Window.Controller.Recording.prototype.removeObserver = function () {
     this.view.subToFilenameButton.off('click');
 
     this.view.deleteButton.off('click');
+
+    this.view.watchButton.off('click');
 
     $(document).off('persistrecordingschange-' + this.keyInCache);
 };
@@ -104,6 +108,14 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
     VDRest.app.getModule('VDRest.Recordings')
         .getResource('List.Recording')
         .deleteRecording(this.view, $.proxy(this.afterDeleteAction, this));
+};
+
+/**
+ * watch recording
+ */
+Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
+
+    window.open('http://192.168.3.99:1337?file=' + encodeURIComponent(this.data.resource.file_name));
 };
 
 /**

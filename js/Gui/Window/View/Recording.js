@@ -240,6 +240,16 @@ Gui.Window.View.Recording.prototype.getEditConfig = function () {
                     .append($('<dd>').text(VDRest.app.translate('Delete Recording')));
             }
         },
+        "watch": {
+            "dom": function () {
+
+                var dom = $('<dl class="window-button round watch-button symbol-button"></dl>');
+                this.watchButton = $('<dt>').html('&#10006;');
+
+                return dom.append(this.watchButton)
+                    .append($('<dd>').text(VDRest.app.translate('Watch Recording')));
+            }
+        },
         "editForm" : {
             "categories" : {
                 "file" : {
