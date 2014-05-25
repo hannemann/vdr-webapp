@@ -61,6 +61,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
             "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel),
             "collection" : this.dataModel.getCollection()
         });
+
+        this.hasInitialBroadcasts = true;
+
     } else {
 
         this.getBroadcasts();
@@ -270,6 +273,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
             this.toggleBroadcastsVisibility();
         }
+    } else if (!this.hasInitialBroadcasts) {
+
+        this.getBroadcasts();
+        this.hasInitialBroadcasts = true;
     }
 };
 

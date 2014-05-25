@@ -85,8 +85,6 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
     this.view.titleWrapper.on('click', $.proxy(this.onIconClick, this));
 
-    $(document).on('dispatch.before', $.proxy(this.showThrobber, this));
-
     $(document).on('dispatch.after', $.proxy(this.handlePostDispatch, this));
 
     this.view.settingsButton.on('click', $.proxy(this.requestContextMenu, this));
@@ -98,8 +96,6 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 Gui.Menubar.Controller.Default.prototype.handlePostDispatch = function () {
 
     this.view.decorateIndicator(this.isStartPage());
-
-    this.hideThrobber();
 };
 
 /**

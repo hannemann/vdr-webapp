@@ -62,5 +62,7 @@ VDRest.app.de_DE = {
     "Timers are being edited - try again later" : "Timer werden gerade bearbeitet - Bitte probiere es später noch ein mal",
     "Folder" : "Ordner",
     "Subtitle to Filename" : "Untertitel zu Dateiname",
-    "Edit Timer" : "Timer bearbeiten"
+    "Edit Timer" : "Timer bearbeiten",
+    "Loads data synchronized to not burn slow CPU\'s" : "Daten synchron laden, um langsamere CPU\'s zu schonen",
+    "Resource efficient loading" : "Resourcenschonendes Laden"
 };

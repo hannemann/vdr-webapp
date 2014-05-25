@@ -53,6 +53,10 @@ VDRest.Lib.Config.prototype.init = function () {
 		var value = storage.getItem(k), type;
 
 		if (!value && typeof this.defaults[k] !== 'undefined') {
+
+
+            // Todo: debuggen warum defaults falsch geladen werden, wenn es ein feld gibt
+
 			value = this.defaults[k];
 		}
 
@@ -179,7 +183,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "language"              :   "en_US",
     "showRadio"             :   false,
     "channelLimit"          :   100,
-    "startChannel"          :   1
+    "startChannel"          :   1,
+    "useSlowServerStrategy" :   true
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -312,6 +317,12 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "number",
         "label" : "Port",
         "info" : "Needs reload of app"
+    },
+    "useSlowServerStrategy" :   {
+        "category" : "server",
+        "type" : "boolean",
+        "label" : "Resource efficient loading",
+        "info" : "Loads data synchronized to not burn slow CPU\'s"
     },
     "showRadio" :   {
         "category" : "channels",

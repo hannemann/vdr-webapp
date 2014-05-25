@@ -86,6 +86,11 @@ VDRest.Api.Resource.prototype.load = function (options) {
             return this.fetchSync(request, callback);
         }
 
+        if (VDRest.config.getItem('useSlowServerStrategy')) {
+
+            request.async = false;
+        }
+
         this.fetchAsync(request, callback);
     }
 };

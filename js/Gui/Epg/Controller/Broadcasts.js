@@ -94,12 +94,17 @@ Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) 
  */
 Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 
-    var i= 0, l=this.broadcastLists.length;
+    var i= 0, l=this.broadcastLists.length, me = this;
 
-    for (i;i<l;i++) {
+    $(document).one('broadcastsloaded', function () {
 
-        this.broadcastLists[i].dispatchView();
-    }
+        for (i;i<l;i++) {
+
+            me.broadcastLists[i].dispatchView();
+        }
+    });
+
+    this.module.store.getModel('Broadcasts').initBroadcasts();
 };
 
 /**
