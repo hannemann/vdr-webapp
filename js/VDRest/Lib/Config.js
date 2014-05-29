@@ -182,6 +182,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "channelLimit"          :   "100",
     "startChannel"          :   "1",
     "useSlowServerStrategy" :   "true",
+    "useHtmlPlayer"         :   "false",
     "defaultSorting"        :   "dateDesc"
 };
 
@@ -400,6 +401,13 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "number",
         "label" : "StreamDev port"
+    },
+    "useHtmlPlayer"    :   {
+        "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Use HTML5 Video Player",
+        "info" : "Externremux has to produce stream in webm format"
     },
     "streamdevParams"  :   {
         "depends" : "streamdevActive",

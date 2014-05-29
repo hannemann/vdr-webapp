@@ -273,7 +273,7 @@ function Transcoder(source) {
          this.child.stderr.on('data', function(chunk) {
 			console.log(chunk.toString());
 		});
-		*/
+		/**/
 
 		if ('object' == typeof this.source) this.source.pipe(this.child.stdin);
 
@@ -370,7 +370,7 @@ function Transcoder(source) {
      */
     Transcoder.prototype.canvasSize = function (width, height) {
 
-        var scale = 'scale=iw*min(' + width + '/iw\\,' + height + '/ih):ih*min(' + width + '/iw\\,' + height + '/ih)';
+        var scale = 'scale=sar*iw*min(' + width + '/iw\\,' + height + '/ih):ih*min(' + width + '/iw\\,' + height + '/ih)';
         var pad = 'pad=' + width + ':' + height + ':(' + width + '-iw*min(' + width + '/iw\\,' + height + '/ih))/2:(' + height + '-ih*min(' + width + '/iw\\,' + height + '/ih))/2';
 
         this.args['vfscale'] = [ '-vf', scale + ', ' + pad ];

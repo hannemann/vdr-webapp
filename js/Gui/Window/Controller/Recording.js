@@ -115,7 +115,17 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
  */
 Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
-    window.open('http://192.168.3.99:1337?file=' + encodeURIComponent(this.data.resource.file_name));
+//    window.open('http://192.168.3.99:1337?file=' + encodeURIComponent(this.data.resource.file_name));
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "VideoPlayer",
+            "data" : {
+                "url" : 'http://192.168.3.99:1337?file=' + encodeURIComponent(this.data.resource.file_name)
+            }
+        }
+    });
 };
 
 /**

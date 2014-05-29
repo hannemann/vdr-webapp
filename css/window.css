@@ -215,3 +215,11 @@ div.window.viewport-fullsize {
 .alert-info {
     font-size: 12px;
 }
+
+video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
