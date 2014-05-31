@@ -274,3 +274,13 @@ Gui.Window.View.Recording.prototype.getEditConfig = function () {
         }
     }
 };
+
+/**
+ * generate filename from title and subtitle of broadcast
+ */
+Gui.Window.View.Recording.prototype.subToFilename = function () {
+
+    this.editForm.filename.gui.val(this.getEventTitle() + '~' + this.getEventShortText());
+
+    this.editForm.filename.gui.change();
+};

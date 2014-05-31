@@ -38,10 +38,11 @@ Gui.Recordings.Controller.List.Directory.prototype.init = function () {
 /**
  * dispatch view, init event handling
  */
-Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function () {
+Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function (position) {
+
+    this.view.position = position;
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-
 
     if ("root" !== this.keyInCache) {
 
@@ -55,6 +56,14 @@ Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function () {
 Gui.Recordings.Controller.List.Directory.prototype.addObserver = function () {
 
     this.view.node.on('click', $.proxy(this.requestWindow, this));
+};
+
+/**
+ * remove events of directory node
+ */
+Gui.Recordings.Controller.List.Directory.prototype.removeObserver = function () {
+
+    this.view.node.off('click');
 };
 
 /**
@@ -78,4 +87,18 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
             }
         }
     });
+};
+
+Gui.Recordings.Controller.List.Directory.prototype.getPosition = function () {
+
+    var dirs = this.view.getParent().view.getDirectories(), i = 0, l = dirs.length;
+
+    for (i; i<l; i++) {
+
+        if (dirs[i] === this) {
+
+            return i;
+        }
+    }
+    return false;
 };

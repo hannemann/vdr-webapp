@@ -39,7 +39,16 @@ Gui.Recordings.View.List.Directory.prototype.render = function () {
         this.node.removeClass('recordings-path');
     }
 
-    VDRest.Abstract.View.prototype.render.call(this);
+    if (!this.position) {
+
+        this.node.appendTo(this.parentView.node);
+    } else {
+
+        this.node.insertAfter(this.parentView.node.find('.recordings-path:nth-child(' + this.position + ')'));
+        delete this.position;
+    }
+
+    this.isRendered = !this.isRendered;
 };
 
 /**

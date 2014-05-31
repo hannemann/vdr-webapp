@@ -44,7 +44,16 @@ Gui.Recordings.View.List.Recording.prototype.render = function () {
 
     this.addClasses();
 
-    VDRest.Abstract.View.prototype.render.call(this);
+    if (!this.position) {
+
+        this.node.appendTo(this.parentView.node);
+    } else {
+
+        this.node.insertBefore(this.parentView.node.find('.recording:nth(' + this.position + ')'));
+        delete this.position;
+    }
+
+    this.isRendered = !this.isRendered;
 };
 
 

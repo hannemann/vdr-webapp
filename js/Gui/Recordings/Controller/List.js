@@ -84,6 +84,18 @@ Gui.Recordings.Controller.List.prototype.dispatchList = function () {
 };
 
 /**
+ * add folder to tree
+ */
+Gui.Recordings.Controller.List.prototype.createFolderFromFile = function (file) {
+
+    var viewModel = this.module.getViewModel('List');
+
+    viewModel.current = file;
+
+    viewModel.addToTree(viewModel.current.name, viewModel.tree);
+};
+
+/**
  * Destroy
  */
 Gui.Recordings.Controller.List.prototype.destructView = function () {

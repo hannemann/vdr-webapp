@@ -25,7 +25,12 @@ Gui.Window.View.DirectoryChooser.prototype.render = function () {
  */
 Gui.Window.View.DirectoryChooser.prototype.addValues = function () {
 
-    var i, values = VDRest.app.getModule('VDRest.Recordings').getHelper().getDirTree();
+    var i, values = VDRest.app.getModule('VDRest.Recordings').getHelper().getDirTree(), root = {};
+
+    // create root folder
+    this.prepareValue('', root);
+    root.dom.prepend(VDRest.app.translate('Root'));
+    root.dom.appendTo(this.valuesWrapper);
 
     for (i in values) {
 

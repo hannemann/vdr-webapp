@@ -47,6 +47,8 @@ Gui.Window.Controller.Recording.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.Recording.prototype.addObserver = function () {
 
+    this.view.subToFilenameButton.on('click', $.proxy(this.view.subToFilename, this.view));
+
     this.view.deleteButton.on('click', $.proxy(this.deleteRecordingAction, this));
 
     $(document).on('persistrecordingschange-' + this.keyInCache, $.proxy(this.updateRecordingAction, this));
@@ -57,6 +59,8 @@ Gui.Window.Controller.Recording.prototype.addObserver = function () {
  * add event listeners
  */
 Gui.Window.Controller.Recording.prototype.removeObserver = function () {
+
+    this.view.subToFilenameButton.off('click');
 
     this.view.deleteButton.off('click');
 
