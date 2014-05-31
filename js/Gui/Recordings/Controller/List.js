@@ -32,8 +32,6 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
-
     if (this.isHidden) {
 
         this.isHidden = false;
@@ -83,8 +81,6 @@ Gui.Recordings.Controller.List.prototype.dispatchList = function () {
     });
 
     this.view.renderFirstLevel();
-
-    VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
 };
 
 /**

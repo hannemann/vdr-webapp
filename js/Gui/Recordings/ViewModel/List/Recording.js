@@ -53,5 +53,15 @@ Gui.Recordings.ViewModel.List.Recording.prototype.initViewMethods = function () 
         return '(' + me.helper().getDurationAsString(this.getDuration()) + ')';
     };
 
+    this.data.view.getNormalizedFileName = function () {
+
+        return me.data.view.getName().split('~').pop();
+    };
+
+    this.data.view.getPath = function () {
+
+        return me.data.view.getName().split('~').slice(0, -1).join('~');
+    };
+
     VDRest.Helper.prototype.parseDescription.call(this, this.resource.event_description);
 };

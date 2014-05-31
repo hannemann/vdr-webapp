@@ -49,6 +49,8 @@ Gui.Window.Controller.Recording.prototype.addObserver = function () {
 
     this.view.deleteButton.on('click', $.proxy(this.deleteRecordingAction, this));
 
+    $(document).on('persistrecordingschange-' + this.keyInCache, $.proxy(this.updateRecordingAction, this));
+
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
 /**
@@ -57,7 +59,37 @@ Gui.Window.Controller.Recording.prototype.addObserver = function () {
 Gui.Window.Controller.Recording.prototype.removeObserver = function () {
 
     this.view.deleteButton.off('click');
-    $(document).off('gui-timer.' + this.eventNameSpace);
+
+    $(document).off('persistrecordingschange-' + this.keyInCache);
+};
+
+/**
+ * trigger update of recording
+ */
+Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
+
+    var fields = e.payload,
+        target;
+
+    if (fields.dirname.getValue() !== '') {
+
+        target = fields.dirname.getValue() + '/' + fields.filename.getValue();
+        this.data.resource.newPath = fields.dirname.getValue();
+
+    } else {
+
+        target = fields.filename.getValue();
+    }
+
+    this.data.resource.newFileName = fields.filename.getValue();
+
+    VDRest.app.getModule('VDRest.Recordings')
+        .getResource('List.Recording')
+        .moveRecording({
+            "source" : this.view.getFileName(),
+            "target" : target,
+            "number" : this.data.number
+        }, $.proxy(this.afterUpdateAction, this));
 };
 
 /**
@@ -68,6 +100,15 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
     VDRest.app.getModule('VDRest.Recordings')
         .getResource('List.Recording')
         .deleteRecording(this.view, $.proxy(this.afterDeleteAction, this));
+};
+
+/**
+ * handle update
+ */
+Gui.Window.Controller.Recording.prototype.afterUpdateAction = function () {
+
+    // currently nothing to do, already happened
+//    VDRest.helper.log('Controller.Window.Recording', this.data);
 };
 
 /**

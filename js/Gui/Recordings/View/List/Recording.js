@@ -28,18 +28,7 @@ Gui.Recordings.View.List.Recording.prototype.init = function () {
 Gui.Recordings.View.List.Recording.prototype.render = function () {
 
 
-    if (! this.name) {
-        this.name = $('<div class="name">')
-            .text(this.getName())
-            .appendTo(this.node);
-
-    }
-    if (!this.shortText && this.hasEventShortText()) {
-
-        this.shortText = $('<div class="shortText italic">')
-            .text(this.getEventShortText())
-            .appendTo(this.name);
-    }
+    this.addName().addPath().addshortText();
 
     if (!this.date) {
         this.date = $('<span class="date">')
@@ -56,6 +45,78 @@ Gui.Recordings.View.List.Recording.prototype.render = function () {
     this.addClasses();
 
     VDRest.Abstract.View.prototype.render.call(this);
+};
+
+
+/**
+ * add name node
+ */
+Gui.Recordings.View.List.Recording.prototype.addName = function () {
+
+    if (! this.name) {
+
+        this.name = $('<div class="name">').appendTo(this.node);
+    }
+    this.name.text(this.getName().split('~').pop());
+
+    return this;
+};
+
+/**
+ * add path node
+ */
+Gui.Recordings.View.List.Recording.prototype.addPath = function () {
+
+    var path = this.getName().split('~').slice(0, -1);
+
+    if (path.length > 0) {
+
+        if (!this.path) {
+
+            this.path = $('<div class="path">');
+
+            if (this.name) {
+
+                this.path.insertBefore(this.name);
+
+            } else {
+                this.path.appendTo(this.node);
+            }
+        }
+
+        this.path.text(path.join('/'));
+
+    } else if (this.path) {
+
+        this.path.remove();
+        this.path = undefined;
+    }
+
+    return this;
+};
+
+/**
+ * add shortText
+ */
+Gui.Recordings.View.List.Recording.prototype.addshortText = function () {
+
+    if (!this.shortText && this.hasEventShortText()) {
+
+        this.shortText = $('<div class="shortText italic">');
+    }
+
+    if (this.hasEventShortText()) {
+
+        this.shortText.text(this.getEventShortText()).appendTo(this.name);
+
+    } else if (this.shortText) {
+
+        this.shortText.remove();
+
+        delete this.shortText;
+    }
+
+    return this;
 };
 
 /**
@@ -77,5 +138,15 @@ Gui.Recordings.View.List.Recording.prototype.addClasses = function () {
     }
 
     this.node.addClass(classNames.join(' '));
+    return this;
+};
+
+/**
+ * handle updates
+ */
+Gui.Recordings.View.List.Recording.prototype.update = function () {
+
+    this.addName().addPath().addshortText();
+
     return this;
 };
