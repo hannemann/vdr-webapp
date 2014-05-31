@@ -241,6 +241,7 @@ Gui.Window.View.Recording.prototype.getEditConfig = function () {
             }
         },
         "watch": {
+            "type" : "button",
             "dom": function () {
 
                 var dom = $('<dl class="window-button round watch-button symbol-button"></dl>');
