@@ -127,11 +127,11 @@ Gui.Window.View.Recording.prototype.getTabConfig = function () {
                 },
                 "default": true
             },
-            "tools": {
-                "label": "Tools",
+            "edit": {
+                "label": "Edit",
                 "content": function (content) {
 
-                    $(content).append(me.renderToolsTab());
+                    $(content).append(me.renderEditTab());
                 }
             },
             "web": {
@@ -148,9 +148,52 @@ Gui.Window.View.Recording.prototype.getTabConfig = function () {
  * render contents of tool tab
  * return {jQuery}
  */
-Gui.Window.View.Recording.prototype.renderToolsTab = function () {
+Gui.Window.View.Recording.prototype.renderEditTab = function () {
 
-    return Gui.Window.View.Broadcast.prototype.renderToolsTab.apply(this);
+    var i, dom, buttonList, button, config = this.getEditConfig();
+
+    dom = $('<div>');
+
+    buttonList = $('<ul class="button-list clearer">');
+
+    for (i in config) {
+
+        if (config.hasOwnProperty(i)) {
+
+            if ("button" === config[i].type) {
+                button = this.getToolButton(config[i]);
+                buttonList.append(button);
+            }
+        }
+    }
+
+    dom.append(buttonList);
+
+    $.event.trigger({
+        "type" : "form.request",
+        "config" : {
+            "parentView" : {
+                "node" : dom
+            },
+            "owner" : this,
+            "reference" : "editForm",
+            "cacheKey" : this.cacheKey,
+            "keyInCache" : this.keyInCache,
+            "number" : this.getNumber(),
+            "catConfig" : config.editForm.categories,
+            "fields" : config.editForm.fields,
+            "hasSubmit" : true,
+            "changed" : $.proxy(function () {
+
+                $.event.trigger({
+                    "type" : "persistrecordingschange-" + this.keyInCache,
+                    "payload" : config.editForm.fields
+                });
+            }, this)
+        }
+    });
+
+    return dom;
 };
 
 /**
@@ -181,10 +224,13 @@ Gui.Window.View.Recording.prototype.renderWebTab = function () {
  * retrieve tool tab configuration
  * @returns {object}
  */
-Gui.Window.View.Recording.prototype.getToolsConfig = function () {
+Gui.Window.View.Recording.prototype.getEditConfig = function () {
+
+    var me = this;
 
     return {
         "delete":{
+            "type" : "button",
             "dom":function () {
 
                 var dom = $('<dl class="window-button round delete-button symbol-button"></dl>');
@@ -192,6 +238,38 @@ Gui.Window.View.Recording.prototype.getToolsConfig = function () {
 
                 return dom.append(this.deleteButton)
                     .append($('<dd>').text(VDRest.app.translate('Delete Recording')));
+            }
+        },
+        "editForm" : {
+            "categories" : {
+                "file" : {
+                    "label" : VDRest.app.translate("File")
+                }
+            },
+            "fields" : {
+                "filename" : {
+                    "type" : "string",
+                    "category" : "file",
+                    "label" : VDRest.app.translate("Filename"),
+                    "value" : this.getNormalizedFileName()
+                },
+                "dirname" : {
+                    "type" : "directory",
+                    "category" : "file",
+                    "label" : VDRest.app.translate("Folder"),
+                    "value" : this.getPath()
+                }
+            }
+        },
+        "subToFilename":{
+            "type" : "button",
+            "dom":function () {
+
+                me.subToFilenameButton = $('<dl class="window-button round symbol-button generate-button"></dl>');
+                button = $('<dt>').html('&#9734;');
+                text = $('<dd>').text(VDRest.app.translate('Subtitle to Filename'));
+
+                return me.subToFilenameButton.append(button).append(text);
             }
         }
     }

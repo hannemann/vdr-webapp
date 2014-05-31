@@ -63,3 +63,32 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
     }, this));
 
 };
+
+/**
+ * move/rename recording
+ * @param obj
+ * @param callback
+ */
+VDRest.Recordings.Model.List.Recording.Resource.prototype.moveRecording = function (obj, callback) {
+
+    var request = {};
+
+    request.url = this.getBaseUrl()
+        + 'recordings/move?source='
+        + encodeURIComponent(obj.source.replace(/\s/g, '_'))
+        + '&target='
+        + encodeURIComponent(obj.target);
+    request.method = 'POST';
+
+    this.fetchAsync(request, function () {
+
+        $.event.trigger({
+            "type" : "vdrest-api-actions.recording-updated." + obj.number
+        });
+
+        if ("function" === typeof callback) {
+
+            callback();
+        }
+    });
+};

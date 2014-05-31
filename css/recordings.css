@@ -29,3 +29,14 @@
 .recording.list-item .shortText {
     font-size: 12px;
 }
+
+.recording.list-item .path:before {
+    content: '';
+    background: #ffb62a url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gQTBygLnAzo6QAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAADLSURBVDjL3ZQ9CsJAEIW/GCEHsBVM0mjvAfQmFlbPGwgewNYmc4DU3sPGA3gHC2shic0GlpDGZG0ceCyzxcc85ieS1BAwJgSOnwPPwBJYOW2A1zfAaSc/mVnl5Q9JC+AKbIEIqJ0A4i4j8ppSm1k8xKakJzDrVthIunl/kVNfNN5bA0nX8h0onIUhUQEHYN0CL2ZWjumupDdQtl3OAkxM6o9NHgCY+cAsNDAPbXkeukIkJaF3OR0xMmnfLh8lFQMuUA3s+4A7pz8/sB9yuiuA0s3U1QAAAABJRU5ErkJggg==);
+    background-size: 14px 14px;
+    display: block;
+    float: left;
+    margin-right: 3px;
+    width: 14px;
+    height: 14px;
+}
