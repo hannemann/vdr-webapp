@@ -44,7 +44,7 @@ Gui.Recordings.View.List.Recording.prototype.render = function () {
 
     this.addClasses();
 
-    if (!this.position) {
+    if (isNaN(this.position)) {
 
         this.node.appendTo(this.parentView.node);
     } else {

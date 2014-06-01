@@ -39,12 +39,12 @@ Gui.Recordings.View.List.Directory.prototype.render = function () {
         this.node.removeClass('recordings-path');
     }
 
-    if (!this.position) {
+    if (isNaN(this.position)) {
 
         this.node.appendTo(this.parentView.node);
     } else {
 
-        this.node.insertAfter(this.parentView.node.find('.recordings-path:nth-child(' + this.position + ')'));
+        this.node.insertBefore(this.parentView.node.find('.recordings-path:nth(' + this.position + ')'));
         delete this.position;
     }
 

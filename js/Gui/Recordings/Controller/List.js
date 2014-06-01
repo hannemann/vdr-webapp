@@ -96,6 +96,37 @@ Gui.Recordings.Controller.List.prototype.createFolderFromFile = function (file) 
 };
 
 /**
+ * traverse path up to root and remove all empty directories
+ * @param {string} path
+ */
+Gui.Recordings.Controller.List.prototype.removeIfEmpty = function (path) {
+
+    var dir, i, parentDirs;
+
+    do {
+
+        dir = this.module.getController('List.Directory', path);
+
+        if (dir.data.files.length === 0 && dir.data.directories.length === 0) {
+
+            dir.destructView();
+            this.module.cache.invalidateAllTypes(dir);
+            parentDirs = [];
+            for (i=0; i < dir.data.parent.data.directories.length; i++) {
+
+                if (dir.data.parent.data.directories[i] === dir) continue;
+                parentDirs.push(dir.data.parent.data.directories[i]);
+            }
+            dir.data.parent.data.directories = parentDirs;
+        }
+        path = path.split('~');
+        path.pop();
+        path = path.join('~');
+
+    } while (path.length > 0);
+};
+
+/**
  * Destroy
  */
 Gui.Recordings.Controller.List.prototype.destructView = function () {

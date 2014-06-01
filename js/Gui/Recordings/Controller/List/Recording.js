@@ -101,51 +101,44 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
 
     var oldParent = this.data.parent,
         path = ['root'].concat(this.view.getName().split('~').slice(0,-1)).join('~'),
-        parentView, winModule = VDRest.app.getModule('Gui.Window');
+        parentView,
+        winModule = VDRest.app.getModule('Gui.Window'),
+        dirToRender;
 
     this.addToParentDir();
 
     if (oldParent !== this.data.parent) {
 
-        // render newly created directory
-        if (this.data.parent.data.parent.view.isRendered && !this.data.parent.view.isRendered) {
-
-            parentView = {
-                "node" : this.data.parent.data.parent.view.parentView.body
-            };
-            if ('root' === this.data.parent.data.parent.keyInCache) {
-
-                parentView = this.data.parent.data.parent.view.parentView;
-            }
-
-            this.data.parent.data.parent.view.getDirectories().sort(this.helper().sortAlpha);
-            this.data.parent.view.setParentView(parentView);
-            this.data.parent.dispatchView(this.data.parent.getPosition());
-        }
-
+        this.removeObserver();
         this.view.node.remove();
+
+        dirToRender = this.getDirToRender(oldParent);
+
+        if (!dirToRender.view.isRendered) {
+
+            dirToRender.data.parent.data.directories.sort(this.helper().sortAlpha);
+            dirToRender.view.setParentView(
+                "root" === dirToRender.data.parent.keyInCache
+                ? dirToRender.data.parent.view
+                : {"node" : dirToRender.data.parent.view.parentView.body}
+            );
+            dirToRender.dispatchView(dirToRender.getPosition());
+        }
 
         if (winModule.cache.store.View.Directory) {
 
-            parentView = winModule.cache.store.View.Directory[path];
-
-            if ('root' === path) {
-
-                parentView = this.module.getView('List.Directory', path);
-            }
+            parentView = 'root' === path
+                ? this.module.getView('List.Directory', path)
+                : winModule.cache.store.View.Directory[path];
 
             if (parentView) {
 
-                this.removeObserver();
                 this.view.setParentView(parentView);
                 this.dispatchView(this.getPosition());
             }
         }
 
-        if (oldParent.data.files.length === 0) {
-
-            oldParent.destructView();
-        }
+        this.module.getController('List').removeIfEmpty(oldParent.view.getPath());
 
     } else {
 
@@ -154,15 +147,17 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
 };
 
 /**
- * try to determine which directory has to be rendered
+ * determine which directory needs to be rendered
  */
-Gui.Recordings.Controller.List.Recording.prototype.getDirToRender = function () {
+Gui.Recordings.Controller.List.Recording.prototype.getDirToRender = function (oldParent) {
 
     var oldPath = oldParent.keyInCache.split('~').slice(1),
         newPath = this.data.parent.keyInCache.split('~').slice(1),
-        cacheKey = ['root'];
+        cacheKey = ['root'],
+        i = 0,
+        l = newPath.length;
 
-    for (var i=0; i<oldPath.length; i++) {
+    for (i; i<l; i++) {
 
         if (oldPath[i] === newPath[i]) {
 
@@ -175,7 +170,7 @@ Gui.Recordings.Controller.List.Recording.prototype.getDirToRender = function () 
     if (newPath[i]) {
         cacheKey.push(newPath[i]);
     }
-    var dirToRender = this.module.getController('List.Directory', cacheKey.join('~'));
+    return this.module.getController('List.Directory', cacheKey.join('~'));
 };
 
 /**
