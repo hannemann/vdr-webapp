@@ -96,15 +96,25 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 
     var i= 0, l=this.broadcastLists.length, me = this;
 
-    $(document).one('broadcastsloaded', function () {
+    if (VDRest.config.getItem('useSlowServerStrategy')) {
+        
+        $(document).one('broadcastsloaded', function () {
+
+            for (i;i<l;i++) {
+
+                me.broadcastLists[i].dispatchView();
+            }
+        });
+
+        this.module.store.getModel('Broadcasts').initBroadcasts();
+
+    } else {
 
         for (i;i<l;i++) {
 
-            me.broadcastLists[i].dispatchView();
+            this.broadcastLists[i].dispatchView();
         }
-    });
-
-    this.module.store.getModel('Broadcasts').initBroadcasts();
+    }
 };
 
 /**
