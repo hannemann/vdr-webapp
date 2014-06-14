@@ -97,7 +97,7 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
     var i= 0, l=this.broadcastLists.length, me = this;
 
     if (VDRest.config.getItem('useSlowServerStrategy')) {
-        
+
         $(document).one('broadcastsloaded', function () {
 
             for (i;i<l;i++) {

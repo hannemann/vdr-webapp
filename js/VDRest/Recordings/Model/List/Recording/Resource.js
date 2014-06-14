@@ -73,22 +73,25 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.moveRecording = functi
 
     var request = {};
 
-    request.url = this.getBaseUrl()
-        + 'recordings/move?source='
-        + encodeURIComponent(obj.source.replace(/\s/g, '_'))
-        + '&target='
-        + encodeURIComponent(obj.target);
+    request.url = this.getBaseUrl() + 'recordings/move.json';
     request.method = 'POST';
+    request.data = {
+        "source" : obj.source,
+        "target" : obj.target + ' '
+    };
 
-    this.fetchAsync(request, function () {
+    this.fetchAsync(request, function (response) {
 
         $.event.trigger({
-            "type" : "vdrest-api-actions.recording-updated." + obj.number
+            "type" : "vdrest-api-actions.recording-updated." + obj.number,
+            "payload" : {
+                data : response
+            }
         });
 
         if ("function" === typeof callback) {
 
-            callback();
+            callback(response);
         }
     });
 };

@@ -77,7 +77,7 @@ Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
 
     if (fields.dirname.getValue() !== '') {
 
-        target = fields.dirname.getValue() + '/' + fields.filename.getValue();
+        target = fields.dirname.getValue() + '~' + fields.filename.getValue();
         this.data.resource.newPath = fields.dirname.getValue();
 
     } else {
@@ -93,7 +93,7 @@ Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
             "source" : this.view.getFileName(),
             "target" : target,
             "number" : this.data.number
-        }, $.proxy(this.afterUpdateAction, this));
+        });
 };
 
 /**
@@ -104,15 +104,6 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
     VDRest.app.getModule('VDRest.Recordings')
         .getResource('List.Recording')
         .deleteRecording(this.view, $.proxy(this.afterDeleteAction, this));
-};
-
-/**
- * handle update
- */
-Gui.Window.Controller.Recording.prototype.afterUpdateAction = function () {
-
-    // currently nothing to do, already happened
-//    VDRest.helper.log('Controller.Window.Recording', this.data);
 };
 
 /**

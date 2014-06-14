@@ -45,10 +45,7 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
  */
 Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (position) {
 
-    if (position) {
-
-        this.view.position = position;
-    }
+    this.view.position = position;
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
@@ -105,45 +102,42 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
         winModule = VDRest.app.getModule('Gui.Window'),
         dirToRender;
 
+    this.data.name = this.view.getName();
+
     this.addToParentDir();
 
-    if (oldParent !== this.data.parent) {
+    this.removeObserver();
+    this.view.node.remove();
 
-        this.removeObserver();
-        this.view.node.remove();
+    dirToRender = this.getDirToRender(oldParent);
 
-        dirToRender = this.getDirToRender(oldParent);
+    if (!dirToRender.view.isRendered) {
 
-        if (!dirToRender.view.isRendered) {
-
-            dirToRender.data.parent.data.directories.sort(this.helper().sortAlpha);
-            dirToRender.view.setParentView(
-                "root" === dirToRender.data.parent.keyInCache
-                ? dirToRender.data.parent.view
-                : {"node" : dirToRender.data.parent.view.parentView.body}
-            );
-            dirToRender.dispatchView(dirToRender.getPosition());
-        }
-
-        if (winModule.cache.store.View.Directory) {
-
-            parentView = 'root' === path
-                ? this.module.getView('List.Directory', path)
-                : winModule.cache.store.View.Directory[path];
-
-            if (parentView) {
-
-                this.view.setParentView(parentView);
-                this.dispatchView(this.getPosition());
-            }
-        }
-
-        this.module.getController('List').removeIfEmpty(oldParent.view.getPath());
-
-    } else {
-
-        this.view.update();
+        dirToRender.data.parent.data.directories.sort(this.helper().sortAlpha);
+        dirToRender.view.setParentView(
+            "root" === dirToRender.data.parent.keyInCache
+            ? dirToRender.data.parent.view
+            : {"node" : dirToRender.data.parent.view.parentView.body}
+        );
+        dirToRender.dispatchView(dirToRender.getPosition());
     }
+
+    if ('root' === path) {
+
+        parentView = this.module.getView('List.Directory', path);
+
+    } else if (winModule.cache.store.View.Directory) {
+
+        parentView = winModule.cache.store.View.Directory[path];
+    }
+
+    if (parentView) {
+
+        this.view.setParentView(parentView);
+        this.dispatchView(this.getPosition());
+    }
+
+    this.module.getController('List').removeIfEmpty(oldParent.view.getPath());
 };
 
 /**
@@ -196,24 +190,21 @@ Gui.Recordings.Controller.List.Recording.prototype.addToParentDir = function () 
 
     dir = this.module.getController('List.Directory', path);
 
-    if (dir !== this.data.parent) {
+    for (i; i < l; i++) {
 
-        for (i; i < l; i++) {
+        if (this.data.parent.data.files[i].keyInCache === this.keyInCache) {
 
-            if (this.data.parent.data.files[i].keyInCache === this.keyInCache) {
-
-                continue;
-            }
-            newFiles.push(this.data.parent.data.files[i]);
+            continue;
         }
-        this.data.parent.data.files = newFiles;
-        if (add) {
-
-            dir.data.files.push(this);
-        }
-
-        this.data.parent = dir;
+        newFiles.push(this.data.parent.data.files[i]);
     }
+    this.data.parent.data.files = newFiles;
+    if (add) {
+
+        dir.data.files.push(this);
+    }
+
+    this.data.parent = dir;
 };
 
 /**
@@ -222,7 +213,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addToParentDir = function () 
  */
 Gui.Recordings.Controller.List.Recording.prototype.getPosition = function () {
 
-    var files = this.data.parent.data.files, i= 0, l = files.length;
+    var files = this.data.parent.data.files, i= 0, l = files.length - 1;
 
     this.data.parent.data.files.sort(this.helper().sortAlpha);
 
@@ -233,5 +224,5 @@ Gui.Recordings.Controller.List.Recording.prototype.getPosition = function () {
             return i;
         }
     }
-    return false;
+    return undefined;
 };

@@ -31,28 +31,18 @@ VDRest.Recordings.Model.List.Recording.prototype.init = function () {
 
 /**
  * process update event
+ * @param {jQuery.Event} e
  */
-VDRest.Recordings.Model.List.Recording.prototype.update = function () {
+VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
 
-    var recFile = this.data.relative_file_name.split('/').pop(),
-        newRelFileName;
+    var i;
 
-    this.data.name = (
-        (this.data.newPath ? this.data.newPath + '~' : '')
-        + this.data.newFileName
-    );
+    for (i in e.payload.data.recordings[0]) {
 
-    newRelFileName = this.data.name.replace(/\s/g, '_').split('~');
-    newRelFileName.push(recFile);
-    newRelFileName = '/' + newRelFileName.join('/');
+        if (e.payload.data.recordings[0].hasOwnProperty(i)) {
 
-    this.data.file_name = this.data.file_name.replace(
-        this.data.relative_file_name,
-        newRelFileName
-    );
+            this.data[i] = e.payload.data.recordings[0][i];
+        }
+    }
 
-    this.data.relative_file_name = newRelFileName;
-
-    this.data.newPath = undefined;
-    this.data.newFileName = undefined;
 };

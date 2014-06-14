@@ -100,5 +100,5 @@ Gui.Recordings.Controller.List.Directory.prototype.getPosition = function () {
             return i;
         }
     }
-    return false;
+    return undefined;
 };

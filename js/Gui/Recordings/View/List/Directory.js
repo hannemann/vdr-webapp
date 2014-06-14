@@ -29,6 +29,8 @@ Gui.Recordings.View.List.Directory.prototype.init = function () {
  */
 Gui.Recordings.View.List.Directory.prototype.render = function () {
 
+    var nextSibling;
+
     if ("root" !== this.getName()) {
 
         this.name.text(this.getName());
@@ -44,7 +46,15 @@ Gui.Recordings.View.List.Directory.prototype.render = function () {
         this.node.appendTo(this.parentView.node);
     } else {
 
-        this.node.insertBefore(this.parentView.node.find('.recordings-path:nth(' + this.position + ')'));
+        nextSibling = this.parentView.node.find('.recordings-path:nth(' + this.position + ')');
+
+        if (nextSibling.get(0)) {
+
+            this.node.insertBefore(nextSibling);
+        } else {
+
+            this.node.insertAfter(this.parentView.node.find('.recordings-path:last'));
+        }
         delete this.position;
     }
 
