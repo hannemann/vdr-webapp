@@ -22,7 +22,9 @@
     width: 39px;
     height: 39px;
     border-bottom: 1px solid black;
-    background-size: 100%;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: 0 center;
     background-color: white;
     color: #696969;
     font-size: 10px;
