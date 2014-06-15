@@ -182,7 +182,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addToParentDir = function () 
     if ("undefined" === typeof this.module.cache.store.Controller['List.Directory'][path]) {
 
         this.module.getController('List').createFolderFromFile({
-            "number" : this.view.getNumber(),
+            "number" : this.keyInCache,
             "name" : this.view.getName()
         });
         add = false;

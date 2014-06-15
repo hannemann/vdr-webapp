@@ -179,7 +179,7 @@ Gui.Window.View.Recording.prototype.renderEditTab = function () {
             "reference" : "editForm",
             "cacheKey" : this.cacheKey,
             "keyInCache" : this.keyInCache,
-            "number" : this.getNumber(),
+            "number" : this.keyInCache,
             "catConfig" : config.editForm.categories,
             "fields" : config.editForm.fields,
             "hasSubmit" : true,
