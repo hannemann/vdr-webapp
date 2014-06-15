@@ -102,7 +102,7 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
         winModule = VDRest.app.getModule('Gui.Window'),
         dirToRender;
 
-    this.data.name = this.view.getName();
+    this.data.name = this.view.getName().split('~').pop();
 
     this.addToParentDir();
 
