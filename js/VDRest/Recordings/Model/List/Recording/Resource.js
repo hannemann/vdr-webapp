@@ -55,8 +55,11 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
 
     $(document).one('window.confirm.confirm', $.proxy(function () {
 
-        request.url = this.getBaseUrl() + 'recordings/' + obj.getNumber();
-        request.method = 'DELETE';
+        request.url = this.getBaseUrl() + 'recordings/delete';
+        request.data = {
+            "file" : obj.getFileName() + ' '
+        };
+        request.method = 'POST';
 
         this.fetchAsync(request, callback);
 
