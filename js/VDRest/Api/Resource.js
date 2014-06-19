@@ -38,7 +38,13 @@ VDRest.Api.Resource.prototype.protocol = VDRest.config.getItem('protocol');
  */
 VDRest.Api.Resource.prototype.getBaseUrl = function () {
 
-    return this.protocol + '://' + this.host + ':' + this.port + '/';
+    var url = this.protocol + '://' + this.host;
+
+    if (80 !== parseInt(this.port) && 443 !== parseInt(this.port)) {
+
+        url += ':' + this.port;
+    }
+    return  url + '/';
 };
 
 /**

@@ -100,8 +100,6 @@ VDRest.App.prototype.run = function () {
         this.initial = true;
     }
 
-    this.setLocationHash('');
-
     this.pollLocation();
 
     if (!this.initWithoutConfig) {
