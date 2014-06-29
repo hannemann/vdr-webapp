@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="css/fonts.css">
+
+    <style type="text/css">
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            /*background: red;*/
+            position: relative;
+            z-index: 0;
+        }
+
+
+        .clearer:before,
+        .clearer:after {
+            content:"";
+            display:table;
+        }
+        .clearer:after {
+            clear:both;
+        }
+
+        #menubar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 50px;
+            width: 100%;
+            background: blue;
+            z-index: 1;
+        }
+
+        #viewport {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            height: calc(100% - 50px);
+            width: 100%;
+            background: black;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        /* epg related */
+
+        #epg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            height: 100%;
+        }
+        div#time-line {
+            height: 20px;
+            padding-left: 40px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+            background: #404040;
+            border-bottom: 1px solid black;
+            color: white;
+            font-size: 9px;
+        }
+        div#time-line div {
+            float: left;
+            width: 15px;
+            line-height: 20px;
+        }
+        div#time-line div.odd {
+            color: black;
+            background: white;
+        }
+        div#time-line .qr {
+            text-align: left;
+        }
+        div#time-line .ql {
+            text-align: right;
+        }
+        div#time-line .ql.hour {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+
+
+        #channels {
+            width: 39px;
+            position: absolute;
+            left: 0;
+            top: 21px;
+            z-index: 1;
+            border-right: 1px solid black;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.5);
+        }
+
+        #channels .channel {
+            width: 39px;
+            height: 39px;
+            border-bottom: 1px solid black;
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+            background-position: 0 center;
+            background-color: white;
+            color: #696969;
+            font-size: 10px;
+            position: relative;
+        }
+
+        #events-wrapper {
+            position: absolute;
+            width: calc(100% - 40px);
+            top: 21px;
+            left: 40px;
+            height: calc(100% - 21px);
+            overflow: auto;
+        }
+
+        canvas {
+            display: block;it -am 
+        }
+
+        /*#events {*/
+            /*background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);*/
+            /*background-size: 100% 40px;*/
+        /*}*/
+
+    </style>
+
+
+    <script type="text/javascript" src="js/VDRest/Lib/jquery-2.1.0.js"></script>
+
+</head>
+
+<body>
+
+    <div id="testwindow">
+        <div id="testcontent"></div>
+    </div>
+
+    <div id="menubar"></div>
+
+    <div id="viewport">
+        <div id="epg"><div id="time-line" style="width: 14349px;"><div data-date="1403474400000" class="ql even hour" style="width: 0">0</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">1</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">2</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">3</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">4</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">5</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">6</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">7</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">8</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">9</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">10</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">11</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">12</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">13</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">14</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">15</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">16</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">17</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">18</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">19</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">20</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">21</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">22</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">23</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div data-date="1403560800000" class="ql even hour">0</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">1</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">2</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">3</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">4</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">5</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">6</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">7</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">8</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">9</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">10</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">11</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">12</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">13</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">14</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">15</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">16</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">17</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">18</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">19</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">20</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">21</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">22</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">23</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div data-date="1403647200000" class="ql even hour">0</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">1</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">2</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">3</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">4</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">5</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">6</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">7</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">8</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">9</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">10</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">11</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">12</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">13</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">14</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">15</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">16</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">17</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">18</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">19</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">20</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">21</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div><div class="ql even hour">22</div><div class="qr odd hour">00</div><div class="ql odd">1</div><div class="qr odd">5</div><div class="ql odd">3</div><div class="qr odd">0</div><div class="ql odd">4</div><div class="qr odd">5</div><div class="ql odd hour">23</div><div class="qr even hour">00</div><div class="ql even">1</div><div class="qr even">5</div><div class="ql even">3</div><div class="qr even">0</div><div class="ql even">4</div><div class="qr even">5</div></div>
+            <div id="channels">
+                <div class="channel" data-channel-id="C-1-1051-11100" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1051-11100);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1079-11110" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1079-11110);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1073-28226" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1073-28226);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1079-28007" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1079-28007);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1073-28229" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1073-28229);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1101-28107" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1101-28107);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1101-28111" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1101-28111);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10014-11120" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10014-11120);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1051-28725" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1051-28725);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10015-50012" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10015-50012);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10013-50015" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10013-50015);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10015-50018" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10015-50018);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10013-50013" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10013-50013);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10014-50009" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10014-50009);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10015-50011" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10015-50011);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10006-50028" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10006-50028);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53606" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53606);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-53627" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-53627);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10005-53625" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10005-53625);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-53002" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-53002);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10007-53609" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10007-53609);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10007-53006" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10007-53006);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10006-50019" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10006-50019);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10017-53009" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10017-53009);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10006-50029" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10006-50029);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10022-53111" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10022-53111);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10007-53617" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10007-53617);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1051-28722" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1051-28722);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1051-28723" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1051-28723);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1051-28487" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1051-28487);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1051-28721" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1051-28721);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1079-28011" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1079-28011);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1079-28016" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1079-28016);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1079-28014" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1079-28014);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10000-52103" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10000-52103);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1101-28108" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1101-28108);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1073-28206" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1073-28206);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10000-28486" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10000-28486);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1101-28113" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1101-28113);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10002-53404" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10002-53404);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10014-50016" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10014-50016);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10004-50101" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10004-50101);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1079-28008" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1079-28008);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10013-50004" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10013-50004);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10015-50023" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10015-50023);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10012-50007" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10012-50007);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10012-50024" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10012-50024);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10012-50020" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10012-50020);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10022-53324" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10022-53324);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10012-50008" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10012-50008);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10012-50017" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10012-50017);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10013-50002" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10013-50002);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10013-50001" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10013-50001);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10016-50035" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10016-50035);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10016-50033" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10016-50033);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10012-50006" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10012-50006);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10013-50003" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10013-50003);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10006-50021" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10006-50021);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10014-50022" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10014-50022);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10014-50010" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10014-50010);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10015-50005" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10015-50005);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-53607" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-53607);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1101-28106" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1101-28106);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1079-28006" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1079-28006);"><div class="mute"></div></div><div class="channel" data-channel-id="C-1-1051-28724" style="background-image: url(http://192.168.3.99:8002/channels/image/C-1-1051-28724);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10000-53601" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10000-53601);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-53621" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-53621);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10000-53626" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10000-53626);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53604" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53604);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-53622" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-53622);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53603" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53603);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53602" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53602);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-50700" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-50700);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10002-53110" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10002-53110);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-50711" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-50711);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10007-50107" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10007-50107);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10007-50304" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10007-50304);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-50108" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-50108);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-53413" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-53413);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53410" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53410);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-50712" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-50712);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-50303" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-50303);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-50106" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-50106);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53301" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53301);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10002-53620" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10002-53620);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53401" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53401);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-53624" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-53624);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10007-53409" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10007-53409);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10008-50708" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10008-50708);"><div class="mute"></div></div><div class="channel" data-channel-id="C-61441-10003-50105" style="background-image: url(http://192.168.3.99:8002/channels/image/C-61441-10003-50105);"><div class="mute"></div></div>
+
+
+            </div>
+            <div id="events-wrapper">
+                <canvas id="events-0" width="2880" height="2000"></canvas>
+                <canvas id="events-1" width="2880" height="2000"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            var timeline = $('#time-line'),
+                channels = $('#channels'),
+                    events = $('#events'),
+                c,ctx,
+                left, width, height = 39,
+                channel = 1,
+                grd,
+                broadcasts=[],
+                scale = 1;
+
+
+
+            $('#events-wrapper').on('scroll', function () {
+
+                var scroll = {
+                    left:this.scrollLeft * -1,
+                    top:this.scrollTop * -1 + 21
+                };
+
+                timeline.css({"left": scroll.left + 'px'});
+                channels.css({"top": scroll.top + 'px'});
+            });
+
+
+            for (var i=0;i<2;i++) {
+
+//            c.height = $('.channel').length * 40;
+                c = document.getElementById('events-' + i);
+                ctx = c.getContext('2d');
+
+                if ("undefined" !== typeof devicePixelRatio) {
+                    c.width = c.width * devicePixelRatio;
+                    c.height = c.height * devicePixelRatio;
+                    c.style.width = c.width / devicePixelRatio + 'px';
+                    c.style.height = c.height / devicePixelRatio + 'px';
+                    scale = devicePixelRatio;
+                }
+
+                ctx.font = '10px Source Sans Pro';
+
+                ctx.imageSmoothingEnabled = true;
+
+                ctx.save();
+                ctx.scale(scale, scale);
+
+
+                for (var top = 0; top < 3600; top += 40) {
+
+                    width = 0;
+                    left = 0;
+
+                    broadcasts[channel] = [];
+
+                    for (var x = 0; x < 150; x++) {
+
+                        width = Math.floor(Math.random() * 240) + 1;
+                        grd = ctx.createLinearGradient(left, top, left + width, top + height);
+                        grd.addColorStop(0, 'dimgrey');
+                        grd.addColorStop(1, '#404040');
+
+                        ctx.fillStyle = grd;
+                        ctx.fillRect(left, top, width, height);
+
+                        ctx.fillStyle = 'white';
+                        ctx.fillText(channel + ' ' + (x + 1) + ' ZDF WM live Moin lala bla hast du nicht gesehen', left + 3, top + 15);
+
+                        broadcasts[channel].push({
+                            "left": left,
+                            "right": left + width,
+                            "ref": channel + ' ' + (x + 1)
+                        });
+
+                        left += width;
+                    }
+                    channel += 1;
+                }
+            }
+
+
+            $(c).on('click', function (e) {
+
+//                console.log(e);
+
+                var channel = Math.floor(e.offsetY / 40) + 1;
+
+//                console.log(e.offsetY, e.offsetX, channel);
+
+                for (var i=0;i<broadcasts[channel].length;i++) {
+
+                    if (e.offsetX >= broadcasts[channel][i].left && e.offsetX <= broadcasts[channel][i].right) {
+
+                        alert(broadcasts[channel][i].ref);
+                        break;
+                    }
+                }
+
+            });
+
+            $('#menubar').on('click', function () {
+                location.reload(true);
+            });
+        });
+            /*
+
+         http://jsfiddle.net/X2cKa/
+         http://stackoverflow.com/questions/5262174/poor-anti-aliasing-of-text-drawn-on-canvas
+
+        */
+
+
+    </script>
+</body>
+</html>
