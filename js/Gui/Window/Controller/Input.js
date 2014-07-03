@@ -51,6 +51,21 @@ Gui.Window.Controller.Input.prototype.setPosition = function () {
  */
 Gui.Window.Controller.Input.prototype.addObserver = function () {
 
+
+    if ("number" === this.data.type) {
+
+        this.view.body.find('input').on('keydown', $.proxy(function (e) {
+
+            if (9 === e.which) {
+
+                e.preventDefault();
+                this.okAction(e);
+            }
+        }, this));
+    }
+
+    this.view.node.on('submit', $.proxy(this.okAction, this));
+
     this.view.ok.on('click', $.proxy(this.okAction, this));
 
     this.view.cancel.on('click', $.proxy(this.cancel, this));
@@ -63,6 +78,11 @@ Gui.Window.Controller.Input.prototype.addObserver = function () {
  */
 Gui.Window.Controller.Input.prototype.removeObserver = function () {
 
+    if ("number" === this.data.type) {
+
+        this.view.body.find('input').off('keydown');
+    }
+
     this.view.ok.off('click', $.proxy(this.okAction, this));
 
     this.view.cancel.off('click', $.proxy(this.cancel, this));
@@ -73,9 +93,11 @@ Gui.Window.Controller.Input.prototype.removeObserver = function () {
 /**
  * handle confirm
  */
-Gui.Window.Controller.Input.prototype.okAction = function () {
+Gui.Window.Controller.Input.prototype.okAction = function (e) {
 
     var type = this.data.type;
+
+    e.preventDefault();
 
     if ("string" === type || "number" === type) {
 
@@ -91,6 +113,8 @@ Gui.Window.Controller.Input.prototype.okAction = function () {
 
         this.setDirectory();
     }
+
+    // TODO: change behaviour... Window has to be closed before action is taken... Add visual feedback for long lastin actions like setting custom time in epg context menu
 
     this.data.gui.change();
 

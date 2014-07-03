@@ -14,6 +14,12 @@ Gui.Window.View.Input.prototype = new Gui.Window.View.Abstract();
  */
 Gui.Window.View.Input.prototype.isModal = true;
 
+
+Gui.Window.View.Input.prototype.getNode = function () {
+
+    return $('<form class="window">');
+};
+
 /**
  * decorate and render
  */

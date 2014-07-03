@@ -9,12 +9,17 @@ Gui.Window.View.Abstract = function () {};
  */
 Gui.Window.View.Abstract.prototype = new VDRest.Abstract.View();
 
+Gui.Window.View.Abstract.prototype.getNode = function () {
+
+    return $('<div class="window">');
+};
+
 /**
  * initialize essentials
  */
 Gui.Window.View.Abstract.prototype.init = function () {
 
-    this.node = $('<div class="window">');
+    this.node = this.getNode();
 
     if (this.hasCloseButton && !this.closeButton) {
         this.addCloseButton();
