@@ -82,9 +82,10 @@ Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callba
 
     history.back();
 
-    setTimeout(function () {
+    $(document).one(this.animationEndEvents, function () {
+
         callback.call(scope);
-    },100);
+    });
 };
 
 /**
@@ -96,9 +97,10 @@ Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
 
     history.back();
 
-    setTimeout(function () {
+    $(document).one(this.animationEndEvents, function () {
+
         VDRest.app.dispatch('Gui.Config');
-    }, 100);
+    });
 };
 
 /**
@@ -106,7 +108,8 @@ Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
  */
 Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
 
-    setTimeout(function () {
+    $(document).one(this.animationEndEvents, function () {
+
         location.reload();
-    }, 100);
+    });
 };
