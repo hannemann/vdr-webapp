@@ -98,7 +98,7 @@ VDRest.Lib.Object.prototype.setData = function (option, value) {
  */
 VDRest.Lib.Object.prototype.hasData = function (option) {
 
-    return "undefined" !== this.data[option];
+    return "undefined" !== typeof this.data[option];
 };
 
 /**
