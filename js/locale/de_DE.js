@@ -2,6 +2,7 @@ VDRest.app.de_DE = {
 
     "Recordings" : "Aufnahmen",
     "Channelview" : "Kanal-Ansicht",
+    "Channels" : "Kanäle",
     "EPG view" : "EPG-Ansicht",
     "Refresh" : "Aktualisieren",
     "Set Time" : "Zeit eingeben",

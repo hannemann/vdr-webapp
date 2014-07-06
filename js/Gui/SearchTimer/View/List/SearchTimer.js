@@ -21,7 +21,11 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.init = function () {
 
 
     // TODO: create own css?
-    this.node = $('<div class="timer list-item clearer">');
+    this.node = $('<div class="timer searchtimer list-item clearer">');
+
+    this.channels = $('<div class="channels">').appendTo(this.node);
+
+    this.search = $('<div class="search">').appendTo(this.node);
 };
 
 /**
@@ -39,7 +43,7 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.render = function () {
  */
 Gui.SearchTimer.View.List.SearchTimer.prototype.decorate = function () {
 
-    this.addClasses();
+    this.addClasses().addChannels().addSearch();
 };
 
 /**
@@ -55,7 +59,27 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.update = function () {
  */
 Gui.SearchTimer.View.List.SearchTimer.prototype.addClasses = function () {
 
-    this.node.toggleClass('active', this.getIsActive());
+    this.node.toggleClass('active', !!this.getUseAsSearchtimer());
+
+    return this;
+};
+
+/**
+ * add channels
+ */
+Gui.SearchTimer.View.List.SearchTimer.prototype.addChannels = function () {
+
+    this.channels.text(VDRest.app.translate('Channels') + ': ' + this.getChannels());
+
+    return this;
+};
+
+/**
+ * add name
+ */
+Gui.SearchTimer.View.List.SearchTimer.prototype.addSearch = function () {
+
+    this.search.text(this.getSearch());
 
     return this;
 };

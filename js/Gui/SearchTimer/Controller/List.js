@@ -60,7 +60,7 @@ Gui.SearchTimer.Controller.List.prototype.iterateTimers = function (collection) 
 
             timerModel.data.id,
 
-            this.module.getController('List.Timer', {
+            this.module.getController('List.SearchTimer', {
                 "id" : timerModel.data.id,
                 "parent" : this,
                 "dataModel" : timerModel

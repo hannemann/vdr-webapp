@@ -110,7 +110,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function ()
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "Timer",
+            "type" : "SearchTimer",
             "data" : {
                 "id" : this.dataModel.data.id,
                 "resource" : this.dataModel.data
