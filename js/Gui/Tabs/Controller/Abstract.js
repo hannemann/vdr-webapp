@@ -91,24 +91,16 @@ Gui.Tabs.Controller.Abstract.prototype.updateCacheKey = function (keyInCache) {
  */
 Gui.Tabs.Controller.Abstract.prototype.addDomEvents = function () {
 
-    var me = this;
+    this.view.tabs.find('li').on('click', $.proxy(this.handleClick, this));
+};
 
-    this.view.tabs.find('li').each(function (k) {
+Gui.Tabs.Controller.Abstract.prototype.handleClick = function (e) {
 
-        var that = $(this);
+    e.preventDefault();
+    if (!$(e.target).hasClass('current')) {
 
-        that.on('click', function () {
-
-            if (that.hasClass('current')) {
-
-                return;
-            }
-
-            me.view.setCurrent(k);
-
-        });
-
-    });
+        this.view.setCurrent($(e.target).attr('data-index'));
+    }
 };
 
 /**
@@ -116,6 +108,7 @@ Gui.Tabs.Controller.Abstract.prototype.addDomEvents = function () {
  */
 Gui.Tabs.Controller.Abstract.prototype.destruct = function () {
 
+    this.view.tabs.find('li').off('click');
     this.view.destruct();
     this.module.cache.flushByClassKey(this);
     this.removeObserver();

@@ -73,33 +73,33 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
  */
 Gui.Form.Controller.Abstract.prototype.addClickHandler = function (field) {
 
-    var me = this;
+    field.dom.on('click', {"field":field}, $.proxy(this.handleClick, this));
+};
 
-    field.dom.on('click', function (e) {
+Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {
 
-        var type = 'Input';
+    var type = 'Input';
 
-        e.preventDefault();
+    e.preventDefault();
 
-        if (!field.disabled) {
+    if (!e.data.field.disabled) {
 
-            if ("enum" === field.type) {
+        if ("enum" === e.data.field.type) {
 
-                type = 'Select';
-            }
-
-            if ("channel" === field.type) {
-
-                type = 'ChannelChooser';
-            }
-
-            if ("directory" === field.type) {
-
-                type = 'DirectoryChooser';
-            }
-            me.requestInput(field, type);
+            type = 'Select';
         }
-    });
+
+        if ("channel" === e.data.field.type) {
+
+            type = 'ChannelChooser';
+        }
+
+        if ("directory" === e.data.field.type) {
+
+            type = 'DirectoryChooser';
+        }
+        this.requestInput(e.data.field, type);
+    }
 };
 
 /**
