@@ -19,6 +19,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.cacheKey = 'id';
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.init = function () {
 
+    console.log(this.data);
+
     this.eventNameSpace = this.module.namespace + this.module.name;
 
     this.view = this.module.getView('List.SearchTimer', {
@@ -57,6 +59,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () 
 
     this.view.node.on('click', $.proxy(this.windowAction, this));
 
+    this.view.node.on('touchstart', $.proxy(this.windowAction, this));
+
     $(document).on('gui-searchtimer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.update, this));
 };
 
@@ -64,6 +68,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () 
  * remove event listeners
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.removeObserver = function () {
+
+    this.view.node.off('touchstart');
 
     this.view.node.off('click');
 
@@ -105,7 +111,9 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.update = function (e) {
 /**
  * request edit window
  */
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function () {
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function (e) {
+
+    console.log(e);
 
     $.event.trigger({
         "type" : "window.request",
