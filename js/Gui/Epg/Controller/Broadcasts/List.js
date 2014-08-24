@@ -138,7 +138,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
     // to prevent already loaded broadcasts to reside at the end of the list
     // if they haven't been rendered yet
     this.updateList();
-    this.getStoreModel().getAllRemaining();
+    this.getStoreModel().getOneDay();
 };
 
 /**
@@ -188,12 +188,12 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
     var me = this, isInView;
 
+    !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
+    !!this.visibleTimeout && clearTimeout(this.visibleTimeout);
+
     if (!this.isChannelView) {
 
         isInView = this.isInView();
-
-        !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
-        !!this.visibleTimeout && clearTimeout(this.visibleTimeout);
 
         if (isInView) {
 
@@ -213,8 +213,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
             }, 200);
         }
-    }
+    } else if (this.view.node.hasClass('active')) {
 
+        this.scrollTimeout = setTimeout(function () {
+
+            me.updateList();
+
+        }, 200);
+    }
 };
 
 /**
@@ -272,6 +278,16 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
             }
 
             this.toggleBroadcastsVisibility();
+
+        } else if (this.view.node.hasClass('active')) {
+            // load next events
+            if (
+                this.broadcasts[l - 1].view.getOffset().top + this.broadcasts[l - 1].view.node.height() - 100 <
+                metrics.win.height
+            ) {
+                this.getStoreModel().getOneDay();
+            }
+
         }
     } else if (!this.hasInitialBroadcasts) {
 
