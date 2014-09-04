@@ -6,6 +6,9 @@
     left: 0;
     z-index: 2;
 }
+#viewport .modal-overlay {
+    position: absolute;
+}
 .modal-overlay.transparent {
     background: rgba(0,0,0,0.01);
 }

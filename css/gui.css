@@ -20,9 +20,9 @@ ul#menubar #refresh {
 .window-drawer {
 	width: 65%;
 	overflow: visible;
-	height: calc(100% - 50px);
+	height: 100%;
 	position:absolute;
-	top: 50px;
+	top: 0;
     left: auto;
     right: auto;
     background: rgba(0,0,0,0.8);
