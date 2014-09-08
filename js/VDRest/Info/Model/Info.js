@@ -44,6 +44,23 @@ VDRest.Info.Model.Info.prototype.load = function () {
 };
 
 /**
+ * retrieve info about plugin
+ * @returns {Object}
+ */
+VDRest.Info.Model.Info.prototype.getPlugin = function (name) {
+
+    var plugins = this.getData('vdr').plugins, i;
+
+    for (i in plugins) {
+
+        if (plugins.hasOwnProperty(i) && plugins[i].name === name) {
+            return plugins[i];
+        }
+    }
+    return false;
+};
+
+/**
  * retrieve info resource model
  * @returns {VDRest.Info.Model.Info.Resource}
  */
