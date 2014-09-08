@@ -29,6 +29,14 @@ Gui.Window.Controller.Recording.prototype.init = function () {
         "resource" : this.data.resource
     });
 
+    this.streamUrl = 'http://'
+    + VDRest.config.getItem('host')
+    + ':'
+    + VDRest.config.getItem('streamdevPort')
+    + '/' + VDRest.config.getItem('streamdevParams') + '/'
+    + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
+    + '.rec';
+
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
 
@@ -115,17 +123,17 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
  */
 Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
-//    window.open('http://192.168.3.99:1337?file=' + encodeURIComponent(this.data.resource.file_name));
+    window.location.href = this.streamUrl;
 
-    $.event.trigger({
-        "type" : "window.request",
-        "payload" : {
-            "type" : "VideoPlayer",
-            "data" : {
-                "url" : 'http://192.168.3.99:1337?file=' + encodeURIComponent(this.data.resource.file_name)
-            }
-        }
-    });
+    //$.event.trigger({
+    //    "type" : "window.request",
+    //    "payload" : {
+    //        "type" : "VideoPlayer",
+    //        "data" : {
+    //            "url" : this.streamUrl
+    //        }
+    //    }
+    //});
 };
 
 /**

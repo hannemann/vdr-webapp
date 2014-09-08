@@ -128,17 +128,17 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
             if (true === VDRest.config.getItem('streamdevActive')) {
 
-//                window.location.href = this.streamUrl;
+                window.location.href = this.streamUrl;
 
-                $.event.trigger({
-                    "type" : "window.request",
-                    "payload" : {
-                        "type" : "VideoPlayer",
-                        "data" : {
-                            "url" : this.streamUrl
-                        }
-                    }
-                });
+                //$.event.trigger({
+                //    "type" : "window.request",
+                //    "payload" : {
+                //        "type" : "VideoPlayer",
+                //        "data" : {
+                //            "url" : this.streamUrl
+                //        }
+                //    }
+                //});
             }
         }, this), 1000);
     }
