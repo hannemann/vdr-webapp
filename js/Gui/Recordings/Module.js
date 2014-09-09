@@ -40,6 +40,67 @@ Gui.Recordings.prototype.startPage = true;
 Gui.Recordings.prototype.headline = 'Recordings';
 
 /**
+ * context menu definition
+ * @type {{}}
+ */
+Gui.Recordings.prototype.contextMenu = {
+
+    "sortAlpha" : {
+        "labels" : {
+            "on" : 'A-Z',
+            "off" : 'Z-A'
+        },
+        "state" : "off",
+        "scope" : 'Gui.Recordings',
+        "fn" : function () {
+
+            var view = this.getView('List');
+            view.setSorting('alnum');
+
+            if ("off" === this.contextMenu.sortAlpha.state) {
+
+                this.contextMenu.sortAlpha.state = "on";
+                view.reverse = true;
+                this.getController('List').reRender();
+
+            } else {
+
+                this.contextMenu.sortAlpha.state = "off";
+                view.reverse = false;
+                this.getController('List').reRender();
+            }
+        }
+    },
+
+    "sortStartTime" : {
+        "labels" : {
+            "on" : 'Newest',
+            "off" : 'Oldest'
+        },
+        "state" : "off",
+        "scope" : 'Gui.Recordings',
+        "fn" : function () {
+
+            var view = this.getView('List');
+            view.setSorting('startTime');
+
+            if ("off" === this.contextMenu.sortStartTime.state) {
+
+                this.contextMenu.sortStartTime.state = "on";
+                view.reverse = false;
+                this.getController('List').reRender();
+
+            } else {
+
+                this.contextMenu.sortStartTime.state = "off";
+                view.reverse = true;
+                this.getController('List').reRender();
+            }
+        }
+    }
+};
+
+/**
  * dispatch default view
  */
 Gui.Recordings.prototype.dispatch = function () {

@@ -53,6 +53,13 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
     $.event.trigger('recordingslist.dispatched');
 };
 
+Gui.Recordings.Controller.List.prototype.reRender = function () {
+
+    this.view.node.empty();
+    this.isHidden = false;
+    this.view.renderFirstLevel();
+};
+
 /**
  * iterate data model collection
  */
@@ -62,7 +69,10 @@ Gui.Recordings.Controller.List.prototype.iterateRecordings = function () {
 
         this.recordingsList.setData(
             recordingsModel.data.number,
-            recordingsModel.data.name
+            {
+                "name": recordingsModel.data.name,
+                "start_time": recordingsModel.data.event_start_time
+            }
         );
 
     }, this));

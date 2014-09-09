@@ -44,11 +44,12 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
             "name" : "root"
         });
 
-        this.resource.each($.proxy(function (number, name) {
+        this.resource.each($.proxy(function (number, data) {
 
             this.current = {
                 "number" : number,
-                "name" : name
+                "name" : data.name,
+                "start_time" : data.start_time
             };
 
             this.addToTree(this.current.name, this.tree);
@@ -121,7 +122,8 @@ Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) 
     return this.module.getController('List.Recording', {
         "number" : this.current.number,
         "parent" : parent,
-        "name" : name
+        "name" : name,
+        "start_time" : this.current.start_time
     });
 };
 

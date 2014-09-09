@@ -10,11 +10,35 @@ Gui.Recordings.View.List = function () {};
 Gui.Recordings.View.List.prototype = new VDRest.Abstract.View();
 
 /**
+ * default sorting method
+ * @type {null}
+ */
+Gui.Recordings.View.List.prototype.defaultSort = null;
+
+/**
  * initialize node
  */
 Gui.Recordings.View.List.prototype.init = function () {
 
+    this.setSorting();
+
+    this.reverse = false;
+
     this.node = $('<div class="recordings-list simple-list clearer">');
+};
+
+/**
+ * initialize node
+ */
+Gui.Recordings.View.List.prototype.setSorting = function (type) {
+
+    type = type || 'alnum';
+
+    if ('startTime' === type) {
+        this.sortCallback = this.sortEvent;
+    } else {
+        this.sortCallback = this.helper().sortAlpha;
+    }
 };
 
 /**
@@ -22,27 +46,47 @@ Gui.Recordings.View.List.prototype.init = function () {
  */
 Gui.Recordings.View.List.prototype.renderFirstLevel = function () {
 
-    var i= 0, l;
-
     this.tree = this.getTree();
+
+    this.renderDirectories().renderFiles();
+
+    this.tree.dispatchView();
+};
+
+Gui.Recordings.View.List.prototype.renderDirectories = function () {
+
+    var i= 0, l = this.tree.data.directories.length;
 
     this.tree.data.directories.sort(this.helper().sortAlpha);
 
-    l = this.tree.data.directories.length;
-
     for (i; i<l; i++) {
-
         this.tree.data.directories[i].dispatchView();
     }
+    return this;
+};
 
-    this.tree.data.files.sort(this.helper().sortAlpha);
+Gui.Recordings.View.List.prototype.renderFiles = function () {
 
-    i=0; l = this.tree.data.files.length;
+    var i= 0, l = this.tree.data.files.length;
 
-    for (i; i<l; i++) {
+    this.tree.data.files.sort(this.sortCallback);
 
-        this.tree.data.files[i].dispatchView();
+    if (this.reverse) {
+        this.tree.data.files.reverse();
     }
 
-    this.tree.dispatchView();
+    for (i; i<l; i++) {
+        this.tree.data.files[i].dispatchView();
+    }
+    return this;
+};
+
+Gui.Recordings.View.List.prototype.sortEvent = function (a, b) {
+
+    a = a.data.start_time;
+    b = b.data.start_time;
+
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
 };

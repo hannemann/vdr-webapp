@@ -90,7 +90,11 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function () {
 
     i = 0; l = files.length;
 
-    files.sort(this.helper().sortAlpha);
+    files.sort(this.module.getView('List').sortCallback);
+
+    if (this.module.getView('List').reverse) {
+        files.reverse();
+    }
 
     for (i; i<l; i++) {
 
