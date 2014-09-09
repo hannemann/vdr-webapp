@@ -25,6 +25,21 @@
     border-bottom: 1px solid rgb(155,155,155);
     clear:both;
     padding-bottom: 10px;
+    position: relative;
+}
+.recording.list-item .name:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.recording.list-item .name.edited:after {
+    content: '\2702';
+}
+.recording.list-item .name.is-new:after {
+    content: '\273d';
+}
+.recording.list-item .name.edited.is-new:after {
+    content: '\2702\273d';
 }
 .recording.list-item .shortText {
     font-size: 12px;

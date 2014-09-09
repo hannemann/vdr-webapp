@@ -136,6 +136,16 @@ Gui.Recordings.View.List.Recording.prototype.addClasses = function () {
 
     var classNames = [], rating = this.getRating();
 
+    if (this.getIsNew()) {
+
+        this.name.addClass('is-new');
+    }
+
+    if (this.getIsEdited()) {
+
+        this.name.addClass('edited');
+    }
+
     if (rating) {
 
         this.name.addClass('rating-' + rating);
