@@ -55,8 +55,16 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
 Gui.Recordings.Controller.List.prototype.reRender = function () {
 
+    var children = VDRest.app.getModule('Gui.Window').cache.store.View.Directory, i;
+
     this.view.node.empty();
     this.view.renderFirstLevel();
+
+    for (i in children) {
+        if (children.hasOwnProperty(i)) {
+            children[i].data.dispatch(children[i], true);
+        }
+    }
 };
 
 /**

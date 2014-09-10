@@ -38,13 +38,13 @@ Gui.Recordings.Controller.List.Directory.prototype.init = function () {
 /**
  * dispatch view, init event handling
  */
-Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function (position) {
+Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function (position, omitObserver) {
 
     this.view.position = position;
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    if ("root" !== this.keyInCache) {
+    if ("root" !== this.keyInCache && !omitObserver) {
 
         this.addObserver();
     }
@@ -81,7 +81,7 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
             "hashSuffix" : '~' + this.data.path,
             "type" : "Directory",
             "data" : {
-                "node" : this.view,
+                "listItem" : this.view,
                 "dispatch" : $.proxy(this.view.renderItems, this.view),
                 "path" : this.data.path
             }
