@@ -19,11 +19,9 @@ Gui.Window.View.Directory.prototype.cacheKey = 'path';
  */
 Gui.Window.View.Directory.prototype.render = function () {
 
-    this.data.node.setParentView(this);
-
     this.addClasses();
 
-    this.data.dispatch();
+    this.data.dispatch(this);
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 

@@ -72,7 +72,7 @@ Gui.Recordings.View.List.Directory.prototype.render = function () {
 /**
  * render items
  */
-Gui.Recordings.View.List.Directory.prototype.renderItems = function () {
+Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView) {
 
     var i = 0, l,
         directories = this.getDirectories(),
@@ -84,7 +84,7 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function () {
 
     for (i; i<l; i++) {
 
-        directories[i].view.setParentView({"node" : this.parentView.body});
+        directories[i].view.setParentView({"node" : parentView.body});
         directories[i].dispatchView();
     }
 
@@ -98,7 +98,7 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function () {
 
     for (i; i<l; i++) {
 
-        files[i].view.setParentView({"node" : this.parentView.body});
+        files[i].view.setParentView({"node" : parentView.body});
         files[i].dispatchView();
     }
 };

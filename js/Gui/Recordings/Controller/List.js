@@ -56,7 +56,6 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 Gui.Recordings.Controller.List.prototype.reRender = function () {
 
     this.view.node.empty();
-    this.isHidden = false;
     this.view.renderFirstLevel();
 };
 
