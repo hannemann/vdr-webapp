@@ -10,19 +10,21 @@ Gui.Recordings.View.List = function () {};
 Gui.Recordings.View.List.prototype = new VDRest.Abstract.View();
 
 /**
- * default sorting method
- * @type {null}
- */
-Gui.Recordings.View.List.prototype.defaultSort = null;
-
-/**
  * initialize node
  */
 Gui.Recordings.View.List.prototype.init = function () {
 
-    this.setSorting();
+    var i, cMenu = VDRest.app.getModule('Gui.Recordings').contextMenu, sortState;
 
-    this.reverse = false;
+    this.setSorting(VDRest.config.getItem('defaultSorting'));
+
+    sortState = this.sorting.indexOf('Desc') > -1;
+
+    for (i in cMenu) {
+        if (cMenu.hasOwnProperty(i) && i.indexOf('sort') === 0) {
+            cMenu[i].state = sortState ? 'off' : 'on';
+        }
+    }
 
     this.node = $('<div class="recordings-list simple-list clearer">');
 };
@@ -32,11 +34,12 @@ Gui.Recordings.View.List.prototype.init = function () {
  */
 Gui.Recordings.View.List.prototype.setSorting = function (type) {
 
-    type = type || 'alnum';
+    this.sorting = type;
 
-    if ('startTime' === type) {
+    this.reverse = type.indexOf('Desc') > -1;
+    if (type.indexOf('date') > -1) {
         this.sortCallback = this.sortEvent;
-    } else {
+    } else if (type.indexOf('name') > -1) {
         this.sortCallback = this.helper().sortAlpha;
     }
 };
@@ -96,8 +99,6 @@ Gui.Recordings.View.List.prototype.sortEvent = function (a, b) {
             a = a.data.oldest;
             b = b.data.oldest;
         }
-        if (a < b) return -1;
-        if (a > b) return 1;
 
     } else {
         a = a.data.start_time;

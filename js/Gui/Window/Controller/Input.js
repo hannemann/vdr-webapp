@@ -140,7 +140,7 @@ Gui.Window.Controller.Input.prototype.setEnum = function () {
 
     var i, value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked').val();
 
-    this.data.gui.val(value);
+    this.data.gui.val(VDRest.app.translate(value));
 
     for (i in this.data.values) {
 

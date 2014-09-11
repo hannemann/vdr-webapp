@@ -60,6 +60,10 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
 
             this.data[i].button = $('<div class="menu-button">').html(VDRest.app.translate(label))
                 .appendTo(this.node);
+
+            if ('function' === typeof this.data[i].highlight) {
+                this.data[i].highlight.call(VDRest.app.getModule(this.data[i].scope), this.data[i]);
+            }
         }
     }
 

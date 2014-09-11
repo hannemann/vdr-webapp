@@ -15,7 +15,7 @@ VDRest.app.de_DE = {
     "Needs reload of app" : "App muss neu geladen werden",
     "Server Settings" : "Server Einstellungen",
     "Protocol" : "Protokoll",
-    "Timer Settings" : "Aufnahme Einstellungen",
+    "Timer Settings" : "Timer Einstellungen",
     "Recording lead time" : "Vorlaufzeit",
     "Recording follow up time" : "Nachlaufzeit",
     "Lead time of recording before broadcast starts (seconds)" : "Vorlaufzeit der Aufnahme, bevor die Sendung beginnt (Sekunden)",
@@ -66,5 +66,12 @@ VDRest.app.de_DE = {
     "Loads data synchronized to not burn slow CPU\'s" : "Daten synchron laden, um langsamere CPU\'s zu schonen",
     "Resource efficient loading" : "Resourcenschonendes Laden",
     "Date &#8595;" : "Datum &#8595;",
-    "Date &#8593;" : "Datum &#8593;"
+    "Date &#8593;" : "Datum &#8593;",
+    "Newest first" : "Neueste zuerst",
+    "Oldest first" : "Älteste zuerst",
+    "Name ascending" : "Name aufsteigend",
+    "Name descending" : "Name absteigend",
+    "Default sorting" : "Sortierung",
+    "Recordings Settings" : "Aufnahmen Einstellungen",
+    "Takes effect after reload" : "Aktiv nach Neustart"
 };

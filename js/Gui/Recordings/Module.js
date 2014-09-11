@@ -45,6 +45,38 @@ Gui.Recordings.prototype.headline = 'Recordings';
  */
 Gui.Recordings.prototype.contextMenu = {
 
+    "sortStartTime" : {
+        "labels" : {
+            "on" : 'Date &#8595;',
+            "off" : 'Date &#8593;'
+        },
+        "state" : "on",
+        "scope" : 'Gui.Recordings',
+        "fn" : function () {
+
+            var view = this.getView('List');
+            if ("on" === this.contextMenu.sortStartTime.state) {
+
+                this.contextMenu.sortStartTime.state = "off";
+                view.setSorting('dateDesc');
+                this.getController('List').reRender();
+
+            } else {
+
+                this.contextMenu.sortStartTime.state = "on";
+                view.setSorting('dateAsc');
+                this.getController('List').reRender();
+            }
+        },
+        "highlight" : function (bObj) {
+            if (0 === this.getView('List').sorting.indexOf('date')) {
+                bObj.button.addClass('active');
+            } else {
+                bObj.button.removeClass('active');
+            }
+        }
+    },
+
     "sortAlpha" : {
         "labels" : {
             "on" : 'Name &#8595;',
@@ -59,41 +91,21 @@ Gui.Recordings.prototype.contextMenu = {
             if ("on" === this.contextMenu.sortAlpha.state) {
 
                 this.contextMenu.sortAlpha.state = "off";
-                view.reverse = true;
+                view.setSorting('nameDesc');
                 this.getController('List').reRender();
 
             } else {
 
                 this.contextMenu.sortAlpha.state = "on";
-                view.reverse = false;
+                view.setSorting('nameAsc');
                 this.getController('List').reRender();
             }
-        }
-    },
-
-    "sortStartTime" : {
-        "labels" : {
-            "on" : 'Date &#8595;', // newest first
-            "off" : 'Date &#8593;'  // oldest first
         },
-        "state" : "on",
-        "scope" : 'Gui.Recordings',
-        "fn" : function () {
-
-            var view = this.getView('List');
-            view.setSorting('startTime');
-            // sorting in reverse order means 'newest first'!!!
-            if ("on" === this.contextMenu.sortStartTime.state) {
-
-                this.contextMenu.sortStartTime.state = "off";
-                view.reverse = true;
-                this.getController('List').reRender();
-
+        "highlight" : function (bObj) {
+            if (0 === this.getView('List').sorting.indexOf('name')) {
+                bObj.button.addClass('active');
             } else {
-
-                this.contextMenu.sortStartTime.state = "on";
-                view.reverse = false;
-                this.getController('List').reRender();
+                bObj.button.removeClass('active');
             }
         }
     }

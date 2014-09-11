@@ -199,6 +199,11 @@ div.window.confirm li:first-child {
     border-top: 1px solid rgb(150, 150,150);
     padding: 10px;
 }
+.context-menu div.menu-button.active {
+    background-color: rgb(167, 167, 167);
+    color: black;
+}
+
 div.window.viewport-fullsize {
     box-shadow: none;
     top: 0;

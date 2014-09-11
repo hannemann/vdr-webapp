@@ -163,7 +163,7 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 
     field.gui
         .attr('type', 'text')
-        .val(selected.label);
+        .val(VDRest.app.translate(selected.label));
 
     field.dom.append(field.gui);
 };

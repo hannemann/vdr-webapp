@@ -60,7 +60,8 @@ Gui.Config.Controller.Settings.prototype.persist = function () {
 
                 for (n in values) {
 
-                    if (values.hasOwnProperty(n) && values[n].label === this.view.data.fields[i].gui.val()) {
+                    if (values.hasOwnProperty(n) &&
+                        VDRest.app.translate(values[n].label) === this.view.data.fields[i].gui.val()) {
 
                         value = values[n].value;
                     }

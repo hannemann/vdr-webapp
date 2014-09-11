@@ -364,6 +364,7 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "enum",
         "label" : "Default sorting",
         "dataType" : "string",
+        "info" : "Takes effect after reload",
         "values" : {
             "dateDesc" : {
                 "label" : "Newest first",
@@ -373,13 +374,13 @@ VDRest.Lib.Config.prototype.fields = {
                 "label" : "Oldest first",
                 "value" : "dateAsc"
             },
-            "nameDesc" : {
-                "label" : "Name descending",
-                "value" : "nameDesc"
-            },
             "nameAsc" : {
                 "label" : "Name ascending",
                 "value" : "nameAsc"
+            },
+            "nameDesc" : {
+                "label" : "Name descending",
+                "value" : "nameDesc"
             }
         }
     },

@@ -44,6 +44,10 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
 
         if (this.data.hasOwnProperty(i) && i !== 'isDispatched') {
 
+            //if ('function' === typeof this.data[i].highlight) {
+            //    this.data[i].highlight.call(VDRest.app.getModule(this.data[i].scope), this.data[i]);
+            //}
+
             this.data[i].button.one(
                 'mousedown', $.proxy(
                     this.handleButtonClick,

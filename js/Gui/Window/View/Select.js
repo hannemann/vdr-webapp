@@ -36,7 +36,7 @@ Gui.Window.View.Select.prototype.render = function () {
  */
 Gui.Window.View.Select.prototype.setHeader = function () {
 
-    this.header.text(this.data.label);
+    this.header.text(VDRest.app.translate(this.data.label));
 
     return this;
 };
@@ -81,7 +81,7 @@ Gui.Window.View.Select.prototype.prepareValue = function (value) {
         html += '<img src="' + value.image + '">';
     }
 
-    html += value.label;
+    html += VDRest.app.translate(value.label);
 
     value.dom.html(html);
 
