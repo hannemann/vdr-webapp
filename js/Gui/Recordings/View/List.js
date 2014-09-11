@@ -57,7 +57,11 @@ Gui.Recordings.View.List.prototype.renderDirectories = function () {
 
     var i= 0, l = this.tree.data.directories.length;
 
-    this.tree.data.directories.sort(this.helper().sortAlpha);
+    this.tree.data.directories.sort($.proxy(this.sortCallback, this));
+
+    if (this.reverse) {
+        this.tree.data.directories.reverse();
+    }
 
     for (i; i<l; i++) {
         this.tree.data.directories[i].dispatchView();
@@ -69,7 +73,7 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
 
     var i= 0, l = this.tree.data.files.length;
 
-    this.tree.data.files.sort(this.sortCallback);
+    this.tree.data.files.sort($.proxy(this.sortCallback, this));
 
     if (this.reverse) {
         this.tree.data.files.reverse();
@@ -83,8 +87,22 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
 
 Gui.Recordings.View.List.prototype.sortEvent = function (a, b) {
 
-    a = a.data.start_time;
-    b = b.data.start_time;
+    if (a instanceof Gui.Recordings.Controller.List.Directory) {
+
+        if (this.reverse) {
+            a = a.data.newest;
+            b = b.data.newest;
+        } else {
+            a = a.data.oldest;
+            b = b.data.oldest;
+        }
+        if (a < b) return -1;
+        if (a > b) return 1;
+
+    } else {
+        a = a.data.start_time;
+        b = b.data.start_time;
+    }
 
     if (a < b) return -1;
     if (a > b) return 1;

@@ -64,5 +64,7 @@ VDRest.app.de_DE = {
     "Subtitle to Filename" : "Untertitel zu Dateiname",
     "Edit Timer" : "Timer bearbeiten",
     "Loads data synchronized to not burn slow CPU\'s" : "Daten synchron laden, um langsamere CPU\'s zu schonen",
-    "Resource efficient loading" : "Resourcenschonendes Laden"
+    "Resource efficient loading" : "Resourcenschonendes Laden",
+    "Date &#8595;" : "Datum &#8595;",
+    "Date &#8593;" : "Datum &#8593;"
 };

@@ -106,7 +106,9 @@ Gui.Recordings.ViewModel.List.prototype.getDirectory = function (path, parent, n
     return this.module.getController('List.Directory', {
         "path" : path,
         "parent" : parent,
-        "name" : name
+        "name" : name,
+        "oldest" : 0,
+        "newest" : 0
     });
 };
 
@@ -118,6 +120,28 @@ Gui.Recordings.ViewModel.List.prototype.getDirectory = function (path, parent, n
  * @returns {*}
  */
 Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) {
+
+    var current = parent;
+
+    do {
+
+        if (0 === current.getData('newest') || current.getData('newest') < this.current.start_time) {
+            current.setData('newest', this.current.start_time)
+        }
+
+        if (0 === current.getData('oldest') || current.getData('oldest') > this.current.start_time) {
+            current.setData('oldest', this.current.start_time)
+        }
+
+        if (current.hasData('parent')) {
+            current = current.getData('parent');
+        } else {
+            current = null;
+        }
+
+    } while (current);
+
+
 
     return this.module.getController('List.Recording', {
         "number" : this.current.number,

@@ -181,7 +181,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "showRadio"             :   "false",
     "channelLimit"          :   "100",
     "startChannel"          :   "1",
-    "useSlowServerStrategy" :   "true"
+    "useSlowServerStrategy" :   "true",
+    "defaultSorting"        :   "dateDesc"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -196,6 +197,9 @@ VDRest.Lib.Config.prototype.categories = {
     },
     "timer" : {
         "label" : 'Timer Settings'
+    },
+    "recordings" : {
+        "label" : 'Recordings Settings'
     },
     "streaming" : {
         "label" : 'Streaming'
@@ -354,6 +358,30 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "timer",
         "type" : "boolean",
         "label" : "Use VPS if available"
+    },
+    "defaultSorting"  :   {
+        "category" : "recordings",
+        "type" : "enum",
+        "label" : "Default sorting",
+        "dataType" : "string",
+        "values" : {
+            "dateDesc" : {
+                "label" : "Newest first",
+                "value" : "dateDesc"
+            },
+            "dateAsc" : {
+                "label" : "Oldest first",
+                "value" : "dateAsc"
+            },
+            "nameDesc" : {
+                "label" : "Name descending",
+                "value" : "nameDesc"
+            },
+            "nameAsc" : {
+                "label" : "Name ascending",
+                "value" : "nameAsc"
+            }
+        }
     },
     "streamdevActive"    :   {
         "category" : "streaming",

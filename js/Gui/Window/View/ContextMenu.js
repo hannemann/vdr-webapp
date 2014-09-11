@@ -58,7 +58,7 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
 
             label = this.data[i].labels[this.data[i].state];
 
-            this.data[i].button = $('<div class="menu-button">').text(VDRest.app.translate(label))
+            this.data[i].button = $('<div class="menu-button">').html(VDRest.app.translate(label))
                 .appendTo(this.node);
         }
     }

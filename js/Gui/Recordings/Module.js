@@ -47,25 +47,24 @@ Gui.Recordings.prototype.contextMenu = {
 
     "sortAlpha" : {
         "labels" : {
-            "on" : 'A-Z',
-            "off" : 'Z-A'
+            "on" : 'Name &#8595;',
+            "off" : 'Name &#8593;'
         },
-        "state" : "off",
+        "state" : "on",
         "scope" : 'Gui.Recordings',
         "fn" : function () {
 
             var view = this.getView('List');
             view.setSorting('alnum');
+            if ("on" === this.contextMenu.sortAlpha.state) {
 
-            if ("off" === this.contextMenu.sortAlpha.state) {
-
-                this.contextMenu.sortAlpha.state = "on";
+                this.contextMenu.sortAlpha.state = "off";
                 view.reverse = true;
                 this.getController('List').reRender();
 
             } else {
 
-                this.contextMenu.sortAlpha.state = "off";
+                this.contextMenu.sortAlpha.state = "on";
                 view.reverse = false;
                 this.getController('List').reRender();
             }
@@ -74,26 +73,26 @@ Gui.Recordings.prototype.contextMenu = {
 
     "sortStartTime" : {
         "labels" : {
-            "on" : 'Newest',
-            "off" : 'Oldest'
+            "on" : 'Date &#8595;', // newest first
+            "off" : 'Date &#8593;'  // oldest first
         },
-        "state" : "off",
+        "state" : "on",
         "scope" : 'Gui.Recordings',
         "fn" : function () {
 
             var view = this.getView('List');
             view.setSorting('startTime');
+            // sorting in reverse order means 'newest first'!!!
+            if ("on" === this.contextMenu.sortStartTime.state) {
 
-            if ("off" === this.contextMenu.sortStartTime.state) {
-
-                this.contextMenu.sortStartTime.state = "on";
-                view.reverse = false;
+                this.contextMenu.sortStartTime.state = "off";
+                view.reverse = true;
                 this.getController('List').reRender();
 
             } else {
 
-                this.contextMenu.sortStartTime.state = "off";
-                view.reverse = true;
+                this.contextMenu.sortStartTime.state = "on";
+                view.reverse = false;
                 this.getController('List').reRender();
             }
         }

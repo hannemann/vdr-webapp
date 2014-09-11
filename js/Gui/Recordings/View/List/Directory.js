@@ -76,13 +76,18 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView,
 
     var i = 0, l,
         directories = this.getDirectories(),
-        files = this.getFiles();
+        files = this.getFiles(),
+        listView = this.module.getView('List');
 
     omitObserver = omitObserver || false;
 
     l = directories.length;
 
-    directories.sort(this.helper().sortAlpha);
+    directories.sort($.proxy(listView.sortCallback, listView));
+
+    if (this.module.getView('List').reverse) {
+        directories.reverse();
+    }
 
     for (i; i<l; i++) {
 
@@ -92,9 +97,9 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView,
 
     i = 0; l = files.length;
 
-    files.sort(this.module.getView('List').sortCallback);
+    files.sort($.proxy(listView.sortCallback, listView));
 
-    if (this.module.getView('List').reverse) {
+    if (listView.reverse) {
         files.reverse();
     }
 
