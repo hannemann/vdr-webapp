@@ -123,17 +123,21 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
  */
 Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
-    window.location.href = this.streamUrl;
+    if (VDRest.config.getItem('useHtmlPlayer')) {
 
-    //$.event.trigger({
-    //    "type" : "window.request",
-    //    "payload" : {
-    //        "type" : "VideoPlayer",
-    //        "data" : {
-    //            "url" : this.streamUrl
-    //        }
-    //    }
-    //});
+        $.event.trigger({
+            "type" : "window.request",
+            "payload" : {
+                "type" : "VideoPlayer",
+                "data" : {
+                    "url" : this.streamUrl
+                }
+            }
+        });
+    } else {
+        window.location.href = this.streamUrl;
+    }
+
 };
 
 /**
