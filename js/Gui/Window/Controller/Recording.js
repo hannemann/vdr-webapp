@@ -19,6 +19,8 @@ Gui.Window.Controller.Recording.prototype.cacheKey = 'number';
  */
 Gui.Window.Controller.Recording.prototype.init = function () {
 
+    var streamdevParams = [];
+
     this.eventPrefix = 'window.recording' + this.data.number;
 
     this.view = this.module.getView('Recording', this.data);
@@ -29,11 +31,18 @@ Gui.Window.Controller.Recording.prototype.init = function () {
         "resource" : this.data.resource
     });
 
+
+    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
+    if (VDRest.config.getItem('useHtmlPlayer')) {
+        streamdevParams.push('CODEC=vpx');
+    }
+
+
     this.streamUrl = 'http://'
     + VDRest.config.getItem('host')
     + ':'
     + VDRest.config.getItem('streamdevPort')
-    + '/' + VDRest.config.getItem('streamdevParams') + '/'
+    + '/' + streamdevParams.join(';') + '/'
     + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
     + '.rec';
 
@@ -166,6 +175,13 @@ Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
 Gui.Window.Controller.Recording.prototype.destructView = function () {
 
     var me = this;
+
+
+    if (VDRest.config.getItem('useHtmlPlayer')) {
+
+    }
+
+
     // apply animation
     this.view.node.toggleClass('collapse expand');
     // remove on animation end

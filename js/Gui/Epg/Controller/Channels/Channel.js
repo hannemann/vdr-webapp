@@ -24,6 +24,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.isMuted = false;
  */
 Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
 
+    var streamdevParams = [];
+
     this.view = this.module.getView('Channels.Channel', {
         "channel_id" : this.data.channel_id
     });
@@ -35,11 +37,16 @@ Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
         "resource" : this.data.dataModel
     });
 
+    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
+    if (VDRest.config.getItem('useHtmlPlayer')) {
+        streamdevParams.push('CODEC=vpx');
+    }
+
     this.streamUrl = 'http://'
         + VDRest.config.getItem('host')
         + ':'
         + VDRest.config.getItem('streamdevPort')
-        + '/' + VDRest.config.getItem('streamdevParams') + '/'
+        + '/' + streamdevParams.join(';') + '/'
         + this.data.dataModel.data.stream;
 };
 

@@ -74,7 +74,7 @@ Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.destruct = function () {
 
-    var me = this;
+    var me = this, v = this.node.get(0);
     // apply animation
 //    this.node.toggleClass('collapse expand');
 //    // remove on animation end
@@ -82,5 +82,9 @@ Gui.Window.View.VideoPlayer.prototype.destruct = function () {
 //
 //        Gui.Window.View.Abstract.prototype.destruct.call(me);
 //    });
+
+    v.pause();
+    v.src = "";
+
     Gui.Window.View.Abstract.prototype.destruct.call(me);
 };
