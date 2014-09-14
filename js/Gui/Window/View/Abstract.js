@@ -9,6 +9,10 @@ Gui.Window.View.Abstract = function () {};
  */
 Gui.Window.View.Abstract.prototype = new VDRest.Abstract.View();
 
+/**
+ * retrieve default node
+ * @returns {*|jQuery|HTMLElement}
+ */
 Gui.Window.View.Abstract.prototype.getNode = function () {
 
     return $('<div class="window">');
@@ -49,11 +53,6 @@ Gui.Window.View.Abstract.prototype.render = function () {
         this.addModalOverlay(VDRest.app.getModule('Gui.Viewport').getView('Default'));
     }
 
-    if (!this.isModalTransparent) {
-
-        $('body').addClass('show-modal');
-    }
-
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
@@ -63,6 +62,13 @@ Gui.Window.View.Abstract.prototype.render = function () {
  */
 Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
 
+    this.modalClassNameShow = 'show-modal';
+    this.modalClassNameHide = 'hide-modal';
+
+    if (this.isModalOpaque) {
+        this.modalClassNameShow += '-opaque';
+        this.modalClassNameHide += '-opaque';
+    }
     /**
      * @type {VDRest.Abstract.view|object}
      * @property {jQuery.fn.init} node
@@ -73,6 +79,9 @@ Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
 
     if (this.isModalTransparent) {
         this.modalOverlay.toggleClass('dark transparent');
+    } else {
+
+        $('body').addClass(this.modalClassNameShow);
     }
 
     this.parentView = {
@@ -161,16 +170,18 @@ Gui.Window.View.Abstract.prototype.destruct = function () {
 
         if (!this.isModalTransparent) {
 
-            this.modalOverlay.on('webkitAnimationEnd MSAnimationEnd oanimationend animationend', function (e) {
+            this.modalOverlay.on(VDRest.Abstract.Controller.prototype.animationEndEvents, function (e) {
 
                 if (e.target === me.modalOverlay.get(0)) {
 
                     me.modalOverlay.remove();
-                    $('body').removeClass('hide-modal');
+                    //$('body').removeClass('hide-modal');
+
+                    $('body').removeClass(me.modalClassNameHide + ' ' + me.modalClassNameShow);
                 }
             });
 
-            $('body').addClass('hide-modal show-modal');
+            $('body').addClass(this.modalClassNameHide + ' ' + this.modalClassNameShow);
 
         } else {
 

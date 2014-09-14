@@ -36,6 +36,25 @@
     to { background: rgba(0,0,0,0); }
 }
 
+/* Modal overlay */
+
+@keyframes showModalOpaque {
+    from { background: rgba(0,0,0,0); }
+    to { background: rgba(0,0,0,1); }
+}
+@keyframes hideModalOpaque {
+    from { background: rgba(0,0,0,1); }
+    to { background: rgba(0,0,0,0); }
+}
+@-webkit-keyframes showModalOpaque {
+    from { background: rgba(0,0,0,0); }
+    to { background: rgba(0,0,0,1); }
+}
+@-webkit-keyframes hideModalOpaque {
+    from { background: rgba(0,0,0,1); }
+    to { background: rgba(0,0,0,0); }
+}
+
 /* drawer */
 
 @keyframes drawerShow {

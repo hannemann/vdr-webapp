@@ -42,6 +42,21 @@
     -webkit-animation-name: hideModal;
     background: rgba(0,0,0,0);
 }
+/* dark modal overlay */
+.show-modal-opaque .modal-overlay.dark {
+    animation-duration: .2s;
+    animation-name: showModalOpaque;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: showModalOpaque;
+    background: rgba(0,0,0,1);
+}
+.hide-modal-opaque .modal-overlay.dark {
+    animation-duration: .2s;
+    animation-name: hideModalOpaque;
+    -webkit-animation-duration: .2s;
+    -webkit-animation-name: hideModalOpaque;
+    background: rgba(0,0,0,0);
+}
 
 /* input, confirm window */
 /* almost full-size window */
