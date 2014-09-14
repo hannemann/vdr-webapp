@@ -10,6 +10,16 @@ Gui.Window.View.VideoPlayer = function () {};
 Gui.Window.View.VideoPlayer.prototype = new Gui.Window.View.Abstract();
 
 /**
+ * @type {Gui.Window.Controller.Abstract}
+ */
+Gui.Window.View.VideoPlayer.prototype.isModal = true;
+
+/**
+ * @type {boolean}
+ */
+Gui.Window.View.VideoPlayer.prototype.isModalOpaque = true;
+
+/**
  * @type {string}
  */
 Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';
@@ -19,6 +29,7 @@ Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';
  */
 Gui.Window.View.VideoPlayer.prototype.init = function () {
 
+    //this.node = $('<video preload="none" controls>');
     this.node = $('<video preload="none" controls>');
 
 };
@@ -46,13 +57,25 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addSource = function (src, type) {
 
-    type = type || 'video/webm';
+    var me = this, d = new Date();
 
-        src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + new Date().getTime();
+    //type = type || 'video/webm';
 
-    var s = $('<source type="' + type + '" src="' + src + '">');
 
-    s.appendTo(this.node);
+    //var s = $('<source type="' + type + '" src="' + src + '">');
+    //var s = $('<source src="' + src + '">');
+    //
+    //s.appendTo(this.node);
+
+
+    src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
+    me.node.prop('src', src);
+
+    //this.node.one('click', function () {
+    //    src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + new Date().getTime();
+    //    me.node.prop('src', src);
+    //    me.node.get(0).play();
+    //});
 };
 
 
@@ -84,7 +107,8 @@ Gui.Window.View.VideoPlayer.prototype.destruct = function () {
 //    });
 
     v.pause();
-    v.src = "";
+    //v.src = "";
+    this.node.prop('src', false);
 
     Gui.Window.View.Abstract.prototype.destruct.call(me);
 };

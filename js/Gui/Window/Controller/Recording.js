@@ -19,8 +19,6 @@ Gui.Window.Controller.Recording.prototype.cacheKey = 'number';
  */
 Gui.Window.Controller.Recording.prototype.init = function () {
 
-    var streamdevParams = [];
-
     this.eventPrefix = 'window.recording' + this.data.number;
 
     this.view = this.module.getView('Recording', this.data);
@@ -30,21 +28,6 @@ Gui.Window.Controller.Recording.prototype.init = function () {
         "view" : this.view,
         "resource" : this.data.resource
     });
-
-
-    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
-    if (VDRest.config.getItem('useHtmlPlayer')) {
-        streamdevParams.push('CODEC=vpx');
-    }
-
-
-    this.streamUrl = 'http://'
-    + VDRest.config.getItem('host')
-    + ':'
-    + VDRest.config.getItem('streamdevPort')
-    + '/' + streamdevParams.join(';') + '/'
-    + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
-    + '.rec';
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
@@ -131,6 +114,21 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
  * watch recording
  */
 Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
+
+    var streamdevParams = [];
+
+    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
+    if (VDRest.config.getItem('useHtmlPlayer')) {
+        streamdevParams.push('TYPE=webm');
+    }
+
+    this.streamUrl = 'http://'
+    + VDRest.config.getItem('host')
+    + ':'
+    + VDRest.config.getItem('streamdevPort')
+    + '/' + streamdevParams.join(';') + '/'
+    + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
+    + '.rec.ts';
 
     if (VDRest.config.getItem('useHtmlPlayer')) {
 
