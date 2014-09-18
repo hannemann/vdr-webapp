@@ -29,9 +29,9 @@ Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';
  */
 Gui.Window.View.VideoPlayer.prototype.init = function () {
 
-    //this.node = $('<video preload="none" controls>');
-    this.node = $('<video preload="none" controls>');
-
+    this.node = $('<div class="video-player-wrapper">');
+    this.player = $('<video preload="none" controls>');
+    this.controls = $('<div class="html5-player-controls">');
 };
 
 /**
@@ -39,15 +39,22 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.render = function () {
 
-    var me = this;
-
-    this.addClasses();
-
     Gui.Window.View.Abstract.prototype.render.call(this);
 
-    me.addSource(me.data.url);
+    this.initPlayer().addClasses();
+
+    this.setPosition();
 
     this.node.toggleClass('collapsed expand');
+};
+
+Gui.Window.View.VideoPlayer.prototype.initPlayer = function () {
+
+    this.player.appendTo(this.node);
+    this.addSource(this.data.url);
+    //this.addControls();
+
+    return this;
 };
 
 /**
@@ -69,13 +76,24 @@ Gui.Window.View.VideoPlayer.prototype.addSource = function (src, type) {
 
 
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
-    me.node.prop('src', src);
+    me.player.prop('src', src);
 
     //this.node.one('click', function () {
     //    src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + new Date().getTime();
     //    me.node.prop('src', src);
     //    me.node.get(0).play();
     //});
+    return this;
+};
+
+/**
+ * add control elements
+ */
+Gui.Window.View.VideoPlayer.prototype.addControls = function () {
+
+    this.controls.appendTo(this.node);
+
+    return this;
 };
 
 
@@ -87,9 +105,20 @@ Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
 
     var classNames = ['html5-player', 'fullsize', 'collapsed'];
 
+    classNames.push(window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
+
     this.node.addClass(classNames.join(' '));
 
     return this;
+};
+
+Gui.Window.View.VideoPlayer.prototype.setPosition = function () {
+
+        if (window.innerHeight > window.innerWidth) {
+            this.node.removeClass('landscape').addClass('portrait');
+        } else {
+            this.node.removeClass('portrait').addClass('landscape');
+        }
 };
 
 /**
@@ -97,18 +126,10 @@ Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.destruct = function () {
 
-    var me = this, v = this.node.get(0);
-    // apply animation
-//    this.node.toggleClass('collapse expand');
-//    // remove on animation end
-//    this.node.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-//
-//        Gui.Window.View.Abstract.prototype.destruct.call(me);
-//    });
+    var me = this, player = this.player.get(0);
 
-    v.pause();
-    //v.src = "";
-    this.node.prop('src', false);
+    player.pause();
+    this.player.prop('src', false);
 
     Gui.Window.View.Abstract.prototype.destruct.call(me);
 };

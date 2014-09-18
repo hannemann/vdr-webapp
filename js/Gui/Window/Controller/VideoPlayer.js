@@ -28,6 +28,24 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.view.setParentView({
         "node" : $('body')
     });
+
+    this.addObserver();
+};
+
+/**
+ * add event listeners
+ */
+Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
+
+    $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
+};
+
+/**
+ * add event listeners
+ */
+Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
+
+    $(window).on('orientationchange.'+this.keyInCache);
 };
 
 /**

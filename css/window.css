@@ -216,10 +216,38 @@ div.window.viewport-fullsize {
     font-size: 12px;
 }
 
-video {
+.html5-player,
+.html5-player .html5-player-controls {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
+}
+.html5-player-controls {
+    background: rgba(255, 255, 255, .5);
+    bottom: 0;
+    right: 0;
+}
+.html5-player video {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+}
+.html5-player.landscape video {
+    position: absolute;
+    display: block;
+    margin: auto 0;
+    bottom: 0;
+    top: 0;
+}
+.html5-player{
+    margin-top: -25%;
+    top: 50%;
+    bottom: auto;
+}
+.html5-player.landscape {
+    margin: auto 0;
+    top: 0;
+    bottom: 0;
 }
