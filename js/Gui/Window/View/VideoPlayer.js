@@ -30,8 +30,10 @@ Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';
 Gui.Window.View.VideoPlayer.prototype.init = function () {
 
     this.node = $('<div class="video-player-wrapper">');
-    this.player = $('<video preload="none" controls>');
-    this.controls = $('<div class="html5-player-controls">');
+    this.player = $('<video preload="none" class="normal-size">');
+    this.controls = $('<div class="html5-player-controls show">');
+
+    this.initPlayer();
 };
 
 /**
@@ -41,7 +43,7 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 
-    this.initPlayer().addClasses();
+    this.addClasses();
 
     this.setPosition();
 
@@ -51,38 +53,8 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
 Gui.Window.View.VideoPlayer.prototype.initPlayer = function () {
 
     this.player.appendTo(this.node);
-    this.addSource(this.data.url);
-    //this.addControls();
+    this.addControls();
 
-    return this;
-};
-
-/**
- * add source node
- * @param {string} src
- * @param {string} [type]
- */
-Gui.Window.View.VideoPlayer.prototype.addSource = function (src, type) {
-
-    var me = this, d = new Date();
-
-    //type = type || 'video/webm';
-
-
-    //var s = $('<source type="' + type + '" src="' + src + '">');
-    //var s = $('<source src="' + src + '">');
-    //
-    //s.appendTo(this.node);
-
-
-    src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
-    me.player.prop('src', src);
-
-    //this.node.one('click', function () {
-    //    src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + new Date().getTime();
-    //    me.node.prop('src', src);
-    //    me.node.get(0).play();
-    //});
     return this;
 };
 
@@ -91,11 +63,31 @@ Gui.Window.View.VideoPlayer.prototype.addSource = function (src, type) {
  */
 Gui.Window.View.VideoPlayer.prototype.addControls = function () {
 
+    this.addControlButtons();
     this.controls.appendTo(this.node);
 
     return this;
 };
 
+/**
+ * add control buttons to overlay
+ */
+Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
+
+    this.ctrlPlay = $('<div class="play">').appendTo(this.controls);
+
+    this.ctrlStop = $('<div class="stop">').appendTo(this.controls);
+
+    this.ctrlFullScreen = $('<div class="toggle-fullScreen">').appendTo(this.controls);
+};
+
+/**
+ * show controls overlay
+ */
+Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
+
+    this.controls.toggleClass('show hide');
+};
 
 /**
  * add classes
@@ -114,11 +106,15 @@ Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
 
 Gui.Window.View.VideoPlayer.prototype.setPosition = function () {
 
+    var me = this;
+
+    setTimeout(function () {
         if (window.innerHeight > window.innerWidth) {
-            this.node.removeClass('landscape').addClass('portrait');
+            me.node.removeClass('landscape').addClass('portrait');
         } else {
-            this.node.removeClass('portrait').addClass('landscape');
+            me.node.removeClass('portrait').addClass('landscape');
         }
+    }, 1000);
 };
 
 /**

@@ -1,0 +1,69 @@
+
+::-webkit-media-controls-overlay-enclosure,
+::-webkit-media-controls-enclosure {
+    display:none !important;
+}
+:-webkit-full-screen {
+    background: black !important;
+}
+
+.html5-player,
+.html5-player .html5-player-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 0;
+}
+.html5-player .html5-player-controls {
+    background: rgba(255, 255, 255, .5);
+    bottom: 0;
+    right: 0;
+    /*z-index: 2147483647;*/
+}
+.html5-player video {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+}
+.html5-player.landscape video {
+    position: absolute;
+    display: block;
+    margin: auto 0;
+    bottom: 0;
+    top: 0;
+}
+.html5-player{
+    margin-top: -25%;
+    top: 50%;
+    bottom: auto;
+}
+.html5-player.landscape {
+    margin: auto 0;
+    top: 0;
+    bottom: 0;
+}
+
+.html5-player-controls div {
+    position: absolute;
+}
+
+.html5-player-controls .play {
+    background: red;
+    width: 50px;
+    height: 50px;
+}
+
+.html5-player-controls .stop {
+    background: blue;
+    width: 50px;
+    height: 50px;
+    left: 50px;
+}
+
+.html5-player-controls .toggle-fullScreen {
+    background: green;
+    width: 50px;
+    height: 50px;
+    left: 100px;
+}

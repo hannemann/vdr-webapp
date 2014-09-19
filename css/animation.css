@@ -150,3 +150,21 @@ TODO: create fancy animation that doesn't burn my device
     -webkit-animation: recording 2s infinite;
 }
 */
+
+/* Video player controls */
+.html5-player-controls.show {
+    animation-duration: .6s;
+    animation-name: showPlayerControls;
+    -webkit-animation-duration: .6s;
+    -webkit-animation-name: showPlayerControls;
+    background-color: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+}
+.html5-player-controls.hide {
+    animation-duration: .6s;
+    animation-name: hidePlayerControls;
+    -webkit-animation-duration: .6s;
+    -webkit-animation-name: hidePlayerControls;
+    background-color: rgba(255, 255, 255, 0);
+    opacity: 0;
+}

@@ -136,3 +136,13 @@
     from { background-position: 0; }
     to { background-position: -384px; }
 }
+
+/* Video player controls */
+@-webkit-keyframes showPlayerControls {
+    from {background-color: rgba(255, 255, 255, 0); opacity: 0; }
+    to {background-color: rgba(255, 255, 255, 0.5); opacity: 1; }
+}
+@-webkit-keyframes hidePlayerControls {
+    from {background-color: rgba(255, 255, 255, 0.5); opacity: 1; }
+    to {background-color: rgba(255, 255, 255, 0); opacity: 0; }
+}
