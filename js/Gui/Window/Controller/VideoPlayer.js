@@ -39,6 +39,9 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     });
 };
 
+/**
+ * dispatch view
+ */
 Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 
     this.addObserver();
@@ -54,31 +57,79 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
-    this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.startPlayback, this));
+    this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
+    if (this.data.isTv) {
+        this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
+        this.view.ctrlChannelDown.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
+    }
+};
+
+/**
+ * add event listeners
+ */
+Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
+
+    $(window).off('orientationchange.'+this.keyInCache);
+    $(this.view.controls).off('click');
+    $(this.view.stop).off('click');
+    if (this.data.isTv) {
+        this.view.ctrlChannelUp.off('click');
+        this.view.ctrlChannelDown.off('click');
+    }
+};
+
+/**
+ * toggle playback
+ */
+Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function () {
+
+    this[this.isPlaying ? 'pausePlayback' : 'startPlayback']();
 };
 
 /**
  * start playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
+Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function (force) {
 
-    var d = new Date(), src = this.data.url;
+    var d = new Date(), src = this.data.channel.dataModel.getStreamUrl();
 
-    if (this.view.controls.hasClass('hide')) {
+    if (!force && this.view.controls.hasClass('hide')) {
         return;
     }
+
+    this.isPlaying = true;
+
+    this.view.toggleThrobber();
+
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
     this.getVideo().src = src;
     this.getVideo().play();
+
+    $(this.getVideo()).one('playing', $.proxy(function () {
+        this.view.toggleThrobber();
+        this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
+    }, this));
+};
+
+/**
+ * pause playback
+ */
+Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
+
+    this.isPlaying = false;
+
+    this.getVideo().pause();
+    this.getVideo().src = false;
+    this.view.ctrlPlay.html(this.view.symbolPlay).removeClass('pause');
 };
 
 /**
  * stop playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function () {
+Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (force) {
 
-    if (this.view.controls.hasClass('hide')) {
+    if (!force && this.view.controls.hasClass('hide')) {
         return;
     }
     history.back();
@@ -91,8 +142,6 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function () {
 Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
 
     var isFullscreen = false;
-
-    e && e.stopPropagation();
 
     if ("undefined" != typeof document.fullScreen) {
         isFullscreen = document.fullScreen;
@@ -107,6 +156,26 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
     }
 
     this[isFullscreen ? 'cancelFullscreen' : 'requestFullscreen']();
+};
+
+/**
+ * load channel model and switch to channel
+ * @param e
+ */
+Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
+
+    var channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels'),
+        getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous',
+        me = this;
+
+    this.data.channel.dataModel = channels['get' + getter + 'Channel'](this.data.channel.dataModel);
+
+    this.getVideo().pause();
+    this.getVideo().src = false;
+
+    setTimeout(function () {
+        me.startPlayback(true);
+    }, 500);
 };
 
 /**
@@ -156,16 +225,6 @@ Gui.Window.Controller.VideoPlayer.prototype.getPlayer = function () {
 Gui.Window.Controller.VideoPlayer.prototype.getVideo = function () {
 
     return this.view.player.get(0);
-};
-
-/**
- * add event listeners
- */
-Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
-
-    $(window).off('orientationchange.'+this.keyInCache);
-    $(this.view.controls).off('click.'+this.keyInCache);
-    $(this.view.stop).off('click.'+this.keyInCache);
 };
 
 /**

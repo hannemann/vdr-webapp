@@ -55,7 +55,7 @@ Gui.Menubar.Controller.Default.prototype.showThrobber = function () {
 
     if (this.throbberCalls === 0) {
         this.view.settingsButton.hide();
-        this.view.throbber.show();
+        this.view.throbber.toggleClass('show');
     }
     this.throbberCalls++;
 };
@@ -68,7 +68,7 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (force) {
 
     this.throbberCalls--;
     if (this.throbberCalls <= 0 || force) {
-        this.view.throbber.hide();
+        this.view.throbber.toggleClass('show');
         this.view.settingsButton.show();
         this.throbberCalls = 0;
     }

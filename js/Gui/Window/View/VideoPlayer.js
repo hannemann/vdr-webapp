@@ -25,13 +25,43 @@ Gui.Window.View.VideoPlayer.prototype.isModalOpaque = true;
 Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';
 
 /**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolPlay = '&#9654;';
+
+/**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolPause = '&#10074;&#10074;';
+
+/**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolStop = '&#9632;';
+
+/**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolNext = '&#9650;';
+
+/**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolPrevious = '&#9660;';
+
+/**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = '&#9701;';
+
+/**
  * initialize video node
  */
 Gui.Window.View.VideoPlayer.prototype.init = function () {
 
     this.node = $('<div class="video-player-wrapper">');
     this.player = $('<video preload="none" class="normal-size">');
-    this.controls = $('<div class="html5-player-controls show">');
+    this.controls = $('<div class="html5-player-controls show" data-animate="opacity">');
 
     this.initPlayer();
 };
@@ -50,6 +80,10 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
     this.node.toggleClass('collapsed expand');
 };
 
+/**
+ * initialize player
+ * @returns {Gui.Window.View.VideoPlayer}
+ */
 Gui.Window.View.VideoPlayer.prototype.initPlayer = function () {
 
     this.player.appendTo(this.node);
@@ -65,6 +99,7 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
 
     this.addControlButtons();
     this.controls.appendTo(this.node);
+    this.addThrobber();
 
     return this;
 };
@@ -74,11 +109,16 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
-    this.ctrlPlay = $('<div class="play">').appendTo(this.controls);
+    this.ctrlPlay = $('<div class="play">' + this.symbolPlay + '</div>').appendTo(this.controls);
 
-    this.ctrlStop = $('<div class="stop">').appendTo(this.controls);
+    this.ctrlStop = $('<div class="stop">' + this.symbolStop + '</div>').appendTo(this.controls);
 
-    this.ctrlFullScreen = $('<div class="toggle-fullScreen">').appendTo(this.controls);
+    this.ctrlFullScreen = $('<div class="toggle-fullScreen">' + this.symbolFullscreen + '</div>').appendTo(this.controls);
+
+    if (this.data.isTv) {
+        this.ctrlChannelUp = $('<div class="channel-up">' + this.symbolNext + '</div>').appendTo(this.controls);
+        this.ctrlChannelDown = $('<div class="channel-down">' + this.symbolPrevious + '</div>').appendTo(this.controls);
+    }
 };
 
 /**
@@ -86,7 +126,33 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
 
-    this.controls.toggleClass('show hide');
+    var me = this;
+
+    this.controls.toggleClass('show');
+
+    if (this.controls.hasClass('show')) {
+
+        setTimeout(function () {
+            me.controls.toggleClass('show');
+        }, 5000);
+    }
+};
+
+/**
+ * add throbber
+ */
+Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
+
+    this.throbber = $('<div style="background: url(' + VDRest.image.getThrobber() + ')" class="throbber">');
+    this.throbber.appendTo(this.node);
+};
+
+/**
+ * toggle throbber
+ */
+Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
+
+    this.throbber.toggleClass('show');
 };
 
 /**
@@ -104,6 +170,9 @@ Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
     return this;
 };
 
+/**
+ * center video
+ */
 Gui.Window.View.VideoPlayer.prototype.setPosition = function () {
 
     var me = this;

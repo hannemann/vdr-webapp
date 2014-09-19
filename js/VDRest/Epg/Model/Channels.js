@@ -63,3 +63,36 @@ VDRest.Epg.Model.Channels.prototype.initChannels = function () {
         "callback" : $.proxy(this.processCollection, this)
     });
 };
+
+/**
+ * retrieve the next channel (channel +)
+ * @param {VDRest.Epg.Model.Channels.Channel} channel
+ * @returns {VDRest.Epg.Model.Channels.Channel|Boolean}
+ */
+VDRest.Epg.Model.Channels.prototype.getNextChannel = function (channel) {
+
+    var i= 0, l = this.collection.length;
+
+    for (i;i<l;i++) {
+        if (this.collection[i] == channel) {
+            return this.collection[i+1];
+        }
+    }
+    return false;
+};
+/**
+ * retrieve previous channel (channel -)
+ * @param {VDRest.Epg.Model.Channels.Channel} channel
+ * @returns {VDRest.Epg.Model.Channels.Channel|Boolean}
+ */
+VDRest.Epg.Model.Channels.prototype.getPreviousChannel = function (channel) {
+
+    var i= 0, l = this.collection.length;
+
+    for (i;i<l;i++) {
+        if (this.collection[i] == channel) {
+            return this.collection[i-1];
+        }
+    }
+    return false;
+};

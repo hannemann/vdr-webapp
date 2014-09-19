@@ -266,6 +266,29 @@ VDRest.Epg.Model.Channels.Channel.prototype.getResource = function () {
 };
 
 /**
+ * retrieve streamurl
+ * @returns {string}
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.getStreamUrl = function () {
+
+    var streamdevParams = [];
+
+    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
+    if (VDRest.config.getItem('useHtmlPlayer')) {
+        streamdevParams.push('TYPE=webm');
+    }
+
+    this.data.streamUrl = 'http://'
+        + VDRest.config.getItem('host')
+        + ':'
+        + VDRest.config.getItem('streamdevPort')
+        + '/' + streamdevParams.join(';') + '/'
+        + this.data.stream;
+
+    return this.data.streamUrl;
+};
+
+/**
  * callback
  */
 VDRest.Epg.Model.Channels.Channel.prototype.afterCollectionLoaded = function () {
