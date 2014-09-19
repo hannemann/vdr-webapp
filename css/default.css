@@ -143,3 +143,9 @@ ul {
 .epg-search-view .top-tipp:before {
     right: 20px;
 }
+.throbber {
+    display: none;
+}
+.throbber.show {
+    display: block;
+}

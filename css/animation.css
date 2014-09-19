@@ -134,7 +134,7 @@
 }
 
 /* throbber */
-#throbber {
+.throbber.show {
     animation: animateThrobber 1.2s steps(12) infinite;
     -webkit-animation: animateThrobber 1.2s steps(12) infinite;
 }

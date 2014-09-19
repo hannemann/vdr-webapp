@@ -43,10 +43,9 @@
     font-family: Source Sans ProBold, sans-serif;
 }
 
-#menubar #throbber {
+#menubar .throbber {
     float: right;
     margin: 4px 0;
-    display: none;
     width: 32px;
     height: 32px;
 }

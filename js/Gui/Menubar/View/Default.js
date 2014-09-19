@@ -75,7 +75,7 @@ Gui.Menubar.View.Default.prototype.getHeader = function () {
  */
 Gui.Menubar.View.Default.prototype.addThrobber = function () {
 
-    this.throbber = $('<div style="background: url(' + VDRest.image.getThrobber() + ')" id="throbber">')
+    this.throbber = $('<div style="background: url(' + VDRest.image.getThrobber() + ')" class="throbber">')
         .appendTo(this.node);
 
     return this;
