@@ -137,7 +137,8 @@ Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
             "payload" : {
                 "type" : "VideoPlayer",
                 "data" : {
-                    "url" : this.streamUrl
+                    "url" : this.streamUrl,
+                    "recording" : this.data
                 }
             }
         });

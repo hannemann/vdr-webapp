@@ -54,7 +54,21 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
+    var me = this;
+
     $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
+
+    this.view.node.swipe({
+        "swipeStatus" : function (event, phase, direction, distance, duration, fingers) {
+            if ("up" === direction) {
+                me.setVolume('increase');
+            }
+            if ("down" === direction) {
+                me.setVolume('decrease');
+            }
+        }
+    });
+
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
@@ -71,12 +85,27 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
 
     $(window).off('orientationchange.'+this.keyInCache);
+    this.view.node.swipe('destroy');
     $(this.view.controls).off('click');
     $(this.view.stop).off('click');
     if (this.data.isTv) {
         this.view.ctrlChannelUp.off('click');
         this.view.ctrlChannelDown.off('click');
     }
+};
+
+Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
+
+    var video = this.getVideo(), vol = video.volume, value = 0.02;
+
+    if ('increase' == action) {
+
+        video.volume = vol + value > 1 ? 1 : vol + value;
+    } else {
+
+        video.volume = vol - value < 0 ? 0 : vol - value;
+    }
+    this.view.setVolumeSliderHeight();
 };
 
 /**
@@ -92,7 +121,13 @@ Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function (force) {
 
-    var d = new Date(), src = this.data.channel.dataModel.getStreamUrl();
+    var d = new Date(), src;
+
+    if (this.data.channel) {
+        src = this.data.channel.dataModel.getStreamUrl();
+    } else if (this.data.recording) {
+        src = this.data.url;
+    }
 
     if (!force && this.view.controls.hasClass('hide')) {
         return;

@@ -115,10 +115,35 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
     this.ctrlFullScreen = $('<div class="toggle-fullScreen">' + this.symbolFullscreen + '</div>').appendTo(this.controls);
 
+    this.ctrlVolume = $('<div class="volume">').appendTo(this.controls);
+    this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
+    this.setVolumeSliderHeight();
+
     if (this.data.isTv) {
         this.ctrlChannelUp = $('<div class="channel-up">' + this.symbolNext + '</div>').appendTo(this.controls);
         this.ctrlChannelDown = $('<div class="channel-down">' + this.symbolPrevious + '</div>').appendTo(this.controls);
     }
+};
+
+/**
+ * set height of volume slider
+ */
+Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
+
+    this.volumeSlider.css({
+        "top" : this.getVolumePercentage()
+    });
+};
+
+/**
+ * retrieve css top property fpr volumeslider
+ * @returns {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.getVolumePercentage = function () {
+
+    var percentage = 100 - (this.player.get(0).volume * 100);
+
+    return percentage == 0 ? '1px' : percentage.toString() + '%';
 };
 
 /**
@@ -127,13 +152,17 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
 
     var me = this;
+    if ("undefined" !== typeof this.controlsTimeout) {
+        clearTimeout(this.controlsTimeout);
+        this.controlsTimeout = undefined;
+    }
 
     this.controls.toggleClass('show');
 
     if (this.controls.hasClass('show')) {
 
-        setTimeout(function () {
-            me.controls.toggleClass('show');
+        me.controlsTimeout = setTimeout(function () {
+            me.controls.removeClass('show');
         }, 5000);
     }
 };
