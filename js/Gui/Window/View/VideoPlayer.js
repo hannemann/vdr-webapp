@@ -60,6 +60,11 @@ Gui.Window.View.VideoPlayer.prototype.symbolPrevious = '&#9660;';
 Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = '&#9701;';
 
 /**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '_';
+
+/**
  * initialize video node
  */
 Gui.Window.View.VideoPlayer.prototype.init = function () {
@@ -120,6 +125,9 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
     this.ctrlFullScreen = $('<div class="toggle-fullScreen">' + this.symbolFullscreen + '</div>').appendTo(this.controls);
 
+
+    this.ctrlMinimize = $('<div class="minimize">' + this.symbolMinimize + '</div>').appendTo(this.controls);
+
     this.ctrlVolume = $('<div class="volume">').appendTo(this.controls);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
     this.setVolumeSliderHeight();
@@ -129,6 +137,11 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
         this.ctrlChannelDown = $('<div class="channel-down">' + this.symbolPrevious + '</div>').appendTo(this.controls);
     }
 };
+
+Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
+
+    $('body').toggleClass('video-minimized');
+}
 
 /**
  * set height of volume slider

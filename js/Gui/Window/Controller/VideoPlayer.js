@@ -23,6 +23,7 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.eventPrefix = 'window.videoplayer';
     this.data.isTv = false;
     this.data.isVideo = false;
+    this.data.isMinimized = false;
 
     if ("undefined" !== typeof this.data.channel) {
 
@@ -74,6 +75,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
+    this.view.ctrlMinimize.on('click.'+this.keyInCache, $.proxy(this.toggleMinimize, this));
     if (this.data.isTv) {
         this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
         this.view.ctrlChannelDown.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
@@ -89,6 +91,9 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.node.swipe('destroy');
     $(this.view.controls).off('click');
     $(this.view.stop).off('click');
+    this.view.ctrlPlay.on('click');
+    this.view.ctrlFullScreen.on('click');
+    this.view.ctrlMinimize.on('click');
     if (this.data.isTv) {
         this.view.ctrlChannelUp.off('click');
         this.view.ctrlChannelDown.off('click');
@@ -115,6 +120,37 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
 Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function () {
 
     this[this.isPlaying ? 'pausePlayback' : 'startPlayback']();
+};
+
+/**
+ * toggle playback
+ */
+Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function () {
+
+    var me = this;
+
+    if (!this.data.isMinimized) {
+        this.cancelFullscreen();
+        this.destroyer = VDRest.app.destroyer.pop();
+        this.observeHash = VDRest.app.getLocationHash();
+        VDRest.app.observeHash.pop();
+        history.back();
+    } else {
+        VDRest.app.observe();
+        VDRest.app.setLocationHash(this.observeHash);
+        VDRest.app.destroyer.push(this.destroyer);
+        $(this.view.controls).trigger('click');
+    }
+    this.view.toggleMinimize();
+    this.data.isMinimized = !this.data.isMinimized;
+
+    if (this.data.isMinimized) {
+        setTimeout(function () {
+            me.view.node.one('click', function () {
+                me.toggleMinimize();
+            });
+        }, 2000);
+    }
 };
 
 /**
