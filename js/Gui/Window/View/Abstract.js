@@ -53,6 +53,11 @@ Gui.Window.View.Abstract.prototype.render = function () {
         this.addModalOverlay(VDRest.app.getModule('Gui.Viewport').getView('Default'));
     }
 
+    if (this.modalExtraClasses) {
+
+        this.modalOverlay.addClass(this.modalExtraClasses);
+    }
+
     VDRest.Abstract.View.prototype.render.call(this);
 };
 

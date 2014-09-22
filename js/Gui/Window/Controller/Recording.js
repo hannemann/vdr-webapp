@@ -115,7 +115,7 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
  */
 Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
-    var streamdevParams = [];
+    var streamdevParams = [], windowModule = VDRest.app.getModule('Gui.Window');
 
     streamdevParams.push(VDRest.config.getItem('streamdevParams'));
     if (VDRest.config.getItem('useHtmlPlayer')) {
@@ -132,16 +132,20 @@ Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
     if (VDRest.config.getItem('useHtmlPlayer')) {
 
-        $.event.trigger({
-            "type" : "window.request",
-            "payload" : {
-                "type" : "VideoPlayer",
-                "data" : {
-                    "url" : this.streamUrl,
-                    "recording" : this.data
+        if (windowModule.hasVideoPlayer()) {
+            windowModule.getVideoPlayer().changeSrc(this);
+        } else {
+            $.event.trigger({
+                "type" : "window.request",
+                "payload" : {
+                    "type" : "VideoPlayer",
+                    "data" : {
+                        "url" : this.streamUrl,
+                        "recording" : this.data
+                    }
                 }
-            }
-        });
+            });
+        }
     } else {
         window.location.href = this.streamUrl;
     }

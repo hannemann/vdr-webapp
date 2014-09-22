@@ -19,6 +19,7 @@ Gui.Window.Controller.VideoPlayer.prototype.cacheKey = 'url';
  */
 Gui.Window.Controller.VideoPlayer.prototype.init = function () {
 
+    this.module.setVideoPlayer(this);
     this.eventPrefix = 'window.videoplayer';
     this.data.isTv = false;
     this.data.isVideo = false;
@@ -199,11 +200,25 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
-    var channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels'),
-        getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous',
-        me = this;
+    var channels, getter, me = this;
 
-    this.data.channel.dataModel = channels['get' + getter + 'Channel'](this.data.channel.dataModel);
+    if (e instanceof VDRest.Epg.Model.Channels.Channel) {
+
+        this.data.channel.dataModel = e;
+
+    } else if (e instanceof Gui.Window.Controller.Recording) {
+
+        this.data.recording = e.data;
+        this.data.channel = undefined;
+        this.data.url = e.streamUrl;
+
+    } else if (e instanceof jQuery.Event) {
+
+        channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
+        getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
+        this.data.recording = undefined;
+        this.data.channel.dataModel = channels['get' + getter + 'Channel'](this.data.channel.dataModel);
+    }
 
     this.getVideo().pause();
     this.getVideo().src = false;
@@ -269,4 +284,5 @@ Gui.Window.Controller.VideoPlayer.prototype.destructView = function () {
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
+    this.module.unsetVideoPlayer();
 };

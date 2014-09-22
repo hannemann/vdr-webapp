@@ -71,7 +71,7 @@
 
 .html5-player-controls .stop,
 .html5-player-controls .play,
-.html5-player-controls .channel-down {
+.html5-player-controls .toggle-fullScreen {
     bottom: 15px;
 }
 .html5-player-controls .play {
@@ -87,23 +87,26 @@
 }
 
 .html5-player-controls .toggle-fullScreen {
-    top: 15px;
-    right: 10px;
+    left: 117px;
 }
 
 .html5-player-controls .channel-up,
 .html5-player-controls .channel-down {
-    right: 10px;
+    left: 10px;
 }
 
 .html5-player-controls .channel-up {
-    bottom: 74px;
+    top: 15px;
+}
+
+.html5-player-controls .channel-down {
+    top: 69px;
 }
 
 .html5-player-controls .volume {
     bottom: 20%;
     top: 20%;
-    right: 30%;
+    right: 30px;
     width: 10px;
     height: auto;
 }
@@ -116,4 +119,30 @@
     height: auto;
     width: auto;
     border: none;
+}
+
+.video-epg-view .modal-video {
+    height: auto;
+    width: auto;
+    bottom: auto;
+    right: auto;
+    display: block;
+    left: 50%;
+}
+
+.video-epg-view .video-player-wrapper {
+    height: auto;
+    margin: 0;
+    top: 0;
+    position: relative;
+}
+
+.video-epg-view .video-player-wrapper video {
+    height: 48px;
+    width: auto;
+    display: block;
+}
+
+.video-epg-view .html5-player-controls {
+    display: none;
 }

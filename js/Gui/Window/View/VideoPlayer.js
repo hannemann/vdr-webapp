@@ -20,6 +20,11 @@ Gui.Window.View.VideoPlayer.prototype.isModal = true;
 Gui.Window.View.VideoPlayer.prototype.isModalOpaque = true;
 
 /**
+ * @type {boolean}
+ */
+Gui.Window.View.VideoPlayer.prototype.modalExtraClasses = "modal-video";
+
+/**
  * @type {string}
  */
 Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';

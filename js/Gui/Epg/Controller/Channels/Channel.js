@@ -111,7 +111,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
-    var streamdevParams = [];
+    var streamdevParams = [], windowModule = VDRest.app.getModule('Gui.Window');
 
     if (!this.isMuted) {
 
@@ -137,16 +137,21 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
                 if (VDRest.config.getItem('useHtmlPlayer')) {
 
-                    $.event.trigger({
-                        "type" : "window.request",
-                        "payload" : {
-                            "type" : "VideoPlayer",
-                            "data" : {
-                                "url" : this.streamUrl,
-                                "channel" : this.data
+                    if (windowModule.hasVideoPlayer()) {
+                        windowModule.getVideoPlayer().changeSrc(this.data.dataModel);
+                    } else {
+                        $.event.trigger({
+                            "type" : "window.request",
+                            "payload" : {
+                                "type" : "VideoPlayer",
+                                "data" : {
+                                    "url" : this.streamUrl,
+                                    "channel" : this.data
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+
                 } else {
                     window.location.href = this.streamUrl;
                 }
