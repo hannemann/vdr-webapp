@@ -28,3 +28,28 @@ Gui.Epg.View.Broadcasts.prototype.render = function () {
 
     this.wrapper.appendTo(this.parentView.node);
 };
+
+/**
+ * retrieve available timespan for events according to chosen type
+ * depends on pixel per seconds value
+ *
+ * @param type
+ * @returns {number}
+ */
+Gui.Epg.View.Broadcasts.prototype.getAvailableTimespan = function (type) {
+
+    var pps = VDRest.config.getItem('pixelPerSecond');
+
+    switch (type) {
+        case "seconds":
+            return this.wrapper.innerWidth() / (pps);
+            break;
+        case "minutes":
+            return this.wrapper.innerWidth() / (pps * 60);
+            break;
+        case "hours":
+        default:
+            return this.wrapper.innerWidth() / (pps * 60 * 60);
+    }
+
+};
