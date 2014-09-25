@@ -71,7 +71,10 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
 
     this.node = $('<div class="video-player-wrapper">');
     this.player = $('<video preload="none" class="normal-size">');
+    this.video = this.player.get(0);
     this.controls = $('<div class="html5-player-controls show" data-animate="opacity">');
+    this.player.prop('crossOrigin', 'anonymous');
+    this.startTime = 0;
 
     this.initPlayer();
 };
@@ -110,6 +113,7 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
     this.addControlButtons();
     this.controls.appendTo(this.node);
     this.addThrobber();
+    this.addProgress();
 
     return this;
 };
@@ -141,7 +145,7 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
 
     $('body').toggleClass('video-minimized');
-}
+};
 
 /**
  * set height of volume slider
@@ -200,6 +204,44 @@ Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
 Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
 
     this.throbber.toggleClass('show');
+};
+
+/**
+ * add timer
+ */
+Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
+
+    if ("undefined" != typeof this.progress) {
+        this.progress.remove();
+        delete this.progress;
+    }
+
+    this.progress = $('<div class="progress">' + this.data.progress + '</div>');
+    this.progress.appendTo(this.controls);
+};
+
+/**
+ * update timer
+ */
+Gui.Window.View.VideoPlayer.prototype.updateProgress = function () {
+
+    this.progress.text(this.getProgress());
+};
+
+/**
+ * convert time to string
+ * @param {float} [time]
+ * @returns {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
+
+    time = time || this.video.currentTime + this.startTime;
+
+    var minutes = this.helper().pad(Math.floor(time / 60), 2),
+        seconds = this.helper().pad(parseInt(time - minutes * 60), 2),
+        hours = this.helper().pad(Math.floor(time / 3600), 2);
+
+    return hours + ':' + minutes + ':' + seconds;
 };
 
 /**

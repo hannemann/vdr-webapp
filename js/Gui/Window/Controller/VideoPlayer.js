@@ -24,6 +24,8 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.data.isTv = false;
     this.data.isVideo = false;
     this.data.isMinimized = false;
+    this.currentTime = 0;
+    this.data.progress = '00:00:00';
 
     if ("undefined" !== typeof this.data.channel) {
 
@@ -76,6 +78,9 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
     this.view.ctrlMinimize.on('click.'+this.keyInCache, $.proxy(this.toggleMinimize, this));
+
+    this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
+
     if (this.data.isTv) {
         this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
         this.view.ctrlChannelDown.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
@@ -94,6 +99,7 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.ctrlPlay.on('click');
     this.view.ctrlFullScreen.on('click');
     this.view.ctrlMinimize.on('click');
+    this.view.player.off('timeupdate');
     if (this.data.isTv) {
         this.view.ctrlChannelUp.off('click');
         this.view.ctrlChannelDown.off('click');
@@ -117,7 +123,13 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
 /**
  * toggle playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function () {
+Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
+
+    if (!this.view.controls.hasClass('show') || this.data.channel) {
+        return;
+    }
+
+    e.stopPropagation();
 
     this[this.isPlaying ? 'pausePlayback' : 'startPlayback']();
 };
@@ -128,6 +140,10 @@ Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function () {
 Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function () {
 
     var me = this;
+
+    if (!this.view.controls.hasClass('show') && !this.data.isMinimized) {
+        return;
+    }
 
     if (!this.data.isMinimized) {
         this.cancelFullscreen();
@@ -156,7 +172,7 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function () {
 /**
  * start playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function (force) {
+Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 
     var d = new Date(), src;
 
@@ -164,15 +180,16 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function (force) {
         src = this.data.channel.dataModel.getStreamUrl();
     } else if (this.data.recording) {
         src = this.data.url;
-    }
-
-    if (!force && this.view.controls.hasClass('hide')) {
-        return;
+        if (this.currentTime > 0) {
+            src += '?pos=time.' + this.currentTime;
+            this.view.startTime = this.currentTime;
+        }
     }
 
     this.isPlaying = true;
 
     this.view.toggleThrobber();
+    this.view.toggleControls();
 
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
     this.getVideo().src = src;
@@ -189,21 +206,33 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function (force) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
 
-    this.isPlaying = false;
+    var video = this.getVideo();
 
-    this.getVideo().pause();
-    this.getVideo().src = false;
+    if (this.data.recording) {
+        this.currentTime = Math.floor(this.currentTime + this.getVideo().currentTime);
+    }
+
+    video.width = video.offsetWidth;
+    video.height = video.offsetHeight;
+
+    video.poster = this.module.getHelper('VideoPlayer').captureFrame(video);
+    this.isPlaying = false;
+    video.pause();
+    video.src = false;
     this.view.ctrlPlay.html(this.view.symbolPlay).removeClass('pause');
 };
 
 /**
  * stop playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (force) {
+Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
 
-    if (!force && this.view.controls.hasClass('hide')) {
+    if (!this.view.controls.hasClass('show')) {
         return;
     }
+
+    e.stopPropagation();
+
     history.back();
 };
 
@@ -212,6 +241,10 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (force) {
  * @param {jQuery.Event} [e]
  */
 Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
+
+    if (!this.view.controls.hasClass('show')) {
+        return;
+    }
 
     var isFullscreen = false;
 
@@ -236,7 +269,13 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
-    var channels, getter, me = this;
+    var channels, getter, me = this, video = this.getVideo();
+
+    if (!this.view.controls.hasClass('show')) {
+        return;
+    }
+
+    this.currentTime = undefined;
 
     if (e instanceof VDRest.Epg.Model.Channels.Channel) {
 
@@ -256,8 +295,11 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.data.channel.dataModel = channels['get' + getter + 'Channel'](this.data.channel.dataModel);
     }
 
-    this.getVideo().pause();
-    this.getVideo().src = false;
+    video.pause();
+    video.src = false;
+
+    video.width = '';
+    video.height = '';
 
     setTimeout(function () {
         me.startPlayback(true);
