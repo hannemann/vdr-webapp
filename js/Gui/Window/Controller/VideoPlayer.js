@@ -212,9 +212,6 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
         this.currentTime = Math.floor(this.currentTime + this.getVideo().currentTime);
     }
 
-    video.width = video.offsetWidth;
-    video.height = video.offsetHeight;
-
     video.poster = this.module.getHelper('VideoPlayer').captureFrame(video);
     this.isPlaying = false;
     video.pause();
@@ -299,9 +296,6 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     video.pause();
     video.src = false;
     this.view.addTitle();
-
-    video.width = '';
-    video.height = '';
 
     setTimeout(function () {
         me.startPlayback(true);
