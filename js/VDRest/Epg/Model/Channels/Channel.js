@@ -236,16 +236,20 @@ VDRest.Epg.Model.Channels.Channel.prototype.getAllRemaining = function () {
 
 /**
  * fetch all remaining events
+ * @param {Boolean} [async]
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getOneDay = function () {
+VDRest.Epg.Model.Channels.Channel.prototype.getOneDay = function (async) {
 
     var from = this.collection.length > 0
         ? this.collection[this.collection.length-1].data.end_date
         : this.getFromDate();
 
+    async = "undefined" === typeof async ? true : async;
+
     this.getResource()
         .setUrl(from, new Date(from.getTime() + 1000 * 60 * 60 * 24))
         .load({
+            "async" : async,
             "url" : 'broadcastsHourly',
             "callback" : $.proxy(this.processCollection, this)
         });
@@ -286,6 +290,24 @@ VDRest.Epg.Model.Channels.Channel.prototype.getStreamUrl = function () {
         + this.data.stream;
 
     return this.data.streamUrl;
+};
+
+VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function () {
+
+    var i = 0, l = this.collection.length, now = new Date().getTime()/1000, cur;
+
+    if (this.collection[l-1].getData('end_time') <= now) {
+
+        this.getOneDay(false);
+    }
+
+    for (i;i<l;i++) {
+        cur = this.collection[i];
+
+        if (cur.getData('start_time') <= now && cur.getData('end_time') >= now) {
+            return cur;
+        }
+    }
 };
 
 /**

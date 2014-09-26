@@ -63,6 +63,7 @@ Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = '&#9701;';
  * @type {string}
  */
 Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '_';
+Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#9881;';
 
 /**
  * initialize video node
@@ -91,6 +92,7 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
     this.setPosition();
 
     this.node.toggleClass('collapsed expand');
+    this.player.attr('poster', this.module.getHelper('VideoPlayer').defaultPoster(this.video));
 };
 
 /**
@@ -114,6 +116,7 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
     this.controls.appendTo(this.node);
     this.addThrobber();
     this.addProgress();
+    this.addTitle();
 
     return this;
 };
@@ -216,7 +219,7 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
         delete this.progress;
     }
 
-    this.progress = $('<div class="progress">' + this.data.progress + '</div>');
+    this.progress = $('<div class="progress info">' + this.data.progress + '</div>');
     this.progress.appendTo(this.controls);
 };
 
@@ -239,9 +242,61 @@ Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
 
     var minutes = this.helper().pad(Math.floor(time / 60), 2),
         seconds = this.helper().pad(parseInt(time - minutes * 60), 2),
-        hours = this.helper().pad(Math.floor(time / 3600), 2);
+        hours = Math.floor(time / 3600);
 
     return hours + ':' + minutes + ':' + seconds;
+};
+
+Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
+
+    var text = [], broadcast, now, me = this, end;
+
+    if (this.title) {
+        this.title.remove();
+    }
+    if (this.subTitle) {
+        this.subTitle.remove();
+    }
+
+    this.title = $('<div class="title info">');
+
+    if (this.data.isVideo) {
+        text.push(this.title.text(this.data.recording.resource.event_title));
+        if ('' !== this.data.recording.resource.event_short_text) {
+            this.subTitle = $('<div class="short-text info">');
+            text.push(
+                this.subTitle.text(this.data.recording.resource.event_short_text)
+            );
+        }
+    } else {
+
+        if ("undefined" != typeof this.changeTitleTimeout) {
+            clearTimeout(this.changeTitleTimeout);
+        }
+
+        broadcast = this.data.channel.dataModel.getCurrentBroadcast();
+        text.push(
+            this.title.text(
+                this.data.channel.dataModel.getData('name')
+                + ' - '
+                + broadcast.getData('title')
+            )
+        );
+        if ('' !== broadcast.getData('short_text')) {
+            this.subTitle = $('<div class="short-text info">');
+            text.push(
+                this.subTitle.text(broadcast.getData('short_text'))
+            );
+        }
+        now = new Date().getTime()/1000;
+        end = (broadcast.getData('end_time') + 10 - parseInt(now, 10)) * 1000;
+
+        this.changeTitleTimeout = setTimeout(function () {
+            me.addTitle();
+        }, end);
+    }
+
+    this.controls.append(text);
 };
 
 /**
@@ -281,6 +336,10 @@ Gui.Window.View.VideoPlayer.prototype.setPosition = function () {
 Gui.Window.View.VideoPlayer.prototype.destruct = function () {
 
     var me = this, player = this.player.get(0);
+
+    if ("undefined" != typeof this.changeTitleTimeout) {
+        clearTimeout(this.changeTitleTimeout);
+    }
 
     player.pause();
     this.player.prop('src', false);

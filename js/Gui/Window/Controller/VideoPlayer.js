@@ -25,7 +25,7 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.data.isVideo = false;
     this.data.isMinimized = false;
     this.currentTime = 0;
-    this.data.progress = '00:00:00';
+    this.data.progress = '0:00:00';
 
     if ("undefined" !== typeof this.data.channel) {
 
@@ -125,9 +125,9 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
 
-    if (!this.view.controls.hasClass('show') || this.data.channel) {
-        return;
-    }
+    if (!this.view.controls.hasClass('show')) return;
+
+    if (this.data.channel && this.isPlaying) return;
 
     e.stopPropagation();
 
@@ -279,6 +279,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
     if (e instanceof VDRest.Epg.Model.Channels.Channel) {
 
+        this.data.recording = undefined;
         this.data.channel.dataModel = e;
 
     } else if (e instanceof Gui.Window.Controller.Recording) {
@@ -297,6 +298,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
     video.pause();
     video.src = false;
+    this.view.addTitle();
 
     video.width = '';
     video.height = '';

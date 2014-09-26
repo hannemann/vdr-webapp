@@ -110,11 +110,24 @@
     top: 69px;
 }
 
-.html5-player-controls .progress {
+.html5-player-controls .info {
     z-index: 0;
-    width: 100%;
     border: none;
     background: none;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: auto;
+}
+
+.html5-player-controls .title {
+    top: 40px;
+    font-size: 16px;
+}
+
+.html5-player-controls .short-text {
+    top: 60px;
+    font-size: 12px;
 }
 
 .html5-player-controls .volume {
