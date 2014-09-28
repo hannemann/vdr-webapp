@@ -43,10 +43,8 @@ Gui.Epg.View.Broadcasts.prototype.getAvailableTimespan = function (type) {
     switch (type) {
         case "seconds":
             return this.wrapper.innerWidth() / (pps);
-            break;
         case "minutes":
             return this.wrapper.innerWidth() / (pps * 60);
-            break;
         case "hours":
         default:
             return this.wrapper.innerWidth() / (pps * 60 * 60);
