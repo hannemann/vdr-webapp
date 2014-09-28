@@ -85,7 +85,7 @@ Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = functio
             "data" : {
                 "node" : this.view,
                 "number" : this.data.number,
-                "resource" : this.dataModel.data
+                "recording" : this.dataModel
             }
         }
     });

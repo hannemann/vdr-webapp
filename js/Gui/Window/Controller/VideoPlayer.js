@@ -108,6 +108,10 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
 
+    if (!this.view.controls.hasClass('show')) {
+        return;
+    }
+
     e.stopPropagation();
     e.preventDefault();
     $(document).one('mouseup', $.proxy(this.volumeUp, this));
@@ -181,6 +185,10 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
 
+    if (!this.view.controls.hasClass('show')) {
+        return;
+    }
+
     e.stopPropagation();
     e.preventDefault();
 
@@ -243,6 +251,8 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeMove = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setTime = function (action, value) {
 
+    var recording = this.getData('recording');
+
     value = value || 1;
     if (action === 'increase') {
         this.currentTime +=value;
@@ -252,8 +262,8 @@ Gui.Window.Controller.VideoPlayer.prototype.setTime = function (action, value) {
     if (this.currentTime < 0) {
         this.currentTime = 0;
     }
-    if (this.currentTime > this.data.recording.resource.duration) {
-        this.currentTime = this.data.recording.resource.duration;
+    if (this.currentTime > recording.getData('duration')) {
+        this.currentTime = recording.getData('duration');
     }
     this.view.startTime = this.currentTime;
     this.view.updateProgress(this.currentTime);
@@ -342,9 +352,9 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
     var d = new Date(), src, video = this.getVideo();
 
     if (this.data.channel) {
-        src = this.data.channel.dataModel.getStreamUrl();
+        src = this.data.channel.getStreamUrl();
     } else if (this.data.recording) {
-        src = this.data.url;
+        src = this.data.recording.getStreamUrl();
         if (this.currentTime > 0) {
             src += '?pos=time.' + this.currentTime;
             this.view.startTime = this.currentTime;
@@ -437,7 +447,10 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
     var channels, getter, me = this, video = this.getVideo();
 
-    if (!this.view.controls.hasClass('show')) {
+    if (
+        !$('body').hasClass('video-minimized')
+        && !this.view.controls.hasClass('show')
+    ) {
         return;
     }
 
@@ -446,20 +459,19 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     if (e instanceof VDRest.Epg.Model.Channels.Channel) {
 
         this.data.recording = undefined;
-        this.data.channel.dataModel = e;
+        this.data.channel = e;
 
-    } else if (e instanceof Gui.Window.Controller.Recording) {
+    } else if (e instanceof VDRest.Recordings.Model.List.Recording) {
 
-        this.data.recording = e.data;
+        this.data.recording = e;
         this.data.channel = undefined;
-        this.data.url = e.streamUrl;
 
     } else if (e instanceof jQuery.Event) {
 
         channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
         getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
         this.data.recording = undefined;
-        this.data.channel.dataModel = channels['get' + getter + 'Channel'](this.data.channel.dataModel);
+        this.data.channel = channels['get' + getter + 'Channel'](this.data.channel);
     }
 
     video.pause();

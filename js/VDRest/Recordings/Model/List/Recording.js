@@ -46,3 +46,25 @@ VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
     }
 
 };
+
+/**
+ * retrieve stream url
+ * @returns {string}
+ */
+VDRest.Recordings.Model.List.Recording.prototype.getStreamUrl = function () {
+
+    var streamdevParams = [];
+
+    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
+    if (VDRest.config.getItem('useHtmlPlayer')) {
+        streamdevParams.push('TYPE=webm');
+    }
+
+    return 'http://'
+    + VDRest.config.getItem('streamdevHost')
+    + ':'
+    + VDRest.config.getItem('streamdevPort')
+    + '/' + streamdevParams.join(';') + '/'
+    + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
+    + '.rec.ts';
+};

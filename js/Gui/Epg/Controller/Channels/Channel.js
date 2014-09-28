@@ -111,7 +111,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
-    var streamdevParams = [], windowModule = VDRest.app.getModule('Gui.Window');
+    var windowModule = VDRest.app.getModule('Gui.Window'),
+        channel = this.data.dataModel;
 
     if (!this.isMuted) {
 
@@ -123,39 +124,26 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
             if (true === VDRest.config.getItem('streamdevActive')) {
 
-                streamdevParams.push(VDRest.config.getItem('streamdevParams'));
-                if (VDRest.config.getItem('useHtmlPlayer')) {
-                    streamdevParams.push('TYPE=webm');
-                }
-
-                this.streamUrl = 'http://'
-                + VDRest.config.getItem('host')
-                + ':'
-                + VDRest.config.getItem('streamdevPort')
-                + '/' + streamdevParams.join(';') + '/'
-                + this.data.dataModel.data.stream;
-
                 if (VDRest.config.getItem('useHtmlPlayer')) {
 
                     if (windowModule.hasVideoPlayer()) {
-                        windowModule.getVideoPlayer().changeSrc(this.data.dataModel);
+                        windowModule.getVideoPlayer().changeSrc(channel);
                     } else {
                         $.event.trigger({
                             "type" : "window.request",
                             "payload" : {
                                 "type" : "VideoPlayer",
                                 "data" : {
-                                    "url" : this.streamUrl,
-                                    "channel" : this.data
+                                    "channel" : channel
                                 }
                             }
                         });
                     }
 
                 } else {
-                    window.location.href = this.streamUrl;
+                    window.location.href = channel.getStreamUrl();
                 }
             }
-        }, this), 1000);
+        }, this), 500);
     }
 };

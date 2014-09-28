@@ -130,18 +130,28 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
     var volume;
 
-    this.ctrlPlay = $('<div class="play">' + this.symbolPlay + '</div>').appendTo(this.controls);
+    this.ctrlPlay = $(
+        '<div class="play">' + this.symbolPlay + '</div>'
+    ).appendTo(this.controls);
 
-    this.ctrlStop = $('<div class="stop">' + this.symbolStop + '</div>').appendTo(this.controls);
+    this.ctrlStop = $(
+        '<div class="stop">' + this.symbolStop + '</div>'
+    ).appendTo(this.controls);
 
-    this.ctrlFullScreen = $('<div class="toggle-fullScreen">' + this.symbolFullscreen + '</div>').appendTo(this.controls);
+    this.ctrlFullScreen = $(
+        '<div class="toggle-fullScreen">' + this.symbolFullscreen + '</div>'
+    ).appendTo(this.controls);
 
 
-    this.ctrlMinimize = $('<div class="minimize">' + this.symbolMinimize + '</div>').appendTo(this.controls);
+    this.ctrlMinimize = $(
+        '<div class="minimize">' + this.symbolMinimize + '</div>'
+    ).appendTo(this.controls);
 
     this.ctrlVolume = $('<div class="slider volume">').appendTo(this.controls);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
-    this.volumeIndicator = $('<div class="info volume-indicator">').hide().appendTo(this.controls);
+    this.volumeIndicator = $(
+        '<div class="info volume-indicator">'
+    ).hide().appendTo(this.controls);
 
     this.ctrlTimeline = $('<div class="slider timeline">').appendTo(this.controls);
     this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
@@ -153,8 +163,12 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
     this.setTimelineSliderWidth();
 
     if (this.data.isTv) {
-        this.ctrlChannelUp = $('<div class="channel-up">' + this.symbolNext + '</div>').appendTo(this.controls);
-        this.ctrlChannelDown = $('<div class="channel-down">' + this.symbolPrevious + '</div>').appendTo(this.controls);
+        this.ctrlChannelUp = $(
+            '<div class="channel-up">' + this.symbolNext + '</div>'
+        ).appendTo(this.controls);
+        this.ctrlChannelDown = $(
+            '<div class="channel-down">' + this.symbolPrevious + '</div>'
+        ).appendTo(this.controls);
     }
 };
 
@@ -238,7 +252,11 @@ Gui.Window.View.VideoPlayer.prototype.stopHideControls = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
 
-    this.throbber = $('<div style="background: url(' + VDRest.image.getThrobber() + ')" class="throbber">');
+    this.throbber = $(
+        '<div style="background: url('
+        + VDRest.image.getThrobber()
+        + ')" class="throbber">'
+    );
     this.throbber.appendTo(this.node);
 };
 
@@ -269,7 +287,11 @@ Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
     var percentage = 100 - (this.player.get(0).volume * 100);
 
     if (this.data.isVideo) {
-        percentage = 100 - (100 * (this.startTime + this.video.currentTime) / this.data.recording.resource.duration);
+        percentage = 100 - (
+            100 * (
+                this.startTime + this.video.currentTime
+            ) / this.getData('recording').getData('duration')
+        );
     }
 
     return percentage <= 0 ? '1px' : percentage.toString() + '%';
@@ -322,7 +344,10 @@ Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
  */
 Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
-    var text = [], broadcast, now, me = this, end;
+    var text = [],
+        broadcast, now,
+        me = this, end,
+        recording = this.getData('recording');
 
     if (this.title) {
         this.title.remove();
@@ -334,11 +359,11 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
     this.title = $('<div class="title info">');
 
     if (this.data.isVideo) {
-        text.push(this.title.text(this.data.recording.resource.event_title));
-        if ('' !== this.data.recording.resource.event_short_text) {
+        text.push(this.title.text(recording.getData('event_title')));
+        if ('' !== recording.getData('event_short_text')) {
             this.subTitle = $('<div class="short-text info">');
             text.push(
-                this.subTitle.text(this.data.recording.resource.event_short_text)
+                this.subTitle.text(recording.getData('event_short_text'))
             );
         }
     } else {
@@ -347,10 +372,10 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
             clearTimeout(this.changeTitleTimeout);
         }
 
-        broadcast = this.data.channel.dataModel.getCurrentBroadcast();
+        broadcast = this.data.channel.getCurrentBroadcast();
         text.push(
             this.title.text(
-                this.data.channel.dataModel.getData('name')
+                this.data.channel.getData('name')
                 + ' - '
                 + broadcast.getData('title')
             )
@@ -362,7 +387,7 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
             );
         }
         now = new Date().getTime()/1000;
-        end = (broadcast.getData('end_time') + 10 - parseInt(now, 10)) * 1000;
+        end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
 
         this.changeTitleTimeout = setTimeout(function () {
             me.addTitle();

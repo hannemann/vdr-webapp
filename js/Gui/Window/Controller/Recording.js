@@ -19,14 +19,18 @@ Gui.Window.Controller.Recording.prototype.cacheKey = 'number';
  */
 Gui.Window.Controller.Recording.prototype.init = function () {
 
-    this.eventPrefix = 'window.recording' + this.data.number;
+    var recording = this.getData('recording');
 
-    this.view = this.module.getView('Recording', this.data);
+    this.eventPrefix = 'window.recording' + recording.getData('number');
+
+    this.view = this.module.getView('Recording', {
+        "number" : recording.getData('number')
+    });
 
     this.module.getViewModel('Recording', {
-        "number" : this.data.number,
+        "number" : recording.getData('number'),
         "view" : this.view,
-        "resource" : this.data.resource
+        "resource" : recording.getData()
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
@@ -77,26 +81,26 @@ Gui.Window.Controller.Recording.prototype.removeObserver = function () {
 Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
 
     var fields = e.payload,
-        target;
+        target, recording = this.getData('recording');
 
     if (fields.dirname.getValue() !== '') {
 
         target = fields.dirname.getValue() + '~' + fields.filename.getValue();
-        this.data.resource.newPath = fields.dirname.getValue();
+        recording.setData('newPath', fields.dirname.getValue());
 
     } else {
 
         target = fields.filename.getValue();
     }
 
-    this.data.resource.newFileName = fields.filename.getValue();
+    recording.setData('newFileName', fields.filename.getValue());
 
     VDRest.app.getModule('VDRest.Recordings')
         .getResource('List.Recording')
         .moveRecording({
             "source" : this.view.getFileName(),
             "target" : target,
-            "number" : this.data.number
+            "number" : recording.getData('number')
         });
 };
 
@@ -115,39 +119,26 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
  */
 Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
-    var streamdevParams = [], windowModule = VDRest.app.getModule('Gui.Window');
-
-    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
-    if (VDRest.config.getItem('useHtmlPlayer')) {
-        streamdevParams.push('TYPE=webm');
-    }
-
-    this.streamUrl = 'http://'
-    + VDRest.config.getItem('host')
-    + ':'
-    + VDRest.config.getItem('streamdevPort')
-    + '/' + streamdevParams.join(';') + '/'
-    + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
-    + '.rec.ts';
+    var windowModule = VDRest.app.getModule('Gui.Window'),
+        recording = this.getData('recording');
 
     if (VDRest.config.getItem('useHtmlPlayer')) {
 
         if (windowModule.hasVideoPlayer()) {
-            windowModule.getVideoPlayer().changeSrc(this);
+            windowModule.getVideoPlayer().changeSrc(recording);
         } else {
             $.event.trigger({
                 "type" : "window.request",
                 "payload" : {
                     "type" : "VideoPlayer",
                     "data" : {
-                        "url" : this.streamUrl,
-                        "recording" : this.data
+                        "recording" : recording
                     }
                 }
             });
         }
     } else {
-        window.location.href = this.streamUrl;
+        window.location.href = recording.getStreamUrl();
     }
 
 };
@@ -161,7 +152,8 @@ Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
             'List.Recording',
             this.keyInCache
         ),
-        view = VDRest.app.getModule('Gui.Recordings').getView('List.Recording', this.keyInCache);
+        view = VDRest.app.getModule('Gui.Recordings')
+            .getView('List.Recording', this.keyInCache);
 
     VDRest.app.getModule('VDRest.Recordings').cache.invalidateAllTypes(model);
 
@@ -178,18 +170,11 @@ Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
 Gui.Window.Controller.Recording.prototype.destructView = function () {
 
     var me = this;
-
-
-    if (VDRest.config.getItem('useHtmlPlayer')) {
-
-    }
-
-
-    // apply animation
-    this.view.node.toggleClass('collapse expand');
     // remove on animation end
     this.view.node.one(this.animationEndEvents, function () {
 
         Gui.Window.Controller.Abstract.prototype.destructView.call(me);
     });
+    // apply animation
+    this.view.node.toggleClass('collapse expand');
 };
