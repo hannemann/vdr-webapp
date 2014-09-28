@@ -139,13 +139,18 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
     this.ctrlMinimize = $('<div class="minimize">' + this.symbolMinimize + '</div>').appendTo(this.controls);
 
-    this.ctrlVolume = $('<div class="volume">').appendTo(this.controls);
+    this.ctrlVolume = $('<div class="slider volume">').appendTo(this.controls);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
+    this.volumeIndicator = $('<div class="info volume-indicator">').hide().appendTo(this.controls);
+
+    this.ctrlTimeline = $('<div class="slider timeline">').appendTo(this.controls);
+    this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
 
     volume = VDRest.config.getItem('html5VideoPlayerVol') || 1;
     this.video.volume = parseFloat(volume);
 
     this.setVolumeSliderHeight();
+    this.setTimelineSliderWidth();
 
     if (this.data.isTv) {
         this.ctrlChannelUp = $('<div class="channel-up">' + this.symbolNext + '</div>').appendTo(this.controls);
@@ -166,9 +171,17 @@ Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
 
+    var percentage = this.getVolumePercentage();
+
     this.volumeSlider.css({
-        "top" : this.getVolumePercentage()
+        "top" : percentage
     });
+    if (percentage === '1px') {
+        percentage = 0;
+    }
+    percentage = 100 - parseInt(percentage);
+
+    this.volumeIndicator.text(percentage.toString() + '%');
 };
 
 /**
@@ -179,7 +192,7 @@ Gui.Window.View.VideoPlayer.prototype.getVolumePercentage = function () {
 
     var percentage = 100 - (this.player.get(0).volume * 100);
 
-    return percentage == 0 ? '1px' : percentage.toString() + '%';
+    return percentage <= 0 ? '1px' : parseInt(percentage).toString() + '%';
 };
 
 /**
@@ -238,6 +251,31 @@ Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
 };
 
 /**
+ * set width of timeline slider
+ */
+Gui.Window.View.VideoPlayer.prototype.setTimelineSliderWidth = function () {
+
+    this.timelineSlider.css({
+        "right" : this.getTimelinePercentage()
+    });
+};
+
+/**
+ * retrieve css left property fpr timelineSlider
+ * @returns {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
+
+    var percentage = 100 - (this.player.get(0).volume * 100);
+
+    if (this.data.isVideo) {
+        percentage = 100 - (100 * (this.startTime + this.video.currentTime) / this.data.recording.resource.duration);
+    }
+
+    return percentage <= 0 ? '1px' : percentage.toString() + '%';
+};
+
+/**
  * add timer
  */
 Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
@@ -252,21 +290,25 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
 };
 
 /**
+ * @param {Number} [time]
  * update timer
  */
-Gui.Window.View.VideoPlayer.prototype.updateProgress = function () {
+Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
 
-    this.progress.text(this.getProgress());
+    if (isNaN(time)) {
+        time = this.startTime + this.video.currentTime;
+    }
+
+    this.progress.text(this.getProgress(time));
+    this.setTimelineSliderWidth();
 };
 
 /**
  * convert time to string
- * @param {float} [time]
+ * @param {float} time
  * @returns {string}
  */
 Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
-
-    time = time || this.video.currentTime + this.startTime;
 
     var minutes = this.helper().pad(Math.floor(time / 60), 2),
         seconds = this.helper().pad(parseInt(time - minutes * 60), 2),
@@ -275,6 +317,9 @@ Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
     return hours + ':' + minutes + ':' + seconds;
 };
 
+/**
+ * add title and subtitle to player
+ */
 Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
     var text = [], broadcast, now, me = this, end;
