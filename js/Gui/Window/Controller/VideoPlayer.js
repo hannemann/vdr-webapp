@@ -58,27 +58,14 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
-    var me = this;
-
     $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
-
-    this.view.node.swipe({
-        "swipeStatus" : function (event, phase, direction, distance, duration, fingers) {
-            if ("up" === direction) {
-                me.setVolume('increase');
-            }
-            if ("down" === direction) {
-                me.setVolume('decrease');
-            }
-        }
-    });
-
+    $(this.view.ctrlVolume).on('mousedown', $.proxy(this.volumeDown, this));
+    $(this.view.ctrlVolume).on('touchstart', $.proxy(this.volumeDown, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
     this.view.ctrlMinimize.on('click.'+this.keyInCache, $.proxy(this.toggleMinimize, this));
-
     this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
 
     if (this.data.isTv) {
@@ -93,7 +80,8 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
 
     $(window).off('orientationchange.'+this.keyInCache);
-    this.view.node.swipe('destroy');
+    $(this.view.ctrlVolume).off('mousedown');
+    $(this.view.ctrlVolume).off('touchstart');
     $(this.view.controls).off('click');
     $(this.view.stop).off('click');
     this.view.ctrlPlay.on('click');
@@ -106,9 +94,67 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     }
 };
 
-Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
+/**
+ * handle start volume change
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
 
-    var video = this.getVideo(), vol = video.volume, value = 0.02;
+    e.stopPropagation();
+    e.preventDefault();
+    $(document).one('mouseup', $.proxy(this.volumeUp, this));
+    $(document).one('touchend', $.proxy(this.volumeUp, this));
+
+    this.view.stopHideControls();
+    if ('touchstart' === e.type) {
+        this.volumeSlidePos = e.originalEvent.changedTouches[0].pageY;
+    } else {
+        this.volumeSlidePos = e.pageY;
+    }
+    $(document).on('mousemove.videoplayer-volume', $.proxy(this.volumeMove, this));
+    $(document).on('touchmove.videoplayer-volume', $.proxy(this.volumeMove, this));
+};
+
+/**
+ * handle stop volume change
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.VideoPlayer.prototype.volumeUp = function (e) {
+
+    e.stopPropagation();
+    e.preventDefault();
+    $(document).off('mousemove.videoplayer-volume');
+    $(document).off('touchmove.videoplayer-volume');
+};
+
+/**
+ * handle volume change
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.VideoPlayer.prototype.volumeMove = function (e) {
+
+    var newPos, value = e.type === 'touchmove' ? 0.03 : undefined;
+
+    e.stopPropagation();
+    e.preventDefault();
+    newPos = e.type === 'touchmove'
+        ? e.originalEvent.changedTouches[0].pageY
+        : e.pageY;
+
+    this.setVolume(newPos >= this.volumeSlidePos ? 'decrease' : 'increase', value);
+    this.volumeSlidePos = newPos;
+};
+
+/**
+ *
+ * @param {string} action
+ * @param {float} value
+ */
+Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action, value) {
+
+    var video = this.getVideo(), vol = video.volume;
+
+    value = value || 0.02;
 
     if ('increase' == action) {
 
@@ -117,6 +163,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
 
         video.volume = vol - value < 0 ? 0 : vol - value;
     }
+    VDRest.config.setItem('html5VideoPlayerVol', video.volume);
     this.view.setVolumeSliderHeight();
 };
 
@@ -221,6 +268,7 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
 
 /**
  * stop playback
+ * @param {jQuery.Event} e
  */
 Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
 
@@ -235,9 +283,8 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
 
 /**
  * toggle fullscreen
- * @param {jQuery.Event} [e]
  */
-Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
+Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function () {
 
     if (!this.view.controls.hasClass('show')) {
         return;
@@ -261,8 +308,8 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
 };
 
 /**
- * load channel model and switch to channel
- * @param e
+ * change video source
+ * @param {VDRest.Epg.Model.Channels.Channel|Gui.Window.Controller.Recording|jQuery.Event} e
  */
 Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
@@ -333,14 +380,6 @@ Gui.Window.Controller.VideoPlayer.prototype.cancelFullscreen = function () {
     } else if (document.webkitCancelFullScreen) {
         document.webkitCancelFullScreen();
     }
-};
-
-/**
- * retrieve video tag
- */
-Gui.Window.Controller.VideoPlayer.prototype.getPlayer = function () {
-
-    return this.view.node;
 };
 
 /**

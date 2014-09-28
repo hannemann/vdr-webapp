@@ -63,7 +63,9 @@ Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = '&#9701;';
  * @type {string}
  */
 Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '_';
-Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#9881;';
+//Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#9881;';
+//Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#x1f50a;';
+//Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#x1f592;';
 
 /**
  * initialize video node
@@ -126,6 +128,8 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
+    var volume;
+
     this.ctrlPlay = $('<div class="play">' + this.symbolPlay + '</div>').appendTo(this.controls);
 
     this.ctrlStop = $('<div class="stop">' + this.symbolStop + '</div>').appendTo(this.controls);
@@ -137,6 +141,10 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
     this.ctrlVolume = $('<div class="volume">').appendTo(this.controls);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
+
+    volume = VDRest.config.getItem('html5VideoPlayerVol') || 1;
+    this.video.volume = parseFloat(volume);
+
     this.setVolumeSliderHeight();
 
     if (this.data.isTv) {
@@ -145,6 +153,9 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
     }
 };
 
+/**
+ * toggle minimized class
+ */
 Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
 
     $('body').toggleClass('video-minimized');
@@ -176,19 +187,36 @@ Gui.Window.View.VideoPlayer.prototype.getVolumePercentage = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
 
+    this.stopHideControls();
+
+    if (this.controls.hasClass('show')) {
+        this.deferHideControls();
+    } else {
+
+        this.controls.addClass('show');
+    }
+};
+
+/**
+ * defer hiding controls
+ */
+Gui.Window.View.VideoPlayer.prototype.deferHideControls = function () {
+
     var me = this;
+
+    this.controlsTimeout = setTimeout(function () {
+        me.controls.removeClass('show');
+    }, 5000);
+};
+
+/**
+ * stop hiding controls
+ */
+Gui.Window.View.VideoPlayer.prototype.stopHideControls = function () {
+
     if ("undefined" !== typeof this.controlsTimeout) {
         clearTimeout(this.controlsTimeout);
         this.controlsTimeout = undefined;
-    }
-
-    this.controls.toggleClass('show');
-
-    if (this.controls.hasClass('show')) {
-
-        me.controlsTimeout = setTimeout(function () {
-            me.controls.removeClass('show');
-        }, 5000);
     }
 };
 
