@@ -173,6 +173,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "recordingEndMargin"    :   "600",
     "protocol"              :   "http",
     "pixelPerSecond"        :   2/60,
+    "streamdevProtocol"     :   "http",
+    "streamdevHost"         :   "",
     "streamdevPort"         :   "3000",
     "streamdevParams"       :   "EXT;QUALITY=SLOW",
     "theme"                 :   "default",
@@ -389,6 +391,28 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "boolean",
         "label" : "Use StreamDev"
+    },
+    "streamdevProtocol"    :   {
+        "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "enum",
+        "label" : "Stream protocol",
+        "dataType" : "string",
+        "info" : "e.g.: Force usage of VLC",
+        "values" : {
+            "http" : {
+                "label" : "HTTP",
+                "value" : "http"
+            },
+            "https" : {
+                "label" : "HTTPS",
+                "value" : "https"
+            },
+            "vlc" : {
+                "label" : "VLC",
+                "value" : "vlc"
+            }
+        }
     },
     "streamdevHost"    :   {
         "depends" : "streamdevActive",

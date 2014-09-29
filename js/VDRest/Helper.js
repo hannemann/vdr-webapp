@@ -211,4 +211,26 @@ VDRest.Helper.prototype.parseDescription = function (description) {
     return this;
 };
 
+/**
+ * retrieve base streamurl
+ * @param {Array} [streamdevParams]
+ * @returns {string}
+ */
+VDRest.Helper.prototype.getBaseStreamUrl = function (streamdevParams) {
+
+    streamdevParams = streamdevParams || [];
+
+    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
+    if (VDRest.config.getItem('useHtmlPlayer')) {
+        streamdevParams.push('TYPE=webm');
+    }
+
+    return VDRest.config.getItem('streamdevProtocol')
+        + '://'
+        + VDRest.config.getItem('streamdevHost')
+        + ':'
+        + VDRest.config.getItem('streamdevPort')
+        + '/' + streamdevParams.join(';') + '/';
+};
+
 VDRest.helper = new VDRest.Helper();

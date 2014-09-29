@@ -271,27 +271,18 @@ VDRest.Epg.Model.Channels.Channel.prototype.getResource = function () {
 
 /**
  * retrieve streamurl
+ * @param {Array} [streamdevParams]
  * @returns {string}
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getStreamUrl = function () {
+VDRest.Epg.Model.Channels.Channel.prototype.getStreamUrl = function (streamdevParams) {
 
-    var streamdevParams = [];
-
-    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
-    if (VDRest.config.getItem('useHtmlPlayer')) {
-        streamdevParams.push('TYPE=webm');
-    }
-
-    this.data.streamUrl = 'http://'
-        + VDRest.config.getItem('host')
-        + ':'
-        + VDRest.config.getItem('streamdevPort')
-        + '/' + streamdevParams.join(';') + '/'
-        + this.data.stream;
-
-    return this.data.streamUrl;
+    return this.helper().getBaseStreamUrl(streamdevParams) + this.data.stream;
 };
 
+/**
+ * retrieve current broadcast
+ * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast|Boolean}
+ */
 VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function () {
 
     var i = 0, l = this.collection.length, now = new Date().getTime()/1000, cur;
@@ -308,6 +299,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function () {
             return cur;
         }
     }
+    return false;
 };
 
 /**

@@ -49,22 +49,12 @@ VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
 
 /**
  * retrieve stream url
+ * @param {Array} [streamdevParams]
  * @returns {string}
  */
-VDRest.Recordings.Model.List.Recording.prototype.getStreamUrl = function () {
+VDRest.Recordings.Model.List.Recording.prototype.getStreamUrl = function (streamdevParams) {
 
-    var streamdevParams = [];
-
-    streamdevParams.push(VDRest.config.getItem('streamdevParams'));
-    if (VDRest.config.getItem('useHtmlPlayer')) {
-        streamdevParams.push('TYPE=webm');
-    }
-
-    return 'http://'
-    + VDRest.config.getItem('streamdevHost')
-    + ':'
-    + VDRest.config.getItem('streamdevPort')
-    + '/' + streamdevParams.join(';') + '/'
-    + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
-    + '.rec.ts';
+    return this.helper().getBaseStreamUrl(streamdevParams)
+        + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
+        + '.rec.ts';
 };
