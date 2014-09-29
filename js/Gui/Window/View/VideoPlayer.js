@@ -294,7 +294,7 @@ Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
         );
     } else if (this.data.isTv) {
 
-        now = new Date().getTime() / 1000;
+        now = parseInt(new Date().getTime() / 1000, 10);
         broadcast = this.getData('channel').getCurrentBroadcast();
         percentage = 100 - (
             100 * (
@@ -326,8 +326,16 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
 
+    var now, broadcast;
+
     if (isNaN(time)) {
-        time = this.getData('startTime') + this.video.currentTime;
+        if (this.data.isVideo) {
+            time = this.getData('startTime') + this.video.currentTime;
+        } else {
+            now = parseInt(new Date().getTime() / 1000, 10);
+            broadcast = this.getData('channel').getCurrentBroadcast();
+            time = now - broadcast.getData('start_time');
+        }
     }
 
     this.progress.text(this.getProgress(time));
@@ -341,11 +349,11 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
  */
 Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
 
-    var minutes = this.helper().pad(Math.floor(time / 60), 2),
+    var minutes = Math.floor(time / 60),
         seconds = this.helper().pad(parseInt(time - minutes * 60), 2),
         hours = Math.floor(time / 3600);
 
-    minutes -= hours * 60;
+    minutes = this.helper().pad(minutes - hours * 60, 2);
 
     return hours + ':' + minutes + ':' + seconds;
 };
