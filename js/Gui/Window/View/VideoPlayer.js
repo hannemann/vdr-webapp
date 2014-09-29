@@ -77,7 +77,6 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
     this.video = this.player.get(0);
     this.controls = $('<div class="html5-player-controls show" data-animate="opacity">');
     this.player.prop('crossOrigin', 'anonymous');
-    this.startTime = 0;
 
     this.initPlayer();
 };
@@ -118,6 +117,7 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
     this.controls.appendTo(this.node);
     this.addThrobber();
     this.addProgress();
+    this.updateProgress();
     this.addTitle();
 
     return this;
@@ -284,13 +284,22 @@ Gui.Window.View.VideoPlayer.prototype.setTimelineSliderWidth = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
 
-    var percentage = 100 - (this.player.get(0).volume * 100);
+    var percentage, now, broadcast;
 
     if (this.data.isVideo) {
         percentage = 100 - (
             100 * (
-                this.startTime + this.video.currentTime
+                this.getData('startTime') + this.video.currentTime
             ) / this.getData('recording').getData('duration')
+        );
+    } else if (this.data.isTv) {
+
+        now = new Date().getTime() / 1000;
+        broadcast = this.getData('channel').getCurrentBroadcast();
+        percentage = 100 - (
+            100 * (
+                now - broadcast.getData('start_time')
+            ) / broadcast.getData('duration')
         );
     }
 
@@ -318,7 +327,7 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
 Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
 
     if (isNaN(time)) {
-        time = this.startTime + this.video.currentTime;
+        time = this.getData('startTime') + this.video.currentTime;
     }
 
     this.progress.text(this.getProgress(time));
@@ -335,6 +344,8 @@ Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
     var minutes = this.helper().pad(Math.floor(time / 60), 2),
         seconds = this.helper().pad(parseInt(time - minutes * 60), 2),
         hours = Math.floor(time / 3600);
+
+    minutes -= hours * 60;
 
     return hours + ':' + minutes + ':' + seconds;
 };
