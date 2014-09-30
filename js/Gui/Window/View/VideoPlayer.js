@@ -473,8 +473,7 @@ Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
-    var text = [],
-        broadcast, now,
+    var broadcast, now,
         me = this, end, logo,
         recording = this.getData('recording');
 
