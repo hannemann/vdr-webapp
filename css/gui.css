@@ -19,6 +19,7 @@ ul#menubar #refresh {
 
 .window-drawer {
 	width: 65%;
+    max-width: 300px;
 	overflow: visible;
 	height: 100%;
 	position:absolute;
