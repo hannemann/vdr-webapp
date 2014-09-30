@@ -141,10 +141,9 @@
 .html5-player-controls .info-area {
     left: 15px;
     width: calc(100% - 74px);
-    bottom: 50px;
+    bottom: calc(20% + 20px);
     margin: 0;
     padding: 2px;
-    bottom: calc(20% + 20px);
 }
 
 .html5-player-controls .info-area.has-logo {
