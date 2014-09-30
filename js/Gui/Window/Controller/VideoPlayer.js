@@ -79,6 +79,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
     this.view.ctrlMinimize.on('click.'+this.keyInCache, $.proxy(this.toggleMinimize, this));
     this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
+    this.view.player.on('stalled', $.proxy(this.handleStalled, this));
 
     if (this.data.isTv) {
         this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
@@ -103,10 +104,29 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.ctrlQuality.on('click');
     this.view.ctrlMinimize.on('click');
     this.view.player.off('timeupdate');
+    this.view.player.off('stalled');
     if (this.data.isTv) {
         this.view.ctrlChannelUp.off('click');
         this.view.ctrlChannelDown.off('click');
     }
+};
+
+/**
+ * try to prevent browser from getting unresponsive in case the video stalls
+ */
+Gui.Window.Controller.VideoPlayer.prototype.handleStalled = function () {
+
+    var me = this;
+
+    this.helper().log('stalled');
+
+    this.view.video.pause();
+    this.view.toggleThrobber();
+    this.view.player.one('canplay', function () {
+        me.view.toggleThrobber();
+        me.view.video.play();
+        me.helper().log('canplay');
+    });
 };
 
 /**
@@ -534,7 +554,7 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
 /**
  * toggle fullscreen
  */
-Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function () {
+Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
 
     if (!this.view.controls.hasClass('show')) {
         return;
