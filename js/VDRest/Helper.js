@@ -213,16 +213,20 @@ VDRest.Helper.prototype.parseDescription = function (description) {
 
 /**
  * retrieve base streamurl
- * @param {Array} [streamdevParams]
+ * @param {Array} [extraParams]
  * @returns {string}
  */
-VDRest.Helper.prototype.getBaseStreamUrl = function (streamdevParams) {
+VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
 
-    streamdevParams = streamdevParams || [];
+    var streamdevParams = [];
 
     streamdevParams.push(VDRest.config.getItem('streamdevParams'));
     if (VDRest.config.getItem('useHtmlPlayer')) {
         streamdevParams.push('TYPE=webm');
+    }
+
+    if (extraParams) {
+        streamdevParams = streamdevParams.concat(extraParams);
     }
 
     return VDRest.config.getItem('streamdevProtocol')

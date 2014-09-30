@@ -172,6 +172,46 @@
     width: auto;
 }
 
+.html5-player-controls .quality-select {
+    height: 48px;
+}
+.html5-player-controls .quality-select,
+.html5-player-controls .quality-select div {
+    width: 200px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+.html5-player-controls .quality-select div {
+    width: 80px;
+    border: none;
+    background: none;
+}
+.html5-player-controls .quality-select div.select {
+    overflow: hidden;
+    height: 23px;
+    border-bottom: 1px solid white;
+    border-radius: 0;
+}
+.html5-player-controls div.size-select {
+    right: 100px;
+}
+.html5-player-controls div.bitrate-select {
+    left: 100px;
+}
+.html5-player-controls .select .item-list {
+    top: 0;
+    bottom: auto;
+    height: auto;
+}
+.html5-player-controls div.select div.item {
+    position: relative;
+    height: 24px;
+    line-height: 24px;
+}
+
 .video-minimized .modal-video {
     height: auto;
     width: auto;

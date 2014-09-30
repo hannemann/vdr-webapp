@@ -68,6 +68,40 @@ Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '_';
 //Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#x1f592;';
 
 /**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.sizes = {
+    "HD1080" : {
+        "width" : 1920,
+        "height" : 1080
+    },
+    "HD720" : {
+        "width" : 1280,
+        "height" : 720
+    },
+    "DVD" : {
+        "width" : 1024,
+        "height" : 576
+    },
+    "640x360" : {
+        "width" : 640,
+        "height" : 360
+    },
+    "480x270" : {
+        "width" : 480,
+        "height" : 270
+    },
+    "320x180" : {
+        "width" : 320,
+        "height" : 180
+    }
+};
+
+Gui.Window.View.VideoPlayer.prototype.bitrates = [
+    '2048K', '1024K', '512K', '256K', '128K', '96K', '64K'
+];
+
+/**
  * initialize video node
  */
 Gui.Window.View.VideoPlayer.prototype.init = function () {
@@ -94,6 +128,13 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
 
     this.node.toggleClass('collapsed expand');
     this.player.attr('poster', this.module.getHelper('VideoPlayer').defaultPoster(this.video));
+
+    this.sizeList.css({
+        "top": - this.sizeList.find('.item.selected').position().top + 'px'
+    });
+    this.bitrateList.css({
+        "top": - this.bitrateList.find('.item.selected').position().top + 'px'
+    });
 };
 
 /**
@@ -118,6 +159,7 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
     this.addThrobber();
     this.addProgress();
     this.updateProgress();
+    this.addQualitySelecter();
     this.addTitle();
 
     return this;
@@ -356,6 +398,35 @@ Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
     minutes = this.helper().pad(minutes - hours * 60, 2);
 
     return hours + ':' + minutes + ':' + seconds;
+};
+
+Gui.Window.View.VideoPlayer.prototype.addQualitySelecter = function () {
+
+    var i, l = this.bitrates.length, item;
+
+    this.qualitySelect = $('<div class="quality-select">');
+    this.sizeSelect = $('<div class="select size-select">').appendTo(this.qualitySelect);
+    this.bitrateSelect = $('<div class="select bitrate-select">').appendTo(this.qualitySelect);
+
+    this.sizeList = $('<div class="item-list sizes">').appendTo(this.sizeSelect);
+    for (i in this.sizes) {
+        if (this.sizes.hasOwnProperty(i)) {
+            item = '<div class="item size' +
+            (i == VDRest.config.getItem('videoQualitySize') ? ' selected' : '')
+            + '">';
+            $(item).text(i).appendTo(this.sizeList);
+        }
+    }
+
+    this.bitrateList = $('<div class="item-list bitrates">').appendTo(this.bitrateSelect);
+    for (i=0; i<l; i++) {
+        item = '<div class="item bitrate' +
+        (this.bitrates[i] == VDRest.config.getItem('videoQualityBitrate') ? ' selected' : '')
+        + '">';
+        $(item).text(this.bitrates[i]).appendTo(this.bitrateList);
+    }
+
+    this.qualitySelect.appendTo(this.controls);
 };
 
 /**

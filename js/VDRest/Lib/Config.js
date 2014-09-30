@@ -185,7 +185,9 @@ VDRest.Lib.Config.prototype.defaults = {
     "startChannel"          :   "1",
     "useSlowServerStrategy" :   "true",
     "useHtmlPlayer"         :   "false",
-    "defaultSorting"        :   "dateDesc"
+    "defaultSorting"        :   "dateDesc",
+    "videoQualitySize"      :   "320x180",
+    "videoQualityBitrate"   :   "512K"
 };
 
 VDRest.Lib.Config.prototype.categories = {

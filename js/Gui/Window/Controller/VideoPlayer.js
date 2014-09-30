@@ -28,7 +28,7 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.data.isMinimized = false;
     this.data.startTime = 0;
     this.data.progress = '0:00:00';
-    this.settingTime = false;
+    this.settingParams = false;
     this.spooling = false;
 
     if ("undefined" !== typeof this.data.channel) {
@@ -68,11 +68,12 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
     $(this.view.ctrlVolume).on('mousedown touchstart', $.proxy(this.volumeDown, this));
     $(this.view.ctrlTimeline).on('mousedown touchstart', $.proxy(this.setTimeDown, this));
-    $(this.view.ctrlTimeline).on('dblclick', $.proxy(function () {
 
-        console.log('dblclick')
+    $(this.view.sizeSelect)
+        .on('touchstart', $.proxy(this.qualitySelectDown, this));
+    $(this.view.bitrateSelect)
+        .on('touchstart', $.proxy(this.qualitySelectDown, this));
 
-    }, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
@@ -107,6 +108,78 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     }
 };
 
+Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
+
+    if (!this.view.controls.hasClass('show')) {
+        return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.isPlaying) {
+        this.pausePlayback();
+    }
+    this.settingParams = true;
+
+    if ($(e.currentTarget).hasClass('size-select')) {
+        this.currentQualitySelect = this.view.sizeSelect;
+    } else  {
+        this.currentQualitySelect = this.view.bitrateSelect;
+    }
+
+    this.qualityTouchPos = e.originalEvent.changedTouches[0].pageY;
+    this.qualityDelta = 0;
+
+    $(document).on('touchmove.qualitySelect', $.proxy(this.qualitySelectMove, this));
+    $(document).one('touchend', $.proxy(this.qualitySelectUp, this));
+};
+
+Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
+
+    if (e instanceof jQuery.Event) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    $(document).off('touchmove.qualitySelect');
+    this.currentQualitySelect = undefined;
+    this.qualityTouchPos = undefined;
+    this.qualityDelta = undefined;
+};
+
+Gui.Window.Controller.VideoPlayer.prototype.qualitySelectMove = function (e) {
+
+    var itemList = this.currentQualitySelect.find('.item-list'),
+        current = itemList.find('.item.selected');
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.qualityDelta = e.originalEvent.changedTouches[0].pageY
+            - this.qualityTouchPos;
+
+    if (Math.abs(this.qualityDelta) > 24) {
+        if (this.qualityDelta > 0) {
+
+            if (current.prev().get(0)) {
+                current.removeClass('selected');
+                current.prev().addClass('selected')
+            }
+
+        } else {
+
+            if (current.next().get(0)) {
+                current.removeClass('selected');
+                current.next().addClass('selected')
+            }
+        }
+
+        itemList.animate({
+            "top" : - itemList.find('.item.selected').position().top + 'px'
+        });
+        this.qualitySelectUp();
+    }
+};
+
 /**
  * handle start volume change
  * @param {jQuery.Event} e
@@ -119,8 +192,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
 
     e.stopPropagation();
     e.preventDefault();
-    $(document).one('mouseup', $.proxy(this.volumeUp, this));
-    $(document).one('touchend', $.proxy(this.volumeUp, this));
+    $(document).one('mouseup touchend', $.proxy(this.volumeUp, this));
 
     this.view.stopHideControls();
     if ('touchstart' === e.type) {
@@ -206,7 +278,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     if (this.isPlaying) {
         this.pausePlayback();
     }
-    this.settingTime = true;
+    this.settingParams = true;
     if ('touchstart' === e.type) {
         this.timelineSlidePos = e.originalEvent.changedTouches[0].pageX;
     } else {
@@ -354,12 +426,19 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 
-    var d = new Date(), src, video = this.getVideo();
+    var d = new Date(), src, video = this.getVideo(),
+        streamdevParams = [],
+        size = this.view.sizeList.find('.item.selected').text(),
+        bitrate = this.view.bitrateList.find('.item.selected').text();
+
+    streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
+    streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
+    streamdevParams.push('VBR=' + bitrate);
 
     if (this.data.channel) {
-        src = this.getData('channel').getStreamUrl();
+        src = this.getData('channel').getStreamUrl(streamdevParams);
     } else if (this.data.recording) {
-        src = this.data.recording.getStreamUrl();
+        src = this.data.recording.getStreamUrl(streamdevParams);
         if (this.data.startTime > 0) {
             src += '?pos=time.' + this.data.startTime;
         }
@@ -367,7 +446,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
     this.isPlaying = true;
     this.view.toggleThrobber();
     this.view.toggleControls();
-    this.settingTime = false;
+    this.settingParams = false;
 
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
     video.src = src;
@@ -392,7 +471,7 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
         this.data.startTime = Math.floor(this.data.startTime + this.getVideo().currentTime);
     }
 
-    if (!this.settingTime) {
+    if (!this.settingParams) {
         video.poster = this.module.getHelper('VideoPlayer').captureFrame(video);
     }
     this.isPlaying = false;
