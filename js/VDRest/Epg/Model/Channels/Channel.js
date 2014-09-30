@@ -287,7 +287,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function () {
 
     var i = 0, l = this.collection.length, now = new Date().getTime()/1000, cur;
 
-    if (this.collection[l-1].getData('end_time') <= now) {
+    if (l > 0 && this.collection[l-1].getData('end_time') <= now) {
 
         this.getOneDay(false);
     }

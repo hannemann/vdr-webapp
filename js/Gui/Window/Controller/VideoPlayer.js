@@ -565,7 +565,7 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
-    var channels, getter, video = this.getVideo(), now, broadcast;
+    var channels, getter, nextChannel, video = this.getVideo(), now, broadcast;
 
     e.stopPropagation();
 
@@ -592,14 +592,22 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
         getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
         this.data.recording = undefined;
-        this.data.channel = channels['get' + getter + 'Channel'](this.data.channel);
+        nextChannel = channels['get' + getter + 'Channel'](this.data.channel);
+        if (nextChannel) {
+            this.data.channel = nextChannel;
+        } else {
+            return;
+        }
     }
 
     if (this.getData('channel')) {
         now = parseInt(new Date().getTime() / 1000, 10);
         broadcast = this.getData('channel').getCurrentBroadcast();
-        this.data.startTime = now - broadcast.getData('start_time');
-        this.view.setData('startTime', this.data.startTime);
+        if (broadcast) {
+            this.data.startTime = now - broadcast.getData('start_time');
+            this.view.setData('startTime', this.data.startTime);
+            this.view.updateProgress();
+        }
     }
 
     video.pause();

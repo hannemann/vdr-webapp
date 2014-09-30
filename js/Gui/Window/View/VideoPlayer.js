@@ -366,11 +366,15 @@ Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
 
         now = parseInt(new Date().getTime() / 1000, 10);
         broadcast = this.getData('channel').getCurrentBroadcast();
-        percentage = 100 - (
-            100 * (
+        if (broadcast) {
+            percentage = 100 - (
+                100 * (
                 now - broadcast.getData('start_time')
-            ) / broadcast.getData('duration')
-        );
+                ) / broadcast.getData('duration')
+            );
+        } else {
+            percentage = 100;
+        }
     }
 
     return percentage <= 0 ? '1px' : percentage.toString() + '%';
@@ -404,7 +408,11 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
         } else {
             now = parseInt(new Date().getTime() / 1000, 10);
             broadcast = this.getData('channel').getCurrentBroadcast();
-            time = now - broadcast.getData('start_time');
+            if (broadcast) {
+                time = now - broadcast.getData('start_time');
+            } else {
+                time = 0;
+            }
         }
     }
 
@@ -490,10 +498,19 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
         }
 
         broadcast = this.data.channel.getCurrentBroadcast();
-        this.title.text(broadcast.getData('title'));
-        if ('' !== broadcast.getData('short_text')) {
-            this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
-            this.subTitle.text(broadcast.getData('short_text'));
+        if (broadcast) {
+            this.title.text(broadcast.getData('title'));
+            if ('' !== broadcast.getData('short_text')) {
+                this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
+                this.subTitle.text(broadcast.getData('short_text'));
+            }
+
+            now = new Date().getTime()/1000;
+            end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
+
+            this.changeTitleTimeout = setTimeout(function () {
+                me.addTitle();
+            }, end);
         }
 
         logo = this.data.channel.getData('image');
@@ -503,13 +520,6 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
                 "background-image" : "url(" + logo + ")"
             });
         }
-
-        now = new Date().getTime()/1000;
-        end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
-
-        this.changeTitleTimeout = setTimeout(function () {
-            me.addTitle();
-        }, end);
     }
 
     this.controls.append(this.infoArea);
