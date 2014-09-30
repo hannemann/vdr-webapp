@@ -69,10 +69,8 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     $(this.view.ctrlVolume).on('mousedown touchstart', $.proxy(this.volumeDown, this));
     $(this.view.ctrlTimeline).on('mousedown touchstart', $.proxy(this.setTimeDown, this));
 
-    $(this.view.sizeSelect)
-        .on('touchstart', $.proxy(this.qualitySelectDown, this));
-    $(this.view.bitrateSelect)
-        .on('touchstart', $.proxy(this.qualitySelectDown, this));
+    $(this.view.sizeSelect).on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
+    $(this.view.bitrateSelect).on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
 
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
@@ -95,7 +93,8 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     $(window).off('orientationchange.'+this.keyInCache);
     $(this.view.ctrlVolume).off('mousedown touchstart');
     $(this.view.ctrlTimeline).off('mousedown touchstart');
-    $(this.view.ctrlTimeline).off('dblclick');
+    $(this.view.sizeSelect).off('mousedown touchstart');
+    $(this.view.bitrateSelect).off('mousedown touchstart');
     $(this.view.controls).off('click');
     $(this.view.stop).off('click');
     this.view.ctrlPlay.on('click');
@@ -115,6 +114,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
     }
     e.preventDefault();
     e.stopPropagation();
+    this.view.stopHideControls();
     if (this.isPlaying) {
         this.pausePlayback();
     }
@@ -126,11 +126,15 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
         this.currentQualitySelect = this.view.bitrateSelect;
     }
 
-    this.qualityTouchPos = e.originalEvent.changedTouches[0].pageY;
+    if ('touchstart' === e.type) {
+        this.qualityTouchPos = e.originalEvent.changedTouches[0].pageY;
+    } else {
+        this.qualityTouchPos = e.pageY;
+    }
     this.qualityDelta = 0;
 
-    $(document).on('touchmove.qualitySelect', $.proxy(this.qualitySelectMove, this));
-    $(document).one('touchend', $.proxy(this.qualitySelectUp, this));
+    $(document).on('mousemove.qualityselect touchmove.qualitySelect', $.proxy(this.qualitySelectMove, this));
+    $(document).one('mouseup touchend', $.proxy(this.qualitySelectUp, this));
 };
 
 Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
@@ -140,7 +144,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
         e.stopPropagation();
     }
 
-    $(document).off('touchmove.qualitySelect');
+    $(document).off('mousemove.qualityselect touchmove.qualitySelect');
     this.currentQualitySelect = undefined;
     this.qualityTouchPos = undefined;
     this.qualityDelta = undefined;
@@ -149,15 +153,20 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
 Gui.Window.Controller.VideoPlayer.prototype.qualitySelectMove = function (e) {
 
     var itemList = this.currentQualitySelect.find('.item-list'),
-        current = itemList.find('.item.selected');
+        current = itemList.find('.item.selected'),
+        me = this;
 
     e.preventDefault();
     e.stopPropagation();
 
-    this.qualityDelta = e.originalEvent.changedTouches[0].pageY
-            - this.qualityTouchPos;
+    this.qualityDelta = (
+        e.type === 'touchmove'
+            ? e.originalEvent.changedTouches[0].pageY
+            : e.pageY
+    ) - this.qualityTouchPos;
 
-    if (Math.abs(this.qualityDelta) > 24) {
+    if (Math.abs(this.qualityDelta) > 24 && !this.qualityAnimating) {
+        this.qualityAnimating = true;
         if (this.qualityDelta > 0) {
 
             if (current.prev().get(0)) {
@@ -175,8 +184,12 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectMove = function (e) {
 
         itemList.animate({
             "top" : - itemList.find('.item.selected').position().top + 'px'
+        }, function () {
+            me.qualityTouchPos = e.type === 'touchmove'
+                ? e.originalEvent.changedTouches[0].pageY
+                : e.pageY;
+            me.qualityAnimating = false;
         });
-        this.qualitySelectUp();
     }
 };
 
