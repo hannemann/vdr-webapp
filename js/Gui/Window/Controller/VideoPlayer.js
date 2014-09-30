@@ -84,7 +84,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 };
 
 /**
- * add event listeners
+ * remove event listeners
  */
 Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
 
@@ -94,7 +94,7 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.sizeSelect.off('mousedown touchstart');
     this.view.bitrateSelect.off('mousedown touchstart');
     this.view.controls.off('click');
-    this.view.stop.off('click');
+    this.view.ctrlStop.off('click');
     this.view.ctrlPlay.on('click');
     this.view.ctrlFullScreen.on('click');
     this.view.ctrlMinimize.on('click');
@@ -105,6 +105,10 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     }
 };
 
+/**
+ * handle quality selector down
+ * @param {jQuery.Event} e
+ */
 Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
 
     if (!this.view.controls.hasClass('show')) {
@@ -135,6 +139,10 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
     $(document).one('mouseup touchend', $.proxy(this.qualitySelectUp, this));
 };
 
+/**
+ * handle quality selector up
+ * @param {jQuery.Event} e
+ */
 Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
 
     if (e instanceof jQuery.Event) {
@@ -142,12 +150,25 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
         e.stopPropagation();
     }
 
+    VDRest.config.setItem(
+            'videoQualitySize',
+        this.view.sizeSelect.find('.item.selected').text()
+    );
+    VDRest.config.setItem(
+        'videoQualityBitrate',
+        this.view.bitrateSelect.find('.item.selected').text()
+    );
+
     $(document).off('mousemove.qualityselect touchmove.qualitySelect');
     this.currentQualitySelect = undefined;
     this.qualityTouchPos = undefined;
     this.qualityDelta = undefined;
 };
 
+/**
+ * handle quality selector move
+ * @param {jQuery.Event} e
+ */
 Gui.Window.Controller.VideoPlayer.prototype.qualitySelectMove = function (e) {
 
     var itemList = this.currentQualitySelect.find('.item-list'),

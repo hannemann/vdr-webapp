@@ -79,7 +79,7 @@ Gui.Window.View.VideoPlayer.prototype.sizes = {
         "width" : 1280,
         "height" : 720
     },
-    "DVD" : {
+    "SD" : {
         "width" : 1024,
         "height" : 576
     },
@@ -159,7 +159,7 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
     this.addThrobber();
     this.addProgress();
     this.updateProgress();
-    this.addQualitySelecter();
+    this.addQualitySelector();
     this.addTitle();
 
     return this;
@@ -400,7 +400,10 @@ Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
     return hours + ':' + minutes + ':' + seconds;
 };
 
-Gui.Window.View.VideoPlayer.prototype.addQualitySelecter = function () {
+/**
+ * add quality selector
+ */
+Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
 
     var i, l = this.bitrates.length, item;
 
