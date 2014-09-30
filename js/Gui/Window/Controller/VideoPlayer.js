@@ -540,6 +540,8 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function () {
         return;
     }
 
+    e.stopPropagation();
+
     var isFullscreen = false;
 
     if ("undefined" != typeof document.fullScreen) {
@@ -563,7 +565,9 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
-    var channels, getter, me = this, video = this.getVideo(), now, broadcast;
+    var channels, getter, video = this.getVideo(), now, broadcast;
+
+    e.stopPropagation();
 
     if (
         !$('body').hasClass('video-minimized')
@@ -601,10 +605,6 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     video.pause();
     video.src = false;
     this.view.addTitle();
-
-    setTimeout(function () {
-        me.startPlayback(true);
-    }, 500);
 };
 
 /**
