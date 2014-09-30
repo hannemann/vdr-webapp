@@ -271,10 +271,12 @@ Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
     this.stopHideControls();
 
     if (this.controls.hasClass('show')) {
-        this.deferHideControls();
+        this.controls.removeClass('show');
+        this.qualitySelect.removeClass('show');
     } else {
 
         this.controls.addClass('show');
+        this.deferHideControls();
     }
 };
 
@@ -326,8 +328,13 @@ Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
 /**
  * show quality overlay
  */
-Gui.Window.View.VideoPlayer.prototype.toggleQuality = function () {
+Gui.Window.View.VideoPlayer.prototype.toggleQuality = function (e) {
 
+    if (!this.controls.hasClass('show')) return;
+
+    e.stopPropagation();
+    e.preventDefault();
+    this.stopHideControls();
     this.qualitySelect.toggleClass('show');
 };
 

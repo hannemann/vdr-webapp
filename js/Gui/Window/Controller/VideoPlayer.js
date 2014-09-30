@@ -115,7 +115,7 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
 
-    if (!this.view.controls.hasClass('show')) {
+    if (!this.view.controls.hasClass('show') || !this.view.qualitySelect.hasClass('show')) {
         return;
     }
     e.preventDefault();
