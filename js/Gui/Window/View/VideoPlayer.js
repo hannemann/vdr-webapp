@@ -268,6 +268,11 @@ Gui.Window.View.VideoPlayer.prototype.getVolumePercentage = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
 
+    if (this.omitToggleControls) {
+        this.omitToggleControls = undefined;
+        return;
+    }
+
     this.stopHideControls();
 
     if (this.controls.hasClass('show')) {

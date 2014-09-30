@@ -237,4 +237,15 @@ VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
         + '/' + streamdevParams.join(';') + '/';
 };
 
+/**
+ * stop propagation of jQuery.Event
+ * @param {jQuery.Event} e
+ */
+VDRest.Helper.prototype.stopPropagation = function (e) {
+
+    if (e instanceof jQuery.Event) {
+        e.stopPropagation();
+    }
+};
+
 VDRest.helper = new VDRest.Helper();

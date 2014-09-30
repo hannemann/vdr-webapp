@@ -67,9 +67,13 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
+    var helper = this.helper();
+
     $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
     this.view.ctrlVolume.on('mousedown touchstart', $.proxy(this.volumeDown, this));
+    this.view.ctrlVolume.on('click', helper.stopPropagation);
     this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
+    this.view.ctrlTimeline.on('click', helper.stopPropagation);
     this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
@@ -94,7 +98,9 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
 
     $(window).off('orientationchange.'+this.keyInCache);
     this.view.ctrlVolume.off('mousedown touchstart');
+    this.view.ctrlVolume.off('click');
     this.view.ctrlTimeline.off('mousedown touchstart');
+    this.view.ctrlVolume.off('click');
     this.view.sizeSelect.off('mousedown touchstart');
     this.view.bitrateSelect.off('mousedown touchstart');
     this.view.controls.off('click');
@@ -145,6 +151,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
         this.pausePlayback();
     }
     this.settingParams = true;
+    this.view.omitToggleControls = true;
 
     if ($(e.currentTarget).hasClass('size-select')) {
         this.currentQualitySelect = this.view.sizeSelect;
@@ -630,7 +637,9 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         }
     }
 
-    video.pause();
+    if (this.isPlaying) {
+        video.pause();
+    }
     video.src = false;
     this.view.addTitle();
 };
