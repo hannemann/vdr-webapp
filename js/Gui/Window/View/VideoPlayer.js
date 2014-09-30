@@ -460,25 +460,21 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
     var text = [],
         broadcast, now,
-        me = this, end,
+        me = this, end, logo,
         recording = this.getData('recording');
 
-    if (this.title) {
-        this.title.remove();
-    }
-    if (this.subTitle) {
-        this.subTitle.remove();
+    if (this.infoArea) {
+        this.infoArea.remove();
     }
 
-    this.title = $('<div class="title info">');
+    this.infoArea = $('<div class="info-area info">');
+    this.title = $('<div class="title info">').appendTo(this.infoArea);
 
     if (this.data.isVideo) {
-        text.push(this.title.text(recording.getData('event_title')));
+        this.title.text(recording.getData('event_title'));
         if ('' !== recording.getData('event_short_text')) {
-            this.subTitle = $('<div class="short-text info">');
-            text.push(
-                this.subTitle.text(recording.getData('event_short_text'))
-            );
+            this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
+            this.subTitle.text(recording.getData('event_short_text'));
         }
     } else {
 
@@ -487,19 +483,24 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
         }
 
         broadcast = this.data.channel.getCurrentBroadcast();
-        text.push(
-            this.title.text(
-                this.data.channel.getData('name')
-                + ' - '
-                + broadcast.getData('title')
-            )
+        this.title.text(
+            this.data.channel.getData('name')
+            + ' - '
+            + broadcast.getData('title')
         );
         if ('' !== broadcast.getData('short_text')) {
-            this.subTitle = $('<div class="short-text info">');
-            text.push(
-                this.subTitle.text(broadcast.getData('short_text'))
-            );
+            this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
+            this.subTitle.text(broadcast.getData('short_text'));
         }
+
+        logo = this.data.channel.getData('image');
+        if ('' !== logo) {
+            this.infoArea.addClass('has-logo');
+            this.infoArea.css({
+                "background-image" : "url(" + logo + ")"
+            });
+        }
+
         now = new Date().getTime()/1000;
         end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
 
@@ -508,7 +509,7 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
         }, end);
     }
 
-    this.controls.append(text);
+    this.controls.append(this.infoArea);
 };
 
 /**

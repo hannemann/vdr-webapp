@@ -116,7 +116,8 @@
     z-index: 0;
     border: none;
     border-radius: 0;
-    background: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.5);
+    background-image: none;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -135,6 +136,31 @@
 .html5-player-controls .short-text {
     top: 41px;
     font-size: 12px;
+}
+
+.html5-player-controls .info-area {
+    left: 15px;
+    width: calc(100% - 74px);
+    bottom: 50px;
+    margin: 0;
+    padding: 2px;
+    bottom: calc(20% + 20px);
+}
+
+.html5-player-controls .info-area.has-logo {
+    min-height: 38px;
+    padding-left: 45px;
+    background-repeat: no-repeat;
+    background-size: 38px 38px;
+    background-position: 2px 2px;
+    width: calc(100% - 115px);
+}
+
+.html5-player-controls .info-area .info {
+    position: relative;
+    top: 0;
+    text-align: left;
+    background: none;
 }
 
 .html5-player-controls .slider {
@@ -262,5 +288,8 @@
     .html5-player-controls .volume,
     .html5-player-controls .timeline {
         bottom: 10px;
+    }
+    .html5-player-controls .info-area {
+        bottom: 32px;
     }
 }
