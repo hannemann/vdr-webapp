@@ -66,12 +66,10 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
     $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
-    $(this.view.ctrlVolume).on('mousedown touchstart', $.proxy(this.volumeDown, this));
-    $(this.view.ctrlTimeline).on('mousedown touchstart', $.proxy(this.setTimeDown, this));
-
-    $(this.view.sizeSelect).on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
-    $(this.view.bitrateSelect).on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
-
+    this.view.ctrlVolume.on('mousedown touchstart', $.proxy(this.volumeDown, this));
+    this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
+    this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
+    this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
@@ -91,12 +89,12 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
 
     $(window).off('orientationchange.'+this.keyInCache);
-    $(this.view.ctrlVolume).off('mousedown touchstart');
-    $(this.view.ctrlTimeline).off('mousedown touchstart');
-    $(this.view.sizeSelect).off('mousedown touchstart');
-    $(this.view.bitrateSelect).off('mousedown touchstart');
-    $(this.view.controls).off('click');
-    $(this.view.stop).off('click');
+    this.view.ctrlVolume.off('mousedown touchstart');
+    this.view.ctrlTimeline.off('mousedown touchstart');
+    this.view.sizeSelect.off('mousedown touchstart');
+    this.view.bitrateSelect.off('mousedown touchstart');
+    this.view.controls.off('click');
+    this.view.stop.off('click');
     this.view.ctrlPlay.on('click');
     this.view.ctrlFullScreen.on('click');
     this.view.ctrlMinimize.on('click');
