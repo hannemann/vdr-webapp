@@ -490,18 +490,14 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
         }
 
         broadcast = this.data.channel.getCurrentBroadcast();
-        this.title.text(
-            this.data.channel.getData('name')
-            + ' - '
-            + broadcast.getData('title')
-        );
+        this.title.text(broadcast.getData('title'));
         if ('' !== broadcast.getData('short_text')) {
             this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
             this.subTitle.text(broadcast.getData('short_text'));
         }
 
         logo = this.data.channel.getData('image');
-        if ('' !== logo) {
+        if (logo) {
             this.infoArea.addClass('has-logo');
             this.infoArea.css({
                 "background-image" : "url(" + logo + ")"
