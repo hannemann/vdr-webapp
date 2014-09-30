@@ -228,6 +228,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.handleResize = function () {
 
+    if (this.module.isMuted) return;
 
     if (!this.isChannelView && this.isInView()) {
 

@@ -55,6 +55,8 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 
+    VDRest.app.getModule('Gui.Epg').mute();
+
     this.addObserver();
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
@@ -654,4 +656,6 @@ Gui.Window.Controller.VideoPlayer.prototype.destructView = function () {
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();
+
+    VDRest.app.getModule('Gui.Epg').unMute();
 };

@@ -15,6 +15,11 @@ VDRest.Abstract.Module.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.Module.prototype.namespace = 'VDRest';
 
 /**
+ * @type {string}
+ */
+VDRest.Abstract.Module.prototype.isMuted = false;
+
+/**
  * Initialize module structure
  */
 VDRest.Abstract.Module.prototype.init = function () {
@@ -304,4 +309,20 @@ VDRest.Abstract.Module.prototype.getInitData = function (id, cacheKey) {
     }
 
     return data;
+};
+
+/**
+ * set muted flag
+ */
+VDRest.Abstract.Module.prototype.mute = function () {
+
+    this.isMuted = true;
+};
+
+/**
+ * unset muted flag
+ */
+VDRest.Abstract.Module.prototype.unMute = function () {
+
+    this.isMuted = false;
 };
