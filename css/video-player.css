@@ -73,6 +73,7 @@
 .html5-player-controls .stop,
 .html5-player-controls .play,
 .html5-player-controls .toggle-fullScreen,
+.html5-player-controls .toggle-quality,
 .html5-player-controls .minimize {
     bottom: 15px;
 }
@@ -92,6 +93,10 @@
 
 .html5-player-controls .minimize {
     left: 172px;
+}
+
+.html5-player-controls .toggle-quality {
+    left: 226px;
 }
 
 .html5-player-controls .channel-up,
@@ -240,6 +245,7 @@
     .html5-player-controls .stop,
     .html5-player-controls .play,
     .html5-player-controls .toggle-fullScreen,
+    .html5-player-controls .toggle-quality,
     .html5-player-controls .minimize {
         bottom: -59px;
     }

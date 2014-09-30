@@ -71,6 +71,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
+    this.view.ctrlQuality.on('click.'+this.keyInCache, $.proxy(this.view.toggleQuality, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
@@ -97,6 +98,7 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.ctrlStop.off('click');
     this.view.ctrlPlay.on('click');
     this.view.ctrlFullScreen.on('click');
+    this.view.ctrlQuality.on('click');
     this.view.ctrlMinimize.on('click');
     this.view.player.off('timeupdate');
     if (this.data.isTv) {

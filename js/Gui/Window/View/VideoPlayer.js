@@ -62,6 +62,11 @@ Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = '&#9701;';
 /**
  * @type {string}
  */
+Gui.Window.View.VideoPlayer.prototype.symbolQuality = 'Q';
+
+/**
+ * @type {string}
+ */
 Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '_';
 //Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#9881;';
 //Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#x1f50a;';
@@ -97,6 +102,9 @@ Gui.Window.View.VideoPlayer.prototype.sizes = {
     }
 };
 
+/**
+ * @type {string[]}
+ */
 Gui.Window.View.VideoPlayer.prototype.bitrates = [
     '2048K', '1024K', '512K', '256K', '128K', '96K', '64K'
 ];
@@ -182,6 +190,10 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
     this.ctrlFullScreen = $(
         '<div class="toggle-fullScreen">' + this.symbolFullscreen + '</div>'
+    ).appendTo(this.controls);
+
+    this.ctrlQuality = $(
+        '<div class="toggle-quality">' + this.symbolQuality + '</div>'
     ).appendTo(this.controls);
 
 
@@ -275,6 +287,7 @@ Gui.Window.View.VideoPlayer.prototype.deferHideControls = function () {
 
     this.controlsTimeout = setTimeout(function () {
         me.controls.removeClass('show');
+        me.qualitySelect.removeClass('show');
     }, 5000);
 };
 
@@ -308,6 +321,14 @@ Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
 Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
 
     this.throbber.toggleClass('show');
+};
+
+/**
+ * show quality overlay
+ */
+Gui.Window.View.VideoPlayer.prototype.toggleQuality = function () {
+
+    this.qualitySelect.toggleClass('show');
 };
 
 /**
@@ -407,7 +428,7 @@ Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
 
     var i, l = this.bitrates.length, item;
 
-    this.qualitySelect = $('<div class="quality-select">');
+    this.qualitySelect = $('<div class="quality-select" data-animate="opacity">');
     this.sizeSelect = $('<div class="select size-select">').appendTo(this.qualitySelect);
     this.bitrateSelect = $('<div class="select bitrate-select">').appendTo(this.qualitySelect);
 
