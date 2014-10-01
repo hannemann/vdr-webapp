@@ -267,7 +267,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
         'mousemove.videoplayer-volume touchmove.videoplayer-volume',
         $.proxy(this.volumeMove, this)
     );
-    this.view.volumeIndicator.show();
+    this.view.toggleVolumeIndicator(true);
 };
 
 /**
@@ -279,7 +279,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeUp = function (e) {
     e.stopPropagation();
     e.preventDefault();
     $(document).off('mousemove.videoplayer-volume touchmove.videoplayer-volume');
-    this.view.volumeIndicator.hide();
+    this.view.toggleVolumeIndicator(false);
 };
 
 /**
@@ -373,12 +373,15 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeMove = function (e) {
 
     var newPos;
 
-    clearTimeout(this.spoolTimeout);
     e.stopPropagation();
     e.preventDefault();
     newPos = e.type === 'touchmove'
         ? e.originalEvent.changedTouches[0].pageX
         : e.pageX;
+
+    if (Math.abs(newPos - this.timelineSlidePos) > 5) {
+        clearTimeout(this.spoolTimeout);
+    }
 
     this.setTime(newPos >= this.timelineSlidePos ? 'increase' : 'decrease');
     this.timelineSlidePos = newPos;
@@ -594,7 +597,9 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
     var channels, getter, nextChannel, video = this.getVideo(), now, broadcast;
 
+    e.preventDefault();
     e.stopPropagation();
+    this.view.stopHideControls();
 
     if (
         !$('body').hasClass('video-minimized')
@@ -633,7 +638,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         if (broadcast) {
             this.data.startTime = now - broadcast.getData('start_time');
             this.view.setData('startTime', this.data.startTime);
-            this.view.updateProgress();
+            this.view.addProgress().updateProgress();
         }
     }
 

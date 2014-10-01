@@ -139,9 +139,9 @@
 }
 
 .html5-player-controls .info-area {
-    left: 15px;
+    left: 10px;
     width: calc(100% - 74px);
-    bottom: calc(20% + 20px);
+    bottom:  106px;
     margin: 0;
     padding: 2px;
 }
@@ -195,11 +195,34 @@
     border-radius: 8px;
 }
 
-.html5-player-controls .timeline {
-    bottom: 20%;
-    left: 15px;
+.html5-player-controls .timeline,
+.html5-player-controls .progress {
+    bottom: 84px;
+    left: 10px;
     right: 55px;
     width: auto;
+}
+.html5-player-controls .progress {
+    bottom: 66px;
+}
+.html5-player-controls .progress .info {
+    position: relative;
+    width: 25%;
+    float: left;
+    font-size: 15px;
+    line-height: 1;
+}
+.html5-player-controls .progress .progress-start {
+    text-align: left;
+}
+.html5-player-controls .progress .progress-current {
+    text-align: right;
+}
+.html5-player-controls .progress .progress-duration {
+    text-align: left;
+}
+.html5-player-controls .progress .progress-end {
+    text-align: right;
 }
 
 .html5-player-controls .quality-select {
@@ -284,11 +307,20 @@
     .html5-player-controls .volume {
         top: 77px;
     }
-    .html5-player-controls .volume,
-    .html5-player-controls .timeline {
+    .html5-player-controls .volume {
         bottom: 10px;
     }
+    .html5-player-controls .timeline {
+        bottom: 20px;
+    }
+    .html5-player-controls .progress {
+        bottom: 0;
+    }
     .html5-player-controls .info-area {
-        bottom: 32px;
+        bottom: 38px;
+    }
+    .html5-player-controls .volume-indicator,
+    .html5-player-controls .quality-select {
+        bottom: 60px;
     }
 }

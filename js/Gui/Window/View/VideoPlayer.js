@@ -204,8 +204,8 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
     this.ctrlVolume = $('<div class="slider volume">').appendTo(this.controls);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
     this.volumeIndicator = $(
-        '<div class="info volume-indicator">'
-    ).hide().appendTo(this.controls);
+        '<div class="info volume-indicator" data-animate="opacity">'
+    ).appendTo(this.controls);
 
     this.ctrlTimeline = $('<div class="slider timeline">').appendTo(this.controls);
     this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
@@ -250,6 +250,16 @@ Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
     percentage = 100 - parseInt(percentage);
 
     this.volumeIndicator.text(percentage.toString() + '%');
+};
+
+/**
+ * toggle volume indicator visibility
+ * @param {Boolean} show
+ */
+Gui.Window.View.VideoPlayer.prototype.toggleVolumeIndicator = function (show) {
+
+    show = !!show;
+    this.volumeIndicator.toggleClass('show', show);
 };
 
 /**
@@ -390,13 +400,42 @@ Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
 
+    var start, end, duration, helper = this.helper(), broadcast;
+
     if ("undefined" != typeof this.progress) {
         this.progress.remove();
         delete this.progress;
     }
 
-    this.progress = $('<div class="progress info">' + this.data.progress + '</div>');
+    this.progress = $('<div class="progress info"></div>');
+    this.start = $('<div class="progress-start info">').appendTo(this.progress);
+    this.currentProgress = $('<div class="progress-current info">')
+        .text(this.data.progress)
+        .appendTo(this.progress);
+    this.duration = $('<div class="progress-duration info">')
+        .appendTo(this.progress);
+    this.end = $('<div class="progress-end info">').appendTo(this.progress);
+
+    if (this.data.isVideo) {
+
+        start = helper.getTimeString(new Date());
+        duration = this.getData('recording').getData('duration');
+        end = helper.getTimeString(
+            new Date(new Date().getTime() + duration * 1000)
+        );
+        duration = helper.getDurationAsString(duration);
+    } else {
+        broadcast = this.getData('channel').getCurrentBroadcast();
+        start = helper.getTimeString(broadcast.getData('start_date'));
+        end = helper.getTimeString(broadcast.getData('end_date'));
+        duration = helper.getDurationAsString(broadcast.getData('duration'));
+    }
+    this.start.text(start);
+    this.end.text(end);
+    this.duration.html('&nbsp;/&nbsp;' + duration);
+
     this.progress.appendTo(this.controls);
+    return this;
 };
 
 /**
@@ -421,8 +460,9 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
         }
     }
 
-    this.progress.text(this.getProgress(time));
+    this.currentProgress.text(this.getProgress(time));
     this.setTimelineSliderWidth();
+    return this;
 };
 
 /**
