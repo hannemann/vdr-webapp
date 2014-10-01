@@ -88,6 +88,12 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     if (this.data.isTv) {
         this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
         this.view.ctrlChannelDown.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
+    } else {
+
+        $(this.view.player).one(
+            'playing',
+            $.proxy(this.view.updateRecordingStartEndTime, this.view)
+        );
     }
 };
 
@@ -109,6 +115,7 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.ctrlFullScreen.on('click');
     this.view.ctrlQuality.on('click');
     this.view.ctrlMinimize.on('click');
+    this.view.player.off('playing');
     this.view.player.off('timeupdate');
     this.view.player.off('stalled');
     if (this.data.isTv) {
@@ -523,6 +530,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
         this.view.toggleThrobber();
         if (this.data.isVideo) {
             this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
+            this.view.updateRecordingEndTime(false);
         }
     }, this));
 };
@@ -534,8 +542,11 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
 
     var video = this.getVideo();
 
+    this.view.stopHideControls();
+
     if (this.data.recording) {
         this.data.startTime = Math.floor(this.data.startTime + this.getVideo().currentTime);
+        this.view.updateRecordingEndTime(true);
     }
 
     if (!this.settingParams) {
@@ -640,14 +651,46 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
             this.data.startTime = now - broadcast.getData('start_time');
             this.view.setData('startTime', this.data.startTime);
             this.view.addProgress().updateProgress();
+            this.setIsTv();
         }
+    } else {
+
+        this.setIsVideo();
     }
 
     if (this.isPlaying) {
         video.pause();
+        if (this.isVideo) {
+            $(video).one(
+                'playing',
+                $.proxy(this.view.updateRecordingStartEndTime, this)
+            );
+        }
     }
     video.src = false;
     this.view.addTitle();
+};
+
+/**
+ * indicate that stream is recording
+ */
+Gui.Window.Controller.VideoPlayer.prototype.setIsVideo = function () {
+
+    this.data.isTv = false;
+    this.data.isVideo = true;
+    this.view.data.isTv = this.data.isTv;
+    this.view.data.isVideo = this.data.isVideo;
+};
+
+/**
+ * indicate that stream is live tv
+ */
+Gui.Window.Controller.VideoPlayer.prototype.setIsTv = function () {
+
+    this.data.isTv = true;
+    this.data.isVideo = false;
+    this.view.data.isTv = this.data.isTv;
+    this.view.data.isVideo = this.data.isVideo;
 };
 
 /**

@@ -12,11 +12,14 @@ VDRest.Helper.prototype.now = function () {
 /**
  * retrieve time string from date object
  * @param {Date} date
+ * @param {Boolean} [withSeconds]
  * @return {*}
  */
-VDRest.Helper.prototype.getTimeString = function (date) {
+VDRest.Helper.prototype.getTimeString = function (date, withSeconds) {
 	if (date instanceof Date) {
-		return this.pad(date.getHours(), 2)+':'+this.pad(date.getMinutes(), 2);
+		return this.pad(date.getHours(), 2)
+            + ':' + this.pad(date.getMinutes(), 2)
+            + (withSeconds ? ':' + this.pad(date.getSeconds(), 2) : '');
 	}
 	return false;
 };
@@ -93,14 +96,18 @@ VDRest.Helper.prototype.pad = function (n, width, z) {
 /**
  * convert seconds to hh:mm
  * @param {int} duration
+ * @param {Boolean} [withSeconds]
  * @return {String}
  */
-VDRest.Helper.prototype.getDurationAsString = function (duration) {
+VDRest.Helper.prototype.getDurationAsString = function (duration, withSeconds) {
 
-    var hours = parseInt(duration/60/60, 10),
-        minutes = Math.round((duration - parseInt(duration/60/60, 10)*60*60)/60);
+    var minutes = Math.floor(duration / 60),
+        seconds = this.pad(parseInt(duration - minutes * 60), 2),
+        hours = Math.floor(duration / 3600);
 
-	return this.pad(hours, 2) + ':' + this.pad(minutes, 2)
+    minutes = this.pad(minutes - hours * 60, 2);
+
+    return hours + ':' + minutes + (withSeconds ? ':' + seconds : '');
 };
 
 /**

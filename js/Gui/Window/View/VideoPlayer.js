@@ -418,17 +418,18 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
 
     if (this.data.isVideo) {
 
-        start = helper.getTimeString(new Date());
+        start = helper.getTimeString(new Date(), true);
         duration = this.getData('recording').getData('duration');
         end = helper.getTimeString(
-            new Date(new Date().getTime() + duration * 1000)
+            new Date(new Date().getTime() + duration * 1000),
+            true
         );
-        duration = helper.getDurationAsString(duration);
+        duration = helper.getDurationAsString(duration, true);
     } else {
         broadcast = this.getData('channel').getCurrentBroadcast();
         start = helper.getTimeString(broadcast.getData('start_date'));
         end = helper.getTimeString(broadcast.getData('end_date'));
-        duration = helper.getDurationAsString(broadcast.getData('duration'));
+        duration = helper.getDurationAsString(broadcast.getData('duration'), true);
     }
     this.start.text(start);
     this.end.text(end);
@@ -436,6 +437,51 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
 
     this.progress.appendTo(this.controls);
     return this;
+};
+
+/**
+ * update recording end time periodically in case of recording is paused
+ * @param {Boolean} action
+ */
+Gui.Window.View.VideoPlayer.prototype.updateRecordingEndTime = function (action) {
+
+    var me = this,
+        duration = this.getData('recording').getData('duration'),
+        helper = this.helper();
+
+    if (action) {
+        this.endTimeInterval = setInterval(function () {
+
+            me.end.text(helper.getTimeString(
+                new Date(new Date().getTime()
+                    + duration * 1000
+                    - me.getData('startTime') * 1000
+                ),
+                true
+            ));
+        }, 1000);
+    } else {
+        clearInterval(this.endTimeInterval);
+    }
+};
+
+/**
+ * update start and end time
+ */
+Gui.Window.View.VideoPlayer.prototype.updateRecordingStartEndTime = function () {
+
+    var duration = this.getData('recording').getData('duration'),
+        helper = this.helper(), start, end;
+
+
+    start = helper.getTimeString(new Date(), true);
+    end = helper.getTimeString(
+        new Date(new Date().getTime() + duration * 1000),
+        true
+    );
+
+    this.end.text(end);
+    this.start.text(start);
 };
 
 /**
@@ -460,25 +506,9 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
         }
     }
 
-    this.currentProgress.text(this.getProgress(time));
+    this.currentProgress.text(this.helper().getDurationAsString(time, true));
     this.setTimelineSliderWidth();
     return this;
-};
-
-/**
- * convert time to string
- * @param {float} time
- * @returns {string}
- */
-Gui.Window.View.VideoPlayer.prototype.getProgress = function (time) {
-
-    var minutes = Math.floor(time / 60),
-        seconds = this.helper().pad(parseInt(time - minutes * 60), 2),
-        hours = Math.floor(time / 3600);
-
-    minutes = this.helper().pad(minutes - hours * 60, 2);
-
-    return hours + ':' + minutes + ':' + seconds;
 };
 
 /**
