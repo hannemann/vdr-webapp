@@ -332,7 +332,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     e.stopPropagation();
     e.preventDefault();
 
-    this.spoolTimeout = setTimeout($.proxy(this.spool, this), 1000);
+    this.spoolTimeout = setTimeout($.proxy(this.spool, this), 2000);
 
     $(document).one('mouseup', $.proxy(this.setTimeUp, this));
     $(document).one('touchend', $.proxy(this.setTimeUp, this));
@@ -347,6 +347,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     } else {
         this.timelineSlidePos = e.pageX;
     }
+    this.timelineDownPos = this.timelineSlidePos;
     $(document).on('mousemove.videoplayer-time', $.proxy(this.setTimeMove, this));
     $(document).on('touchmove.videoplayer-time', $.proxy(this.setTimeMove, this));
 };
@@ -379,7 +380,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeMove = function (e) {
         ? e.originalEvent.changedTouches[0].pageX
         : e.pageX;
 
-    if (Math.abs(newPos - this.timelineSlidePos) > 5) {
+    if (Math.abs(newPos - this.timelineDownPos) > 2) {
         clearTimeout(this.spoolTimeout);
     }
 
