@@ -622,11 +622,17 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
     if (e instanceof VDRest.Epg.Model.Channels.Channel) {
 
+        if (this.data.channel && this.data.channel == e) {
+            return;
+        }
         this.data.recording = undefined;
         this.data.channel = e;
 
     } else if (e instanceof VDRest.Recordings.Model.List.Recording) {
 
+        if (this.data.recording && this.data.recording == e) {
+            return;
+        }
         this.data.recording = e;
         this.data.channel = undefined;
         this.data.startTime = 0;
@@ -643,6 +649,9 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
             return;
         }
     }
+    this.pausePlayback();
+    this.view.updateRecordingEndTime(false);
+    this.view.setDefaultPoster();
 
     if (this.getData('channel')) {
         now = parseInt(new Date().getTime() / 1000, 10);
@@ -652,24 +661,23 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
             this.view.addChannelButtons();
             this.data.startTime = now - broadcast.getData('start_time');
             this.view.setData('startTime', this.data.startTime);
-            this.view.addProgress().updateProgress();
+        } else {
+            return;
         }
-    } else {
+    } else if (this.getData('recording')) {
 
         this.setIsVideo();
+        this.data.startTime = 0;
+        this.view.setData('startTime', this.data.startTime);
         this.view.removeChannelButtons();
+        $(video).one(
+            'playing',
+            $.proxy(this.view.updateRecordingStartEndTime, this.view)
+        );
+    } else {
+        return;
     }
-
-    if (this.isPlaying) {
-        video.pause();
-        if (this.isVideo) {
-            $(video).one(
-                'playing',
-                $.proxy(this.view.updateRecordingStartEndTime, this)
-            );
-        }
-    }
-    video.src = false;
+    this.view.addProgress().updateProgress();
     this.view.addTitle();
 };
 

@@ -135,7 +135,7 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
     this.addClasses();
 
     this.node.toggleClass('collapsed expand');
-    this.player.attr('poster', this.module.getHelper('VideoPlayer').defaultPoster(this.video));
+    this.setDefaultPoster();
 
     this.sizeList.css({
         "top": - this.sizeList.find('.item.selected').position().top + 'px'
@@ -155,6 +155,14 @@ Gui.Window.View.VideoPlayer.prototype.initPlayer = function () {
     this.addControls();
 
     return this;
+};
+
+Gui.Window.View.VideoPlayer.prototype.setDefaultPoster = function () {
+
+    this.player.attr(
+        'poster',
+        this.module.getHelper('VideoPlayer').defaultPoster(this.video)
+    );
 };
 
 /**
@@ -218,6 +226,9 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
     this.addChannelButtons();
 };
 
+/**
+ * add channel buttons
+ */
 Gui.Window.View.VideoPlayer.prototype.addChannelButtons = function () {
 
     if (this.data.isTv && !this.ctrlChannelUp) {
@@ -230,6 +241,9 @@ Gui.Window.View.VideoPlayer.prototype.addChannelButtons = function () {
     }
 };
 
+/**
+ * remove channel buttons
+ */
 Gui.Window.View.VideoPlayer.prototype.removeChannelButtons = function () {
 
     if (this.ctrlChannelUp) {
