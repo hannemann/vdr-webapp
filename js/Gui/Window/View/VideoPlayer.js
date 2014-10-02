@@ -121,6 +121,8 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
     this.player.prop('crossOrigin', 'anonymous');
 
     this.initPlayer();
+
+    $('body').addClass('has-video-player');
 };
 
 /**
@@ -625,4 +627,5 @@ Gui.Window.View.VideoPlayer.prototype.destruct = function () {
     this.player.prop('src', false);
 
     Gui.Window.View.Abstract.prototype.destruct.call(me);
+    $('body').removeClass('has-video-player');
 };

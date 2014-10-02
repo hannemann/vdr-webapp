@@ -253,29 +253,25 @@
     line-height: 24px;
 }
 
-.video-minimized .modal-video {
-    height: auto;
-    width: auto;
-    bottom: auto;
-    right: auto;
-    display: block;
-    left: 50%;
-}
-.video-minimized .video-player-wrapper {
-    height: auto;
-    margin: 0;
-    top: 0;
-    position: relative;
-}
+@media (orientation: portrait) {
+    .video-minimized #viewport {
+        min-height: 50%;
+        height: calc(100% - 180px - 50px);
+    }
 
-.video-minimized .video-player-wrapper video {
-    height: 48px;
-    width: auto;
-    display: block;
-}
-
-.video-minimized .html5-player-controls {
-    display: none;
+    .video-minimized .html5-player-controls {
+        display: none;
+    }
+    .video-minimized .modal-overlay {
+        min-height: 50%;
+        height: calc(100% - 180px);
+    }
+    .video-minimized .modal-overlay.modal-video {
+        max-height: 50%;
+        height: 180px;
+        top: auto;
+        min-height: 0;
+    }
 }
 
 @media (orientation: landscape) {
@@ -325,5 +321,24 @@
     .html5-player-controls .volume-indicator,
     .html5-player-controls .quality-select {
         bottom: 60px;
+    }
+}
+@media (min-width: 1024px), (orientation: landscape) {
+    .has-video-player.video-minimized #menubar {
+        min-width: calc(50% - 17px);
+        width: calc(100% - 320px - 17px);
+    }
+    .has-video-player.video-minimized #viewport {
+        min-width: 50%;
+        width: calc(100% - 320px);
+    }
+    .has-video-player.video-minimized .modal-video {
+        left: auto;
+        max-width: 50%;
+        width: 320px;
+    }
+    .video-minimized .modal-overlay {
+        min-width: 50%;
+        width: calc(100% - 320px);
     }
 }
