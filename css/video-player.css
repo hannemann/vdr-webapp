@@ -24,22 +24,10 @@
     z-index: 0;
     width: 100%;
 }
-.html5-player.landscape video {
-    position: absolute;
-    display: block;
-    margin: auto 0;
-    bottom: 0;
-    top: 0;
-}
 .html5-player{
     margin-top: -25%;
     top: 50%;
     bottom: auto;
-}
-.html5-player.landscape {
-    margin: auto 0;
-    top: 0;
-    bottom: 0;
 }
 .html5-player .throbber {
     position: absolute;
@@ -288,6 +276,21 @@
 
 .video-minimized .html5-player-controls {
     display: none;
+}
+
+@media (orientation: landscape) {
+    .html5-player video {
+        position: absolute;
+        display: block;
+        margin: auto 0;
+        bottom: 0;
+        top: 0;
+    }
+    .html5-player {
+        margin: auto 0;
+        top: 0;
+        bottom: 0;
+    }
 }
 @media (max-width: 480px) {
     .html5-player-controls .stop,

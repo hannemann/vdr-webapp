@@ -69,7 +69,6 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
     var helper = this.helper();
 
-    $(window).on('orientationchange.'+this.keyInCache, $.proxy(this.view.setPosition, this.view));
     this.view.ctrlVolume.on('mousedown touchstart', $.proxy(this.volumeDown, this));
     this.view.ctrlVolume.on('click', helper.stopPropagation);
     this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
@@ -102,7 +101,6 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
 
-    $(window).off('orientationchange.'+this.keyInCache);
     this.view.ctrlVolume.off('mousedown touchstart');
     this.view.ctrlVolume.off('click');
     this.view.ctrlTimeline.off('mousedown touchstart');

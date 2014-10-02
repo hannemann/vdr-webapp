@@ -132,8 +132,6 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
 
     this.addClasses();
 
-    this.setPosition();
-
     this.node.toggleClass('collapsed expand');
     this.player.attr('poster', this.module.getHelper('VideoPlayer').defaultPoster(this.video));
 
@@ -607,27 +605,9 @@ Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
 
     var classNames = ['html5-player', 'fullsize', 'collapsed'];
 
-    classNames.push(window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
-
     this.node.addClass(classNames.join(' '));
 
     return this;
-};
-
-/**
- * center video
- */
-Gui.Window.View.VideoPlayer.prototype.setPosition = function () {
-
-    var me = this;
-
-    setTimeout(function () {
-        if (window.innerHeight > window.innerWidth) {
-            me.node.removeClass('landscape').addClass('portrait');
-        } else {
-            me.node.removeClass('portrait').addClass('landscape');
-        }
-    }, 1000);
 };
 
 /**
