@@ -93,11 +93,11 @@
 }
 
 .html5-player-controls .channel-up {
-    top: 77px;
+    top: 15px;
 }
 
 .html5-player-controls .channel-down {
-    top: 131px;
+    top: 69px;
 }
 
 .html5-player-controls .info {
@@ -256,6 +256,18 @@
     z-index: 3;
 }
 
+.video-minimized .html5-player {
+    margin-top: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+}
+.video-minimized .html5-player video {
+    max-width: 320px;
+    max-height: 180px;
+    height: 100%;
+}
+
 @media (orientation: portrait) {
     .video-minimized #viewport {
         min-height: 50%;
@@ -265,7 +277,6 @@
     .video-minimized .html5-player-controls {
         display: none;
     }
-    .video-minimized video,
     .video-minimized .modal-overlay {
         min-height: 50%;
         height: calc(100% - 180px);
@@ -276,23 +287,7 @@
         top: auto;
         min-height: 0;
     }
-}
 
-@media (orientation: landscape) {
-    .html5-player video {
-        position: absolute;
-        display: block;
-        margin: auto 0;
-        bottom: 0;
-        top: 0;
-    }
-    .html5-player {
-        margin: auto 0;
-        top: 0;
-        bottom: 0;
-    }
-}
-@media (max-width: 480px) {
     .html5-player-controls .stop,
     .html5-player-controls .play,
     .html5-player-controls .toggle-fullScreen,
@@ -327,7 +322,7 @@
         bottom: 60px;
     }
 }
-@media (min-width: 1024px), (orientation: landscape) {
+@media (orientation: landscape) {
     .has-video-player.video-minimized #menubar {
         min-width: calc(50% - 17px);
         width: calc(100% - 320px - 17px);
@@ -336,13 +331,26 @@
         min-width: 50%;
         width: calc(100% - 320px);
     }
-    .has-video-player.video-minimized .modal-video {
+    .has-video-player.video-minimized .modal-overlay.modal-video {
         left: auto;
         max-width: 50%;
         width: 320px;
+        min-width: 0;
     }
     .video-minimized .modal-overlay {
         min-width: 50%;
         width: calc(100% - 320px);
+    }
+    .html5-player {
+        margin: auto 0;
+        top: 0;
+        bottom: 0;
+    }
+    .html5-player video {
+        position: absolute;
+        display: block;
+        margin: auto 0;
+        bottom: 0;
+        top: 0;
     }
 }
