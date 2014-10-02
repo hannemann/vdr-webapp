@@ -252,6 +252,9 @@
     height: 24px;
     line-height: 24px;
 }
+.modal-overlay.modal-video {
+    z-index: 3;
+}
 
 @media (orientation: portrait) {
     .video-minimized #viewport {
@@ -262,6 +265,7 @@
     .video-minimized .html5-player-controls {
         display: none;
     }
+    .video-minimized video,
     .video-minimized .modal-overlay {
         min-height: 50%;
         height: calc(100% - 180px);

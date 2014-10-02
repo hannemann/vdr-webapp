@@ -118,14 +118,14 @@
 .drawer .modal-overlay {
     background: rgba(0,0,0,0);
 }
-.drawer.show .modal-overlay {
+.drawer.show #viewport .modal-overlay {
     animation-duration: .6s;
     animation-name: showModal;
     -webkit-animation-duration: .6s;
     -webkit-animation-name: showModal;
     background: rgba(0,0,0,0.5);
 }
-.drawer.hide .modal-overlay {
+.drawer.hide #viewport .modal-overlay {
     animation-duration: .6s;
     animation-name: hideModal;
     -webkit-animation-duration: .6s;

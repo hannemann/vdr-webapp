@@ -215,14 +215,28 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 
     this.setVolumeSliderHeight();
     this.setTimelineSliderWidth();
+    this.addChannelButtons();
+};
 
-    if (this.data.isTv) {
+Gui.Window.View.VideoPlayer.prototype.addChannelButtons = function () {
+
+    if (this.data.isTv && !this.ctrlChannelUp) {
         this.ctrlChannelUp = $(
             '<div class="channel-up">' + this.symbolNext + '</div>'
         ).appendTo(this.controls);
         this.ctrlChannelDown = $(
             '<div class="channel-down">' + this.symbolPrevious + '</div>'
         ).appendTo(this.controls);
+    }
+};
+
+Gui.Window.View.VideoPlayer.prototype.removeChannelButtons = function () {
+
+    if (this.ctrlChannelUp) {
+        this.ctrlChannelUp.remove();
+        this.ctrlChannelDown.remove();
+        this.ctrlChannelUp = undefined;
+        this.ctrlChannelDown = undefined;
     }
 };
 

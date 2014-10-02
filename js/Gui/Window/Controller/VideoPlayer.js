@@ -607,8 +607,10 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
     var channels, getter, nextChannel, video = this.getVideo(), now, broadcast;
 
-    e.preventDefault();
-    e.stopPropagation();
+    if (e instanceof jQuery.Event) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     this.view.stopHideControls();
 
     if (
@@ -646,14 +648,16 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         now = parseInt(new Date().getTime() / 1000, 10);
         broadcast = this.getData('channel').getCurrentBroadcast();
         if (broadcast) {
+            this.setIsTv();
+            this.view.addChannelButtons();
             this.data.startTime = now - broadcast.getData('start_time');
             this.view.setData('startTime', this.data.startTime);
             this.view.addProgress().updateProgress();
-            this.setIsTv();
         }
     } else {
 
         this.setIsVideo();
+        this.view.removeChannelButtons();
     }
 
     if (this.isPlaying) {

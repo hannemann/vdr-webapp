@@ -8,6 +8,7 @@
 }
 #viewport .modal-overlay {
     position: absolute;
+    height: 100%;
 }
 .modal-overlay.transparent {
     background: rgba(0,0,0,0.01);
