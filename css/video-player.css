@@ -266,6 +266,9 @@
     bottom: 0;
     text-align: center;
 }
+.video-minimized .html5-player-controls {
+    top: 120px;
+}
 .video-minimized .html5-player video {
     max-width: 320px;
     max-height: 180px;
@@ -316,9 +319,7 @@
         left: 64px;
     }
     .html5-player-controls .volume {
-        top: 77px;
-    }
-    .html5-player-controls .volume {
+        top: 10px;
         bottom: 10px;
     }
     .html5-player-controls .timeline {
