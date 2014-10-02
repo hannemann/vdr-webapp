@@ -144,10 +144,14 @@
 }
 
 .html5-player-controls .info-area .info {
-    position: relative;
     top: 0;
     text-align: left;
     background: none;
+    left: auto;
+    right: auto;
+}
+.html5-player-controls .info-area .short-text.info {
+    top: 18px;
 }
 
 .html5-player-controls .slider {
@@ -267,15 +271,24 @@
     max-height: 180px;
     height: 100%;
 }
+.video-minimized .html5-player-controls > div {
+    display: none;
+}
+.video-minimized .html5-player-controls .info-area {
+    display: block;
+    bottom: 10px;
+    width: calc(100% - 24px);
+}
+.video-minimized .html5-player-controls .info-area.has-logo {
+    display: block;
+    bottom: 10px;
+    width: calc(100% - 69px);
+}
 
 @media (orientation: portrait) {
     .video-minimized #viewport {
         min-height: 50%;
         height: calc(100% - 180px - 50px);
-    }
-
-    .video-minimized .html5-player-controls {
-        display: none;
     }
     .video-minimized .modal-overlay {
         min-height: 50%;
@@ -340,6 +353,10 @@
     .video-minimized .modal-overlay {
         min-width: 50%;
         width: calc(100% - 320px);
+    }
+    .video-minimized #viewport .modal-overlay {
+        min-width: 0;
+        width: auto;
     }
     .html5-player {
         margin: auto 0;

@@ -650,7 +650,6 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         }
     }
     this.pausePlayback();
-    this.view.updateRecordingEndTime(false);
     this.view.setDefaultPoster();
 
     if (this.getData('channel')) {
@@ -670,6 +669,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.data.startTime = 0;
         this.view.setData('startTime', this.data.startTime);
         this.view.removeChannelButtons();
+        this.view.updateRecordingEndTime(false);
         $(video).one(
             'playing',
             $.proxy(this.view.updateRecordingStartEndTime, this.view)
@@ -679,6 +679,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     }
     this.view.addProgress().updateProgress();
     this.view.addTitle();
+    this.view.toggleControls();
 };
 
 /**
