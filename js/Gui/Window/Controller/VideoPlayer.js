@@ -499,7 +499,8 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
     var d = new Date(), src, video = this.getVideo(),
         streamdevParams = [],
         size = this.view.sizeList.find('.item.selected').text(),
-        bitrate = this.view.bitrateList.find('.item.selected').text();
+        bitrate = this.view.bitrateList.find('.item.selected').text(),
+        duration;
 
     streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
     streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
@@ -508,6 +509,10 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
     if (this.data.channel) {
         src = this.getData('channel').getStreamUrl(streamdevParams);
     } else if (this.data.recording) {
+        duration = this.data.recording.getData('duration');
+        streamdevParams.push(
+            'DUR=' + (this.data.startTime ? duration - this.data.startTime : duration).toString()
+        );
         src = this.data.recording.getStreamUrl(streamdevParams);
         if (this.data.startTime > 0) {
             src += '?pos=time.' + this.data.startTime;
