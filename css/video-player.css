@@ -132,10 +132,10 @@
     bottom:  106px;
     margin: 0;
     padding: 2px;
+    min-height: 38px;
 }
 
 .html5-player-controls .info-area.has-logo {
-    min-height: 38px;
     padding-left: 45px;
     background-repeat: no-repeat;
     background-size: 38px 38px;
@@ -267,7 +267,8 @@
     text-align: center;
 }
 .video-minimized .html5-player-controls {
-    top: 120px;
+    top: auto;
+    height: 60px;
 }
 .video-minimized .html5-player video {
     max-width: 320px;

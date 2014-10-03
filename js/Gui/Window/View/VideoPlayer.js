@@ -143,6 +143,7 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
     this.bitrateList.css({
         "top": - this.bitrateList.find('.item.selected').position().top + 'px'
     });
+    this.scrollTitle();
 };
 
 /**
@@ -304,13 +305,16 @@ Gui.Window.View.VideoPlayer.prototype.getVolumePercentage = function () {
 /**
  * show controls overlay
  */
-Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
+Gui.Window.View.VideoPlayer.prototype.toggleControls = function (e) {
 
     if (this.omitToggleControls) {
         this.omitToggleControls = undefined;
         return;
     }
 
+    if (e instanceof jQuery.Event) {
+        e.stopPropagation();
+    }
     this.stopHideControls();
 
     if (this.controls.hasClass('show')) {
@@ -319,7 +323,10 @@ Gui.Window.View.VideoPlayer.prototype.toggleControls = function () {
     } else {
 
         this.controls.addClass('show');
-        this.deferHideControls();
+        this.scrollTitle();
+        if (!e) {
+            this.deferHideControls();
+        }
     }
 };
 
@@ -628,6 +635,99 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 };
 
 /**
+ * scroll title
+ */
+Gui.Window.View.VideoPlayer.prototype.scrollTitle = function () {
+
+    if ("undefined" !== typeof this.infoAreaScrollInterval) {
+        clearInterval(this.infoAreaScrollInterval);
+        this.infoAreaScrollInterval = undefined;
+    }
+    if ("undefined" !== typeof this.infoAreaScrollTimeout) {
+        clearTimeout(this.infoAreaScrollTimeout);
+        this.infoAreaScrollTimeout = undefined;
+    }
+    if (this.controls.hasClass('show')) {
+        this.animateInfoArea();
+    }
+
+};
+
+/**
+ * animate info area
+ */
+Gui.Window.View.VideoPlayer.prototype.animateInfoArea = function () {
+
+    var me = this,
+        indent = 0,
+        elem = this.infoArea,
+        infoWidth = this.infoArea.width(),
+        titleWidth,
+        subTitleWidth = 0,
+        delta;
+
+    elem.css({
+        "text-indent": indent
+    });
+
+    titleWidth = this.title.width();
+    if (this.subTitle) {
+        subTitleWidth = this.subTitle.width();
+    }
+
+    delta = Math.max(titleWidth, subTitleWidth) - infoWidth;
+
+    if (delta < 1) return;
+
+    this.infoAreaScrollTimeout = setTimeout(function () {
+
+        me.infoAreaScrollInterval = setInterval(function () {
+            indent -= 1;
+
+            if (Math.abs(indent) > delta) {
+                clearInterval(me.infoAreaScrollInterval);
+                me.infoAreaScrollInterval = undefined;
+                me.infoAreaScrollTimeout = setTimeout(function () {
+                    var skip = 0;
+                    elem.find('.info').animate({
+                        'opacity' : 0
+                    }, {
+                        "duration" : "fast",
+                        "complete" : function () {
+                            elem.css({
+                                "text-indent" : 0
+                            });
+                            elem.find('.info').animate({
+                                'opacity' : 1
+                            }, {
+                                "duration" : "fast",
+                                "complete" : function () {
+                                    if (skip < 3) {
+                                        skip += 1;
+                                        return;
+                                    }
+                                    me.animateInfoArea.call(me);
+                                }
+                            })
+                        }
+                    });
+                }, 2000);
+            } else if (!me.controls.hasClass('show')) {
+                clearInterval(me.infoAreaScrollInterval);
+                me.infoAreaScrollInterval = undefined;
+                elem.css({
+                    "text-indent": 0
+                });
+            } else {
+                elem.css({
+                    "text-indent": indent + 'px'
+                });
+            }
+        }, 40);
+    }, 2000);
+};
+
+/**
  * add classes
  * @returns {Gui.Window.View.VideoPlayer}
  */
@@ -649,6 +749,16 @@ Gui.Window.View.VideoPlayer.prototype.destruct = function () {
 
     if ("undefined" != typeof this.changeTitleTimeout) {
         clearTimeout(this.changeTitleTimeout);
+        this.changeTitleTimeout = undefined;
+    }
+
+    if ("undefined" !== this.infoAreaScrollInterval) {
+        clearInterval(this.infoAreaScrollInterval);
+        this.infoAreaScrollInterval = undefined;
+    }
+    if ("undefined" !== typeof this.infoAreaScrollTimeout) {
+        clearTimeout(this.infoAreaScrollTimeout);
+        this.infoAreaScrollTimeout = undefined;
     }
 
     player.pause();

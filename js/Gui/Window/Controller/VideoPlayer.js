@@ -461,9 +461,13 @@ Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
 /**
  * toggle minimize
  */
-Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function () {
+Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function (e) {
 
     var me = this;
+
+    if (e instanceof jQuery.Event) {
+        e.stopPropagation();
+    }
 
     if (!this.view.controls.hasClass('show') && !this.data.isMinimized) {
         return;
@@ -479,7 +483,6 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function () {
         VDRest.app.observe();
         VDRest.app.setLocationHash(this.observeHash);
         VDRest.app.destroyer.push(this.destroyer);
-        $(this.view.controls).trigger('click');
     }
     this.view.toggleMinimize();
     this.data.isMinimized = !this.data.isMinimized;
@@ -679,7 +682,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     }
     this.view.addProgress().updateProgress();
     this.view.addTitle();
-    this.view.toggleControls();
+    this.view.scrollTitle();
 };
 
 /**
