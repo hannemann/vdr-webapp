@@ -129,14 +129,9 @@ Gui.Window.Controller.VideoPlayer.prototype.handleStalled = function () {
 
     var me = this;
 
-    this.helper().log('stalled');
-
-    this.view.video.pause();
     this.view.toggleThrobber();
-    this.view.player.one('canplay', function () {
+    this.view.player.one('timeupdate', function () {
         me.view.toggleThrobber();
-        me.view.video.play();
-        me.helper().log('canplay');
     });
 };
 
