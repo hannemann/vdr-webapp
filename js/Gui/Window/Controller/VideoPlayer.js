@@ -358,12 +358,29 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
 
+    var d, streamdevParams, size;
+
     clearTimeout(this.spoolTimeout);
     clearInterval(this.spoolInterval);
     clearInterval(this.increaseValueInterval);
     e.stopPropagation();
     e.preventDefault();
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
+
+    if (this.data.isVideo) {
+        d = new Date().getTime();
+        size = this.view.sizeList.find('.item.selected').text();
+
+        streamdevParams = [];
+        streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
+        streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
+
+        this.getVideo().poster = this.getData('recording')
+            .getStreamUrl(streamdevParams)
+            .replace(/TYPE=[a-z]+/, 'TYPE=poster')
+                + '?pos=time.'
+                + this.data.startTime + '&d=' + d;
+    }
 };
 
 /**
