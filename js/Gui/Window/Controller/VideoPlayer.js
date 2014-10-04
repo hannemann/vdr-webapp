@@ -60,6 +60,11 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
     this.addObserver();
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+
+
+    if (this.data.isVideo) {
+        this.getRecordingPreview();
+    }
 };
 
 /**
@@ -341,6 +346,11 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     if (this.isPlaying) {
         this.pausePlayback();
     }
+
+    if (this.data.isVideo) {
+        this.view.togglePreview();
+    }
+
     this.settingParams = true;
     if ('touchstart' === e.type) {
         this.timelineSlidePos = e.originalEvent.changedTouches[0].pageX;
@@ -361,6 +371,11 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
     clearTimeout(this.spoolTimeout);
     clearInterval(this.spoolInterval);
     clearInterval(this.increaseValueInterval);
+
+    if (this.data.isVideo) {
+        this.view.togglePreview();
+    }
+
     e.stopPropagation();
     e.preventDefault();
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
@@ -409,6 +424,11 @@ Gui.Window.Controller.VideoPlayer.prototype.setTime = function (action, value) {
     if (this.data.startTime > recording.getData('duration')) {
         this.data.startTime = recording.getData('duration');
     }
+
+    if (this.data.isVideo && this.previewFrames[this.data.startTime]) {
+        this.view.previewImage.attr('src', this.previewFrames[this.data.startTime]);
+    }
+
     this.view.setData('startTime', this.data.startTime);
     this.view.updateProgress(this.data.startTime);
 };
@@ -437,6 +457,65 @@ Gui.Window.Controller.VideoPlayer.prototype.spool = function () {
             me.spooling
         );
     }, 100);
+};
+
+Gui.Window.Controller.VideoPlayer.prototype.getRecordingPreview = function () {
+
+    var streamdevParams = [], src, d=new Date();
+
+    if (this.data.isVideo) {
+        if ("undefined" !== this.fetchPreviewFramesInterval) {
+            clearInterval(this.fetchPreviewFramesInterval);
+            this.fetchPreviewFramesInterval = undefined;
+        }
+
+        streamdevParams.push('QUALITY=preview;DUR=' + this.data.recording.getData('duration'));
+        src = this.data.recording.getStreamUrl(streamdevParams);
+
+        this.view.preview.attr('src', src + '?d=' + d.getTime());
+
+        console.log(src);
+
+        this.previewFrames = {};
+        var frame = null, newFrame,
+            duration = this.data.recording.getData(duration), i=1,
+            preview = this.view.preview.get(0),
+            helper = this.module.getHelper('VideoPlayer'), me = this,
+            canplay = false, fetchErrors = 0;
+
+        preview.oncanplay = function () {
+            canplay = true;
+        };
+        this.fetchPreviewFramesInterval = setInterval(function () {
+
+            if (!canplay) return;
+
+            try {
+                preview.currentTime = i;
+                newFrame = helper.captureFrame(preview);
+            } catch (e) {
+                if (fetchErrors++ > 500) {
+                    console.log('clear fetch errors');
+                    clearInterval(me.fetchPreviewFramesInterval);
+                }
+            }
+            if (newFrame !== frame) {
+                console.log('capture');
+                frame = newFrame;
+                me.previewFrames[i] = frame;
+                //me.getVideo().poster = me.previewFrames[i];
+                i++;
+            }
+            if (i >= duration) {
+                console.log(i, 'stop');
+                clearInterval(me.fetchPreviewFramesInterval);
+            }
+        }, 10);
+        preview.onerror = function (e) {
+            console.log(i, 'Fehler', e);
+            clearInterval(me.fetchPreviewFramesInterval);
+        };
+    }
 };
 
 /**
@@ -753,6 +832,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getVideo = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.destructView = function () {
 
+    clearInterval(this.fetchPreviewFramesInterval);
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();

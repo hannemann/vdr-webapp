@@ -179,6 +179,15 @@ Gui.Window.View.VideoPlayer.prototype.addControls = function () {
     this.addQualitySelector();
     this.addTitle();
 
+    if (this.data.isVideo) {
+        this.preview = $(
+            '<video preload="auto" class="video-preview" data-animate="opacity">'
+        ).appendTo(this.controls);
+        this.preview.prop('crossOrigin', 'anonymous');
+        this.previewImage = $('<img class="video-preview" data-animate="opacity">')
+            .appendTo(this.controls);
+    }
+
     return this;
 };
 
@@ -386,6 +395,14 @@ Gui.Window.View.VideoPlayer.prototype.toggleQuality = function (e) {
     e.preventDefault();
     this.stopHideControls();
     this.qualitySelect.toggleClass('show');
+};
+
+/**
+ * toggle preview video visibility
+ */
+Gui.Window.View.VideoPlayer.prototype.togglePreview = function () {
+
+    this.previewImage.toggleClass('show');
 };
 
 /**

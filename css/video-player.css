@@ -256,6 +256,22 @@
     height: 24px;
     line-height: 24px;
 }
+
+.html5-player-controls .video-preview {
+    bottom: auto;
+    top: 10px;
+    left: 10px;
+    right: auto;
+    width: 64px;
+    height: 36px;
+    display: block;
+    position: absolute;
+}
+.html5-player-controls img.video-preview {
+    width: 128px;
+    height: 72px;
+}
+
 .modal-overlay.modal-video {
     z-index: 3;
 }
