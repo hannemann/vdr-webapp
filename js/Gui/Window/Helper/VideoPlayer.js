@@ -42,3 +42,27 @@ Gui.Window.Helper.VideoPlayer.prototype.defaultPoster = function (video) {
 
     return c.toDataURL();
 };
+
+/**
+ * retrieve frame from externremux and set it as poster
+ * @param {{
+ *      width: int,
+ *      height: int,
+ *      video: HTMLElement,
+ *      recording: VDRest.Recordings.Model.List.Recording,
+ *      startTime: int
+ *  }} options
+ */
+Gui.Window.Helper.VideoPlayer.prototype.setRecordingPoster = function (options) {
+
+    var d = new Date().getTime(), streamdevParams = [];
+
+    streamdevParams.push('WIDTH=' + options.width);
+    streamdevParams.push('HEIGHT=' + options.height);
+
+    options.video.poster = options.recording
+        .getStreamUrl(streamdevParams)
+        .replace(/TYPE=[a-z]+/, 'TYPE=poster')
+            + '?pos=time.'
+            + options.startTime + '&d=' + d;
+};

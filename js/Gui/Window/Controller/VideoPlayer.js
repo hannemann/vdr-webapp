@@ -60,6 +60,12 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
     this.addObserver();
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+
+    if (this.data.isVideo) {
+
+        this.module.getHelper('VideoPlayer')
+            .setRecordingPoster(this.getPosterOptions(2));
+    }
 };
 
 /**
@@ -119,6 +125,31 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     if (this.data.isTv) {
         this.view.ctrlChannelUp.off('click');
         this.view.ctrlChannelDown.off('click');
+    }
+};
+
+/**
+ * retrieve options object for poster extraction
+ * @param {int} [time]
+ * @returns {{
+ *      width: int,
+ *      height: int,
+ *      video: HTMLElement,
+ *      recording: VDRest.Recordings.Model.List.Recording,
+ *      startTime: int
+ *  }}
+ */
+Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
+
+    var size = this.view.sizeList.find('.item.selected').text();
+    time = time || this.getData('startTime');
+
+    return {
+        "width" : this.view.sizes[size].width,
+        "height" : this.view.sizes[size].height,
+        "video" : this.getVideo(),
+        "recording" : this.getData('recording'),
+        "startTime" : time
     }
 };
 
@@ -358,8 +389,6 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
 
-    var d, streamdevParams, size;
-
     clearTimeout(this.spoolTimeout);
     clearInterval(this.spoolInterval);
     clearInterval(this.increaseValueInterval);
@@ -368,18 +397,9 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
 
     if (this.data.isVideo) {
-        d = new Date().getTime();
-        size = this.view.sizeList.find('.item.selected').text();
 
-        streamdevParams = [];
-        streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
-        streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
-
-        this.getVideo().poster = this.getData('recording')
-            .getStreamUrl(streamdevParams)
-            .replace(/TYPE=[a-z]+/, 'TYPE=poster')
-                + '?pos=time.'
-                + this.data.startTime + '&d=' + d;
+        this.module.getHelper('VideoPlayer')
+            .setRecordingPoster(this.getPosterOptions());
     }
 };
 
@@ -690,6 +710,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.view.setData('startTime', this.data.startTime);
         this.view.removeChannelButtons();
         this.view.updateRecordingEndTime(false);
+        this.module.getHelper('VideoPlayer').setRecordingPoster(this.getPosterOptions(2));
         $(video).one(
             'playing',
             $.proxy(this.view.updateRecordingStartEndTime, this.view)
