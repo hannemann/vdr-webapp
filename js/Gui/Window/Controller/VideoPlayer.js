@@ -298,10 +298,10 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
         'mousemove.videoplayer-volume touchmove.videoplayer-volume',
         $.proxy(this.volumeMove, this)
     );
-    this.view.isAllowedUpdateVolumeIndicator = false;
+    this.isAllowedUpdateVolume = false;
     this.view.volumeIndicator.on(this.transitionEndEvents, $.proxy(function () {
         this.view.volumeIndicator.off(this.transitionEndEvents);
-        this.view.isAllowedUpdateVolumeIndicator = true;
+        this.isAllowedUpdateVolume = true;
     }, this));
     this.view.toggleVolumeIndicator(true);
 };
@@ -314,7 +314,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeUp = function (e) {
 
     e.stopPropagation();
     e.preventDefault();
-    this.view.isAllowedUpdateVolumeIndicator = undefined;
+    this.view.isAllowedUpdateVolume = undefined;
     $(document).off('mousemove.videoplayer-volume touchmove.videoplayer-volume');
     this.view.toggleVolumeIndicator(false);
 };
@@ -326,6 +326,10 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeUp = function (e) {
 Gui.Window.Controller.VideoPlayer.prototype.volumeMove = function (e) {
 
     var newPos;
+
+    if (!this.isAllowedUpdateVolume) {
+        return;
+    }
 
     e.stopPropagation();
     e.preventDefault();

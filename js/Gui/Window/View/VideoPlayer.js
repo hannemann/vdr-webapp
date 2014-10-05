@@ -336,9 +336,7 @@ Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
     this.volumeSlider.css({
         "top" : percentage
     });
-    if (this.isAllowedUpdateVolumeIndicator) {
-        this.updateVolumeIndicator();
-    }
+    this.updateVolumeIndicator();
 
     return this;
 };
