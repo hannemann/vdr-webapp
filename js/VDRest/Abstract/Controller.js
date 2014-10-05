@@ -18,6 +18,13 @@ VDRest.Abstract.Controller.prototype.animationEndEvents =
     "webkitAnimationEnd MSAnimationEnd oanimationend animationend";
 
 /**
+ * transitionEnd event names
+ * @type {string[]}
+ */
+VDRest.Abstract.Controller.prototype.transitionEndEvents =
+    "webkitTransitionEnd MSTransitionEnd otransitionend transitionend";
+
+/**
  * render view
  */
 VDRest.Abstract.Controller.prototype.dispatchView = function () {

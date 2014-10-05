@@ -210,22 +210,30 @@
 .html5-player-controls .volume-indicator {
     top: 0;
     bottom: 0;
+    right: auto;
     margin: auto;
-    width: 84px;
+    width: 0;
     height: 30px;
     padding-top: 8px;
     border-radius: 8px;
+    text-align: left;
+}
+.html5-player-controls .volume-indicator.show {
+    width: 84px;
+    right: 0;
 }
 .html5-player-controls .volume-indicator span {
     display: inline-block;
-    width: 20px;
-    float: left;
-    text-align: left;
+    font-family: inherit;
+}
+.html5-player-controls .volume-indicator span.value {
+    margin-left: 5px;
 }
 
 
 .html5-player-controls .quality-select {
     height: 48px;
+    z-index: 1;
 }
 .html5-player-controls .quality-select,
 .html5-player-controls .quality-select div {

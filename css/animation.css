@@ -151,11 +151,13 @@ TODO: create fancy animation that doesn't burn my device
 }
 */
 
-/* Video player controls */
 *[data-animate*="opacity"] {
     opacity: 0;
     transition: opacity .6s;
 }
 *[data-animate*="opacity"].show {
     opacity: 1;
+}
+*[data-animate*="fast"] {
+    transition-duration: .2s;
 }
