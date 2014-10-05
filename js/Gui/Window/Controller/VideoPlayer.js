@@ -762,6 +762,8 @@ Gui.Window.Controller.VideoPlayer.prototype.requestFullscreen = function () {
             document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         }
     }
+
+    this.view.ctrlFullScreen.html(this.view.symbolExitFullscreen);
 };
 
 /**
@@ -776,6 +778,7 @@ Gui.Window.Controller.VideoPlayer.prototype.cancelFullscreen = function () {
     } else if (document.webkitCancelFullScreen) {
         document.webkitCancelFullScreen();
     }
+    this.view.ctrlFullScreen.html(this.view.symbolFullscreen);
 };
 
 /**

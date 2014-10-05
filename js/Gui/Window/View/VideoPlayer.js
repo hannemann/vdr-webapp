@@ -32,45 +32,52 @@ Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolPlay = '&#9654;';
+Gui.Window.View.VideoPlayer.prototype.symbolPlay = 'C';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolPause = '&#10074;&#10074;';
+Gui.Window.View.VideoPlayer.prototype.symbolPause = 'B';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolStop = '&#9632;';
+Gui.Window.View.VideoPlayer.prototype.symbolStop = 'D';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolNext = '&#9650;';
+Gui.Window.View.VideoPlayer.prototype.symbolNext = 'S';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolPrevious = '&#9660;';
+Gui.Window.View.VideoPlayer.prototype.symbolPrevious = 'T';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = '&#9701;';
+Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = 'Q';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolQuality = 'Q';
+Gui.Window.View.VideoPlayer.prototype.symbolExitFullscreen = 'R';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '_';
-//Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#9881;';
-//Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#x1f50a;';
-//Gui.Window.View.VideoPlayer.prototype.symbolMinimize = '&#x1f592;';
+Gui.Window.View.VideoPlayer.prototype.symbolQuality = 'A';
+
+/**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolMinimize = 'O';
+
+/**
+ * @type {string}
+ */
+Gui.Window.View.VideoPlayer.prototype.symbolMaximize = 'P';
 
 /**
  * @type {string}
@@ -153,11 +160,14 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
 Gui.Window.View.VideoPlayer.prototype.initPlayer = function () {
 
     this.player.appendTo(this.node);
-    this.addControls();
+    this.initControls().initOsd();
 
     return this;
 };
 
+/**
+ * set poster with icon
+ */
 Gui.Window.View.VideoPlayer.prototype.setDefaultPoster = function () {
 
     this.player.attr(
@@ -169,15 +179,25 @@ Gui.Window.View.VideoPlayer.prototype.setDefaultPoster = function () {
 /**
  * add control elements
  */
-Gui.Window.View.VideoPlayer.prototype.addControls = function () {
+Gui.Window.View.VideoPlayer.prototype.initControls = function () {
 
-    this.addControlButtons();
     this.controls.appendTo(this.node);
-    this.addThrobber();
-    this.addProgress();
-    this.updateProgress();
-    this.addQualitySelector();
-    this.addTitle();
+    this.addControlButtons().addThrobber().addQualitySelector();
+
+    return this;
+};
+
+/**
+ * initialize osd
+ * @returns {Gui.Window.View.VideoPlayer}
+ */
+Gui.Window.View.VideoPlayer.prototype.initOsd = function () {
+
+    this.osd = $('<div class="video-osd">').appendTo(this.controls);
+    this.addTitle()
+        .addTimeLine()
+        .addProgress()
+        .updateProgress();
 
     return this;
 };
@@ -190,41 +210,51 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
     var volume;
 
     this.ctrlPlay = $(
-        '<div class="play">' + this.symbolPlay + '</div>'
+        '<div class="vdr-web-symbol play">' + this.symbolPlay + '</div>'
     ).appendTo(this.controls);
 
     this.ctrlStop = $(
-        '<div class="stop">' + this.symbolStop + '</div>'
+        '<div class="vdr-web-symbol stop">' + this.symbolStop + '</div>'
     ).appendTo(this.controls);
 
     this.ctrlFullScreen = $(
-        '<div class="toggle-fullScreen">' + this.symbolFullscreen + '</div>'
+        '<div class="vdr-web-symbol toggle-fullScreen">' + this.symbolFullscreen + '</div>'
     ).appendTo(this.controls);
 
     this.ctrlQuality = $(
-        '<div class="toggle-quality">' + this.symbolQuality + '</div>'
+        '<div class="vdr-web-symbol toggle-quality">' + this.symbolQuality + '</div>'
     ).appendTo(this.controls);
 
 
     this.ctrlMinimize = $(
-        '<div class="minimize">' + this.symbolMinimize + '</div>'
+        '<div class="vdr-web-symbol minimize">' + this.symbolMinimize + '</div>'
     ).appendTo(this.controls);
 
     this.ctrlVolume = $('<div class="slider volume">').appendTo(this.controls);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
     this.volumeIndicator = $(
-        '<div class="info volume-indicator" data-animate="opacity">'
+        '<div class="vdr-web-symbol info volume-indicator" data-animate="opacity">'
     ).appendTo(this.controls);
-
-    this.ctrlTimeline = $('<div class="slider timeline">').appendTo(this.controls);
-    this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
 
     volume = VDRest.config.getItem('html5VideoPlayerVol') || 1;
     this.video.volume = parseFloat(volume);
 
     this.setVolumeSliderHeight();
-    this.setTimelineSliderWidth();
     this.addChannelButtons();
+
+    return this;
+};
+
+/**
+ * add timeline
+ * @returns {Gui.Window.View.VideoPlayer}
+ */
+Gui.Window.View.VideoPlayer.prototype.addTimeLine = function () {
+
+    this.ctrlTimeline = $('<div class="slider timeline">').appendTo(this.osd);
+    this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
+
+    return this;
 };
 
 /**
@@ -234,10 +264,10 @@ Gui.Window.View.VideoPlayer.prototype.addChannelButtons = function () {
 
     if (this.data.isTv && !this.ctrlChannelUp) {
         this.ctrlChannelUp = $(
-            '<div class="channel-up">' + this.symbolNext + '</div>'
+            '<div class="vdr-web-symbol channel-up">' + this.symbolNext + '</div>'
         ).appendTo(this.controls);
         this.ctrlChannelDown = $(
-            '<div class="channel-down">' + this.symbolPrevious + '</div>'
+            '<div class="vdr-web-symbol channel-down">' + this.symbolPrevious + '</div>'
         ).appendTo(this.controls);
     }
 };
@@ -260,7 +290,15 @@ Gui.Window.View.VideoPlayer.prototype.removeChannelButtons = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
 
-    $('body').toggleClass('video-minimized');
+    var body = $('body'), className = 'video-minimized';
+
+    body.toggleClass(className);
+
+    if (body.hasClass(className)) {
+        this.ctrlMinimize.html(this.symbolMaximize);
+    } else {
+        this.ctrlMinimize.html(this.symbolMinimize);
+    }
 };
 
 /**
@@ -268,7 +306,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
 
-    var percentage = this.getVolumePercentage();
+    var percentage = this.getVolumePercentage(), symbol;
 
     this.volumeSlider.css({
         "top" : percentage
@@ -278,7 +316,15 @@ Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
     }
     percentage = 100 - parseInt(percentage);
 
-    this.volumeIndicator.text(percentage.toString() + '%');
+    if (percentage == 0) {
+        symbol = 'U';
+    } else if (percentage <= 50) {
+        symbol = 'V';
+    } else {
+        symbol = 'W';
+    }
+
+    this.volumeIndicator.html('<span class="vdr-web-symbol">' + symbol + '</span> ' + percentage.toString() + '%');
 };
 
 /**
@@ -365,6 +411,8 @@ Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
         + ')" class="throbber">'
     );
     this.throbber.appendTo(this.node);
+
+    return this;
 };
 
 /**
@@ -396,6 +444,8 @@ Gui.Window.View.VideoPlayer.prototype.setTimelineSliderWidth = function () {
     this.timelineSlider.css({
         "right" : this.getTimelinePercentage()
     });
+
+    return this;
 };
 
 /**
@@ -470,7 +520,7 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
     this.end.text(end);
     this.duration.html('&nbsp;/&nbsp;' + duration);
 
-    this.progress.appendTo(this.controls);
+    this.progress.appendTo(this.osd);
     return this;
 };
 
@@ -576,6 +626,8 @@ Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
     }
 
     this.qualitySelect.appendTo(this.controls);
+
+    return this;
 };
 
 /**
@@ -631,7 +683,9 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
         }
     }
 
-    this.controls.append(this.infoArea);
+    this.osd.append(this.infoArea);
+
+    return this;
 };
 
 /**

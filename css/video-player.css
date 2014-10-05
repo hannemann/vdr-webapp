@@ -63,7 +63,7 @@
 .html5-player-controls .toggle-fullScreen,
 .html5-player-controls .toggle-quality,
 .html5-player-controls .minimize {
-    bottom: 15px;
+    top: 10px;
 }
 .html5-player-controls .play {
     left: 10px;
@@ -90,22 +90,22 @@
 .html5-player-controls .channel-up,
 .html5-player-controls .channel-down {
     left: 10px;
+    top: 50%;
 }
 
 .html5-player-controls .channel-up {
-    top: 15px;
+    margin-top: -49px;
 }
 
 .html5-player-controls .channel-down {
-    top: 69px;
+    margin-top: 5px;
 }
 
 .html5-player-controls .info {
     z-index: 0;
     border: none;
     border-radius: 0;
-    background-color: rgba(0,0,0,0.5);
-    background-image: none;
+    background: none;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -125,13 +125,24 @@
     top: 41px;
     font-size: 12px;
 }
-
-.html5-player-controls .info-area {
+.html5-player-controls .video-osd {
+    height: auto;
+    padding: 3px 10px;
+    border-radius: 0;
+    border: none;
+    background: rgba(0,0,0,.5);
+    bottom: 10px;
     left: 10px;
-    width: calc(100% - 74px);
-    bottom:  106px;
+    right: 10px;
+    width: auto;
+}
+.html5-player-controls .video-osd > div {
+    position: relative;
+    margin-bottom: 3px;
+}
+.html5-player-controls .info-area {
+    width: 100%;
     margin: 0;
-    padding: 2px;
     min-height: 38px;
 }
 
@@ -140,7 +151,7 @@
     background-repeat: no-repeat;
     background-size: 38px 38px;
     background-position: 2px 2px;
-    width: calc(100% - 115px);
+    width: calc(100% - 45px);
 }
 
 .html5-player-controls .info-area .info {
@@ -152,6 +163,25 @@
 }
 .html5-player-controls .info-area .short-text.info {
     top: 18px;
+}
+.html5-player-controls .video-osd .timeline,
+.html5-player-controls .video-osd .progress {
+    width: auto;
+}
+.html5-player-controls .progress .info {
+    position: relative;
+    width: 25%;
+    float: left;
+    font-size: 15px;
+    line-height: 1;
+}
+.html5-player-controls .progress .progress-duration,
+.html5-player-controls .progress .progress-start {
+    text-align: left;
+}
+.html5-player-controls .progress .progress-current,
+.html5-player-controls .progress .progress-end {
+    text-align: right;
 }
 
 .html5-player-controls .slider {
@@ -171,9 +201,9 @@
 }
 
 .html5-player-controls .volume {
-    bottom: 20%;
-    top: 20%;
-    right: 30px;
+    bottom: 102px;
+    top: 10px;
+    right: 20px;
     height: auto;
 }
 
@@ -181,41 +211,18 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    width: 80px;
+    width: 84px;
     height: 30px;
     padding-top: 8px;
     border-radius: 8px;
 }
-
-.html5-player-controls .timeline,
-.html5-player-controls .progress {
-    bottom: 84px;
-    left: 10px;
-    right: 55px;
-    width: auto;
-}
-.html5-player-controls .progress {
-    bottom: 66px;
-}
-.html5-player-controls .progress .info {
-    position: relative;
-    width: 25%;
+.html5-player-controls .volume-indicator span {
+    display: inline-block;
+    width: 20px;
     float: left;
-    font-size: 15px;
-    line-height: 1;
-}
-.html5-player-controls .progress .progress-start {
     text-align: left;
 }
-.html5-player-controls .progress .progress-current {
-    text-align: right;
-}
-.html5-player-controls .progress .progress-duration {
-    text-align: left;
-}
-.html5-player-controls .progress .progress-end {
-    text-align: right;
-}
+
 
 .html5-player-controls .quality-select {
     height: 48px;
@@ -278,15 +285,10 @@
 .video-minimized .html5-player-controls > div {
     display: none;
 }
-.video-minimized .html5-player-controls .info-area {
+.video-minimized .html5-player-controls .video-osd {
     display: block;
-    bottom: 10px;
-    width: calc(100% - 24px);
-}
-.video-minimized .html5-player-controls .info-area.has-logo {
-    display: block;
-    bottom: 10px;
-    width: calc(100% - 69px);
+    width: auto;
+    bottom: 0;
 }
 
 @media (orientation: portrait) {
@@ -310,31 +312,25 @@
     .html5-player-controls .toggle-fullScreen,
     .html5-player-controls .toggle-quality,
     .html5-player-controls .minimize {
-        bottom: -59px;
+        top: -54px;
     }
     .html5-player-controls .channel-up,
     .html5-player-controls .channel-down {
-        top: -50px;
+        bottom: -50px;
+        top: auto;
     }
     .html5-player-controls .channel-down {
         left: 64px;
     }
     .html5-player-controls .volume {
-        top: 10px;
         bottom: 10px;
-    }
-    .html5-player-controls .timeline {
-        bottom: 20px;
-    }
-    .html5-player-controls .progress {
-        bottom: 0;
-    }
-    .html5-player-controls .info-area {
-        bottom: 38px;
     }
     .html5-player-controls .volume-indicator,
     .html5-player-controls .quality-select {
         bottom: 60px;
+    }
+    .html5-player-controls .video-osd {
+        width: calc(100% - 84px);
     }
 }
 @media (orientation: landscape) {
