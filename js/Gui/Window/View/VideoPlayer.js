@@ -82,6 +82,11 @@ Gui.Window.View.VideoPlayer.prototype.symbolMaximize = 'P';
 /**
  * @type {string}
  */
+Gui.Window.View.VideoPlayer.prototype.symbolDownload = 'X';
+
+/**
+ * @type {string}
+ */
 Gui.Window.View.VideoPlayer.prototype.sizes = {
     "HD1080" : {
         "width" : 1920,
@@ -232,13 +237,38 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
         '<div class="vdr-web-symbol toggle-quality">' + this.symbolQuality + '</div>'
     ).appendTo(this.controls);
 
-
     this.ctrlMinimize = $(
         '<div class="vdr-web-symbol minimize">' + this.symbolMinimize + '</div>'
     ).appendTo(this.controls);
+
+    if (this.data.isVideo) {
+        this.addDownloadButton();
+    }
+
     this.addChannelButtons();
 
     return this;
+};
+
+/**
+ * add download button
+ */
+Gui.Window.View.VideoPlayer.prototype.addDownloadButton = function () {
+
+    this.ctrlDownload = $(
+        '<div class="vdr-web-symbol download">' + this.symbolDownload + '</div>'
+    ).appendTo(this.controls);
+};
+
+/**
+ * add download button
+ */
+Gui.Window.View.VideoPlayer.prototype.removeDownloadButton = function () {
+
+    if ("undefined" !== typeof this.ctrlDownload) {
+        this.ctrlDownload.remove();
+        this.ctrlDownload = undefined;
+    }
 };
 
 /**

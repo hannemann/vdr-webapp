@@ -69,10 +69,10 @@ Gui.Window.Helper.VideoPlayer.prototype.setVideoPoster = function (options) {
 
     streamdevParams.push('WIDTH=' + options.width);
     streamdevParams.push('HEIGHT=' + options.height);
+    streamdevParams.push('TYPE=poster');
 
     options.video.poster = options.sourceModel
         .getStreamUrl(streamdevParams)
-        .replace(/TYPE=[a-z]+/, 'TYPE=poster')
             + '?pos=time.'
             + options.startTime + '&d=' + d;
 };

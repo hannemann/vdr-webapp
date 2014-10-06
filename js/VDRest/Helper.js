@@ -228,9 +228,6 @@ VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
     var streamdevParams = [];
 
     streamdevParams.push(VDRest.config.getItem('streamdevParams'));
-    if (VDRest.config.getItem('useHtmlPlayer')) {
-        streamdevParams.push('TYPE=webm');
-    }
 
     if (extraParams) {
         streamdevParams = streamdevParams.concat(extraParams);

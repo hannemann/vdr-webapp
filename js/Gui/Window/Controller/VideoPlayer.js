@@ -88,6 +88,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
     this.view.player.on('stalled', $.proxy(this.handleStalled, this));
     this.addOsdObserver();
+    this.addDownloadEvent();
 
     if (this.data.isTv) {
         this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
@@ -102,13 +103,23 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 };
 
 /**
- * add event listeners
+ * add osd related event listeners
  */
 Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
 
     var helper = this.helper();
     this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
     this.view.ctrlTimeline.on('click', helper.stopPropagation);
+};
+
+/**
+ * add download event listener
+ */
+Gui.Window.Controller.VideoPlayer.prototype.addDownloadEvent = function () {
+
+    if ("undefined" !== typeof this.view.ctrlDownload) {
+        this.view.ctrlDownload.on('click', $.proxy(this.startDownload, this));
+    }
 };
 
 /**
@@ -134,15 +145,27 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     if (this.data.isTv) {
         this.view.ctrlChannelUp.off('click');
         this.view.ctrlChannelDown.off('click');
+    } else {
+        this.removeDownloadEvent();
     }
 };
 
 /**
- * remove event listeners
+ * remove osd related event listeners
  */
 Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
 
     this.view.ctrlTimeline.off('mousedown touchstart');
+};
+
+/**
+ * remove osd related event listeners
+ */
+Gui.Window.Controller.VideoPlayer.prototype.removeDownloadEvent = function () {
+
+    if ("undefined" !== typeof this.view.ctrlDownload) {
+        this.view.ctrlDownload.off('click');
+    }
 };
 
 /**
@@ -168,6 +191,26 @@ Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
         "sourceModel" : (this.data.isTv ? this.getData('channel') : this.getData('recording')),
         "startTime" : time
     }
+};
+
+/**
+ * start download of recording
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.VideoPlayer.prototype.startDownload = function (e) {
+
+    var src = this.getStreamUrl([
+        'FILENAME=' + encodeURIComponent(this.getData('recording').getData('name')) + '.mkv'
+    ]).replace('TYPE=webm', 'TYPE=download');
+
+    if (!this.view.controls.hasClass('show')) {
+        return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+
+    location.href = src;
+
 };
 
 /**
@@ -560,17 +603,44 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 
-    var d = new Date(), src, video = this.getVideo(),
-        streamdevParams = [],
-        size = this.view.sizeList.find('.item.selected').text(),
-        bitrate = this.view.bitrateList.find('.item.selected').text(),
-        duration;
+    var video = this.getVideo();
 
     if ("undefined" !== this.fetchPosterTimeout) {
         clearTimeout(this.fetchPosterTimeout);
         this.fetchPosterTimeout = undefined;
     }
 
+    this.isPlaying = true;
+    this.view.toggleThrobber();
+    this.view.toggleControls();
+    this.settingParams = false;
+
+    video.src = this.getStreamUrl();
+    video.play();
+
+    $(video).one('playing', $.proxy(function () {
+        this.view.toggleThrobber();
+        if (this.data.isVideo) {
+            this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
+            this.view.updateRecordingEndTime(false);
+        }
+    }, this));
+};
+
+/**
+ * retrieve stream url
+ * @param {Array} [streamdevParams]
+ * @returns {String}
+ */
+Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevParams) {
+
+    var size = this.view.sizeList.find('.item.selected').text(),
+        bitrate = this.view.bitrateList.find('.item.selected').text(),
+        duration, src, d = new Date();
+
+    streamdevParams = streamdevParams || [];
+
+    streamdevParams.push('TYPE=webm');
     streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
     streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
     streamdevParams.push('VBR=' + bitrate);
@@ -587,22 +657,9 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
             src += '?pos=time.' + this.data.startTime;
         }
     }
-    this.isPlaying = true;
-    this.view.toggleThrobber();
-    this.view.toggleControls();
-    this.settingParams = false;
-
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
-    video.src = src;
-    video.play();
 
-    $(video).one('playing', $.proxy(function () {
-        this.view.toggleThrobber();
-        if (this.data.isVideo) {
-            this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
-            this.view.updateRecordingEndTime(false);
-        }
-    }, this));
+    return src;
 };
 
 /**
@@ -684,6 +741,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         e.stopPropagation();
     }
     this.view.stopHideControls();
+    this.removeDownloadEvent();
 
     if (
         !$('body').hasClass('video-minimized')
@@ -729,6 +787,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         broadcast = this.getData('channel').getCurrentBroadcast();
         if (broadcast) {
             this.setIsTv();
+            this.view.removeDownloadButton();
             this.view.addChannelButtons();
             this.data.startTime = now - broadcast.getData('start_time');
             this.view.setData('startTime', this.data.startTime);
@@ -742,6 +801,8 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.view.setData('startTime', this.data.startTime);
         this.view.removeChannelButtons();
         this.view.updateRecordingEndTime(false);
+        this.view.addDownloadButton();
+        this.addDownloadEvent();
         $(video).one(
             'playing',
             $.proxy(this.view.updateRecordingStartEndTime, this.view)

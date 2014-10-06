@@ -62,7 +62,8 @@
 .html5-player-controls .play,
 .html5-player-controls .toggle-fullScreen,
 .html5-player-controls .toggle-quality,
-.html5-player-controls .minimize {
+.html5-player-controls .minimize,
+.html5-player-controls .download {
     top: 10px;
 }
 .html5-player-controls .play {
@@ -85,6 +86,9 @@
 
 .html5-player-controls .toggle-quality {
     left: 226px;
+}
+.html5-player-controls .download {
+    left: 280px;
 }
 
 .html5-player-controls .channel-up,
@@ -323,12 +327,17 @@
         top: -54px;
     }
     .html5-player-controls .channel-up,
-    .html5-player-controls .channel-down {
+    .html5-player-controls .channel-down,
+    .html5-player-controls .download {
         bottom: -50px;
         top: auto;
     }
     .html5-player-controls .channel-down {
         left: 64px;
+    }
+    .html5-player-controls .download {
+        right: 10px;
+        left: auto;
     }
     .html5-player-controls .volume {
         bottom: 10px;
