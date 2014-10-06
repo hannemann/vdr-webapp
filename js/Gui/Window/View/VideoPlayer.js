@@ -113,7 +113,7 @@ Gui.Window.View.VideoPlayer.prototype.sizes = {
  * @type {string[]}
  */
 Gui.Window.View.VideoPlayer.prototype.bitrates = [
-    '2048K', '1024K', '512K', '256K', '128K', '96K', '64K'
+    '2048K', '1536K', '1024K', '512K', '256K', '128K', '96K', '64K'
 ];
 
 /**
