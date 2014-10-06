@@ -61,11 +61,11 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    if (this.data.isVideo) {
+    //if (this.data.isVideo) {
 
         this.module.getHelper('VideoPlayer')
-            .setRecordingPoster(this.getPosterOptions(2));
-    }
+            .setVideoPoster(this.getPosterOptions(2));
+    //}
 };
 
 /**
@@ -151,8 +151,8 @@ Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
  * @returns {{
  *      width: int,
  *      height: int,
- *      video: HTMLElement,
- *      recording: VDRest.Recordings.Model.List.Recording,
+ *      video: HTMLVideoElement,
+ *      sourceModel: VDRest.Recordings.Model.List.Recording|VDRest.Epg.Model.Channels.Channel,
  *      startTime: int
  *  }}
  */
@@ -165,7 +165,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
         "width" : this.view.sizes[size].width,
         "height" : this.view.sizes[size].height,
         "video" : this.getVideo(),
-        "recording" : this.getData('recording'),
+        "sourceModel" : (this.data.isTv ? this.getData('channel') : this.getData('recording')),
         "startTime" : time
     }
 };
@@ -423,11 +423,11 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
     e.preventDefault();
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
 
-    if (this.data.isVideo) {
+    //if (this.data.isVideo) {
 
         this.module.getHelper('VideoPlayer')
-            .setRecordingPoster(this.getPosterOptions());
-    }
+            .setVideoPoster(this.getPosterOptions());
+    //}
 };
 
 /**
@@ -565,6 +565,11 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
         size = this.view.sizeList.find('.item.selected').text(),
         bitrate = this.view.bitrateList.find('.item.selected').text(),
         duration;
+
+    if ("undefined" !== this.fetchPosterTimeout) {
+        clearTimeout(this.fetchPosterTimeout);
+        this.fetchPosterTimeout = undefined;
+    }
 
     streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
     streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
@@ -737,7 +742,6 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.view.setData('startTime', this.data.startTime);
         this.view.removeChannelButtons();
         this.view.updateRecordingEndTime(false);
-        this.module.getHelper('VideoPlayer').setRecordingPoster(this.getPosterOptions(2));
         $(video).one(
             'playing',
             $.proxy(this.view.updateRecordingStartEndTime, this.view)
@@ -745,6 +749,18 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     } else {
         return;
     }
+
+    if ("undefined" !== this.fetchPosterTimeout) {
+        clearTimeout(this.fetchPosterTimeout);
+        this.fetchPosterTimeout = undefined;
+    }
+
+    this.fetchPosterTimeout = setTimeout($.proxy(function () {
+        this.module.getHelper('VideoPlayer')
+            .setVideoPoster(this.getPosterOptions(
+                (this.data.isVideo ? 2 : undefined))
+            );
+    }, this), 500);
     this.removeOsdObserver();
     this.view.initOsd();
     this.addOsdObserver();

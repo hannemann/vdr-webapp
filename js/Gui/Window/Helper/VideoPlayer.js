@@ -9,6 +9,11 @@ Gui.Window.Helper.VideoPlayer = function () {};
  */
 Gui.Window.Helper.VideoPlayer.prototype = new VDRest.Abstract.Helper();
 
+/**
+ * capture current frame from video tag
+ * @param {HTMLVideoElement} video
+ * @returns {string}
+ */
 Gui.Window.Helper.VideoPlayer.prototype.captureFrame = function (video) {
 
     var c = document.createElement('canvas'),
@@ -23,6 +28,11 @@ Gui.Window.Helper.VideoPlayer.prototype.captureFrame = function (video) {
     return c.toDataURL();
 };
 
+/**
+ * set Poster with app icon
+ * @param video
+ * @returns {string}
+ */
 Gui.Window.Helper.VideoPlayer.prototype.defaultPoster = function (video) {
 
     var c = document.createElement('canvas'),
@@ -48,19 +58,19 @@ Gui.Window.Helper.VideoPlayer.prototype.defaultPoster = function (video) {
  * @param {{
  *      width: int,
  *      height: int,
- *      video: HTMLElement,
- *      recording: VDRest.Recordings.Model.List.Recording,
+ *      video: HTMLVideoElement,
+ *      sourceModel: VDRest.Recordings.Model.List.Recording|VDRest.Epg.Model.Channels.Channel,
  *      startTime: int
  *  }} options
  */
-Gui.Window.Helper.VideoPlayer.prototype.setRecordingPoster = function (options) {
+Gui.Window.Helper.VideoPlayer.prototype.setVideoPoster = function (options) {
 
     var d = new Date().getTime(), streamdevParams = [];
 
     streamdevParams.push('WIDTH=' + options.width);
     streamdevParams.push('HEIGHT=' + options.height);
 
-    options.video.poster = options.recording
+    options.video.poster = options.sourceModel
         .getStreamUrl(streamdevParams)
         .replace(/TYPE=[a-z]+/, 'TYPE=poster')
             + '?pos=time.'
