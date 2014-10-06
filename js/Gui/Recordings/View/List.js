@@ -14,9 +14,14 @@ Gui.Recordings.View.List.prototype = new VDRest.Abstract.View();
  */
 Gui.Recordings.View.List.prototype.init = function () {
 
-    var i, cMenu = VDRest.app.getModule('Gui.Recordings').contextMenu, sortState;
+    var i, cMenu = VDRest.app.getModule('Gui.Recordings').contextMenu,
+        currentSorting = VDRest.config.getItem('currentSorting'), sortState;
 
-    this.setSorting(VDRest.config.getItem('defaultSorting'));
+    if (!currentSorting) {
+        currentSorting = VDRest.config.getItem('defaultSorting');
+    }
+
+    this.setSorting(currentSorting);
 
     sortState = this.sorting.indexOf('Desc') > -1;
 
@@ -35,6 +40,8 @@ Gui.Recordings.View.List.prototype.init = function () {
 Gui.Recordings.View.List.prototype.setSorting = function (type) {
 
     this.sorting = type;
+
+    VDRest.config.setItem('currentSorting', type);
 
     this.reverse = type.indexOf('Desc') > -1;
     if (type.indexOf('date') > -1) {
