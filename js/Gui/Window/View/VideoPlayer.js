@@ -150,7 +150,6 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
     this.bitrateList.css({
         "top": - this.bitrateList.find('.item.selected').position().top + 'px'
     });
-    this.scrollTitle();
 };
 
 /**
@@ -198,11 +197,16 @@ Gui.Window.View.VideoPlayer.prototype.initControls = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.initOsd = function () {
 
+    if ("undefined" !== typeof this.osd) {
+        this.osd.remove();
+    }
+
     this.osd = $('<div class="video-osd">').appendTo(this.controls);
     this.addTitle()
         .addTimeLine()
         .addProgress()
-        .updateProgress();
+        .updateProgress()
+        .scrollTitle();
 
     return this;
 };

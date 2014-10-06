@@ -77,8 +77,6 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
     this.view.ctrlVolume.on('mousedown touchstart', $.proxy(this.volumeDown, this));
     this.view.ctrlVolume.on('click', helper.stopPropagation);
-    this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
-    this.view.ctrlTimeline.on('click', helper.stopPropagation);
     this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
@@ -89,6 +87,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.ctrlMinimize.on('click.'+this.keyInCache, $.proxy(this.toggleMinimize, this));
     this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
     this.view.player.on('stalled', $.proxy(this.handleStalled, this));
+    this.addOsdObserver();
 
     if (this.data.isTv) {
         this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
@@ -103,13 +102,22 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 };
 
 /**
+ * add event listeners
+ */
+Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
+
+    var helper = this.helper();
+    this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
+    this.view.ctrlTimeline.on('click', helper.stopPropagation);
+};
+
+/**
  * remove event listeners
  */
 Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
 
     this.view.ctrlVolume.off('mousedown touchstart');
     this.view.ctrlVolume.off('click');
-    this.view.ctrlTimeline.off('mousedown touchstart');
     this.view.ctrlVolume.off('click');
     this.view.sizeSelect.off('mousedown touchstart');
     this.view.bitrateSelect.off('mousedown touchstart');
@@ -122,10 +130,19 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.player.off('playing');
     this.view.player.off('timeupdate');
     this.view.player.off('stalled');
+    this.removeOsdObserver();
     if (this.data.isTv) {
         this.view.ctrlChannelUp.off('click');
         this.view.ctrlChannelDown.off('click');
     }
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
+
+    this.view.ctrlTimeline.off('mousedown touchstart');
 };
 
 /**
@@ -728,9 +745,9 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     } else {
         return;
     }
-    this.view.addProgress().updateProgress();
-    this.view.addTitle();
-    this.view.scrollTitle();
+    this.removeOsdObserver();
+    this.view.initOsd();
+    this.addOsdObserver();
 };
 
 /**
