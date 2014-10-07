@@ -87,10 +87,8 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.addDownloadEvent();
 
     if (this.data.isTv) {
-        this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
-        this.view.ctrlChannelDown.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
+        this.addZappObserver();
     } else {
-
         $(this.view.player).one(
             'playing',
             $.proxy(this.view.updateRecordingStartEndTime, this.view)
@@ -99,11 +97,25 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 };
 
 /**
+ * add event listeners for zapping
+ */
+Gui.Window.Controller.VideoPlayer.prototype.addZappObserver = function () {
+
+    this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
+    this.view.ctrlChannelDown.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
+};
+
+/**
  * add osd related event listeners
  */
 Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
 
     var helper = this.helper();
+    this.view.osd.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
+    this.view.title.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
+    if ("undefined" != typeof this.view.subTitle) {
+        this.view.subTitle.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
+    }
     this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
     this.view.ctrlTimeline.on('click', helper.stopPropagation);
 };
@@ -139,11 +151,19 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.player.off('stalled');
     this.removeOsdObserver();
     if (this.data.isTv) {
-        this.view.ctrlChannelUp.off('click');
-        this.view.ctrlChannelDown.off('click');
+        this.removeZappObserver();
     } else {
         this.removeDownloadEvent();
     }
+};
+
+/**
+ * remove event listeners for zapping
+ */
+Gui.Window.Controller.VideoPlayer.prototype.removeZappObserver = function () {
+
+    this.view.ctrlChannelUp.off('click');
+    this.view.ctrlChannelDown.off('click');
 };
 
 /**
@@ -151,6 +171,11 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
 
+    this.view.osd.off('click');
+    this.view.title.off('click');
+    if ("undefined" != typeof this.view.subTitle) {
+        this.view.subTitle.off('click');
+    }
     this.view.ctrlTimeline.off('mousedown touchstart');
 };
 
@@ -422,7 +447,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
 
-    if (!this.view.controls.hasClass('show') || this.isTv()) {
+    if (!this.view.controls.hasClass('show') || this.data.isTv) {
         return;
     }
 
@@ -733,8 +758,11 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         broadcast = this.data.sourceModel.getCurrentBroadcast();
         if (broadcast) {
             this.setIsTv();
+            this.removeDownloadEvent();
             this.view.removeDownloadButton();
             this.view.addChannelButtons();
+            this.removeZappObserver();
+            this.addZappObserver();
             this.data.startTime = now - broadcast.getData('start_time');
             this.view.setData('startTime', this.data.startTime);
         } else {
@@ -745,6 +773,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.setIsVideo();
         this.data.startTime = 0;
         this.view.setData('startTime', this.data.startTime);
+        this.removeZappObserver();
         this.view.removeChannelButtons();
         this.view.updateRecordingEndTime(false);
         this.view.addDownloadButton();

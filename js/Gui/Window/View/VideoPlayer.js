@@ -241,9 +241,9 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
         '<div class="vdr-web-symbol minimize">' + this.symbolMinimize + '</div>'
     ).appendTo(this.controls);
 
-    if (this.data.isVideo) {
-        this.addDownloadButton();
-    }
+    //if (this.data.isVideo) {
+    //    this.addDownloadButton();
+    //}
 
     this.addChannelButtons();
 
