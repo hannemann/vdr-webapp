@@ -481,7 +481,7 @@ Gui.Window.View.VideoPlayer.prototype.stopHideControls = function () {
 Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
 
     this.throbber = $(
-        '<div style="background: url('
+        '<div style="background-image: url('
         + VDRest.image.getThrobber()
         + ')" class="throbber">'
     );
