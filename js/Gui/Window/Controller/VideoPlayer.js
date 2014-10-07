@@ -198,7 +198,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startDownload = function (e) {
 
     var src = this.getStreamUrl([
         'FILENAME=' + encodeURIComponent(this.data.sourceModel.getData('name')) + '.mkv'
-    ]).replace('TYPE=[a-z]+', 'TYPE=download');
+    ]).replace(/TYPE=[a-z]+/, 'TYPE=download');
 
     if (!this.view.controls.hasClass('show')) {
         return;
