@@ -61,8 +61,7 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    this.module.getHelper('VideoPlayer')
-        .setVideoPoster(this.getPosterOptions(2));
+    this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
 };
 
 /**
@@ -599,11 +598,6 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 
     var video = this.getVideo();
 
-    if ("undefined" !== this.fetchPosterTimeout) {
-        clearTimeout(this.fetchPosterTimeout);
-        this.fetchPosterTimeout = undefined;
-    }
-
     this.isPlaying = true;
     this.view.toggleThrobber();
     this.view.toggleControls();
@@ -763,17 +757,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         return;
     }
 
-    if ("undefined" !== this.fetchPosterTimeout) {
-        clearTimeout(this.fetchPosterTimeout);
-        this.fetchPosterTimeout = undefined;
-    }
-
-    this.fetchPosterTimeout = setTimeout($.proxy(function () {
-        this.module.getHelper('VideoPlayer')
-            .setVideoPoster(this.getPosterOptions(
-                (this.data.isVideo ? 2 : undefined))
-            );
-    }, this), 500);
+    this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
     this.removeOsdObserver();
     this.view.initOsd();
     this.addOsdObserver();
