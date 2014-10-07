@@ -241,10 +241,7 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
         '<div class="vdr-web-symbol minimize">' + this.symbolMinimize + '</div>'
     ).appendTo(this.controls);
 
-    //if (this.data.isVideo) {
-    //    this.addDownloadButton();
-    //}
-
+    this.addDownloadButton();
     this.addChannelButtons();
 
     return this;
@@ -255,9 +252,11 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addDownloadButton = function () {
 
-    this.ctrlDownload = $(
-        '<div class="vdr-web-symbol download">' + this.symbolDownload + '</div>'
-    ).appendTo(this.controls);
+    if (VDRest.config.getItem('streamDownload') && this.data.isVideo) {
+        this.ctrlDownload = $(
+            '<div class="vdr-web-symbol download">' + this.symbolDownload + '</div>'
+        ).appendTo(this.controls);
+    }
 };
 
 /**

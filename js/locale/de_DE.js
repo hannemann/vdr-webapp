@@ -64,7 +64,7 @@ VDRest.app.de_DE = {
     "Subtitle to Filename" : "Untertitel zu Dateiname",
     "Edit Timer" : "Timer bearbeiten",
     "Use HTML5 Video Player" : "HTML5 Video Player benutzen",
-    "Externremux has to produce stream in webm format" : "Externremux muss den Stream im Format webm produzieren",
+    "An extended externremux.sh is needed" : "Es wird eine erweiterte externremux.sh benötigt",
     "Loads data synchronized to not burn slow CPU\'s" : "Daten synchron laden, um langsamere CPU\'s zu schonen",
     "Resource efficient loading" : "Resourcenschonendes Laden",
     "Date &#8595;" : "Datum &#8595;",
@@ -75,5 +75,7 @@ VDRest.app.de_DE = {
     "Name descending" : "Name absteigend",
     "Default sorting" : "Sortierung",
     "Recordings Settings" : "Aufnahmen Einstellungen",
-    "Takes effect after reload" : "Aktiv nach Neustart"
+    "Takes effect after reload" : "Aktiv nach Neustart",
+    "e.g.: Force usage of VLC" : "z.B. um VLC zu erzwingen",
+    "Enable download of transcoded Recordings. Does not work on Android powered devices. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska." : "Download transkodierter Aufnahmen anbieten. Funktioniert nicht auf Android Geräten. Downloads werden mit den aktuellen Qualitätseinstellungen per libx264 und aac transkodiert. Container ist Matroska."
 };

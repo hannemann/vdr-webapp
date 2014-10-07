@@ -220,9 +220,10 @@ Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.startDownload = function (e) {
 
-    var src = this.getStreamUrl([
-        'FILENAME=' + encodeURIComponent(this.data.sourceModel.getData('name')) + '.mkv'
-    ]).replace(/TYPE=[a-z]+/, 'TYPE=download');
+    var filename = encodeURIComponent(
+                this.data.sourceModel.getData('name')
+            ) + '.' + VDRest.config.getItem('streamdevContainer'),
+        src = this.getStreamUrl(['FILENAME=' + filename], 'download');
 
     if (!this.view.controls.hasClass('show')) {
         return;
@@ -643,9 +644,10 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 /**
  * retrieve stream url
  * @param {Array} [streamdevParams]
+ * @param {String} [type]
  * @returns {String}
  */
-Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevParams) {
+Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevParams, type) {
 
     var size = this.view.sizeList.find('.item.selected').text(),
         bitrate = this.view.bitrateList.find('.item.selected').text(),
@@ -653,7 +655,9 @@ Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevPa
 
     streamdevParams = streamdevParams || [];
 
-    streamdevParams.push('TYPE=mkv');
+    type = type || VDRest.config.getItem('streamdevContainer');
+
+    streamdevParams.push('TYPE=' + type);
     streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
     streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
     streamdevParams.push('VBR=' + bitrate);

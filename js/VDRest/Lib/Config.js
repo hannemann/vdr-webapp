@@ -177,6 +177,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "streamdevHost"         :   "",
     "streamdevPort"         :   "3000",
     "streamdevParams"       :   "EXT;QUALITY=SLOW",
+    "streamdevContainer"    :   "mkv",
+    "streamDownload"        :   "false",
     "theme"                 :   "default",
     "autoVps"               :   "false",
     "language"              :   "en_US",
@@ -364,31 +366,6 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "boolean",
         "label" : "Use VPS if available"
     },
-    "defaultSorting"  :   {
-        "category" : "recordings",
-        "type" : "enum",
-        "label" : "Default sorting",
-        "dataType" : "string",
-        "info" : "Takes effect after reload",
-        "values" : {
-            "dateDesc" : {
-                "label" : "Newest first",
-                "value" : "dateDesc"
-            },
-            "dateAsc" : {
-                "label" : "Oldest first",
-                "value" : "dateAsc"
-            },
-            "nameAsc" : {
-                "label" : "Name ascending",
-                "value" : "nameAsc"
-            },
-            "nameDesc" : {
-                "label" : "Name descending",
-                "value" : "nameDesc"
-            }
-        }
-    },
     "streamdevActive"    :   {
         "category" : "streaming",
         "type" : "boolean",
@@ -433,13 +410,37 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "boolean",
         "label" : "Use HTML5 Video Player",
-        "info" : "Externremux has to produce stream in webm format"
+        "info" : "An extended externremux.sh is needed"
     },
     "streamdevParams"  :   {
         "depends" : "streamdevActive",
         "category" : "streaming",
         "type" : "string",
         "label" : "StreamDev parameter"
+    },
+    "streamdevContainer"  :   {
+        "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "enum",
+        "label" : "Container",
+        "dataType" : "string",
+        "values" : {
+            "mkv" : {
+                "label" : "Matroska",
+                "value" : "mkv"
+            },
+            "webm" : {
+                "label" : "WebM",
+                "value" : "webm"
+            }
+        }
+    },
+    "streamDownload" : {
+        "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Download",
+        "info" : "Enable download of transcoded Recordings. Does not work on Android powered devices. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska."
     },
     "debug"             :   {
         "category" : "dev",
