@@ -28,18 +28,12 @@
     position: relative;
 }
 .recording.list-item .name:after {
-    position: absolute;
-    top: 0;
+    top: -5px;
     right: 0;
+    bottom: auto;
 }
-.recording.list-item .name.edited:after {
-    content: '\2702';
-}
-.recording.list-item .name.is-new:after {
-    content: '\273d';
-}
-.recording.list-item .name.edited.is-new:after {
-    content: '\2702\273d';
+.recording.list-item .name:before {
+    right: 0;
 }
 .recording.list-item .shortText {
     font-size: 12px;

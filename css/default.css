@@ -94,7 +94,7 @@ ul {
     white-space: nowrap;
 }
 
-
+.top-tipp:after,
 .rating-1:after,
 .rating-2:after,
 .rating-3:after,
@@ -102,8 +102,9 @@ ul {
 .rating-5:after {
     position: absolute;
     bottom: 0;
-    right: 25px;
+    right: 20px;
     color: #ffaf17;
+    font-family: VDR-web, sans-serif;
 }
 .epg-search-view .rating-1:after,
 .epg-search-view .rating-2:after,
@@ -133,13 +134,37 @@ ul {
     content: '★★★★★';
 }
 
-.top-tipp:before {
-    content: '\1F44D';
+.top-tipp:before,
+.is-new:before,
+.edited:before {
     position: absolute;
     bottom: 1px;
-    right: 10px;
-    color: #ffaf17;
+    right: 5px;
+    color: white;
+    font-family: VDR-web, sans-serif;
 }
+.edited:before {
+    content: 'Z';
+}
+.top-tipp:before {
+    content: 'Y';
+}
+.is-new:before {
+    content: 'K';
+}
+.top-tipp.is-new:before {
+    content: 'Y K';
+}
+.top-tipp.edited:before {
+    content: 'Y Z';
+}
+.top-tipp.is-new.edited:before {
+    content: 'Y Z K';
+}
+
+
+
+
 .epg-search-view .top-tipp:before {
     right: 20px;
 }
