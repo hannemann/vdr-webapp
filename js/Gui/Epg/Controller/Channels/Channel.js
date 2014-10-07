@@ -134,7 +134,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
                             "payload" : {
                                 "type" : "VideoPlayer",
                                 "data" : {
-                                    "channel" : channel
+                                    "sourceModel" : channel
                                 }
                             }
                         });

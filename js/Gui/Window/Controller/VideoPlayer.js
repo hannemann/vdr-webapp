@@ -31,11 +31,11 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.settingParams = false;
     this.spooling = false;
 
-    if ("undefined" !== typeof this.data.channel) {
+    if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
 
         this.data.isTv = true;
         now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.getData('channel').getCurrentBroadcast();
+        broadcast = this.data.sourceModel.getCurrentBroadcast();
         this.data.startTime = now - broadcast.getData('start_time');
     } else {
         this.data.isVideo = true;
@@ -61,11 +61,8 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    //if (this.data.isVideo) {
-
-        this.module.getHelper('VideoPlayer')
-            .setVideoPoster(this.getPosterOptions(2));
-    //}
+    this.module.getHelper('VideoPlayer')
+        .setVideoPoster(this.getPosterOptions(2));
 };
 
 /**
@@ -188,7 +185,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
         "width" : this.view.sizes[size].width,
         "height" : this.view.sizes[size].height,
         "video" : this.getVideo(),
-        "sourceModel" : (this.data.isTv ? this.getData('channel') : this.getData('recording')),
+        "sourceModel" : this.data.sourceModel,
         "startTime" : time
     }
 };
@@ -200,8 +197,8 @@ Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
 Gui.Window.Controller.VideoPlayer.prototype.startDownload = function (e) {
 
     var src = this.getStreamUrl([
-        'FILENAME=' + encodeURIComponent(this.getData('recording').getData('name')) + '.mkv'
-    ]).replace('TYPE=webm', 'TYPE=download');
+        'FILENAME=' + encodeURIComponent(this.data.sourceModel.getData('name')) + '.mkv'
+    ]).replace('TYPE=[a-z]+', 'TYPE=download');
 
     if (!this.view.controls.hasClass('show')) {
         return;
@@ -426,7 +423,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
 
-    if (!this.view.controls.hasClass('show') || this.getData('channel')) {
+    if (!this.view.controls.hasClass('show') || this.isTv()) {
         return;
     }
 
@@ -466,11 +463,8 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
     e.preventDefault();
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
 
-    //if (this.data.isVideo) {
-
-        this.module.getHelper('VideoPlayer')
-            .setVideoPoster(this.getPosterOptions());
-    //}
+    this.module.getHelper('VideoPlayer')
+        .setVideoPoster(this.getPosterOptions());
 };
 
 /**
@@ -502,7 +496,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeMove = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setTime = function (action, value) {
 
-    var recording = this.getData('recording');
+    var sourceModel = this.data.sourceModel;
 
     value = value || 1;
     if (action === 'increase') {
@@ -513,8 +507,8 @@ Gui.Window.Controller.VideoPlayer.prototype.setTime = function (action, value) {
     if (this.data.startTime < 0) {
         this.data.startTime = 0;
     }
-    if (this.data.startTime > recording.getData('duration')) {
-        this.data.startTime = recording.getData('duration');
+    if (this.data.startTime > sourceModel.getData('duration')) {
+        this.data.startTime = sourceModel.getData('duration');
     }
     this.view.setData('startTime', this.data.startTime);
     this.view.updateProgress(this.data.startTime);
@@ -553,7 +547,7 @@ Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
 
     if (!this.view.controls.hasClass('show')) return;
 
-    if (this.data.channel && this.isPlaying) return;
+    if (this.data.isTv && this.isPlaying) return;
 
     e.stopPropagation();
 
@@ -640,22 +634,20 @@ Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevPa
 
     streamdevParams = streamdevParams || [];
 
-    streamdevParams.push('TYPE=webm');
+    streamdevParams.push('TYPE=mkv');
     streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
     streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
     streamdevParams.push('VBR=' + bitrate);
 
-    if (this.data.channel) {
-        src = this.getData('channel').getStreamUrl(streamdevParams);
-    } else if (this.data.recording) {
-        duration = this.data.recording.getData('duration');
+    if (this.data.isVideo) {
+        duration = this.data.sourceModel.getData('duration');
         streamdevParams.push(
             'DUR=' + (this.data.startTime ? duration - this.data.startTime : duration).toString()
         );
-        src = this.data.recording.getStreamUrl(streamdevParams);
-        if (this.data.startTime > 0) {
-            src += '?pos=time.' + this.data.startTime;
-        }
+    }
+    src = this.data.sourceModel.getStreamUrl(streamdevParams);
+    if (this.data.startTime > 0) {
+        src += '?pos=time.' + this.data.startTime;
     }
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
 
@@ -671,7 +663,7 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
 
     this.view.stopHideControls();
 
-    if (this.data.recording) {
+    if (this.data.isVideo) {
         this.data.startTime = Math.floor(this.data.startTime + this.getVideo().currentTime);
         this.view.updateRecordingEndTime(true);
     }
@@ -701,34 +693,6 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
 };
 
 /**
- * toggle fullscreen
- */
-Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
-
-    if (!this.view.controls.hasClass('show')) {
-        return;
-    }
-
-    e.stopPropagation();
-
-    var isFullscreen = false;
-
-    if ("undefined" != typeof document.fullScreen) {
-        isFullscreen = document.fullScreen;
-    }
-
-    if ("undefined" != typeof document.mozFullscreen) {
-        isFullscreen = document.mozFullscreen;
-    }
-
-    if ("undefined" != typeof document.webkitIsFullScreen) {
-        isFullscreen = document.webkitIsFullScreen;
-    }
-
-    this[isFullscreen ? 'cancelFullscreen' : 'requestFullscreen']();
-};
-
-/**
  * change video source
  * @param {VDRest.Epg.Model.Channels.Channel|Gui.Window.Controller.Recording|jQuery.Event} e
  */
@@ -750,41 +714,29 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         return;
     }
 
-    if (e instanceof VDRest.Epg.Model.Channels.Channel) {
-
-        if (this.data.channel && this.data.channel == e) {
-            return;
-        }
-        this.data.recording = undefined;
-        this.data.channel = e;
-
-    } else if (e instanceof VDRest.Recordings.Model.List.Recording) {
-
-        if (this.data.recording && this.data.recording == e) {
-            return;
-        }
-        this.data.recording = e;
-        this.data.channel = undefined;
-        this.data.startTime = 0;
-
-    } else if (e instanceof jQuery.Event) {
-
-        channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
-        getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
-        this.data.recording = undefined;
-        nextChannel = channels['get' + getter + 'Channel'](this.data.channel);
-        if (nextChannel) {
-            this.data.channel = nextChannel;
-        } else {
-            return;
-        }
+    if (this.data.sourceModel == e) {
+        return;
     }
     this.pausePlayback();
     this.view.setDefaultPoster();
 
-    if (this.getData('channel')) {
+    if (e instanceof jQuery.Event) {
+
+        channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
+        getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
+        nextChannel = channels['get' + getter + 'Channel'](this.data.channel);
+        if (nextChannel) {
+            this.data.sourceModel = nextChannel;
+        } else {
+            return;
+        }
+    } else {
+        this.data.sourceModel = e;
+    }
+
+    if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
         now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.getData('channel').getCurrentBroadcast();
+        broadcast = this.data.sourceModel.getCurrentBroadcast();
         if (broadcast) {
             this.setIsTv();
             this.view.removeDownloadButton();
@@ -794,7 +746,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         } else {
             return;
         }
-    } else if (this.getData('recording')) {
+    } else if (this.data.sourceModel instanceof VDRest.Recordings.Model.List.Recording) {
 
         this.setIsVideo();
         this.data.startTime = 0;
@@ -847,6 +799,34 @@ Gui.Window.Controller.VideoPlayer.prototype.setIsTv = function () {
     this.data.isVideo = false;
     this.view.data.isTv = this.data.isTv;
     this.view.data.isVideo = this.data.isVideo;
+};
+
+/**
+ * toggle fullscreen
+ */
+Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
+
+    if (!this.view.controls.hasClass('show')) {
+        return;
+    }
+
+    e.stopPropagation();
+
+    var isFullscreen = false;
+
+    if ("undefined" != typeof document.fullScreen) {
+        isFullscreen = document.fullScreen;
+    }
+
+    if ("undefined" != typeof document.mozFullscreen) {
+        isFullscreen = document.mozFullscreen;
+    }
+
+    if ("undefined" != typeof document.webkitIsFullScreen) {
+        isFullscreen = document.webkitIsFullScreen;
+    }
+
+    this[isFullscreen ? 'cancelFullscreen' : 'requestFullscreen']();
 };
 
 /**

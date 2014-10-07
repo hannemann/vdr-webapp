@@ -132,7 +132,7 @@ Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
                 "payload" : {
                     "type" : "VideoPlayer",
                     "data" : {
-                        "recording" : recording
+                        "sourceModel" : recording
                     }
                 }
             });

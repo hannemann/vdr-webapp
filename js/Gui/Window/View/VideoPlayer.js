@@ -536,12 +536,12 @@ Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
         percentage = 100 - (
             100 * (
                 this.getData('startTime') + this.video.currentTime
-            ) / this.getData('recording').getData('duration')
+            ) / this.data.sourceModel.getData('duration')
         );
     } else if (this.data.isTv) {
 
         now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.getData('channel').getCurrentBroadcast();
+        broadcast = this.data.sourceModel.getCurrentBroadcast();
         if (broadcast) {
             percentage = 100 - (
                 100 * (
@@ -580,14 +580,14 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
     if (this.data.isVideo) {
 
         start = helper.getTimeString(new Date(), true);
-        duration = this.getData('recording').getData('duration');
+        duration = this.data.sourceModel.getData('duration');
         end = helper.getTimeString(
             new Date(new Date().getTime() + duration * 1000),
             true
         );
         duration = helper.getDurationAsString(duration, true);
     } else {
-        broadcast = this.getData('channel').getCurrentBroadcast();
+        broadcast = this.data.sourceModel.getCurrentBroadcast();
         start = helper.getTimeString(broadcast.getData('start_date'));
         end = helper.getTimeString(broadcast.getData('end_date'));
         duration = helper.getDurationAsString(broadcast.getData('duration'), true);
@@ -607,7 +607,7 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
 Gui.Window.View.VideoPlayer.prototype.updateRecordingEndTime = function (action) {
 
     var me = this,
-        duration = this.getData('recording').getData('duration'),
+        duration = this.data.sourceModel.getData('duration'),
         helper = this.helper();
 
     if (action) {
@@ -631,7 +631,7 @@ Gui.Window.View.VideoPlayer.prototype.updateRecordingEndTime = function (action)
  */
 Gui.Window.View.VideoPlayer.prototype.updateRecordingStartEndTime = function () {
 
-    var duration = this.getData('recording').getData('duration'),
+    var duration = this.data.sourceModel.getData('duration'),
         helper = this.helper(), start, end;
 
 
@@ -658,7 +658,7 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
             time = this.getData('startTime') + this.video.currentTime;
         } else {
             now = parseInt(new Date().getTime() / 1000, 10);
-            broadcast = this.getData('channel').getCurrentBroadcast();
+            broadcast = this.data.sourceModel.getCurrentBroadcast();
             if (broadcast) {
                 time = now - broadcast.getData('start_time');
             } else {
@@ -713,7 +713,7 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
     var broadcast, now,
         me = this, end, logo,
-        recording = this.getData('recording');
+        sourceModel = this.data.sourceModel;
 
     if (this.infoArea) {
         this.infoArea.remove();
@@ -723,10 +723,10 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
     this.title = $('<div class="title info">').appendTo(this.infoArea);
 
     if (this.data.isVideo) {
-        this.title.text(recording.getData('event_title'));
-        if ('' !== recording.getData('event_short_text')) {
+        this.title.text(sourceModel.getData('event_title'));
+        if ('' !== sourceModel.getData('event_short_text')) {
             this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
-            this.subTitle.text(recording.getData('event_short_text'));
+            this.subTitle.text(sourceModel.getData('event_short_text'));
         }
     } else {
 
@@ -734,7 +734,7 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
             clearTimeout(this.changeTitleTimeout);
         }
 
-        broadcast = this.data.channel.getCurrentBroadcast();
+        broadcast = sourceModel.getCurrentBroadcast();
         if (broadcast) {
             this.title.text(broadcast.getData('title'));
             if ('' !== broadcast.getData('short_text')) {
@@ -750,7 +750,7 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
             }, end);
         }
 
-        logo = this.data.channel.getData('image');
+        logo = this.data.sourceModel.getData('image');
         if (logo) {
             this.infoArea.addClass('has-logo');
             this.infoArea.css({
