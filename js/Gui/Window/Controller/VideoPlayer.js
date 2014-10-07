@@ -724,7 +724,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
         channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
         getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
-        nextChannel = channels['get' + getter + 'Channel'](this.data.channel);
+        nextChannel = channels['get' + getter + 'Channel'](this.data.sourceModel);
         if (nextChannel) {
             this.data.sourceModel = nextChannel;
         } else {
