@@ -578,11 +578,10 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
 
     if (this.data.isVideo) {
 
-        start = helper.getTimeString(new Date(), true);
+        start = helper.getTimeString(new Date());
         duration = this.data.sourceModel.getData('duration');
         end = helper.getTimeString(
-            new Date(new Date().getTime() + duration * 1000),
-            true
+            new Date(new Date().getTime() + duration * 1000)
         );
         duration = helper.getDurationAsString(duration, true);
     } else {
@@ -616,8 +615,7 @@ Gui.Window.View.VideoPlayer.prototype.updateRecordingEndTime = function (action)
                 new Date(new Date().getTime()
                     + duration * 1000
                     - me.getData('startTime') * 1000
-                ),
-                true
+                )
             ));
         }, 1000);
     } else {
@@ -634,11 +632,8 @@ Gui.Window.View.VideoPlayer.prototype.updateRecordingStartEndTime = function () 
         helper = this.helper(), start, end;
 
 
-    start = helper.getTimeString(new Date(), true);
-    end = helper.getTimeString(
-        new Date(new Date().getTime() + duration * 1000),
-        true
-    );
+    start = helper.getTimeString(new Date());
+    end = helper.getTimeString(new Date(new Date().getTime() + duration * 1000));
 
     this.end.text(end);
     this.start.text(start);

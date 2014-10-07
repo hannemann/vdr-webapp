@@ -77,5 +77,6 @@ VDRest.app.de_DE = {
     "Recordings Settings" : "Aufnahmen Einstellungen",
     "Takes effect after reload" : "Aktiv nach Neustart",
     "e.g.: Force usage of VLC" : "z.B. um VLC zu erzwingen",
+    "Watch Recording" : "Aufnahme Ansehen",
     "Enable download of transcoded Recordings. Does not work on Android powered devices. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska." : "Download transkodierter Aufnahmen anbieten. Funktioniert nicht auf Android Geräten. Downloads werden mit den aktuellen Qualitätseinstellungen per libx264 und aac transkodiert. Container ist Matroska."
 };

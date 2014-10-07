@@ -162,8 +162,10 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.removeZappObserver = function () {
 
-    this.view.ctrlChannelUp.off('click');
-    this.view.ctrlChannelDown.off('click');
+    if ("undefined" !== typeof this.view.ctrlChannelUp) {
+        this.view.ctrlChannelUp.off('click');
+        this.view.ctrlChannelDown.off('click');
+    }
 };
 
 /**
@@ -740,7 +742,9 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     if (this.data.sourceModel == e) {
         return;
     }
-    this.pausePlayback();
+    if (this.isPlaying) {
+        this.pausePlayback();
+    }
     this.view.setDefaultPoster();
 
     if (e instanceof jQuery.Event) {
@@ -779,7 +783,6 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.view.setData('startTime', this.data.startTime);
         this.removeZappObserver();
         this.view.removeChannelButtons();
-        this.view.updateRecordingEndTime(false);
         this.view.addDownloadButton();
         this.addDownloadEvent();
         $(video).one(
@@ -789,6 +792,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     } else {
         return;
     }
+    this.view.updateRecordingEndTime(false);
 
     this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
     this.removeOsdObserver();
