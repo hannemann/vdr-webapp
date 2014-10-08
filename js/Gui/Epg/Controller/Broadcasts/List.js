@@ -385,7 +385,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
         metrics = this.epgController.getMetrics(),
         threshold = 120;
 
-    return top - threshold < metrics.win.height && bottom + threshold > metrics.broadcasts.top;
+    return top - threshold < metrics.win.height
+            && bottom + threshold > metrics.broadcasts.top
+            && !this.module.getController('Epg').isHidden;
 
 };
 
