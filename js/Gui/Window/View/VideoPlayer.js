@@ -332,7 +332,8 @@ Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
  */
 Gui.Window.View.VideoPlayer.prototype.addVolumeControl = function () {
 
-    this.ctrlVolume = $('<div class="slider volume">').appendTo(this.controls);
+    this.volumeWrapper = $('<div class="volume-wrapper">').appendTo(this.controls);
+    this.ctrlVolume = $('<div class="slider volume">').appendTo(this.volumeWrapper);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
     this.volumeIndicator = $(
         '<div class="vdr-web-symbol info volume-indicator" data-animate="opacity fast">'

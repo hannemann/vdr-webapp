@@ -71,8 +71,8 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
     var helper = this.helper();
 
-    this.view.ctrlVolume.on('mousedown touchstart', $.proxy(this.volumeDown, this));
-    this.view.ctrlVolume.on('click', helper.stopPropagation);
+    this.view.volumeWrapper.on('mousedown touchstart', $.proxy(this.volumeDown, this));
+    this.view.volumeWrapper.on('click', helper.stopPropagation);
     this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.toggleControls, this));
