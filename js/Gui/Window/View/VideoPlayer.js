@@ -501,15 +501,12 @@ Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
 
 /**
  * show quality overlay
+ * @param {Boolean} [force]
  */
-Gui.Window.View.VideoPlayer.prototype.toggleQuality = function (e) {
+Gui.Window.View.VideoPlayer.prototype.toggleQuality = function (force) {
 
-    if (!this.controls.hasClass('show')) return;
-
-    e.stopPropagation();
-    e.preventDefault();
     this.stopHideControls();
-    this.qualitySelect.toggleClass('show');
+    this.qualitySelect.toggleClass('show', force);
 };
 
 /**

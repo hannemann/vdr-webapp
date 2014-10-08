@@ -76,7 +76,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.controls.on('click.'+this.keyInCache, $.proxy(this.toggleControls, this));
-    this.view.ctrlQuality.on('click.'+this.keyInCache, $.proxy(this.view.toggleQuality, this.view));
+    this.view.ctrlQuality.on('click.'+this.keyInCache, $.proxy(this.toggleQuality, this));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
@@ -186,6 +186,19 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleControls = function (e) {
     }
 
     this.stopToggleControls = undefined;
+};
+
+/**
+ * toggle quality
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.VideoPlayer.prototype.toggleQuality = function (e) {
+
+    if (!this.view.controls.hasClass('show')) return;
+
+    e.stopPropagation();
+    e.preventDefault();
+    this.view.toggleQuality();
 };
 
 /**
@@ -374,6 +387,8 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
     if (!this.view.controls.hasClass('show')) {
         return;
     }
+
+    this.view.toggleQuality(false);
 
     e.stopPropagation();
     e.preventDefault();
@@ -644,6 +659,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 
     this.isPlaying = true;
     this.view.toggleThrobber();
+    this.view.omitToggleControls = false;
     this.view.toggleControls();
     this.settingParams = false;
 
