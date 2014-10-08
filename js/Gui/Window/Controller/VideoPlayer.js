@@ -75,7 +75,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.ctrlVolume.on('click', helper.stopPropagation);
     this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
     this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
-    this.view.controls.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
+    this.view.controls.on('click.'+this.keyInCache, $.proxy(this.toggleControls, this));
     this.view.ctrlQuality.on('click.'+this.keyInCache, $.proxy(this.view.toggleQuality, this.view));
     this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
@@ -110,14 +110,8 @@ Gui.Window.Controller.VideoPlayer.prototype.addZappObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
 
-    var helper = this.helper();
-    this.view.osd.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
-    this.view.title.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
-    if ("undefined" != typeof this.view.subTitle) {
-        this.view.subTitle.on('click.'+this.keyInCache, $.proxy(this.view.toggleControls, this.view));
-    }
-    this.view.ctrlTimeline.on('mousedown touchstart', $.proxy(this.setTimeDown, this));
-    this.view.ctrlTimeline.on('click', helper.stopPropagation);
+    this.view.osd.on('mouseup touchend', $.proxy(this.toggleControls, this));
+    this.view.osd.on('touchstart mousedown', $.proxy(this.setTimeDown, this));
 };
 
 /**
@@ -142,10 +136,10 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
     this.view.bitrateSelect.off('mousedown touchstart');
     this.view.controls.off('click');
     this.view.ctrlStop.off('click');
-    this.view.ctrlPlay.on('click');
-    this.view.ctrlFullScreen.on('click');
-    this.view.ctrlQuality.on('click');
-    this.view.ctrlMinimize.on('click');
+    this.view.ctrlPlay.off('click');
+    this.view.ctrlFullScreen.off('click');
+    this.view.ctrlQuality.off('click');
+    this.view.ctrlMinimize.off('click');
     this.view.player.off('playing');
     this.view.player.off('timeupdate');
     this.view.player.off('stalled');
@@ -173,12 +167,25 @@ Gui.Window.Controller.VideoPlayer.prototype.removeZappObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
 
-    this.view.osd.off('click');
-    this.view.title.off('click');
-    if ("undefined" != typeof this.view.subTitle) {
-        this.view.subTitle.off('click');
+    this.view.osd.off('mouseup touchend');
+    this.view.osd.off('mousedown touchstart');
+};
+
+/**
+ * toggle controls
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.VideoPlayer.prototype.toggleControls = function (e) {
+
+    if ("undefined" === typeof this.stopToggleControls) {
+
+        clearTimeout(this.spoolTimeout);
+        e.stopPropagation();
+        e.preventDefault();
+        this.view.toggleControls();
     }
-    this.view.ctrlTimeline.off('mousedown touchstart');
+
+    this.stopToggleControls = undefined;
 };
 
 /**
@@ -459,9 +466,6 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
 
     this.spoolTimeout = setTimeout($.proxy(this.spool, this), 2000);
 
-    $(document).one('mouseup', $.proxy(this.setTimeUp, this));
-    $(document).one('touchend', $.proxy(this.setTimeUp, this));
-
     this.view.stopHideControls();
     if (this.isPlaying) {
         this.pausePlayback();
@@ -469,12 +473,13 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     this.settingParams = true;
     if ('touchstart' === e.type) {
         this.timelineSlidePos = e.originalEvent.changedTouches[0].pageX;
+        $(document).one('touchend', $.proxy(this.setTimeUp, this));
     } else {
         this.timelineSlidePos = e.pageX;
+        $(document).one('mouseup', $.proxy(this.setTimeUp, this));
     }
     this.timelineDownPos = this.timelineSlidePos;
-    $(document).on('mousemove.videoplayer-time', $.proxy(this.setTimeMove, this));
-    $(document).on('touchmove.videoplayer-time', $.proxy(this.setTimeMove, this));
+    $(document).on('mousemove.videoplayer-time touchmove.videoplayer-time', $.proxy(this.setTimeMove, this));
 };
 
 /**
@@ -488,10 +493,15 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
     clearInterval(this.increaseValueInterval);
     e.stopPropagation();
     e.preventDefault();
+
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
 
-    this.module.getHelper('VideoPlayer')
-        .setVideoPoster(this.getPosterOptions());
+    if ("undefined" !== typeof this.fetchPoster) {
+        this.module.getHelper('VideoPlayer')
+            .setVideoPoster(this.getPosterOptions());
+
+        this.fetchPoster = undefined;
+    }
 };
 
 /**
@@ -501,6 +511,9 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
 Gui.Window.Controller.VideoPlayer.prototype.setTimeMove = function (e) {
 
     var newPos;
+
+    this.stopToggleControls = true;
+    this.fetchPoster = true;
 
     e.stopPropagation();
     e.preventDefault();
@@ -549,6 +562,9 @@ Gui.Window.Controller.VideoPlayer.prototype.spool = function () {
     var me = this,
         slider = this.view.timelineSlider,
         timelinePos = slider.offset().left + slider.width();
+
+    this.stopToggleControls = true;
+    this.fetchPoster = true;
 
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
 
