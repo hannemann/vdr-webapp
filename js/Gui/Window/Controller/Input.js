@@ -37,11 +37,17 @@ Gui.Window.Controller.Input.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.Input.prototype.setPosition = function () {
 
-    var winHeight = $(window).height(), height = this.view.node.height();
+    var winHeight = $(window).height(), height = this.view.node.height(), top;
+
+    if ("Input" === this.keyInCache) {
+        top = '25%';
+    } else {
+        top = parseInt((winHeight - height) / 2, 10) + 'px';
+    }
 
     this.view.node.css({
         "transition" : "top .2s",
-        "top": parseInt((winHeight - height) / 2, 10) + 'px'
+        "top": top
     });
 
 };
