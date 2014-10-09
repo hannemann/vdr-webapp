@@ -62,10 +62,6 @@ VDRest.Api.Resource.prototype.load = function (options) {
 
         async = options.async !== false;
 
-    if (!this.noThrobber) {
-        VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
-    }
-
     if ("function" !== typeof callback) {
 
         callback = this.onSuccess;
@@ -110,6 +106,10 @@ VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
 
     var me = this;
 
+    if (!this.noThrobber) {
+        VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+    }
+
     $.ajax(
         request
     )
@@ -135,6 +135,10 @@ VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
 VDRest.Api.Resource.prototype.fetchSync = function (request, callback) {
 
     var data;
+
+    if (!this.noThrobber) {
+        VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+    }
 
     request.async = false;
 
