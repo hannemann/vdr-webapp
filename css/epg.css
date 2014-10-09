@@ -84,6 +84,10 @@
     background-image: linear-gradient(135deg, #696969 30%, #930000 70%);
     background-size: 5px 5px;
 }
+#broadcasts .broadcasts-list .broadcast:active {
+    background: rgb(168, 168, 168);
+}
+
 
 #epg-date {
     position: absolute;

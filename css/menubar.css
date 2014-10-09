@@ -32,6 +32,9 @@
 #menubar .title-wrapper {
     display: inline-block;
 }
+#menubar .title-wrapper:active {
+    background-color: rgba(255,255,255,0.5);
+}
 #menubar .icon {
     width: 40px;
     height: 40px;
