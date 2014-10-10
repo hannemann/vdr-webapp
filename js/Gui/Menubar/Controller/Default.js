@@ -127,6 +127,8 @@ Gui.Menubar.Controller.Default.prototype.requestContextMenu = function (e) {
 
     } else {
 
+        this.vibrate();
+
         $.event.trigger({
             "type" : "window.request",
             "payload" : {
@@ -169,6 +171,8 @@ Gui.Menubar.Controller.Default.prototype.onDrawerAnimate = function () {
  * handle click on icon
  */
 Gui.Menubar.Controller.Default.prototype.onIconClick = function (e) {
+
+    this.vibrate();
 
     e.stopPropagation();
 

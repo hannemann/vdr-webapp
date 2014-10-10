@@ -51,6 +51,8 @@ Gui.Window.Controller.Alert.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Alert.prototype.okAction = function () {
 
+    this.vibrate();
+
     history.back();
 };
 

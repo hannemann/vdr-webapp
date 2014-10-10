@@ -165,6 +165,8 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
 
+    this.vibrate();
+
     VDRest.app.getModule('VDRest.Timer')
         .getResource('List.Timer')
         .deleteTimer(this.getAdapter());
@@ -287,6 +289,8 @@ Gui.Window.Controller.Timer.prototype.update = function (e) {
  */
 Gui.Window.Controller.Timer.prototype.toggleActivateTimer = function () {
 
+    this.vibrate();
+
     this.data.resource.is_active = !this.data.resource.is_active;
 
     VDRest.app.getModule('VDRest.Timer')
@@ -327,6 +331,8 @@ Gui.Window.Controller.Timer.prototype.destroyTimer = function () {
  * trigger image animation
  */
 Gui.Window.Controller.Timer.prototype.animateImageAction = function () {
+
+    this.vibrate();
 
     this.view.animateImage();
 };

@@ -33,6 +33,19 @@ VDRest.Abstract.Controller.prototype.dispatchView = function () {
 };
 
 /**
+ * let mobile devices vibrate if capable
+ * @param {Array|Number} [sequence]
+ */
+VDRest.Abstract.Controller.prototype.vibrate = function (sequence) {
+
+    sequence = sequence || 5;
+
+    if (navigator.vibrate) {
+        navigator.vibrate(sequence);
+    }
+};
+
+/**
  * destruct view
  */
 VDRest.Abstract.Controller.prototype.destructView = function () {
@@ -43,3 +56,4 @@ VDRest.Abstract.Controller.prototype.destructView = function () {
 
     this.view.destruct();
 };
+

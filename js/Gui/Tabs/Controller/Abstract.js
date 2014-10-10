@@ -96,6 +96,8 @@ Gui.Tabs.Controller.Abstract.prototype.addDomEvents = function () {
 
 Gui.Tabs.Controller.Abstract.prototype.handleClick = function (e) {
 
+    this.vibrate();
+
     e.preventDefault();
     if (!$(e.target).hasClass('current')) {
 

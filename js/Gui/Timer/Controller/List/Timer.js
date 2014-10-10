@@ -107,6 +107,8 @@ Gui.Timer.Controller.List.Timer.prototype.update = function (e) {
  */
 Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
 
+    this.vibrate();
+
     $.event.trigger({
         "type" : "window.request",
         "payload" : {

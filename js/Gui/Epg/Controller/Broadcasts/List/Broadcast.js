@@ -93,6 +93,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function () {
 
+    this.vibrate();
+
     $.event.trigger({
         "type" : 'window.request',
         "payload" : {

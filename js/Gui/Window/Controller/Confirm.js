@@ -55,6 +55,8 @@ Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Confirm.prototype.okAction = function () {
 
+    this.vibrate();
+
     history.back();
 
     $.event.trigger({
@@ -66,6 +68,8 @@ Gui.Window.Controller.Confirm.prototype.okAction = function () {
  * handle cancel click
  */
 Gui.Window.Controller.Confirm.prototype.cancel = function () {
+
+    this.vibrate();
 
     history.back();
 

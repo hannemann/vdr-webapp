@@ -426,6 +426,8 @@ Gui.Window.View.Timer.prototype.renderEditTab = function () {
  */
 Gui.Window.View.Timer.prototype.subToFilename = function () {
 
+    VDRest.Abstract.Controller.prototype.vibrate();
+
     this.editForm.filename.gui.val(this.getBroadcastTitle() + '~' + this.getBroadcastShortText());
 
     this.editForm.filename.gui.change();

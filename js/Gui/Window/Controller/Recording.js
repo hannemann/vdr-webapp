@@ -80,6 +80,8 @@ Gui.Window.Controller.Recording.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
 
+    this.vibrate();
+
     var fields = e.payload,
         target, recording = this.getData('recording');
 
@@ -109,6 +111,8 @@ Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
  */
 Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
 
+    this.vibrate();
+
     VDRest.app.getModule('VDRest.Recordings')
         .getResource('List.Recording')
         .deleteRecording(this.view, $.proxy(this.afterDeleteAction, this));
@@ -118,6 +122,8 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
  * watch recording
  */
 Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
+
+    this.vibrate();
 
     var windowModule = VDRest.app.getModule('Gui.Window'),
         recording = this.getData('recording');

@@ -88,6 +88,8 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {
 
+    this.vibrate();
+
     this.view.animateImage();
 };
 
@@ -108,6 +110,8 @@ Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
     var timer = VDRest.app.getModule('VDRest.Timer')
         .loadModel('List.Timer', this.data.dataModel.data.timer_id);
 
+    this.vibrate();
+
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
@@ -115,7 +119,8 @@ Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
             "data" : {
                 "id" : timer.data.id,
                 "resource" : timer.data,
-                "activeTab" : 'edit'
+                "activeTab" : 'edit',
+                "dontDeleteListItem" : true
             }
         }
     });
@@ -132,6 +137,8 @@ Gui.Window.Controller.Broadcast.prototype.toggleTimerAction = function () {
             this.keyInCache
         )
     ), resource = VDRest.app.getModule('VDRest.Timer').getResource('List.Timer');
+
+    this.vibrate();
 
     if (this.data.dataModel.data.timer_exists) {
 

@@ -26,11 +26,15 @@ Gui.Window.Controller.DirectoryChooser.prototype.init = function () {
  */
 Gui.Window.Controller.DirectoryChooser.prototype.addObserver = function () {
 
+    var me = this;
+
     Gui.Window.Controller.Select.prototype.addObserver.call(this);
 
     this.view.node.find('label').each (function () {
 
         $(this).on('mouseup', function (e) {
+
+            me.vibrate();
 
             e.stopPropagation();
 

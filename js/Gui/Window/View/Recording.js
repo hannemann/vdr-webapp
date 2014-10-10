@@ -291,6 +291,8 @@ Gui.Window.View.Recording.prototype.getEditConfig = function () {
  */
 Gui.Window.View.Recording.prototype.subToFilename = function () {
 
+    VDRest.Abstract.Controller.prototype.vibrate();
+
     this.editForm.filename.gui.val(this.getEventTitle() + '~' + this.getEventShortText());
 
     this.editForm.filename.gui.change();

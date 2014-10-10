@@ -99,6 +99,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
 
             if (this.module.getController('Epg').getIsChannelView()) {
 
+                this.vibrate();
+
                 this.module.getController('Channels').handleChannelView({"payload" : this});
             }
         }
@@ -118,6 +120,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
         this.preventClick = undefined;
         this.channelClickTimeout = window.setTimeout($.proxy(function () {
+
+            this.vibrate(100);
 
             this.preventClick = true;
             e.preventDefault();

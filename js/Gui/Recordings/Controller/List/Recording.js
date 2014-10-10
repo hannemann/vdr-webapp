@@ -73,6 +73,8 @@ Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () 
  */
 Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = function (e) {
 
+    this.vibrate();
+
     e.preventDefault();
 
     e.stopPropagation();

@@ -101,6 +101,8 @@ Gui.Window.Controller.Input.prototype.removeObserver = function () {
  */
 Gui.Window.Controller.Input.prototype.okAction = function (e) {
 
+    this.vibrate();
+
     var type = this.data.type;
 
     e.preventDefault();
@@ -196,6 +198,8 @@ Gui.Window.Controller.Input.prototype.setDirectory = function () {
  * cancel action
  */
 Gui.Window.Controller.Input.prototype.cancel = function () {
+
+    this.vibrate();
 
     this.goBack();
 };

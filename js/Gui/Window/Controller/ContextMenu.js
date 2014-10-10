@@ -82,6 +82,8 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
  */
 Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callback, scope) {
 
+    this.vibrate();
+
     this.skipBack = true;
 
     history.back();
@@ -97,6 +99,8 @@ Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callba
  */
 Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
 
+    this.vibrate();
+
     this.skipBack = true;
 
     history.back();
@@ -111,6 +115,8 @@ Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
  * reload page
  */
 Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
+
+    this.vibrate();
 
     $(document).one(this.animationEndEvents, function () {
 

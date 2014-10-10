@@ -147,6 +147,8 @@ Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 
     var request = $(this).attr('data-module');
 
+    VDRest.Abstract.Controller.prototype.vibrate();
+
     e.stopPropagation();
 
     history.back();
