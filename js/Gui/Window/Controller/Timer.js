@@ -321,7 +321,9 @@ Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
 Gui.Window.Controller.Timer.prototype.destroyTimer = function () {
 
     // delete list entry
-    VDRest.app.getModule('Gui.Timer').getController('List.Timer', this.keyInCache).destructView();
+    if (!this.data.dontDeleteListItem) {
+        VDRest.app.getModule('Gui.Timer').getController('List.Timer', this.keyInCache).destructView();
+    }
 
     // destroy myself
     history.back();
