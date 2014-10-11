@@ -18,6 +18,8 @@ Gui.Epg.Controller.TimeLine.prototype.dispatchView = function () {
 
     this.view = this.module.getView('TimeLine');
 
+    this.node = this.view.node.get(0);
+
     this.view.setParentView(this.data.parent.view);
 
     this.module.getViewModel('TimeLine', {
@@ -42,16 +44,12 @@ Gui.Epg.Controller.TimeLine.prototype.addObserver = function () {
 
     this.menubarDate = null;
 
-    $(document).on('epg.scroll', $.proxy(this.handleScroll, this));
-
 };
 
 /**
  * remove observer
  */
 Gui.Epg.Controller.TimeLine.prototype.removeObserver = function () {
-
-    $(document).off('epg.scroll', $.proxy(this.handleScroll, this));
 
 };
 
@@ -65,7 +63,7 @@ Gui.Epg.Controller.TimeLine.prototype.handleScroll = function () {
 
     if (this.view.node.is(':visible')) {
 
-        this.view.node.css({"left": scroll + 'px'});
+        this.node.style.transform = "translateX(" + scroll + "px)";
 
         this.view.node.find('*[data-date]').each(function (k, v) {
             var d = $(v);

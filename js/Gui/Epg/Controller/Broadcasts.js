@@ -19,6 +19,8 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.view.setParentView(this.data.parent.view);
     this.broadcastLists = [];
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
+    this.channelsController = this.module.getController('Channels');
+    this.timeLineController = this.module.getController('TimeLine');
 };
 
 /**
@@ -44,7 +46,7 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
 
-    this.view.wrapper.get(0).onscroll = this.handleScroll;
+    this.view.wrapper.get(0).onscroll = $.proxy(this.handleScroll, this);
 };
 
 /**
@@ -60,9 +62,17 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function () {
 
-    $.event.trigger({
-        "type" : "epg.scroll"
-    });
+    var i;
+
+    this.channelsController.handleScroll();
+    this.timeLineController.handleScroll();
+
+    for (i in this.broadcastLists) {
+        if (this.broadcastLists.hasOwnProperty(i) && this.broadcastLists[i].isInView()) {
+
+            this.broadcastLists[i].handleScroll();
+        }
+    }
 };
 
 /**

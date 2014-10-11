@@ -20,6 +20,7 @@ Gui.Epg.Controller.Channels.prototype.channelView = false;
 Gui.Epg.Controller.Channels.prototype.init = function () {
 
     this.view = this.module.getView('Channels');
+    this.node = this.view.node.get(0);
     this.view.setParentView(this.data.parent.view);
     this.channelsList = [];
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
@@ -147,7 +148,6 @@ Gui.Epg.Controller.Channels.prototype.recoverState = function () {
 Gui.Epg.Controller.Channels.prototype.addObserver = function () {
 
     $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
-    $(document).on('epg.scroll', $.proxy(this.handleScroll, this));
     $(document).on('epg.channelview', $.proxy(this.handleChannelView, this));
 };
 
@@ -156,7 +156,6 @@ Gui.Epg.Controller.Channels.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Channels.prototype.removeObserver = function () {
 
-    $(document).off('epg.scroll');
     $(document).off('epg.channelview');
 };
 
@@ -204,10 +203,7 @@ Gui.Epg.Controller.Channels.prototype.handleScroll = function () {
     var scroll = this.broadcastsWrapper.scrollTop * -1;
 
     if (!this.channelView) {
-
-        this.offsetTop = this.offsetTop || parseInt(this.view.node.css('top'), 10);
-
-        this.view.node.css({"top": scroll + this.offsetTop + 'px'});
+        this.node.style.transform = "translateY(" + scroll + "px)";
     }
 };
 

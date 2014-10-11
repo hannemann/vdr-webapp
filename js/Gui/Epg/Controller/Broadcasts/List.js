@@ -106,8 +106,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
 
     $(document).on('broadcastsloaded-'+this.data.channel_id, $.proxy(this.iterateBroadcasts, this));
 
-    $(document).on('epg.scroll', $.proxy(this.handleScroll, this));
-
     $(window).on('orientationchange', $.proxy(this.handleResize, this));
 
     $(window).on('resize', $.proxy(this.handleResize, this));
@@ -119,8 +117,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
 Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
 
     $(document).off('broadcastsloaded-'+this.data.channel_id);
-
-    $(document).off('epg.scroll', $.proxy(this.handleScroll, this));
 
     $(window).off('orientationchange', $.proxy(this.handleResize, this));
 
