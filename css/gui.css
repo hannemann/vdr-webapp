@@ -86,3 +86,8 @@ ul#menubar #refresh {
     margin: 0 10px;
     font-size: 12px;
 }
+.recordings-list .recordings-path:active,
+.recordings-list .recording:active,
+#timer-list .list-item:active {
+    background-color: rgba(255,255,255,0.5);
+}
