@@ -61,6 +61,11 @@
     height: 21px;
     float: right;
     margin: 10px 0;
-    background: linear-gradient(0deg, transparent 2px, rgba(255,255,255,0.5) 0) repeat-y center top;
+    background-image: linear-gradient(0deg, transparent 2px, rgba(255,255,255,0.5) 0);
+    background-position: center top;
+    background-repeat: repeat-y;
     background-size: 5px 7px;
+}
+#button-settings:active {
+    background-color: rgba(255,255,255,0.5);
 }

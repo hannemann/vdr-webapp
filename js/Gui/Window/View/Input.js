@@ -56,7 +56,9 @@ Gui.Window.View.Input.prototype.addInput = function () {
 
     this.input = this.data.dom.clone();
 
-    this.input.find('.info').remove();
+    if (!this.data.showInfo) {
+        this.input.find('.info').remove();
+    }
 
     this.input.appendTo(this.body);
 

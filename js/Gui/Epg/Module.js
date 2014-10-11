@@ -117,16 +117,17 @@ Gui.Epg.prototype.contextMenu = {
         "fn" : function () {
 
             var data = {
-                "type": "number",
-                "dom": $('<label class="clearer text">')
+                "type": "string",
+                "dom": $('<label class="clearer text">'),
+                "showInfo" : true
             };
 
             $('<span>').text(VDRest.app.translate('Custom Time')).appendTo(data.dom);
             $('<span class="info">')
-                .text(VDRest.app.translate('Please enter desired time in format [h]hmm (2015 for 20:15 o\'clock)'))
+                .html(VDRest.app.translate('Please enter desired date (optional) and/or time in format [[yyyy]mmdd] [h]hmm<br>(<strong>20141224 2015</strong> for <strong>2014.12.24 20:15</strong> o\'clock)'))
                 .appendTo(data.dom);
 
-            data.gui = $('<input type="number" name="custom-time">')
+            data.gui = $('<input type="text" name="custom-time">')
                 .appendTo(data.dom);
 
             data.gui.on('change', $.proxy(this.setCustomTime, this));
@@ -190,25 +191,53 @@ Gui.Epg.prototype.getFromDate = function () {
  */
 Gui.Epg.prototype.setCustomTime = function (e) {
 
-    var now, custom, reg = new RegExp('([0-9]{1,2})([0-9]{1,2})'), value = e.target.value;
+    var custom,
+        timeReg = new RegExp('([0-9]{1,2})([0-9]{2})'),
+        value = e.target.value, values = value.split(' '),
+        date, time,
+        d = new Date();
 
-    if (value.length === 3) {
-
-        reg = new RegExp('([0-9]{1})([0-9]{1,2})');
+    if (values.length > 1) {
+        date = values[0];
+        time = values[1];
+    } else {
+        time = value
     }
 
-    if (reg.test(value)) {
+    if (date) {
+        if (date.length === 4) {
+            if (/([0-9]{2})([0-9]{2})/.test(date)) {
+                date = new Date(
+                    d.getFullYear(),
+                    RegExp.$1 - 1,
+                    RegExp.$2
+                );
+            }
+        } else {
+            if (/([0-9]{4})([0-9]{2})([0-9]{2})/.test(date)) {
+                date = new Date(
+                    RegExp.$1,
+                    RegExp.$2 - 1,
+                    RegExp.$3
+                );
+            }
+        }
+    } else {
+        date = d;
+    }
 
-        now = new Date();
+    if (timeReg.test(time)) {
 
         custom = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
             RegExp.$1, RegExp.$2, 0
         );
 
-        if (custom < now) {
+        console.log(custom);
+
+        if (custom < d) {
 
             custom.setTime(custom.getTime() + 24 * 60 * 60 * 1000);
         }
