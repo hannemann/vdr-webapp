@@ -169,11 +169,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
 
     }, this), $.proxy(function () {
 
-        newBroadcasts.sort(function (a, b) {
-
-            return a.getData('dataModel').getData('start_time') - b.getData('dataModel').getData('start_time');
-        });
-
         this.broadcasts = this.broadcasts.concat(newBroadcasts);
     }, this));
 
