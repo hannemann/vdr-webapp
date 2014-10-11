@@ -157,6 +157,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
 
     collection.iterate($.proxy(function (dataModel) {
 
+        if (dataModel.data.end_date <= this.module.getFromDate()) return;
+
         newBroadcasts.push(this.module.getController('Broadcasts.List.Broadcast', {
             'channel' : dataModel.data.channel,
             'id' : dataModel.data.id,

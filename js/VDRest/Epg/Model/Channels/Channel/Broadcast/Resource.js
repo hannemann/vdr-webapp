@@ -35,7 +35,9 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan =
 VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.init = function () {
 
     this.baseUrl = "events/" + this.data.channel_id + ".json?";
-    this.urls = {};
+    this.urls = {
+        "current" : this.baseUrl + 'start=0&limit=1'
+    };
 };
 
 /**
@@ -94,5 +96,3 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setIdUrl = functi
 
     return this;
 };
-
-
