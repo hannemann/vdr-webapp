@@ -43,6 +43,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.scrollLeft = 0;
     this.firstVisible = 0;
     this.lastVisible = 0;
+    this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
+    this.fromTime = this.module.getFromDate().getTime();
     this.initial = true;
 };
 
@@ -151,24 +153,29 @@ Gui.Epg.Controller.Broadcasts.List.prototype.detachChannelView = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (collection) {
 
-    var isInView = this.isInView();
+    var isInView = this.isInView(), newBroadcasts = [];
 
     collection.iterate($.proxy(function (dataModel) {
 
-        this.broadcasts.push(this.module.getController('Broadcasts.List.Broadcast', {
+        newBroadcasts.push(this.module.getController('Broadcasts.List.Broadcast', {
             'channel' : dataModel.data.channel,
             'id' : dataModel.data.id,
             "parent" : this,
             "dataModel" : dataModel,
-            "position" : this.broadcasts.length
+            "position" : this.broadcasts.length + newBroadcasts.length
         }));
 
-        if (isInView) {
+    }, this), $.proxy(function () {
 
-            this.broadcasts[this.broadcasts.length -1].dispatchView();
-        }
+        newBroadcasts.sort(function (a, b) {
 
+            return a.getData('dataModel').getData('start_time') - b.getData('dataModel').getData('start_time');
+        });
+
+        this.broadcasts = this.broadcasts.concat(newBroadcasts);
     }, this));
+
+    newBroadcasts = [];
     // runs in endless loop if previous collection had items but current not
     // trigger update ONLY if collection.length is not 0!!!
     if (collection.collection.length > 0 && isInView) {
@@ -300,17 +307,26 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
     var i,
         l = this.broadcasts.length,
-        currentScrollLeft = this.broadcastsWrapper.scrollLeft();
+        wrapperWidth = this.broadcastsWrapper.get(0).offsetWidth,
+        currentScrollLeft = this.broadcastsWrapper.scrollLeft(),
+        currentScrollDate = new Date((currentScrollLeft / this.pixelPerSecond) * 1000 + this.fromTime),
+        currentSrcollTime = currentScrollDate.getTime() / 1000,
+        visibleEndDate = new Date((wrapperWidth / this.pixelPerSecond) * 1000 + currentSrcollTime * 1000),
+        visibleEndTime = visibleEndDate.getTime() / 1000,
+        broadcast, start, end;
 
     if (l > 0) {
 
         if (this.scrollLeft <= currentScrollLeft) {
 
-            i = this.firstVisible;
-            // search from firstVisible until element is visible
-            for (i; i < l; i++) {
+            // search from start until element is visible
+            for (i = 0; i < l; i++) {
 
-                if (this.broadcasts[i].isInView()) {
+                broadcast = this.broadcasts[i].getData('dataModel');
+                start = broadcast.getData('start_time');
+                end = broadcast.getData('end_time');
+
+                if (end > currentSrcollTime && start <= currentSrcollTime) {
 
                     this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
                     this.broadcasts[i].view.node.addClass('first-visible');
@@ -319,11 +335,15 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
                 }
             }
 
-            // search from first visible next node until element is not visible
+            // search from start until element is not visible
 
-            for (i; i < l; i++) {
+            for (i = 0; i < l; i++) {
 
-                if (!this.broadcasts[i].isInView() || i === this.broadcasts.length) {
+                broadcast = this.broadcasts[i].getData('dataModel');
+                start = broadcast.getData('start_time');
+                end = broadcast.getData('end_time');
+
+                if (start > visibleEndTime || i === this.broadcasts.length) {
 
                     this.broadcasts[this.lastVisible].view.node.removeClass('last-visible');
                     this.broadcasts[i - 1].view.node.addClass('last-visible');
@@ -334,12 +354,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
         } else {
 
-            i = this.lastVisible;
-            i = i <= 0 ? this.broadcasts.length - 1 : i;
-            // search from lastVisible until element is visible
-            for (i; i >= 0; i--) {
+            // search from end until element is visible
+            for (i = this.broadcasts.length - 1; i >= 0; i--) {
 
-                if (this.broadcasts[i].isInView()) {
+                broadcast = this.broadcasts[i].getData('dataModel');
+                start = broadcast.getData('start_time');
+                end = broadcast.getData('end_time');
+
+                if (start <= visibleEndTime) {
 
                     this.broadcasts[this.lastVisible].view.node.removeClass('last-visible');
                     this.broadcasts[i].view.node.addClass('last-visible');
@@ -348,12 +370,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
                 }
             }
 
-            // search from lastVisible until element is not visible
-            i--;
-            i = i <= 0 ? 0 : i;
-            for (i; i >= 0; i--) {
+            // search from end until element is not visible
+            for (i = this.broadcasts.length - 1; i >= 0; i--) {
 
-                if (!this.broadcasts[i].isInView() || i === 0) {
+                broadcast = this.broadcasts[i].getData('dataModel');
+                start = broadcast.getData('start_time');
+                end = broadcast.getData('end_time');
+
+                if (end <= currentSrcollTime || i === 0) {
 
                     this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
                     this.broadcasts[i].view.node.addClass('first-visible');

@@ -68,7 +68,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function () {
     this.timeLineController.handleScroll();
 
     for (i in this.broadcastLists) {
-        if (this.broadcastLists.hasOwnProperty(i) && this.broadcastLists[i].isInView()) {
+        if (this.broadcastLists.hasOwnProperty(i)) {
 
             this.broadcastLists[i].handleScroll();
         }

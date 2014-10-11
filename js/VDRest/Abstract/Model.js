@@ -104,8 +104,9 @@ VDRest.Abstract.Model.prototype.triggerCollectionLoaded = function () {
 /**
  * default result iterator
  * @param {function} callback
+ * @param {function} [complete]
  */
-VDRest.Abstract.Model.prototype.resultIterator = function (callback) {
+VDRest.Abstract.Model.prototype.resultIterator = function (callback, complete) {
 
     var i = 0, l = this.currentResult.length, n = true;
 
@@ -116,6 +117,11 @@ VDRest.Abstract.Model.prototype.resultIterator = function (callback) {
         if (n === false) {
             break;
         }
+    }
+
+    if ("function" === typeof complete) {
+
+        complete(this.currentResult);
     }
 };
 

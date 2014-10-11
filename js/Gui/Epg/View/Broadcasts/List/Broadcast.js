@@ -35,13 +35,13 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
     if (0 === this.getData('position')) {
 
-        this.parentView.node.prepend(this.node);
+        this.parentView.node.append(this.node);
 
     } else {
 
         this.parentView.node.find('div.broadcast').each(function () {
 
-            if (me.getLeft() >= parseInt($(this).attr('data-right'), 10)) {
+            if (me.getData('position') > parseInt($(this).attr('data-position'), 10)) {
 
                 me.node.insertAfter(this);
             }

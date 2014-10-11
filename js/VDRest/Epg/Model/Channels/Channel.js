@@ -104,6 +104,8 @@ VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
 
         this.setData('image', this.baseUrl + 'channels/image/' + channelId);
     }
+
+    this.loadedNextFrom = {};
 };
 
 /**
@@ -124,6 +126,10 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
     var from = this.collection.length > 0
             ? this.collection[this.collection.length-1].data.end_date
             : this.getFromDate();
+
+    if (this.loadedNextFrom[from.getTime()]) return;
+
+    this.loadedNextFrom[from.getTime()] = true;
 
     this.getResource()
         .setUrl(from)
