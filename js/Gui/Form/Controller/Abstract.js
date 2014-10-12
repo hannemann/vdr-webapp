@@ -98,6 +98,8 @@ Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {
 
             type = 'DirectoryChooser';
         }
+
+        this.vibrate();
         this.requestInput(e.data.field, type);
     }
 };
@@ -112,6 +114,10 @@ Gui.Form.Controller.Abstract.prototype.addChangeHandler = function (field, field
     var me = this;
 
     field.gui.on('change', function () {
+
+        if ("boolean" === field.type) {
+            VDRest.Abstract.Controller.prototype.vibrate();
+        }
 
         if (me.hasDependencies(fieldName)) {
 
