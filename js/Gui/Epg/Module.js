@@ -246,6 +246,15 @@ Gui.Epg.prototype.setCustomTime = function (e) {
 };
 
 /**
+ * unset muted flag
+ */
+Gui.Epg.prototype.unMute = function () {
+
+    VDRest.Abstract.Module.prototype.unMute.call(this);
+    this.getController('Epg').recover();
+};
+
+/**
  * register module
  */
 VDRest.app.registerModule('Gui.Epg', true);

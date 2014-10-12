@@ -65,8 +65,8 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
     if (this.isHidden) {
 
         this.view.node.show();
-
         this.isHidden = false;
+        this.module.unMute();
 
     } else {
 
@@ -81,6 +81,20 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
 
         this.module.store.initChannels();
 
+    }
+};
+
+/**
+ * recover from muted state
+ */
+Gui.Epg.Controller.Epg.prototype.recover = function () {
+
+    var i, cache = this.module.cache.store.Controller['Broadcasts.List'];
+    for (i in cache) {
+
+        if (cache.hasOwnProperty(i)) {
+            cache[i].handleScroll();
+        }
     }
 };
 
@@ -196,7 +210,7 @@ Gui.Epg.Controller.Epg.prototype.getIsChannelView = function () {
  */
 Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 
-    $(window).on('orientationchange', $.proxy(this.setMetrics, this));
+    $(window).on('orientationchange.epg-controller', $.proxy(this.handleOrientationChange, this));
     $(window).on('resize', $.proxy(this.setMetrics, this));
     $(document).on('epg.channelview', $.proxy(this.setIsChannelView, this));
 };
@@ -206,9 +220,24 @@ Gui.Epg.Controller.Epg.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
 
-    $(window).off('orientationchange', $.proxy(this.setMetrics, this));
+    $(window).off('orientationchange.epg-controller');
     $(window).off('resize', $.proxy(this.setMetrics, this));
     $(document).off('epg.channelview', $.proxy(this.setIsChannelView, this));
+};
+
+/**
+ * handle orientation change
+ */
+Gui.Epg.Controller.Epg.prototype.handleOrientationChange = function () {
+
+    if (!this.module.isMuted) {
+
+        setTimeout($.proxy(function () {
+
+            this.setMetrics();
+            this.recover();
+        }, this), 500);
+    }
 };
 
 /**
@@ -220,6 +249,7 @@ Gui.Epg.Controller.Epg.prototype.destructView = function (hideOnly) {
 
         this.view.node.hide();
         this.isHidden = true;
+        this.module.mute();
 
     } else {
 
