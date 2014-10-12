@@ -116,6 +116,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
     var windowModule = VDRest.app.getModule('Gui.Window'),
         channel = this.data.dataModel;
 
+    this.vibrate();
+
     if (!this.isMuted) {
 
         this.preventClick = undefined;

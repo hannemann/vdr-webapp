@@ -132,6 +132,8 @@ Gui.Window.View.Abstract.prototype.getToolButton = function (options) {
 
     dom.on('click', function () {
 
+        VDRest.Abstract.Controller.prototype.vibrate();
+
         if (typeof options.url != 'undefined') {
 
             if (options.target == 'new') {
