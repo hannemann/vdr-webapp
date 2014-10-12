@@ -38,6 +38,8 @@ VDRest.Abstract.Controller.prototype.dispatchView = function () {
  */
 VDRest.Abstract.Controller.prototype.vibrate = function (sequence) {
 
+    if (!VDRest.config.getItem('hapticFeedback')) return;
+
     sequence = sequence || 5;
 
     if (navigator.vibrate) {

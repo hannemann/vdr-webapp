@@ -189,7 +189,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "useHtmlPlayer"         :   "false",
     "defaultSorting"        :   "dateDesc",
     "videoQualitySize"      :   "320x180",
-    "videoQualityBitrate"   :   "512K"
+    "videoQualityBitrate"   :   "512K",
+    "hapticFeedback"        :   "true"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -279,6 +280,11 @@ VDRest.Lib.Config.prototype.fields = {
                 "value" : "black"
             }
         }
+    },
+    "hapticFeedback" :   {
+        "category" : "gui",
+        "type" : "boolean",
+        "label" : "Vibration"
     },
     "language" : {
         "category" : "gui",
