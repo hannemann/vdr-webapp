@@ -235,8 +235,6 @@ Gui.Epg.prototype.setCustomTime = function (e) {
             RegExp.$1, RegExp.$2, 0
         );
 
-        console.log(custom);
-
         if (custom < d) {
 
             custom.setTime(custom.getTime() + 24 * 60 * 60 * 1000);
