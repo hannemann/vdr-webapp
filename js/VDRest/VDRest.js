@@ -100,7 +100,11 @@ VDRest.App.prototype.run = function () {
         this.initial = true;
     }
 
-    this.pollLocation();
+    if ("object" === typeof window.onhashchange) {
+        window.onhashchange = $.proxy(this.locationChange, this);
+    } else {
+        this.pollLocation();
+    }
 
     if (!this.initWithoutConfig) {
 
@@ -154,28 +158,36 @@ VDRest.App.prototype.setLocationHash = function (hash) {
  * poll location hash and dispatch changes
  */
 VDRest.App.prototype.pollLocation = function () {
-    var start = VDRest.config.getItem('start'), hash;
 
     setInterval($.proxy(function () {
 
-        hash = this.getLocationHash();
-
-        if ("" === hash) {
-
-            hash = start;
-        }
-
-        if (hash !== this.current && this.isRegistered(hash)) {
-
-            this.dispatch(hash);
-
-        } else if (this.observeHash[this.observeHash.length-1] === hash) {
-
-            this.destroy();
-
-        }
-
+        this.locationChange();
     }, this), 100);
+};
+
+/**
+ * react on location change event
+ */
+VDRest.App.prototype.locationChange = function () {
+    var start = VDRest.config.getItem('start'), hash;
+
+    hash = this.getLocationHash();
+
+    if ("" === hash) {
+
+        hash = start;
+    }
+
+    if (hash !== this.current && this.isRegistered(hash)) {
+
+        this.dispatch(hash);
+
+    } else if (this.observeHash[this.observeHash.length-1] === hash) {
+
+        this.destroy();
+
+    }
+
 };
 
 VDRest.App.prototype.observe = function (hash) {
