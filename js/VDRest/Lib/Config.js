@@ -190,7 +190,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "defaultSorting"        :   "dateDesc",
     "videoQualitySize"      :   "320x180",
     "videoQualityBitrate"   :   "512K",
-    "hapticFeedback"        :   "true"
+    "hapticFeedback"        :   "true",
+    "favourites"            :   ""
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -410,6 +411,30 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "number",
         "label" : "StreamDev port"
+    },
+    "favourites" : {
+        "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "channel",
+        "label" : "Favourites",
+        "values" : function () {
+
+            var channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels').collection,
+                values = {}, i=0, l;
+
+            l = channels.length;
+
+            for (i;i<l;i++) {
+
+                values[channels[i].data.channel_id] = {
+                    "label" : channels[i].data.name,
+                    "selected" : VDRest.config.getItem('favourites') === channels[i].data.channel_id,
+                    "value" : channels[i].data.channel_id
+                }
+            }
+
+            return values;
+        }
     },
     "useHtmlPlayer"    :   {
         "depends" : "streamdevActive",

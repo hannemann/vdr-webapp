@@ -35,7 +35,7 @@ Gui.Window.View.Drawer.prototype.render = function () {
 
     this.buttons = [];
 
-    this.addClasses().addButtons().addInfo();
+    this.addClasses().addButtons().addFavourites().addInfo();
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 };
@@ -73,6 +73,41 @@ Gui.Window.View.Drawer.prototype.addButtons = function () {
 };
 
 /**
+ * add favourites
+ * @returns {Gui.Window.View.Drawer}
+ */
+Gui.Window.View.Drawer.prototype.addFavourites = function () {
+
+    var i = 0, l, channel;
+
+    l = this.data.favourites.length;
+
+    if (l < 1) return this;
+
+    this.favourites = $('<div class="favourites clearer"><div class="header">' + VDRest.app.translate('Favourites') + '</div></div>');
+
+    for (i;i<l;i++) {
+        channel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', this.data.favourites[i]);
+
+        this.addFavourite(channel);
+    }
+
+    this.favourites.appendTo(this.body);
+
+    return this;
+};
+
+/**
+ * add favourite button
+ * @param channel
+ * @returns {VDRest.Epg.Model.Channels.Channel}
+ */
+Gui.Window.View.Drawer.prototype.addFavourite = function (channel) {
+
+    return $('<img data-channelId="' + channel.data.channel_id + '" src="' + channel.data.image + '">').appendTo(this.favourites);
+};
+
+/**
  * add info to drawer
  */
 Gui.Window.View.Drawer.prototype.addInfo = function () {
@@ -107,4 +142,6 @@ Gui.Window.View.Drawer.prototype.addInfo = function () {
     $('<div class="info-item">').text(info.getData('diskusage').description_localized).appendTo(this.info);
 
     this.info.appendTo(this.body);
+
+    return this;
 };

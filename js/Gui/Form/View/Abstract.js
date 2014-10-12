@@ -175,9 +175,12 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
  */
 Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
 
+    var selected = field.getValue();
+
     this.decorateField(id, field);
 
-    field.gui.attr('type', 'text');
+    field.gui.attr('type', 'text')
+        .val(VDRest.app.translate(selected.label));
 
     field.dom.append(field.gui);
 };

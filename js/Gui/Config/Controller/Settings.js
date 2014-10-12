@@ -46,7 +46,7 @@ Gui.Config.Controller.Settings.prototype.persist = function () {
 
                 value = this.view.data.fields[i].gui.prop('checked');
 
-            } else if (this.view.data.fields[i].type === "enum") {
+            } else if (this.view.data.fields[i].type === "enum" || this.view.data.fields[i].type === "channel") {
 
                 if ("function" === typeof this.view.data.fields[i].values) {
 

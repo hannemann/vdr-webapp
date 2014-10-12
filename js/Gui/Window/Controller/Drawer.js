@@ -21,6 +21,18 @@ Gui.Window.Controller.Drawer.prototype.init = function () {
 
     this.eventPrefix = 'window.drawer';
 
+    this.data.favourites = VDRest.config.getItem('favourites');
+
+    try {
+        this.data.favourites = JSON.parse(this.data.favourites);
+    } catch (e) {
+        if (this.data.favourites) {
+            this.data.favourites = [this.data.favourites];
+        } else {
+            this.data.favourites = [];
+        }
+    }
+
     this.view = this.module.getView('Drawer', this.data);
 
     this.module.getViewModel('Drawer', {
@@ -112,6 +124,12 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
         $(document).one('click', me.handleStateChanged);
     });
 
+    if (this.view.favourites) {
+        this.view.favourites.find('img')
+            .on('mousedown', $.proxy(this.handleFavDown, this))
+            .on('click', $.proxy(this.handleFavClick, this));
+    }
+
     this.view.node.on(this.animationEndEvents, $.proxy(this.animationCallback, this));
 };
 
@@ -135,6 +153,10 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
 
     this.view.node.off(this.animationEndEvents);
 
+    if (this.view.favourites) {
+        this.view.favourites.find('img').off('click mousedown');
+    }
+
 };
 
 /**
@@ -146,6 +168,8 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
 Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 
     var request = $(this).attr('data-module');
+
+    if (this.stopStateChanged) return;
 
     VDRest.Abstract.Controller.prototype.vibrate();
 
@@ -176,6 +200,62 @@ Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
     $.event.trigger({
         "type" : "drawer.statechanged",
         "payload" : false
+    });
+};
+
+/**
+ * handle favourite click
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    if ("undefined" === typeof this.preventClick) {
+
+        if ("undefined" !== typeof this.channelClickTimeout) {
+            window.clearTimeout(this.channelClickTimeout);
+        }
+
+        this.vibrate();
+
+        this.playFavourite(e);
+    }
+};
+
+/**
+ * handle favourite mouse down
+ */
+Gui.Window.Controller.Drawer.prototype.handleFavDown = function () {
+
+    this.preventClick = undefined;
+
+    this.channelClickTimeout = window.setTimeout($.proxy(function () {
+
+        this.preventClick = true;
+
+    }, this), 500);
+};
+
+/**
+ * request favourite video player
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.Drawer.prototype.playFavourite = function (e) {
+
+    var channel = $(e.currentTarget).attr('data-channelId');
+
+    channel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', channel);
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "VideoPlayer",
+            "data" : {
+                "sourceModel" : channel
+            }
+        }
     });
 };
 
