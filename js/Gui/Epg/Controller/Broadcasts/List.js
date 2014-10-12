@@ -169,7 +169,19 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
 
     }, this), $.proxy(function () {
 
+        var i= 0, l;
+
         this.broadcasts = this.broadcasts.concat(newBroadcasts);
+
+        if (this.isChannelView) {
+
+            l = newBroadcasts.length;
+
+            for (i;i<l;i++) {
+                newBroadcasts[i].dispatchView();
+            }
+        }
+
     }, this));
 
     newBroadcasts = [];
