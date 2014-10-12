@@ -132,6 +132,14 @@
     -webkit-animation-name: hideModal;
     background: rgba(0,0,0,0);
 }
+#epg-channels .channel.attention {
+    animation-duration: 3s;
+    animation-name: channel-attention;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-name: channel-attention;
+    box-shadow: none;
+    z-index: 1;
+}
 
 /* throbber */
 .throbber.show {

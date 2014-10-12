@@ -125,6 +125,22 @@
     100% { color: white; }
 }
 
+@keyframes channel-attention {
+    0% { box-shadow: none; }
+    33% { box-shadow: 0 0 50px 0 #FF0000; }
+    0% { box-shadow: none; }
+    66% { box-shadow: 0 0 50px 0 #FF0000; }
+    100% { box-shadow: none; }
+}
+
+@-webkit-keyframes channel-attention {
+    0% { box-shadow: none; }
+    33% { box-shadow: 0 0 50px 0 #FF0000; }
+    0% { box-shadow: none; }
+    66% { box-shadow: 0 0 50px 0 #FF0000; }
+    100% { box-shadow: none; }
+}
+
 /* Throbber */
 
 @keyframes animateThrobber {

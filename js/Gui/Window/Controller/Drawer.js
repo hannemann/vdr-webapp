@@ -169,7 +169,7 @@ Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 
     var request = $(this).attr('data-module');
 
-    if (this.stopStateChanged) return;
+    //if (this.stopStateChanged) return;
 
     VDRest.Abstract.Controller.prototype.vibrate();
 
@@ -209,6 +209,12 @@ Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
  */
 Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
 
+    var epg = VDRest.app.getModule('Gui.Epg'),
+        top,
+        wrapper = epg.getView('Broadcasts').wrapper,
+        channelId = $(e.currentTarget).attr('data-channelId'),
+        channel = epg.getView('Channels.Channel', channelId).node;
+
     e.preventDefault();
     e.stopPropagation();
 
@@ -218,22 +224,37 @@ Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
             window.clearTimeout(this.channelClickTimeout);
         }
 
-        this.vibrate();
+        top = epg.getView('Broadcasts.List', channelId)
+            .node.offset().top - wrapper.offset().top + wrapper.scrollTop();
 
-        this.playFavourite(e);
+        wrapper.scrollTop(top);
+
+        this.handleStateChanged(e);
+
+        channel.addClass('attention');
+
+        setTimeout(function () {
+            channel.removeClass('attention');
+        }, 3000);
     }
 };
 
 /**
  * handle favourite mouse down
  */
-Gui.Window.Controller.Drawer.prototype.handleFavDown = function () {
+Gui.Window.Controller.Drawer.prototype.handleFavDown = function (e) {
 
     this.preventClick = undefined;
 
+    this.vibrate();
+
     this.channelClickTimeout = window.setTimeout($.proxy(function () {
 
+        this.vibrate(100);
+
         this.preventClick = true;
+
+        this.playFavourite(e);
 
     }, this), 500);
 };
