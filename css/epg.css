@@ -31,6 +31,11 @@
     position: relative;
 }
 
+#epg-channels .channel:active {
+    z-index: 1;
+    box-shadow: 0 0 40px 0 red;
+}
+
 #broadcasts-wrapper {
     position: absolute;
     width: calc(100% - 40px);

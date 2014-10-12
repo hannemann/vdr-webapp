@@ -196,6 +196,8 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleQuality = function (e) {
 
     if (!this.view.controls.hasClass('show')) return;
 
+    this.vibrate();
+
     e.stopPropagation();
     e.preventDefault();
     this.view.toggleQuality();
@@ -293,6 +295,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
     } else  {
         this.currentQualitySelect = this.view.bitrateSelect;
     }
+    this.view.toggleQualityControlActiveState(this.currentQualitySelect);
 
     if ('touchstart' === e.type) {
         this.qualityTouchPos = e.originalEvent.changedTouches[0].pageY;
@@ -302,7 +305,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
     this.qualityDelta = 0;
 
     $(document).on('mousemove.qualityselect touchmove.qualitySelect', $.proxy(this.qualitySelectMove, this));
-    $(document).one('mouseup touchend', $.proxy(this.qualitySelectUp, this));
+    $(document).one('mouseup.qualitySelect touchend.qualitySelect', $.proxy(this.qualitySelectUp, this));
 };
 
 /**
@@ -326,6 +329,8 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
     );
 
     $(document).off('mousemove.qualityselect touchmove.qualitySelect');
+    $(document).off('mouseup.qualitySelect touchend.qualitySelect');
+    this.view.toggleQualityControlActiveState(this.currentQualitySelect);
     this.currentQualitySelect = undefined;
     this.qualityTouchPos = undefined;
     this.qualityDelta = undefined;
@@ -392,7 +397,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
 
     e.stopPropagation();
     e.preventDefault();
-    $(document).one('mouseup touchend', $.proxy(this.volumeUp, this));
+    $(document).one('mouseup.videoplayer-volume touchend.videoplayer-volume', $.proxy(this.volumeUp, this));
 
     this.view.stopHideControls();
     if ('touchstart' === e.type) {
@@ -410,6 +415,8 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
         this.isAllowedUpdateVolume = true;
     }, this));
     this.view.toggleVolumeIndicator(true);
+    this.view.toggleVolumeSliderActiveState();
+    this.vibrate();
 };
 
 /**
@@ -422,7 +429,9 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeUp = function (e) {
     e.preventDefault();
     this.view.isAllowedUpdateVolume = undefined;
     $(document).off('mousemove.videoplayer-volume touchmove.videoplayer-volume');
+    $(document).off('mouseup.videoplayer-volume touchend.videoplayer-volume');
     this.view.toggleVolumeIndicator(false);
+    this.view.toggleVolumeSliderActiveState();
 };
 
 /**
@@ -488,13 +497,15 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     this.settingParams = true;
     if ('touchstart' === e.type) {
         this.timelineSlidePos = e.originalEvent.changedTouches[0].pageX;
-        $(document).one('touchend', $.proxy(this.setTimeUp, this));
+        $(document).one('touchend.videoplayer-time', $.proxy(this.setTimeUp, this));
     } else {
         this.timelineSlidePos = e.pageX;
-        $(document).one('mouseup', $.proxy(this.setTimeUp, this));
+        $(document).one('mouseup.videoplayer-time', $.proxy(this.setTimeUp, this));
     }
     this.timelineDownPos = this.timelineSlidePos;
     $(document).on('mousemove.videoplayer-time touchmove.videoplayer-time', $.proxy(this.setTimeMove, this));
+    this.view.toggleTimeLineActiveState();
+    this.vibrate();
 };
 
 /**
@@ -510,6 +521,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
     e.preventDefault();
 
     $(document).off('mousemove.videoplayer-time touchmove.videoplayer-time');
+    $(document).off('touchend.videoplayer-time mouseup.videoplayer-time');
 
     if ("undefined" !== typeof this.fetchPoster) {
         this.module.getHelper('VideoPlayer')
@@ -517,6 +529,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
 
         this.fetchPoster = undefined;
     }
+    this.view.toggleTimeLineActiveState();
 };
 
 /**
@@ -578,6 +591,8 @@ Gui.Window.Controller.VideoPlayer.prototype.spool = function () {
         slider = this.view.timelineSlider,
         timelinePos = slider.offset().left + slider.width();
 
+    this.vibrate(100);
+
     this.stopToggleControls = true;
     this.fetchPoster = true;
 
@@ -607,6 +622,8 @@ Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
 
     if (this.data.isTv && this.isPlaying) return;
 
+    this.vibrate();
+
     e.stopPropagation();
 
     this[this.isPlaying ? 'pausePlayback' : 'startPlayback']();
@@ -619,13 +636,15 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function (e) {
 
     var me = this;
 
+    if (!this.view.controls.hasClass('show') && !this.data.isMinimized) {
+        return;
+    }
+
     if (e instanceof jQuery.Event) {
         e.stopPropagation();
     }
 
-    if (!this.view.controls.hasClass('show') && !this.data.isMinimized) {
-        return;
-    }
+    this.vibrate();
 
     if (!this.data.isMinimized) {
         this.cancelFullscreen();
@@ -744,6 +763,8 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
         return;
     }
 
+    this.vibrate();
+
     e.stopPropagation();
 
     history.back();
@@ -761,6 +782,7 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         e.preventDefault();
         e.stopPropagation();
     }
+
     this.view.stopHideControls();
     this.removeDownloadEvent();
 
@@ -780,6 +802,8 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     this.view.setDefaultPoster();
 
     if (e instanceof jQuery.Event) {
+
+        this.vibrate();
 
         channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
         getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
@@ -864,6 +888,8 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
     }
 
     e.stopPropagation();
+
+    this.vibrate();
 
     var isFullscreen = false;
 

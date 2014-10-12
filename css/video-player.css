@@ -68,6 +68,16 @@
 .html5-player-controls .download {
     top: 10px;
 }
+.html5-player-controls .stop:active,
+.html5-player-controls .play:active,
+.html5-player-controls .toggle-fullScreen:active,
+.html5-player-controls .toggle-quality:active,
+.html5-player-controls .minimize:active,
+.html5-player-controls .download:active,
+.html5-player-controls .channel-up:active,
+.html5-player-controls .channel-down:active {
+    background-color: rgba(255,255,255,0.5);
+}
 .html5-player-controls .play {
     left: 10px;
 }
@@ -141,6 +151,7 @@
     left: 10px;
     right: 10px;
     width: auto;
+    z-index: 0;
 }
 .html5-player-controls .video-osd > div {
     position: relative;
@@ -193,6 +204,12 @@
 .html5-player-controls .slider {
     width: 10px;
     height: 10px;
+    transition: box-shadow .3s;
+}
+.html5-player-controls .size-select.active,
+.html5-player-controls .bitrate-select.active,
+.html5-player-controls .slider.active {
+    box-shadow: 0 0 40px 0 rgba(255,255,255,0.5);
 }
 
 .html5-player-controls .slider div {
@@ -212,6 +229,7 @@
     height: auto;
     background: none;
     border: none;
+    z-index: 1;
 }
 .html5-player-controls .volume {
     bottom: 0;

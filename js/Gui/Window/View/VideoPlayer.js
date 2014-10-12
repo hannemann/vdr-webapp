@@ -365,6 +365,14 @@ Gui.Window.View.VideoPlayer.prototype.setInitialVolume = function () {
 };
 
 /**
+ * toggle active state of volume slider
+ */
+Gui.Window.View.VideoPlayer.prototype.toggleVolumeSliderActiveState = function () {
+
+    this.ctrlVolume.toggleClass('active');
+};
+
+/**
  * set height of volume slider
  */
 Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
@@ -523,6 +531,14 @@ Gui.Window.View.VideoPlayer.prototype.setTimelineSliderWidth = function () {
     });
 
     return this;
+};
+
+/**
+ * toggle timeline active state
+ */
+Gui.Window.View.VideoPlayer.prototype.toggleTimeLineActiveState = function () {
+
+    this.ctrlTimeline.toggleClass('active');
 };
 
 /**
@@ -700,6 +716,11 @@ Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
     this.qualitySelect.appendTo(this.controls);
 
     return this;
+};
+
+Gui.Window.View.VideoPlayer.prototype.toggleQualityControlActiveState = function (selector) {
+
+    selector.toggleClass('active');
 };
 
 /**
