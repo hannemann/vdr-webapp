@@ -47,20 +47,21 @@ Gui.Window.View.Select.prototype.setHeader = function () {
  */
 Gui.Window.View.Select.prototype.addValues = function () {
 
-    var i, values = this.data.values;
+    var i;
+    this.values = this.data.values;
 
-    if ("function" === typeof values) {
+    if ("function" === typeof this.values) {
 
-        values = values();
+        this.values = this.values();
     }
 
-    for (i in values) {
+    for (i in this.values) {
 
-        if (values.hasOwnProperty(i)) {
+        if (this.values.hasOwnProperty(i)) {
 
-            this.prepareValue(values[i]);
+            this.prepareValue(this.values[i]);
 
-            values[i].dom.appendTo(this.valuesWrapper);
+            this.values[i].dom.appendTo(this.valuesWrapper);
         }
     }
 
@@ -73,7 +74,9 @@ Gui.Window.View.Select.prototype.addValues = function () {
  */
 Gui.Window.View.Select.prototype.prepareValue = function (value) {
 
-    var name = this.data.gui.attr('name'), html = '';
+    var name = this.data.gui.attr('name'), html = '', type;
+
+    type = this.data.multiselect ? 'checkbox' : 'radio';
 
     value.dom = $('<label>');
 
@@ -85,11 +88,36 @@ Gui.Window.View.Select.prototype.prepareValue = function (value) {
 
     value.dom.html(html);
 
-    value.gui = $('<input name="' + name + '" value="' + value.label + '" type="radio">')
+    value.gui = $('<input name="' + name + '" value="' + value.label + '" type="' + type + '">')
         .appendTo(value.dom);
 
     if (value.selected || this.data.gui.val() === value.label || VDRest.config.getItem(name) === value.value) {
 
         value.gui.prop('checked', true);
+        value.dom.addClass('selected');
     }
+
+    value.gui.on('change', function () {
+        if ("radio" === type) {
+            value.dom.parent('.wrapper').find('label').removeClass('selected');
+        }
+        VDRest.Abstract.Controller.prototype.vibrate();
+        value.dom.toggleClass('selected', this.checked === true);
+    });
+};
+
+/**
+ * destruct
+ */
+Gui.Window.View.Select.prototype.destruct = function () {
+
+    var i;
+
+    for (i in this.values) {
+        if (this.values.hasOwnProperty(i)) {
+            this.values[i].gui.off('change');
+        }
+    }
+
+    Gui.Window.View.Abstract.prototype.destruct.call(this);
 };

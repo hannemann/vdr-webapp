@@ -36,7 +36,7 @@ Gui.Config.Controller.Settings.prototype.init = function () {
  */
 Gui.Config.Controller.Settings.prototype.persist = function () {
 
-    var i, n, value, values;
+    var i, n, value, values, multivalues = [];
 
     for (i in this.view.data.fields) {
 
@@ -58,13 +58,33 @@ Gui.Config.Controller.Settings.prototype.persist = function () {
 
                 }
 
+                if (this.view.data.fields[i].multiselect) {
+                    multivalues = this.view.data.fields[i].gui.val().split(', ');
+                    value = [];
+                }
+
                 for (n in values) {
 
                     if (values.hasOwnProperty(n) &&
-                        VDRest.app.translate(values[n].label) === this.view.data.fields[i].gui.val()) {
 
-                        value = values[n].value;
+                        (
+                            VDRest.app.translate(values[n].label) === this.view.data.fields[i].gui.val()
+
+                            || (
+                                this.view.data.fields[i].multiselect &&
+                                multivalues.indexOf(VDRest.app.translate(values[n].label)) > -1
+                            )
+                        )
+                    ) {
+                        if (this.view.data.fields[i].multiselect) {
+                            value.push(values[n].value);
+                        } else {
+                            value = values[n].value;
+                        }
                     }
+                }
+                if (this.view.data.fields[i].multiselect) {
+                    value = JSON.stringify(value);
                 }
 
             } else {

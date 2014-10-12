@@ -146,9 +146,20 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
  */
 Gui.Window.Controller.Input.prototype.setEnum = function () {
 
-    var i, value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked').val();
+    var i, value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked'), values = [];
 
-    this.data.gui.val(VDRest.app.translate(value));
+    if (this.data.multiselect) {
+
+        value.each(function () {
+            values.push(VDRest.app.translate(this.value));
+        });
+
+        this.data.gui.val(values.join(', '));
+
+    } else {
+
+        this.data.gui.val(VDRest.app.translate(value).val());
+    }
 
     for (i in this.data.values) {
 

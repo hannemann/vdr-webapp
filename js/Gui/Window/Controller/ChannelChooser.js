@@ -31,20 +31,23 @@ Gui.Window.Controller.ChannelChooser.prototype.getChannels = function () {
     var collection = VDRest.app.getModule('VDRest.Epg').getModel('Channels').getCollection(),
         i = 0, l = collection.length;
 
-    this.data.values = {};
+    if ("function" !== typeof this.data.values) {
 
-    for (i;i<l;i++) {
+        this.data.values = {};
 
-        this.data.values[i] = {};
+        for (i;i<l;i++) {
 
-        this.data.values[i].label = collection[i].getData('name');
+            this.data.values[i] = {};
 
-        if (collection[i].hasData('image')) {
+            this.data.values[i].label = collection[i].getData('name');
 
-            this.data.values[i].image = collection[i].getData('image');
+            if (collection[i].hasData('image')) {
+
+                this.data.values[i].image = collection[i].getData('image');
+            }
+
+            this.data.values[i].value = collection[i].getData('channel_id');
         }
-
-        this.data.values[i].value = collection[i].getData('channel_id');
     }
 
 };

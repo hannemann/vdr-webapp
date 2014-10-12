@@ -416,11 +416,19 @@ VDRest.Lib.Config.prototype.fields = {
         "depends" : "streamdevActive",
         "category" : "streaming",
         "type" : "channel",
+        "multiselect" : true,
         "label" : "Favourites",
         "values" : function () {
 
             var channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels').collection,
-                values = {}, i=0, l;
+                values = {}, i=0, l,
+                favourites = VDRest.config.getItem('favourites');
+
+            try {
+                favourites = JSON.parse(favourites);
+            } catch (e) {
+                favourites = [];
+            }
 
             l = channels.length;
 
@@ -428,8 +436,14 @@ VDRest.Lib.Config.prototype.fields = {
 
                 values[channels[i].data.channel_id] = {
                     "label" : channels[i].data.name,
-                    "selected" : VDRest.config.getItem('favourites') === channels[i].data.channel_id,
+                    "selected" : favourites.indexOf(channels[i].data.channel_id) > -1,
                     "value" : channels[i].data.channel_id
+                };
+
+
+                if (channels[i].data.image) {
+
+                    values[channels[i].data.channel_id].image = channels[i].data.image;
                 }
             }
 

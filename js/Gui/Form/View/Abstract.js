@@ -175,12 +175,26 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
  */
 Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
 
-    var selected = field.getValue();
+    var selected = field.getValue(), values = [], i, l, label;
 
     this.decorateField(id, field);
 
+    if (field.multiselect) {
+
+        i = 0;
+        l = selected.length;
+
+        for (i;i<l;i++) {
+
+            values.push(VDRest.app.translate(selected[i].label));
+        }
+        label = values.join(', ');
+    } else {
+        label = VDRest.app.translate(selected.label);
+    }
+
     field.gui.attr('type', 'text')
-        .val(VDRest.app.translate(selected.label));
+        .val(label);
 
     field.dom.append(field.gui);
 };

@@ -140,7 +140,7 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
 
         field.getValue = function () {
 
-            var i, values = this.values;
+            var i, values = this.values, retVal = [];
 
             if ("function" === typeof this.values) {
 
@@ -152,11 +152,16 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
                 if (values.hasOwnProperty(i)) {
 
                     if (values[i].selected) {
-                        return values[i];
+                        if (field.multiselect) {
+                            retVal.push(values[i]);
+                        } else {
+                            return values[i];
+                        }
                     }
                 }
             }
-            return {"value" : null};
+
+            return retVal.length > 0 ? retVal : {"value" : null};
         }
     } else if (field.type === 'string' || field.type === 'number' || field.type === 'directory') {
 
