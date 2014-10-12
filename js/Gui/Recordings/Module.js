@@ -108,6 +108,18 @@ Gui.Recordings.prototype.contextMenu = {
                 bObj.button.removeClass('active');
             }
         }
+    },
+
+    "Refresh" : {
+        "labels" : {
+            "on" : VDRest.app.translate("Refresh")
+        },
+        "state" : "on",
+        "scope" : 'Gui.Recordings',
+        "fn" : function () {
+
+            this.refresh();
+        }
     }
 };
 
@@ -133,11 +145,22 @@ Gui.Recordings.prototype.destruct = function () {
  */
 Gui.Recordings.prototype.refresh = function () {
 
-    VDRest.app.getModule('Gui.Viewport').getView('Default').node.empty();
+    var windows = $('.window.recordings');
+
+    this.getView('List').node.empty();
     VDRest.app.getModule('Gui.Window').cache.invalidateClasses('Directory');
+
+    windows.each(function () {
+        $(this).remove();
+        VDRest.app.destroyer.pop();
+        VDRest.app.observeHash.pop();
+    });
+    history.go(-windows.length);
+
     this.store.getModel('List').flushCollection();
     this.store.cache.flush();
     this.cache.flush();
+    this.store.getModel('List').initList();
     this.dispatch();
 };
 

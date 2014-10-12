@@ -15,7 +15,8 @@ Gui.Recordings.View.List.prototype = new VDRest.Abstract.View();
 Gui.Recordings.View.List.prototype.init = function () {
 
     var i, cMenu = VDRest.app.getModule('Gui.Recordings').contextMenu,
-        currentSorting = VDRest.config.getItem('currentSorting'), sortState;
+        currentSorting = VDRest.config.getItem('currentSorting'), sortState,
+        node = $('.recordings-list');
 
     if (!currentSorting) {
         currentSorting = VDRest.config.getItem('defaultSorting');
@@ -31,7 +32,11 @@ Gui.Recordings.View.List.prototype.init = function () {
         }
     }
 
-    this.node = $('<div class="recordings-list simple-list clearer">');
+    if (node.get(0)) {
+        this.node = node;
+    } else {
+        this.node = $('<div class="recordings-list simple-list clearer">');
+    }
 };
 
 /**
