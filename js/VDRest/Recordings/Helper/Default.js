@@ -73,6 +73,7 @@ VDRest.Recordings.Helper.Default.prototype.getDirTree = function () {
         if (paths.length > 0) {
 
             root[path] = this.addDirTree(paths, root[path]);
+            root[path].hasChildren = true;
         }
     }
 
@@ -95,6 +96,9 @@ VDRest.Recordings.Helper.Default.prototype.addDirTree = function (paths, root) {
             current[paths[i]] = {};
         }
         current = current[paths[i]];
+        if (i < l-1) {
+            current.hasChildren = true;
+        }
     }
 
     return root;

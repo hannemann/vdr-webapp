@@ -32,13 +32,21 @@ Gui.Window.Controller.DirectoryChooser.prototype.addObserver = function () {
 
     this.view.node.find('label').each (function () {
 
+        var node = $(this);
+
         $(this).on('mouseup', function (e) {
 
             me.vibrate();
 
             e.stopPropagation();
 
-            $(this).toggleClass('expand');
+            me.view.node.find('label').removeClass('active');
+
+            if (node.find('label').length > 0) {
+
+                $(this).toggleClass('expand');
+            }
+            $(this).addClass('active');
         })
     });
 };

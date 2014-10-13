@@ -183,10 +183,11 @@ Gui.Window.Controller.Input.prototype.setDirectory = function () {
         checked = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked'),
         path = [];
 
-    checked.parents('label').each(function () {
+    checked.parents('label.directory').each(function () {
 
         path.push($(this).find('input:first').val());
     });
+    path.pop(); // remove root
 
     value = path.reverse().join('~');
 

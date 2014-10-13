@@ -12,13 +12,45 @@ form label {
     display: block;
     width: 100%;
 }
-.window-input label label {
+.window-input.select label input[type="radio"],
+.window-input.select label input[type="checkbox"] {
+    margin: 5px 0 0 5px;
+}
+.window-input.select label > span.child-wrapper,
+.window-input.select label > span.text {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+}
+.window-input.select label > span.child-wrapper {
     display: none;
+    position: relative;
+    top: 14px;
+}
+.window-input label > span.child-wrapper > label {
     padding-left: 10px;
     width: calc(100% - 10px);
 }
-.window-input label.expand > label {
+.window-input.select label > span.text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 3px;
+}
+.window-input.select label.expand,
+.window-input.select label.default-expanded {
+    height: auto;
+    margin-bottom: 16px;
+}
+.window-input.select label.default-expanded > span.child-wrapper,
+.window-input.select label.expand > span.child-wrapper {
     display: block;
+}
+.window-input.select label span.text:active,
+.window-input.select label.active > span.text {
+    background-color: rgba(255,255,255,0.5);
+    color: black;
 }
 
 .directory-chooser label:before {

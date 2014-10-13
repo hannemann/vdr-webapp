@@ -25,18 +25,20 @@ Gui.Window.View.DirectoryChooser.prototype.render = function () {
  */
 Gui.Window.View.DirectoryChooser.prototype.addValues = function () {
 
-    var i, values = VDRest.app.getModule('VDRest.Recordings').getHelper().getDirTree(), root = {};
+    var i, values = VDRest.app.getModule('VDRest.Recordings').getHelper().getDirTree(), root = {
+        "hasChildren" : true
+    };
 
     // create root folder
     this.prepareValue('', root);
     root.dom.prepend(VDRest.app.translate('Root'));
-    root.dom.appendTo(this.valuesWrapper);
+    root.dom.addClass('default-expanded').appendTo(this.valuesWrapper);
 
     for (i in values) {
 
         if (values.hasOwnProperty(i)) {
 
-            this.addRecursive(i, values[i], this.valuesWrapper);
+            this.addRecursive(i, values[i], root.childWrapper);
         }
     }
 
@@ -57,11 +59,15 @@ Gui.Window.View.DirectoryChooser.prototype.addRecursive = function (label, direc
 
     for (i in directory) {
 
-        if (i === 'dom' || i === 'gui') continue;
+        if (i === 'dom' || i === 'gui' || i === 'hasChildren' || i === 'childWrapper') continue;
 
         if (directory.hasOwnProperty(i)) {
 
-            this.addRecursive(i, directory[i], directory.dom);
+            this.addRecursive(
+                i,
+                directory[i],
+                (directory.hasChildren ? directory.childWrapper : directory.dom)
+            );
         }
     }
 
@@ -77,15 +83,20 @@ Gui.Window.View.DirectoryChooser.prototype.prepareValue = function (label, value
 
     var name = this.data.gui.attr('name');
 
-    value.dom = $('<label>');
-
-    value.dom.html(label);
+    value.dom = $('<label>').addClass('directory');
 
     value.gui = $('<input name="' + name + '" value="' + label + '" type="radio">')
         .appendTo(value.dom);
 
+    $('<span>').addClass('text').html(label).appendTo(value.dom);
+
     if (value.selected || this.data.gui.val() === label || VDRest.config.getItem(name) === value.value) {
 
         value.gui.prop('checked', true);
+        value.dom.addClass('active');
+    }
+
+    if (value.hasChildren) {
+        value.childWrapper = $('<span class="child-wrapper">').appendTo(value.dom);
     }
 };
