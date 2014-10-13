@@ -51,7 +51,7 @@ VDRest.Recordings.Helper.Default.prototype.getDirectories = function () {
  */
 VDRest.Recordings.Helper.Default.prototype.getDirTree = function () {
 
-    var paths, path, i = 0, l, root = {}, directories = this.getDirectories();
+    var fullPath, paths, path, i = 0, l, root = {}, directories = this.getDirectories();
 
     if ('' === directories[0]) {
         directories.shift();
@@ -61,18 +61,22 @@ VDRest.Recordings.Helper.Default.prototype.getDirTree = function () {
 
     for (i; i<l; i++) {
 
-        paths = directories.shift().split('~');
+        fullPath = directories.shift();
+
+        paths = fullPath.split('~');
 
         path = paths.shift();
 
         if (!root[path]) {
 
-            root[path] = {}
+            root[path] = {
+                "fullPath" : path
+            }
         }
 
         if (paths.length > 0) {
 
-            root[path] = this.addDirTree(paths, root[path]);
+            root[path] = this.addDirTree(paths, root[path], fullPath);
             root[path].hasChildren = true;
         }
     }
@@ -84,16 +88,19 @@ VDRest.Recordings.Helper.Default.prototype.getDirTree = function () {
  * add directory to tree
  * @param paths
  * @param root
+ * @param {String} fullPath
  * @returns {*}
  */
-VDRest.Recordings.Helper.Default.prototype.addDirTree = function (paths, root) {
+VDRest.Recordings.Helper.Default.prototype.addDirTree = function (paths, root, fullPath) {
 
     var i = 0, l=paths.length, current = root;
 
     for (i;i<l;i++) {
 
         if (!current[paths[i]]) {
-            current[paths[i]] = {};
+            current[paths[i]] = {
+                "fullPath" : fullPath.split('~').slice(0, i+2).join('~')
+            };
         }
         current = current[paths[i]];
         if (i < l-1) {

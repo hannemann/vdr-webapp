@@ -59,7 +59,7 @@ Gui.Window.View.DirectoryChooser.prototype.addRecursive = function (label, direc
 
     for (i in directory) {
 
-        if (i === 'dom' || i === 'gui' || i === 'hasChildren' || i === 'childWrapper') continue;
+        if (i === 'dom' || i === 'gui' || i === 'hasChildren' || i === 'fullPath' || i === 'childWrapper') continue;
 
         if (directory.hasOwnProperty(i)) {
 
@@ -72,6 +72,9 @@ Gui.Window.View.DirectoryChooser.prototype.addRecursive = function (label, direc
     }
 
     directory.dom.appendTo(parentNode);
+    if (directory.dom.hasClass('active') || directory.dom.hasClass('expand')) {
+        directory.dom.parents('label.directory').addClass('expand');
+    }
 };
 
 /**
@@ -90,10 +93,16 @@ Gui.Window.View.DirectoryChooser.prototype.prepareValue = function (label, value
 
     $('<span>').addClass('text').html(label).appendTo(value.dom);
 
-    if (value.selected || this.data.gui.val() === label || VDRest.config.getItem(name) === value.value) {
+    if (
+        value.selected ||
+        this.data.gui.val() === label ||
+        this.data.gui.val() === value.fullPath ||
+        VDRest.config.getItem(name) === value.value
+    ) {
 
         value.gui.prop('checked', true);
         value.dom.addClass('active');
+        value.dom.parents('label.directory').addClass('expand');
     }
 
     if (value.hasChildren) {
