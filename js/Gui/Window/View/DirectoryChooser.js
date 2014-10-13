@@ -30,8 +30,7 @@ Gui.Window.View.DirectoryChooser.prototype.addValues = function () {
     };
 
     // create root folder
-    this.prepareValue('', root);
-    root.dom.prepend(VDRest.app.translate('Root'));
+    this.prepareValue('/', root);
     root.dom.addClass('default-expanded').appendTo(this.valuesWrapper);
 
     for (i in values) {
