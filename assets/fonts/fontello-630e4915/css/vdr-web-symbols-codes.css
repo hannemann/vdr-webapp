@@ -1,0 +1,25 @@
+
+.icon-cog:before { content: '\41'; } /* 'A' */
+.icon-pause:before { content: '\42'; } /* 'B' */
+.icon-play:before { content: '\43'; } /* 'C' */
+.icon-stop:before { content: '\44'; } /* 'D' */
+.icon-to-end:before { content: '\45'; } /* 'E' */
+.icon-to-end-alt:before { content: '\46'; } /* 'F' */
+.icon-to-start:before { content: '\47'; } /* 'G' */
+.icon-to-start-alt:before { content: '\48'; } /* 'H' */
+.icon-fast-fw:before { content: '\49'; } /* 'I' */
+.icon-fast-bw:before { content: '\4a'; } /* 'J' */
+.icon-alert:before { content: '\4b'; } /* 'K' */
+.icon-plus:before { content: '\4c'; } /* 'L' */
+.icon-popup:before { content: '\4f'; } /* 'O' */
+.icon-window:before { content: '\50'; } /* 'P' */
+.icon-resize-full-1:before { content: '\51'; } /* 'Q' */
+.icon-resize-small:before { content: '\52'; } /* 'R' */
+.icon-up-open:before { content: '\53'; } /* 'S' */
+.icon-down-open:before { content: '\54'; } /* 'T' */
+.icon-volume-off-1:before { content: '\55'; } /* 'U' */
+.icon-volume-down-1:before { content: '\56'; } /* 'V' */
+.icon-volume-up-1:before { content: '\57'; } /* 'W' */
+.icon-download:before { content: '\58'; } /* 'X' */
+.icon-thumbs-up-alt:before { content: '\59'; } /* 'Y' */
+.icon-scissors:before { content: '\5a'; } /* 'Z' */

@@ -1,0 +1,76 @@
+@font-face {
+  font-family: 'vdr-web-symbols';
+  src: url('../font/vdr-web-symbols.eot?96594442');
+  src: url('../font/vdr-web-symbols.eot?96594442#iefix') format('embedded-opentype'),
+       url('../font/vdr-web-symbols.woff?96594442') format('woff'),
+       url('../font/vdr-web-symbols.ttf?96594442') format('truetype'),
+       url('../font/vdr-web-symbols.svg?96594442#vdr-web-symbols') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'vdr-web-symbols';
+    src: url('../font/vdr-web-symbols.svg?96594442#vdr-web-symbols') format('svg');
+  }
+}
+*/
+ 
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "vdr-web-symbols";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+     
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
+.icon-cog:before { content: '\41'; } /* 'A' */
+.icon-pause:before { content: '\42'; } /* 'B' */
+.icon-play:before { content: '\43'; } /* 'C' */
+.icon-stop:before { content: '\44'; } /* 'D' */
+.icon-to-end:before { content: '\45'; } /* 'E' */
+.icon-to-end-alt:before { content: '\46'; } /* 'F' */
+.icon-to-start:before { content: '\47'; } /* 'G' */
+.icon-to-start-alt:before { content: '\48'; } /* 'H' */
+.icon-fast-fw:before { content: '\49'; } /* 'I' */
+.icon-fast-bw:before { content: '\4a'; } /* 'J' */
+.icon-alert:before { content: '\4b'; } /* 'K' */
+.icon-plus:before { content: '\4c'; } /* 'L' */
+.icon-popup:before { content: '\4f'; } /* 'O' */
+.icon-window:before { content: '\50'; } /* 'P' */
+.icon-resize-full-1:before { content: '\51'; } /* 'Q' */
+.icon-resize-small:before { content: '\52'; } /* 'R' */
+.icon-up-open:before { content: '\53'; } /* 'S' */
+.icon-down-open:before { content: '\54'; } /* 'T' */
+.icon-volume-off-1:before { content: '\55'; } /* 'U' */
+.icon-volume-down-1:before { content: '\56'; } /* 'V' */
+.icon-volume-up-1:before { content: '\57'; } /* 'W' */
+.icon-download:before { content: '\58'; } /* 'X' */
+.icon-thumbs-up-alt:before { content: '\59'; } /* 'Y' */
+.icon-scissors:before { content: '\5a'; } /* 'Z' */
