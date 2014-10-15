@@ -462,7 +462,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeMove = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
 
-    var video = this.getVideo(), vol = video.volume, value = 0.02;
+    var video = this.getVideo(), vol = video.volume, value = 0.01;
 
     if ('increase' == action) {
 
