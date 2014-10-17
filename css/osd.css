@@ -1,0 +1,14 @@
+#osd-items {
+    background: black;
+    padding: 20px;
+}
+
+.osd-item {
+    color: white;
+    font-weight: bold;
+}
+
+.osd-item.selected {
+    color: black;
+    background: rgba(255,255,255,0.5);
+}
