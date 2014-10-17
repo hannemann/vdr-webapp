@@ -18,8 +18,8 @@ ul#menubar #refresh {
 }
 
 .window-drawer {
-	width: 65%;
-    max-width: 250px;
+	width: 260px;
+    max-width: 260px;
 	overflow: visible;
 	height: 100%;
 	position:absolute;
@@ -42,6 +42,10 @@ ul#menubar #refresh {
     color: black;
     line-height: 30px;
     padding: 0 0 0 10px;
+}
+.window-drawer .window-body {
+    overflow: auto;
+    height: calc(100% - 30px);
 }
 .window-drawer .navi-button,
 .window-drawer .info .info-item {
