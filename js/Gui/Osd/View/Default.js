@@ -33,6 +33,8 @@ Gui.Osd.View.Default.prototype.render = function () {
  */
 Gui.Osd.View.Default.prototype.addButtons = function () {
 
+    this.red = this.green = this.yellow = this.blue = undefined;
+
     if (this.data.TextOsd) {
 
         this.red = $('<div class="color-button red">');

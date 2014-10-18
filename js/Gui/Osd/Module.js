@@ -38,6 +38,8 @@ Gui.Osd.prototype.headline = 'OSD';
  */
 Gui.Osd.prototype.dispatch = function () {
 
+    this.backend = VDRest.app.getModule('VDRest.Remote').getModel('Remote');
+
     this.getController('Default').dispatchView();
 };
 
