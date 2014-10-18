@@ -1,6 +1,8 @@
 #osd-items {
     background: black;
     padding: 20px;
+    max-height: 250px;
+    overflow: hidden;
 }
 
 .osd-item {

@@ -1,5 +1,5 @@
 /**
- * Menubar Module
+ * OSD Module
  * @constructor
  */
 Gui.Osd = function () {};
@@ -39,6 +39,15 @@ Gui.Osd.prototype.headline = 'OSD';
 Gui.Osd.prototype.dispatch = function () {
 
     this.getController('Default').dispatchView();
+};
+
+/**
+ * dispatch default view
+ */
+Gui.Osd.prototype.destruct = function () {
+
+    this.getController('Default').destructView();
+    this.cache.flush();
 };
 
 /**

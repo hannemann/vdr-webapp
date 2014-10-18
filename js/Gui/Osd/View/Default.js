@@ -24,9 +24,7 @@ Gui.Osd.View.Default.prototype.init = function () {
  */
 Gui.Osd.View.Default.prototype.render = function () {
 
-    this.node = $('<div id="osd">');
     this.osd.appendTo(this.node);
-
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
@@ -70,6 +68,7 @@ Gui.Osd.View.Default.prototype.addItem = function (item) {
 
     if (item.is_selected) {
         node.addClass('selected');
+        this.selectedItem = node;
     }
 
     node.appendTo(this.osd);
@@ -83,4 +82,5 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
     this.colorButtons.empty();
     this.osd.empty();
     this.addButtons().renderItems();
+    this.selectedItem.get(0).scrollIntoView();
 };
