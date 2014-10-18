@@ -192,7 +192,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "videoQualityBitrate"   :   "512K",
     "hapticFeedback"        :   "true",
     "favourites"            :   "",
-    "osdDelay"              :   100
+    "osdDelay"              :   100,
+    "osdLoadInterval"       :   2000
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -201,6 +202,9 @@ VDRest.Lib.Config.prototype.categories = {
     },
     "server" : {
         "label" : 'Server Settings'
+    },
+    "osd" : {
+        "label" : 'OSD Settings'
     },
     "channels" : {
         "label" : 'Channel Settings'
@@ -334,17 +338,22 @@ VDRest.Lib.Config.prototype.fields = {
         "label" : "Port",
         "info" : "Needs reload of app"
     },
-    "osdDelay"              :   {
-        "category" : "server",
-        "type" : "number",
-        "label" : "OSD Delay",
-        "info" : "Time to wait after key press before OSD is refreshed"
-    },
     "useSlowServerStrategy" :   {
         "category" : "server",
         "type" : "boolean",
         "label" : "Resource efficient loading",
         "info" : "Loads data synchronized to not burn slow CPU\'s"
+    },
+    "osdDelay"              :   {
+        "category" : "osd",
+        "type" : "number",
+        "label" : "OSD Delay (ms)",
+        "info" : "Time to wait after key press before OSD is refreshed"
+    },
+    "osdLoadInterval"       :   {
+        "category" : "osd",
+        "type" : "number",
+        "label" : "OSD refresh interval (ms)"
     },
     "showRadio" :   {
         "category" : "channels",

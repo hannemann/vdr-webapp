@@ -33,6 +33,7 @@ Gui.Osd.Controller.Default.prototype.dispatchView = function () {
     this.addObserver();
     this.dataModel.loadOsd();
     this.remote.dispatch(this.parentView);
+    this.startRefreshInterval();
 };
 
 /**
@@ -69,6 +70,28 @@ Gui.Osd.Controller.Default.prototype.removeObserver = function () {
     return this;
 };
 
+Gui.Osd.Controller.Default.prototype.startRefreshInterval = function () {
+
+    this.refreshInterval = setInterval(
+        $.proxy(this.dataModel.loadOsd, this.dataModel),
+        VDRest.config.getItem('osdLoadInterval')
+    );
+};
+
+Gui.Osd.Controller.Default.prototype.stopRefreshInterval = function () {
+
+    clearInterval(this.refreshInterval);
+};
+
+Gui.Osd.Controller.Default.prototype.loadOsd = function () {
+
+    this.stopRefreshInterval();
+
+    this.dataModel.loadOsd();
+
+    this.startRefreshInterval();
+};
+
 /**
  * refresh osd
  * @param {jQuery.Event} e
@@ -97,6 +120,8 @@ Gui.Osd.Controller.Default.prototype.sendKey = function (key) {
  * destroy
  */
 Gui.Osd.Controller.Default.prototype.destructView = function () {
+
+    this.stopRefreshInterval();
 
     VDRest.app.getModule('Gui.Remote').destruct();
 
