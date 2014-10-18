@@ -191,7 +191,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "videoQualitySize"      :   "320x180",
     "videoQualityBitrate"   :   "512K",
     "hapticFeedback"        :   "true",
-    "favourites"            :   ""
+    "favourites"            :   "",
+    "osdDelay"              :   10
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -332,6 +333,12 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "number",
         "label" : "Port",
         "info" : "Needs reload of app"
+    },
+    "osdDelay"              :   {
+        "category" : "server",
+        "type" : "number",
+        "label" : "OSD Delay",
+        "info" : "Time to wait after key press before OSD is refreshed"
     },
     "useSlowServerStrategy" :   {
         "category" : "server",
