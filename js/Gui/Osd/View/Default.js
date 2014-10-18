@@ -92,6 +92,8 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
 
     if (this.data.Error) {
         this.addItem(this.data.Error);
+    } else if (this.data.ChannelOsd) {
+        this.addItem({ "content" : this.data.ChannelOsd });
     } else {
         this.renderItems();
     }

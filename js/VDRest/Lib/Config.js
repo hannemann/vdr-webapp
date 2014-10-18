@@ -192,7 +192,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "videoQualityBitrate"   :   "512K",
     "hapticFeedback"        :   "true",
     "favourites"            :   "",
-    "osdDelay"              :   10
+    "osdDelay"              :   100
 };
 
 VDRest.Lib.Config.prototype.categories = {
