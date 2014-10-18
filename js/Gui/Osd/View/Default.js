@@ -33,15 +33,21 @@ Gui.Osd.View.Default.prototype.render = function () {
  */
 Gui.Osd.View.Default.prototype.addButtons = function () {
 
-    this.red = $('<div class="color-button red">');
-    this.green = $('<div class="color-button green">');
-    this.yellow = $('<div class="color-button yellow">');
-    this.blue = $('<div class="color-button blue">');
+    if (this.data.TextOsd) {
 
-    this.red.text(this.data.TextOsd.red).appendTo(this.colorButtons);
-    this.green.text(this.data.TextOsd.green).appendTo(this.colorButtons);
-    this.yellow.text(this.data.TextOsd.yellow).appendTo(this.colorButtons);
-    this.blue.text(this.data.TextOsd.blue).appendTo(this.colorButtons);
+        this.red = $('<div class="color-button red">');
+        this.green = $('<div class="color-button green">');
+        this.yellow = $('<div class="color-button yellow">');
+        this.blue = $('<div class="color-button blue">');
+
+        this.red.text(this.data.TextOsd.red).appendTo(this.colorButtons);
+        this.green.text(this.data.TextOsd.green).appendTo(this.colorButtons);
+        this.yellow.text(this.data.TextOsd.yellow).appendTo(this.colorButtons);
+        this.blue.text(this.data.TextOsd.blue).appendTo(this.colorButtons);
+
+        this.colorButtons.appendTo(this.node);
+
+    }
 
     return this;
 };

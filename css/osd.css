@@ -1,8 +1,14 @@
-#osd-items {
+#osd {
+    position: relative;
     background: black;
     padding: 20px;
+}
+
+#osd-items {
     max-height: 250px;
     overflow: hidden;
+    margin: 0 0 20px;
+    height: 200px;
 }
 
 .osd-item {
@@ -13,4 +19,35 @@
 .osd-item.selected {
     color: black;
     background: rgba(255,255,255,0.5);
+}
+
+#osd-buttons {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 2%;
+    height:20px;
+}
+
+#osd-buttons .color-button {
+    margin: 0 1%;
+    float: left;
+    text-align: center;
+    width: 23%;
+    font-size: 15px;
+    font-weight: bold;
+}
+#osd-buttons .color-button.red {
+    background-color: red;
+}
+#osd-buttons .color-button.yellow {
+    background-color: yellow;
+    color: black;
+}
+#osd-buttons .color-button.green {
+    background-color: green;
+}
+#osd-buttons .color-button.blue {
+    background-color: blue;
 }
