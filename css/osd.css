@@ -15,6 +15,14 @@
     color: white;
     font-weight: bold;
 }
+.osd-item .list-key {
+    display: block;
+    width: 23px;
+    text-align: right;
+    margin-right: 5px;
+    float:left;
+    height:100%;
+}
 
 .osd-item.selected {
     color: black;

@@ -72,7 +72,10 @@ Gui.Osd.View.Default.prototype.renderItems = function () {
  */
 Gui.Osd.View.Default.prototype.addItem = function (item) {
 
-    var node = $('<pre class="osd-item">').text(item.content);
+    var node = $('<pre class="osd-item clearer">'), text = item.content;
+
+    text = text.replace(/^\s*([0-9]{1,3})\s+/, '<span class="list-key">$1</span>&nbsp;');
+    node.html(text);
 
     if (item.is_selected) {
         node.addClass('selected');
