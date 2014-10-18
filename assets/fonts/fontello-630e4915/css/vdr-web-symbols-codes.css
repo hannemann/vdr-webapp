@@ -28,3 +28,4 @@
 .icon-right-dir:before { content: '\63'; } /* 'c' */
 .icon-up-dir:before { content: '\64'; } /* 'd' */
 .icon-undo:before { content: '\65'; } /* 'e' */
+.icon-info:before { content: '\69'; } /* 'i' */

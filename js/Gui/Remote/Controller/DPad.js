@@ -43,6 +43,7 @@ Gui.Remote.Controller.DPad.prototype.addObserver = function () {
     this.view.ok    .on('click', $.proxy(this.defaultController.sendKey, this, 'Ok'));
     this.view.menu  .on('click', $.proxy(this.defaultController.sendKey, this, 'Menu'));
     this.view.back  .on('click', $.proxy(this.defaultController.sendKey, this, 'Back'));
+    this.view.info  .on('click', $.proxy(this.defaultController.sendKey, this, 'Info'));
 };
 
 /**
@@ -57,4 +58,5 @@ Gui.Remote.Controller.DPad.prototype.removeObserver = function () {
     this.view.ok    .off('click');
     this.view.menu  .off('click');
     this.view.back  .off('click');
+    this.view.info  .off('click');
 };

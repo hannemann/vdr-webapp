@@ -53,15 +53,16 @@ Gui.Remote.View.NumPad.prototype.addButtons = function () {
     this.eight  = $('<div class="remote-button eight">').text(this.symbolEight)  .appendTo(this.node);
     this.nine   = $('<div class="remote-button nine">') .text(this.symbolNine)   .appendTo(this.node);
     this.zero   = $('<div class="remote-button zero">') .text(this.symbolZero)   .appendTo(this.node);
-    $('<div class="additional">').text('.,-').appendTo(this.one);
-    $('<div class="additional">').text('abc').appendTo(this.two);
-    $('<div class="additional">').text('def').appendTo(this.three);
-    $('<div class="additional">').text('ghi').appendTo(this.four);
-    $('<div class="additional">').text('jkl').appendTo(this.five);
-    $('<div class="additional">').text('mno').appendTo(this.six);
-    $('<div class="additional">').text('pqrs').appendTo(this.seven);
-    $('<div class="additional">').text('tuv').appendTo(this.eight);
-    $('<div class="additional">').text('wxyz').appendTo(this.nine);
+    $('<div class="additional">').text('.,-')   .appendTo(this.one);
+    $('<div class="additional">').text('abc')   .appendTo(this.two);
+    $('<div class="additional">').text('def')   .appendTo(this.three);
+    $('<div class="additional">').text('ghi')   .appendTo(this.four);
+    $('<div class="additional">').text('jkl')   .appendTo(this.five);
+    $('<div class="additional">').text('mno')   .appendTo(this.six);
+    $('<div class="additional">').text('pqrs')  .appendTo(this.seven);
+    $('<div class="additional">').text('tuv')   .appendTo(this.eight);
+    $('<div class="additional">').text('wxyz')  .appendTo(this.nine);
+    $('<div class="additional">').text('_')     .appendTo(this.zero);
 
     return this;
 };
