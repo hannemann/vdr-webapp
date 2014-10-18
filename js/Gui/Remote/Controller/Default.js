@@ -26,8 +26,13 @@ Gui.Remote.Controller.Default.prototype.init = function () {
  */
 Gui.Remote.Controller.Default.prototype.dispatchView = function () {
 
-    this.module.getController('NumPad').dispatchView();
-    this.module.getController('DPad').dispatchView();
+    this.numPad = this.module.getController('NumPad');
+    this.numPad.defaultController = this;
+    this.dPad = this.module.getController('DPad');
+    this.dPad.defaultController = this;
+
+    this.numPad.dispatchView();
+    this.dPad.dispatchView();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
@@ -38,5 +43,6 @@ Gui.Remote.Controller.Default.prototype.dispatchView = function () {
  */
 Gui.Remote.Controller.Default.prototype.sendKey = function (key) {
 
+    this.vibrate();
     this.module.backend.send(key);
 };

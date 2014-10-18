@@ -31,23 +31,26 @@
 }
 
 #osd-buttons .color-button {
-    margin: 0 1%;
-    float: left;
+    position:absolute;
     text-align: center;
-    width: 23%;
+    width: 22.5%;
     font-size: 15px;
     font-weight: bold;
 }
 #osd-buttons .color-button.red {
     background-color: red;
+    left: 2%;
+}
+#osd-buttons .color-button.green {
+    background-color: green;
+    left: 26.5%;
 }
 #osd-buttons .color-button.yellow {
     background-color: yellow;
     color: black;
-}
-#osd-buttons .color-button.green {
-    background-color: green;
+    left: 51%;
 }
 #osd-buttons .color-button.blue {
     background-color: blue;
+    left: 75.5%;
 }

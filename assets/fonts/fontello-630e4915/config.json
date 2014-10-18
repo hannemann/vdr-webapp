@@ -103,6 +103,12 @@
       "src": "entypo"
     },
     {
+      "uid": "ce5e29aa5208417700e7f7012a236c00",
+      "css": "undo",
+      "code": 101,
+      "src": "iconic"
+    },
+    {
       "uid": "8pcqxtjxtvkqo3dgemy49z7fw1d8xsh9",
       "css": "volume-off-1",
       "code": 85,
@@ -118,6 +124,30 @@
       "uid": "rrb2e7qiu68cw7itzq0wzm2hugw1u4lu",
       "css": "volume-up-1",
       "code": 87,
+      "src": "modernpics"
+    },
+    {
+      "uid": "8ax1xqcbzz1hobyd4i7f0unwib1bztip",
+      "css": "down-dir",
+      "code": 97,
+      "src": "modernpics"
+    },
+    {
+      "uid": "am79573ydakwiicuct1odx7f2e9zv8lv",
+      "css": "left-dir",
+      "code": 98,
+      "src": "modernpics"
+    },
+    {
+      "uid": "gypcofts1tkouwkxbv8d33eanqpreyy9",
+      "css": "right-dir",
+      "code": 99,
+      "src": "modernpics"
+    },
+    {
+      "uid": "6ipws8y9gej6vbloufvhi5qux7rluf64",
+      "css": "up-dir",
+      "code": 100,
       "src": "modernpics"
     },
     {

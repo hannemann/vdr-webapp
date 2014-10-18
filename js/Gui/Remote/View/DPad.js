@@ -9,29 +9,26 @@ Gui.Remote.View.DPad = function () {};
  */
 Gui.Remote.View.DPad.prototype = new VDRest.Abstract.View();
 
-Gui.Remote.View.DPad.prototype.symbolUp     = 'Up';
-Gui.Remote.View.DPad.prototype.symbolDown   = 'Down';
-Gui.Remote.View.DPad.prototype.symbolLeft   = 'Left';
-Gui.Remote.View.DPad.prototype.symbolRight  = 'Right';
+Gui.Remote.View.DPad.prototype.symbolUp     = 'd';
+Gui.Remote.View.DPad.prototype.symbolDown   = 'a';
+Gui.Remote.View.DPad.prototype.symbolLeft   = 'b';
+Gui.Remote.View.DPad.prototype.symbolRight  = 'c';
 Gui.Remote.View.DPad.prototype.symbolOk     = 'Ok';
 Gui.Remote.View.DPad.prototype.symbolMenu   = 'Menu';
-Gui.Remote.View.DPad.prototype.symbolBack   = 'Back';
+Gui.Remote.View.DPad.prototype.symbolBack   = 'e';
 
 /**
  * init nodes
  */
 Gui.Remote.View.DPad.prototype.init = function () {
 
-    this.node = $('<div id="remote-dpad">');
-    this.buttons = $('<div class="remote-buttons">');
+    this.node = $('<div id="remote-dpad" class="remote-group">');
 };
 
 /**
  * initialize render
  */
 Gui.Remote.View.DPad.prototype.render = function () {
-
-    this.buttons.appendTo(this.node);
 
     this.addButtons();
 
@@ -43,13 +40,13 @@ Gui.Remote.View.DPad.prototype.render = function () {
  */
 Gui.Remote.View.DPad.prototype.addButtons = function () {
 
-    this.up     = $('<div class="remote-dpad-button up">')      .text(this.symbolUp)       .appendTo(this.node);
-    this.down   = $('<div class="remote-dpad-button down">')    .text(this.symbolDown)     .appendTo(this.node);
-    this.left   = $('<div class="remote-dpad-button left">')    .text(this.symbolLeft)     .appendTo(this.node);
-    this.right  = $('<div class="remote-dpad-button right">')   .text(this.symbolRight)    .appendTo(this.node);
-    this.ok     = $('<div class="remote-dpad-button ok">')      .text(this.symbolOk)       .appendTo(this.node);
-    this.menu   = $('<div class="remote-dpad-button menu">')    .text(this.symbolMenu)     .appendTo(this.node);
-    this.back   = $('<div class="remote-dpad-button back">')    .text(this.symbolBack)     .appendTo(this.node);
+    this.up     = $('<div class="remote-button up vdr-web-symbol">')      .text(this.symbolUp)       .appendTo(this.node);
+    this.left   = $('<div class="remote-button left vdr-web-symbol">')    .text(this.symbolLeft)     .appendTo(this.node);
+    this.ok     = $('<div class="remote-button ok">')      .text(this.symbolOk)       .appendTo(this.node);
+    this.right  = $('<div class="remote-button right vdr-web-symbol">')   .text(this.symbolRight)    .appendTo(this.node);
+    this.down   = $('<div class="remote-button down vdr-web-symbol">')    .text(this.symbolDown)     .appendTo(this.node);
+    this.menu   = $('<div class="remote-button menu">')    .text(this.symbolMenu)     .appendTo(this.node);
+    this.back   = $('<div class="remote-button back vdr-web-symbol">')    .text(this.symbolBack)     .appendTo(this.node);
 
     return this;
 };

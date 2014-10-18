@@ -15,18 +15,16 @@ Gui.Remote.Controller.DPad.prototype = new VDRest.Abstract.Controller();
 Gui.Remote.Controller.DPad.prototype.init = function () {
 
     this.view = this.module.getView('DPad');
-
-    this.defaultController = this.module.getController('Default');
-
-    this.view.setParentView(
-        this.module.getView('Default')
-    );
 };
 
 /**
  * initialize view
  */
 Gui.Remote.Controller.DPad.prototype.dispatchView = function () {
+
+    this.view.setParentView({
+        "node" : this.defaultController.view.buttons
+    });
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 

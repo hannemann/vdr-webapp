@@ -23,3 +23,8 @@
 .icon-download:before { content: '\58'; } /* 'X' */
 .icon-thumbs-up-alt:before { content: '\59'; } /* 'Y' */
 .icon-scissors:before { content: '\5a'; } /* 'Z' */
+.icon-down-dir:before { content: '\61'; } /* 'a' */
+.icon-left-dir:before { content: '\62'; } /* 'b' */
+.icon-right-dir:before { content: '\63'; } /* 'c' */
+.icon-up-dir:before { content: '\64'; } /* 'd' */
+.icon-undo:before { content: '\65'; } /* 'e' */

@@ -1,0 +1,43 @@
+#remote-buttons {
+    width: 300px;
+    padding: 10px;
+    text-align: center;
+    margin: 0 auto;
+}
+.remote-group {
+    float: left;
+    width: 140px;
+    margin: 5px;
+}
+
+.remote-group .remote-button {
+    float: left;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    background: rgb(68, 68, 68);
+    border: 2px outset rgb(119, 119, 119);
+    margin: 3px;
+    border-radius: 3px;
+    position: relative;
+}
+
+.remote-group .remote-button:active {
+    background-color: rgb(154, 154, 155);
+}
+
+.remote-button.zero,
+.remote-button.up,
+.remote-button.down {
+    margin: 3px calc(50% - 21px);
+}
+
+.remote-button .additional {
+    position: absolute;
+    bottom: 0;
+    height: 10px;
+    line-height: 10px;
+    font-size: 10px;
+    left: 0;
+    right: 0;
+}

@@ -15,7 +15,7 @@ Gui.Remote.View.Default.prototype = new VDRest.Abstract.View();
 Gui.Remote.View.Default.prototype.init = function () {
 
     this.node = $('<div id="remote">');
-    this.buttons = $('<div id="remote-buttons">');
+    this.buttons = $('<div id="remote-buttons" class="clearer">');
 };
 
 /**
@@ -25,15 +25,5 @@ Gui.Remote.View.Default.prototype.render = function () {
 
     this.buttons.appendTo(this.node);
 
-    this.addButtons();
-
     VDRest.Abstract.View.prototype.render.call(this);
-};
-
-/**
- * add color buttons
- */
-Gui.Remote.View.Default.prototype.addButtons = function () {
-
-    return this;
 };
