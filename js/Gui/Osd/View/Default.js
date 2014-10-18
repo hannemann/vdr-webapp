@@ -24,8 +24,16 @@ Gui.Osd.View.Default.prototype.init = function () {
  */
 Gui.Osd.View.Default.prototype.render = function () {
 
+    var poster;
+
     this.osd.appendTo(this.node);
     VDRest.Abstract.View.prototype.render.call(this);
+
+    poster = VDRest.app.getModule('Gui.Window').getHelper('VideoPlayer').defaultPoster(this.node.get(0));
+
+    this.node.css({
+        "background-image": 'url(' + poster + ')'
+    });
 };
 
 /**
@@ -72,17 +80,22 @@ Gui.Osd.View.Default.prototype.renderItems = function () {
  */
 Gui.Osd.View.Default.prototype.addItem = function (item) {
 
-    var node = $('<pre class="osd-item clearer">'), text = item.content;
+    var node, text = item.content;
 
-    text = text.replace(/^\s*([0-9]{1,3})\s+/, '<span class="list-key">$1</span>&nbsp;');
-    node.html(text);
+    if (text) {
+        node = $('<pre class="osd-item clearer">');
 
-    if (item.is_selected) {
-        node.addClass('selected');
-        this.selectedItem = node;
+        text = text.replace(/^\s*([0-9]{1,3})\s+/, '<span class="list-key">$1</span>&nbsp;');
+        node.html(text);
+
+        if (item.is_selected) {
+            node.addClass('selected');
+            this.selectedItem = node;
+        }
+
+        node.appendTo(this.osd);
+
     }
-
-    node.appendTo(this.osd);
 };
 
 /**

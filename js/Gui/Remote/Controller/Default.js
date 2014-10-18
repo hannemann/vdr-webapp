@@ -40,8 +40,13 @@ Gui.Remote.Controller.Default.prototype.dispatchView = function () {
 
 /**
  * send key
+ * @param {String} key
+ * @param {jQuery.Event} e
  */
-Gui.Remote.Controller.Default.prototype.sendKey = function (key) {
+Gui.Remote.Controller.Default.prototype.sendKey = function (key, e) {
+
+    e.preventDefault();
+    e.stopPropagation();
 
     this.vibrate();
     this.module.backend.send(key);

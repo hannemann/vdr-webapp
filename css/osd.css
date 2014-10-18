@@ -1,14 +1,16 @@
 #osd {
     position: relative;
-    background: black;
-    padding: 20px;
+    background: black no-repeat center center;
+    height: 49%;
 }
 
 #osd-items {
-    max-height: 250px;
     overflow: hidden;
-    margin: 0 0 20px;
-    height: 200px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 30px;
 }
 
 .osd-item {
@@ -45,6 +47,8 @@
     width: 22.5%;
     font-size: 15px;
     font-weight: bold;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 #osd-buttons .color-button.red {
     background-color: red;
@@ -66,8 +70,8 @@
 
 @media (orientation: landscape) {
     #osd {
-        width: calc(50% - 40px);
-        height: calc(100% - 40px);
+        width: 50%;
+        height: 100%;
         float:left;
     }
 }

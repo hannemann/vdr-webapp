@@ -1,5 +1,5 @@
 #remote {
-    height: calc(100% - 260px);
+    height: 51%;
 }
 #remote-buttons {
     width: 300px;
@@ -20,27 +20,39 @@
     float: left;
     width: 34px;
     height: 34px;
-    line-height: 34px;
-    background: rgb(68, 68, 68);
+    line-height: 38px;
+    background: -webkit-radial-gradient(center, ellipse cover, #45484d 0%,#000000 100%);
+    background: radial-gradient(center, ellipse cover, #45484d 0%,#000000 100%);
     border: 2px outset rgb(119, 119, 119);
-    margin: 3px;
-    border-radius: 3px;
+    margin: 4px;
+    border-radius: 17px;
     position: relative;
+    cursor: pointer;
+}
+
+#remote-numpad .remote-button {
+    line-height: 30px;
 }
 
 .remote-group .remote-button:active {
-    background-color: rgb(154, 154, 155);
+    background: -webkit-radial-gradient(center, ellipse cover, #c6bfb3 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
+    background: radial-gradient(ellipse at center, #c6bfb3 0%,#000000 100%); /* W3C */
 }
 
 .remote-button.zero,
 .remote-button.up,
 .remote-button.down {
-    margin: 3px calc(50% - 21px);
+    margin: 3px calc(50% - 20px);
+}
+.remote-button.menu {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .remote-button .additional {
     position: absolute;
-    bottom: 0;
+    bottom: 4px;
     height: 10px;
     line-height: 10px;
     font-size: 10px;
