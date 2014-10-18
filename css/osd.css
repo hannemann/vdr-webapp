@@ -63,3 +63,11 @@
     background-color: blue;
     left: 75.5%;
 }
+
+@media (orientation: landscape) {
+    #osd {
+        width: calc(50% - 40px);
+        height: calc(100% - 40px);
+        float:left;
+    }
+}

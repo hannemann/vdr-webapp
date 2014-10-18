@@ -1,13 +1,19 @@
+#remote {
+    height: calc(100% - 260px);
+}
 #remote-buttons {
     width: 300px;
+    max-width: 100%;
+    height: 100%;
     padding: 10px;
     text-align: center;
     margin: 0 auto;
+    overflow: auto;
 }
 .remote-group {
     float: left;
     width: 140px;
-    margin: 5px;
+    margin: 5px 5px 20px;
 }
 
 .remote-group .remote-button {
@@ -40,4 +46,21 @@
     font-size: 10px;
     left: 0;
     right: 0;
+}
+
+@media (orientation: landscape) {
+    #remote {
+        float:left;
+        width: 50%;
+    }
+    .remote-group {
+        margin: 5px 0 20px;
+    }
+    #remote,
+    #remote-buttons {
+        height: 100%;
+    }
+    #remote-buttons {
+        width: 100%;
+    }
 }
