@@ -23,6 +23,8 @@ VDRest.Osd.Model.Osd.prototype._class = 'VDRest.Osd.Model.Osd';
 VDRest.Osd.Model.Osd.prototype.init = function () {
 
     this.currentOsd = null;
+    this.resource = this.module.getResource('Osd');
+    this.resource.dataModel = this;
 };
 
 /**
@@ -31,17 +33,24 @@ VDRest.Osd.Model.Osd.prototype.init = function () {
  */
 VDRest.Osd.Model.Osd.prototype.loadOsd = function () {
 
-    this.module.getResource('Osd').load({
+    this.resource.load({
         "url" : "main",
-        "callback" : $.proxy(function (result) {
-            this.currentOsd = result;
-            $.event.trigger({
-                "type" : "osdloaded",
-                "payload" : {
-                    "data" : this.currentOsd
-                }
-            });
-        }, this)
+        "callback" : $.proxy(this.triggerOsdLoaded, this)
+    });
+};
+
+/**
+ * trigger osd loaded
+ * @param {Object} result
+ */
+VDRest.Osd.Model.Osd.prototype.triggerOsdLoaded = function (result) {
+
+    this.currentOsd = result;
+    $.event.trigger({
+        "type" : "osdloaded",
+        "payload" : {
+            "data" : this.currentOsd
+        }
     });
 };
 

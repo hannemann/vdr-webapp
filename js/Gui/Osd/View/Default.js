@@ -87,6 +87,16 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
 
     this.colorButtons.empty();
     this.osd.empty();
-    this.addButtons().renderItems();
-    this.selectedItem.get(0).scrollIntoView();
+    this.selectedItem = null;
+    this.addButtons();
+
+    if (this.data.Error) {
+        this.addItem(this.data.Error);
+    } else {
+        this.renderItems();
+    }
+
+    if (this.selectedItem) {
+        this.selectedItem.get(0).scrollIntoView();
+    }
 };

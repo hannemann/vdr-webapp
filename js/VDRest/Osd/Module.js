@@ -25,6 +25,15 @@ VDRest.Osd.prototype.initOsd = function () {
 };
 
 /**
+ * destroy
+ */
+VDRest.Osd.prototype.destruct = function () {
+
+    this.getController('Osd').destructView();
+    this.cache.flush();
+};
+
+/**
  * register module
  */
 VDRest.app.registerModule('VDRest.Osd', true);

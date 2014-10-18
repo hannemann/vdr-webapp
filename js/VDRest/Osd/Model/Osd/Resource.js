@@ -24,3 +24,18 @@ VDRest.Osd.Model.Osd.Resource.prototype.urls = {
 
     "main" : "osd.json"
 };
+
+/**
+ * handle osd error
+ * in common 404 means no OSD available
+ */
+VDRest.Osd.Model.Osd.Resource.prototype.onError = function (e) {
+
+    var message;
+
+    if (e.status === 404) {
+        message = e.statusText;
+    }
+
+    this.dataModel.triggerOsdLoaded({"Error" : {"content":VDRest.app.translate(message)}});
+};
