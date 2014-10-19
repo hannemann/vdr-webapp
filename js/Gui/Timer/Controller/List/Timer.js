@@ -108,6 +108,10 @@ Gui.Timer.Controller.List.Timer.prototype.update = function (e) {
 Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
 
     this.vibrate();
+    this.removeObserver();
+    $(document).one(this.animationEndEvents, $.proxy(function () {
+        this.addObserver();
+    }, this));
 
     $.event.trigger({
         "type" : "window.request",

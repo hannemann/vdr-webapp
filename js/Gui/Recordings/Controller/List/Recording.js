@@ -74,10 +74,12 @@ Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () 
 Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = function (e) {
 
     this.vibrate();
-
     e.preventDefault();
-
     e.stopPropagation();
+    $(document).one(this.animationEndEvents, $.proxy(function () {
+        this.addObserver();
+    }, this));
+    this.removeObserver();
 
     $.event.trigger({
         "type" : "window.request",
