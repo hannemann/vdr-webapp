@@ -30,7 +30,7 @@ VDRest.Remote.Model.Remote.Resource.prototype.urls = {
  */
 VDRest.Remote.Model.Remote.Resource.prototype.send = function (key) {
 
-    this.fetchAsync({
+    this.fetchSync({
         "method" : "POST",
         "url" : this.getBaseUrl() + this.urls.main + '/' + key
         },function () {

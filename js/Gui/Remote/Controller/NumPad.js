@@ -36,16 +36,16 @@ Gui.Remote.Controller.NumPad.prototype.dispatchView = function () {
  */
 Gui.Remote.Controller.NumPad.prototype.addObserver = function () {
 
-    this.view.one   .on('click', $.proxy(this.defaultController.sendKey, this, '1'));
-    this.view.two   .on('click', $.proxy(this.defaultController.sendKey, this, '2'));
-    this.view.three .on('click', $.proxy(this.defaultController.sendKey, this, '3'));
-    this.view.four  .on('click', $.proxy(this.defaultController.sendKey, this, '4'));
-    this.view.five  .on('click', $.proxy(this.defaultController.sendKey, this, '5'));
-    this.view.six   .on('click', $.proxy(this.defaultController.sendKey, this, '6'));
-    this.view.seven .on('click', $.proxy(this.defaultController.sendKey, this, '7'));
-    this.view.eight .on('click', $.proxy(this.defaultController.sendKey, this, '8'));
-    this.view.nine  .on('click', $.proxy(this.defaultController.sendKey, this, '9'));
-    this.view.zero  .on('click', $.proxy(this.defaultController.sendKey, this, '0'));
+    this.view.one   .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '1'));
+    this.view.two   .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '2'));
+    this.view.three .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '3'));
+    this.view.four  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '4'));
+    this.view.five  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '5'));
+    this.view.six   .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '6'));
+    this.view.seven .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '7'));
+    this.view.eight .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '8'));
+    this.view.nine  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '9'));
+    this.view.zero  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '0'));
 };
 
 /**

@@ -43,7 +43,7 @@ Gui.Osd.View.Default.prototype.addButtons = function () {
 
     this.red = this.green = this.yellow = this.blue = undefined;
 
-    if (this.data.TextOsd) {
+    if (this.data && this.data.TextOsd) {
 
         this.red = $('<div class="color-button red">');
         this.green = $('<div class="color-button green">');
@@ -63,9 +63,9 @@ Gui.Osd.View.Default.prototype.addButtons = function () {
 };
 
 /**
- * render items
+ * render text osd
  */
-Gui.Osd.View.Default.prototype.renderItems = function () {
+Gui.Osd.View.Default.prototype.renderText = function () {
 
     var i= 0, items = this.data.TextOsd.items, l = items.length;
 
@@ -99,6 +99,46 @@ Gui.Osd.View.Default.prototype.addItem = function (item) {
 };
 
 /**
+ * render programme osd
+ */
+Gui.Osd.View.Default.prototype.renderProgramme = function () {
+
+    var osd = this.data.ProgrammeOsd,
+        presentTime = new Date(osd.present_time * 1000),
+        followingTime = new Date(osd.following_time * 1000),
+        helper = this.helper();
+
+    this.addItem({
+        "content": VDRest.app.translate('Now') + ':'
+    });
+    this.addItem({
+        "content": helper.getTimeString(presentTime, false) + " - " + osd.present_title
+    });
+
+    if (osd.present_subtitle) {
+        this.addItem({
+            "content" : osd.present_subtitle
+        });
+    }
+
+    this.addItem({"content":" "});
+
+    this.addItem({
+        "content": VDRest.app.translate('Next') + ':'
+    });
+
+    this.addItem({
+        "content": helper.getTimeString(followingTime, false) + " - " + osd.following_title
+    });
+
+    if (osd.following_subtitle) {
+        this.addItem({
+            "content" : osd.following_subtitle
+        });
+    }
+};
+
+/**
  * repaint osd
  */
 Gui.Osd.View.Default.prototype.rePaint = function () {
@@ -108,12 +148,16 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
     this.selectedItem = null;
     this.addButtons();
 
-    if (this.data.Error) {
-        this.addItem(this.data.Error);
-    } else if (this.data.ChannelOsd) {
-        this.addItem({ "content" : this.data.ChannelOsd });
-    } else {
-        this.renderItems();
+    if (this.data) {
+        if (this.data.Error) {
+            this.addItem(this.data.Error);
+        } else if (this.data.ChannelOsd) {
+            this.addItem({ "content" : this.data.ChannelOsd });
+        } else if (this.data.TextOsd) {
+            this.renderText();
+        } else if (this.data.ProgrammeOsd) {
+            this.renderProgramme()
+        }
     }
 
     if (this.selectedItem) {

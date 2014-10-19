@@ -37,5 +37,9 @@ VDRest.Osd.Model.Osd.Resource.prototype.onError = function (e) {
         message = e.statusText;
     }
 
-    this.dataModel.triggerOsdLoaded({"Error" : {"content":VDRest.app.translate(message)}});
+    this.dataModel.triggerOsdLoaded({
+        "responseJSON": {
+            "Error" : {"content":VDRest.app.translate(message)}
+        }
+    });
 };
