@@ -31,6 +31,7 @@
 
 #menubar .title-wrapper {
     display: inline-block;
+    max-width: calc(100% - 36px);
 }
 #menubar .title-wrapper:active {
     background-color: rgba(255,255,255,0.5);
@@ -44,6 +45,7 @@
     display: inline-block;
     float: left;
     font-family: Source Sans ProBold, sans-serif;
+    width: calc(100% - 40px);
 }
 
 #menubar .throbber {
@@ -55,6 +57,9 @@
 #header {
     display: inline-block;
     padding: 11px 0 5px;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
 }
 #button-settings {
     width: 32px;

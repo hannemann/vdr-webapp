@@ -19,7 +19,13 @@ Gui.Window.Controller.Directory.prototype.cacheKey = 'path';
  */
 Gui.Window.Controller.Directory.prototype.init = function () {
 
-    this.eventPrefix = 'window.directory.' + this.data.path.replace(/\s/g, '.');
+    var path = this.data.path;
+
+    this.header = VDRest.app.getModule('Gui.Menubar').getView('Default').getHeader();
+    this.oldHeader = this.header.text();
+    this.header.text(path.replace('root~', '').replace(/~/g, '/'));
+
+    this.eventPrefix = 'window.directory.' + path.replace(/\s/g, '.');
 
     this.view = this.module.getView('Directory', this.data);
 
@@ -35,6 +41,7 @@ Gui.Window.Controller.Directory.prototype.init = function () {
  */
 Gui.Window.Controller.Directory.prototype.destructView = function () {
 
+    this.header.text(this.oldHeader);
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
 };
