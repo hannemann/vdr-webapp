@@ -101,6 +101,10 @@
     height:60px;
     font-family: sans-serif;
 }
+.window-button.vdr-web-symbol dt {
+    font-family: VDR-web, sans-serif;
+    font-size: 30px;
+}
 .window-button.round dt {
     border-radius: 30px;
     background: #404040;
@@ -126,6 +130,13 @@
 }
 .window-button.generate-button dt:active {
     box-shadow: 0 0 40px 0 rgb(27, 91, 160), 0 0 30px #FFFFFF inset;
+}
+.window-button.watch-button dt {
+    background-color: rgb(0, 0, 160);
+    text-indent: 5px;
+}
+.window-button.watch-button dt:active {
+    box-shadow: 0 0 40px 0 rgb(0, 0, 160), 0 0 30px #FFFFFF inset;
 }
 .delete-button.round dt {
     background: red;

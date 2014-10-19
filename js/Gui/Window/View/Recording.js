@@ -244,8 +244,8 @@ Gui.Window.View.Recording.prototype.getEditConfig = function () {
             "type" : "button",
             "dom": function () {
 
-                var dom = $('<dl class="window-button round watch-button symbol-button"></dl>');
-                this.watchButton = $('<dt>').html('&#10006;');
+                var dom = $('<dl class="window-button round watch-button symbol-button vdr-web-symbol"></dl>');
+                this.watchButton = $('<dt>').html('C');
 
                 return dom.append(this.watchButton)
                     .append($('<dd>').text(VDRest.app.translate('Watch Recording')));

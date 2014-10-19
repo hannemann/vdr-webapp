@@ -58,6 +58,10 @@ Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (posi
 Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 
     this.view.node.on('click', $.proxy(this.requestWindowAction, this));
+
+    this.view.node
+        .on('mouseup', $.proxy(this.handleUp, this))
+        .on('mousedown', $.proxy(this.handleDown, this));
 };
 
 /**
@@ -66,6 +70,67 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () {
 
     this.view.node.off('click');
+
+    this.view.node.off('mouseup mousedown');
+};
+
+/**
+ * handle mouseup
+ * @param {jQuery.Event} e
+ */
+Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
+
+    if (!this.isMuted) {
+
+        if ("undefined" === typeof this.preventClick) {
+
+            if ("undefined" !== typeof this.clickTimeout) {
+                window.clearTimeout(this.clickTimeout);
+            }
+            this.requestWindowAction(e)
+        }
+    }
+};
+
+/**
+ * handle mousedown
+ * @param {jQuery.Event} e
+ */
+Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
+
+    var windowModule = VDRest.app.getModule('Gui.Window'),
+        recording = this.dataModel;
+
+    this.vibrate();
+
+    this.preventClick = undefined;
+    this.clickTimeout = window.setTimeout($.proxy(function () {
+
+        this.vibrate(100);
+
+        this.preventClick = true;
+        e.preventDefault();
+
+        if (VDRest.config.getItem('useHtmlPlayer')) {
+
+            if (windowModule.hasVideoPlayer()) {
+                windowModule.getVideoPlayer().changeSrc(recording);
+            } else {
+                $.event.trigger({
+                    "type" : "window.request",
+                    "payload" : {
+                        "type" : "VideoPlayer",
+                        "data" : {
+                            "sourceModel" : recording
+                        }
+                    }
+                });
+            }
+        } else {
+            window.location.href = recording.getStreamUrl();
+        }
+
+    }, this), 500);
 };
 
 /**
