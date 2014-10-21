@@ -647,11 +647,11 @@ Gui.Window.View.VideoPlayer.prototype.updateRecordingEndTime = function (action)
 Gui.Window.View.VideoPlayer.prototype.updateRecordingStartEndTime = function () {
 
     var duration = this.data.sourceModel.getData('duration'),
-        helper = this.helper(), start, end;
+        helper = this.helper(), start, end, d = new Date();
 
 
-    start = helper.getTimeString(new Date());
-    end = helper.getTimeString(new Date(new Date().getTime() + duration * 1000));
+    start = helper.getTimeString(d);
+    end = helper.getTimeString(new Date(d.getTime() + duration * 1000 - this.data.startTime * 1000));
 
     this.end.text(end);
     this.start.text(start);
