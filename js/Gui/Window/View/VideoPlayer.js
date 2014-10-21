@@ -778,6 +778,8 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
     this.osd.append(this.infoArea);
 
+    $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
+
     return this;
 };
 
