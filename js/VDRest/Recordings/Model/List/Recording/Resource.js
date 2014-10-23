@@ -57,7 +57,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
 
         request.url = this.getBaseUrl() + 'recordings/delete';
         request.data = {
-            "file" : obj.getFileName() + ' '
+            "file" : obj.getFileName()
         };
         request.method = 'POST';
 
@@ -80,7 +80,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.moveRecording = functi
     request.method = 'POST';
     request.data = {
         "source" : obj.source,
-        "target" : obj.target + ' '
+        "target" : obj.target
     };
 
     this.fetchAsync(request, function (response) {
