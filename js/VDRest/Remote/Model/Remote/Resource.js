@@ -31,8 +31,28 @@ VDRest.Remote.Model.Remote.Resource.prototype.urls = {
 VDRest.Remote.Model.Remote.Resource.prototype.send = function (key) {
 
     this.fetchSync({
-        "method" : "POST",
-        "url" : this.getBaseUrl() + this.urls.main + '/' + key
+            "method" : "POST",
+            "url" : this.getBaseUrl() + this.urls.main + '/' + key
+        },function () {
+            $.event.trigger({
+                "type" : "remotekeypress"
+            });
+        }
+    );
+};
+
+/**
+ * send key press
+ * @param {String} key
+ */
+VDRest.Remote.Model.Remote.Resource.prototype.sendKbd = function (key) {
+
+    this.fetchSync({
+            "method" : "POST",
+            "url" : this.getBaseUrl() + this.urls.main + '/kbd/' + key,
+            "data" : {
+                "kbd" : key
+            }
         },function () {
             $.event.trigger({
                 "type" : "remotekeypress"

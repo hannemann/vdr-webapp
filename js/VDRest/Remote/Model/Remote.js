@@ -38,6 +38,15 @@ VDRest.Remote.Model.Remote.prototype.send = function (key) {
 };
 
 /**
+ * send key press
+ * @param {String} key
+ */
+VDRest.Remote.Model.Remote.prototype.sendKbd = function (key) {
+
+    this.module.getResource('Remote').sendKbd(key);
+};
+
+/**
  * retrieve available keys
  */
 VDRest.Remote.Model.Remote.prototype.getKeys = function () {
