@@ -22,6 +22,12 @@ Gui.SearchTimer.prototype.namespace = 'Gui';
 Gui.SearchTimer.prototype.name = 'SearchTimer';
 
 /**
+ * Module depends on vdr plugin epgsearch
+ * @type {string}
+ */
+Gui.SearchTimer.prototype.pluginDependency = 'epgsearch';
+
+/**
  * show up in drawer
  * @type {string}
  */

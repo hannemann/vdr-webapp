@@ -89,6 +89,7 @@ VDRest.app.de_DE = {
     "OSD Delay (ms)" : "OSD Verzögerung (ms)",
     "Time to wait after key press before OSD is refreshed" : "Zeit die nach Knopfdruck gewartet wird, bevor das OSD aktualisiert wird.",
     "OSD refresh interval (ms)" : "OSD Aktualisierungsintervall (ms)",
+    "Searchtimer" : "Suchtimer",
     "Show images in EPG view": "Bilder in EPG Ansicht zeigen",
     "Misc.": "Sonstiges",
     "Show first time installation guide": "Zeige Installationsanleitung",
