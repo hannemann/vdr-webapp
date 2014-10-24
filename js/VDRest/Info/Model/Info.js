@@ -54,10 +54,27 @@ VDRest.Info.Model.Info.prototype.getPlugin = function (name) {
     for (i in plugins) {
 
         if (plugins.hasOwnProperty(i) && plugins[i].name === name) {
+
+            plugins[i].versnum = this.getPluginVersnum(plugins[i]);
             return plugins[i];
         }
     }
     return false;
+};
+
+/**
+ * normalize version number
+ * Version * 10000 + Major * 100 + Minor
+ * @param {Object} plugin
+ * @returns {number}
+ */
+VDRest.Info.Model.Info.prototype.getPluginVersnum = function (plugin) {
+
+    var version = plugin.version.replace(/[^.0-9]/g, '').split('.');
+
+    return parseInt(version[0], 10) * 10000
+            + parseInt(version[1], 10) * 100
+            + parseInt(version[2], 10);
 };
 
 /**
