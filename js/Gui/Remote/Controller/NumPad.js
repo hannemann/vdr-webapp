@@ -46,6 +46,7 @@ Gui.Remote.Controller.NumPad.prototype.addObserver = function () {
     this.view.eight .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '8'));
     this.view.nine  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '9'));
     this.view.zero  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '0'));
+    this.view.txt   .on('click', $.proxy(this.requestKbd, this));
 };
 
 /**
@@ -63,4 +64,37 @@ Gui.Remote.Controller.NumPad.prototype.removeObserver = function () {
     this.view.eight .off('click');
     this.view.nine  .off('click');
     this.view.zero  .off('click');
+    this.view.txt   .off('click');
+};
+
+/**
+ * request user input
+ */
+Gui.Remote.Controller.NumPad.prototype.requestKbd = function () {
+
+    var data = {
+        "type": "string",
+        "dom": $('<label class="clearer text">')
+    };
+
+    $('<span>').text(VDRest.app.translate('Input Text')).appendTo(data.dom);
+    data.gui = $('<input type="text" name="remote-txt">')
+        .appendTo(data.dom);
+    data.gui.on('change', $.proxy(this.sendKbd, this));
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Input",
+            "data" : data
+        }
+    });
+};
+
+/**
+ * send keyboard input
+ */
+Gui.Remote.Controller.NumPad.prototype.sendKbd = function (e) {
+
+    this.module.backend.sendKbd(e.target.value);
 };

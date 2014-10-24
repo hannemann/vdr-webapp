@@ -44,6 +44,9 @@
 .remote-button.down {
     margin: 3px calc(50% - 20px);
 }
+.remote-button.zero {
+    margin: 3px 3px 3px calc(50% - 20px);
+}
 .remote-button.menu {
     font-size: 11px;
     font-weight: bold;

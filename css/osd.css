@@ -49,6 +49,11 @@
     font-weight: bold;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    height: 20px;
+    line-height: 20px;
+}
+#osd-buttons .color-button.long-text {
+    font-size: 11px;
 }
 #osd-buttons .color-button.red {
     background-color: red;

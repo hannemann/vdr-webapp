@@ -55,6 +55,11 @@ Gui.Osd.View.Default.prototype.addButtons = function () {
         this.yellow.text(this.data.TextOsd.yellow).appendTo(this.colorButtons);
         this.blue.text(this.data.TextOsd.blue).appendTo(this.colorButtons);
 
+        this.data.TextOsd.red.length    > 9 ? this.red.addClass('long-text')    : this.red.removeClass('long-text');
+        this.data.TextOsd.green.length  > 9 ? this.green.addClass('long-text')  : this.green.removeClass('long-text');
+        this.data.TextOsd.yellow.length > 9 ? this.yellow.addClass('long-text') : this.yellow.removeClass('long-text');
+        this.data.TextOsd.blue.length   > 9 ? this.blue.addClass('long-text')   : this.blue.removeClass('long-text');
+
         this.colorButtons.appendTo(this.node);
 
     }

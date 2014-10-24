@@ -19,6 +19,7 @@ Gui.Remote.View.NumPad.prototype.symbolSeven    = '7';
 Gui.Remote.View.NumPad.prototype.symbolEight    = '8';
 Gui.Remote.View.NumPad.prototype.symbolNine     = '9';
 Gui.Remote.View.NumPad.prototype.symbolZero     = '0';
+Gui.Remote.View.NumPad.prototype.symbolTxt      = 'txt';
 
 /**
  * init nodes
@@ -53,6 +54,7 @@ Gui.Remote.View.NumPad.prototype.addButtons = function () {
     this.eight  = $('<div class="remote-button eight">').text(this.symbolEight)  .appendTo(this.node);
     this.nine   = $('<div class="remote-button nine">') .text(this.symbolNine)   .appendTo(this.node);
     this.zero   = $('<div class="remote-button zero">') .text(this.symbolZero)   .appendTo(this.node);
+    this.txt    = $('<div class="remote-button txt">')  .text(this.symbolTxt)    .appendTo(this.node);
     $('<div class="additional">').text('.,-')   .appendTo(this.one);
     $('<div class="additional">').text('abc')   .appendTo(this.two);
     $('<div class="additional">').text('def')   .appendTo(this.three);
