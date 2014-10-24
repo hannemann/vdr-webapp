@@ -33,6 +33,9 @@
 #remote-numpad .remote-button {
     line-height: 30px;
 }
+#remote-numpad .remote-button.txt {
+    line-height: 34px;
+}
 
 .remote-group .remote-button:active {
     background: -webkit-radial-gradient(center, ellipse cover, #c6bfb3 0%,#000000 100%); /* Chrome10+,Safari5.1+ */

@@ -77,6 +77,8 @@ Gui.Remote.Controller.NumPad.prototype.requestKbd = function () {
         "dom": $('<label class="clearer text">')
     };
 
+    this.vibrate();
+
     $('<span>').text(VDRest.app.translate('Input Text')).appendTo(data.dom);
     data.gui = $('<input type="text" name="remote-txt">')
         .appendTo(data.dom);
