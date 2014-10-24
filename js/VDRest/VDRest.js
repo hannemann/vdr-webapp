@@ -123,6 +123,7 @@ VDRest.App.prototype.run = function () {
 
         $(document).one('infoupdate', $.proxy(function () {
 
+            VDRest.info = this.getModule('VDRest.Info').getModel('Info');
             this.dispatch(start);
 
         }, this));
