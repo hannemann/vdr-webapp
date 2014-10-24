@@ -50,6 +50,13 @@ Gui.Window.ViewModel.Drawer.prototype.getButtons = function () {
 
         if (current !== i && modules.hasOwnProperty(i) && modules[i].inDrawer && modules[i].headline) {
 
+            if (
+                "undefined" !== typeof modules[i].pluginDependency
+                && !VDRest.info.getPlugin(modules[i].pluginDependency)
+            ) {
+                continue;
+            }
+
             module = modules[i].namespace+'.'+modules[i].name;
 
             collection.setData(module, {

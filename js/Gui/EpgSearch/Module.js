@@ -22,6 +22,12 @@ Gui.EpgSearch.prototype.namespace = 'Gui';
 Gui.EpgSearch.prototype.name = 'EpgSearch';
 
 /**
+ * Module depends on vdr plugin epgsearch
+ * @type {string}
+ */
+Gui.EpgSearch.prototype.pluginDependency = 'epgsearch';
+
+/**
  * show up in drawer
  * @type {string}
  */
