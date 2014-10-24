@@ -10,11 +10,44 @@ VDRest.Info.Model.Info = function () {};
 VDRest.Info.Model.Info.prototype = new VDRest.Abstract.Model();
 
 /**
+ * @type {VDRest.Abstract.Model}
+ */
+VDRest.Info.Model.Info.prototype.minRemuxRecordingsVersnum = 601;
+
+/**
  * initialize info
  */
 VDRest.Info.Model.Info.prototype.init = function () {
 
       this.load();
+};
+
+/**
+ * @returns {boolean}
+ */
+VDRest.Info.Model.Info.prototype.canUseHtmlPlayer = function () {
+
+    return this.getStreamer()
+        && VDRest.config.getItem('useHtmlPlayer')
+        && VDRest.config.getItem('streamdevParams').indexOf('EXT') > -1;
+};
+
+/**
+ * @returns {boolean}
+ */
+VDRest.Info.Model.Info.prototype.canRemuxRecordings = function () {
+
+    var streamer = this.getStreamer();
+
+    return streamer && streamer.versnum >= this.minRemuxRecordingsVersnum;
+};
+
+/**
+ * @returns {Object}
+ */
+VDRest.Info.Model.Info.prototype.getStreamer = function () {
+
+    return VDRest.config.getItem('streamdevActive') && this.getPlugin('streamdev-server');
 };
 
 /**
