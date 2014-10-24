@@ -55,7 +55,9 @@ Gui.Window.Controller.Recording.prototype.addObserver = function () {
 
     this.view.deleteButton.on('click', $.proxy(this.deleteRecordingAction, this));
 
-    this.view.watchButton.on('click', $.proxy(this.watchRecordingAction, this));
+    if (VDRest.info.getStreamer()) {
+        this.view.watchButton.on('click', $.proxy(this.watchRecordingAction, this));
+    }
 
     $(document).on('persistrecordingschange-' + this.keyInCache, $.proxy(this.updateRecordingAction, this));
 
@@ -70,7 +72,9 @@ Gui.Window.Controller.Recording.prototype.removeObserver = function () {
 
     this.view.deleteButton.off('click');
 
-    this.view.watchButton.off('click');
+    if (VDRest.info.getStreamer()) {
+        this.view.watchButton.off('click');
+    }
 
     $(document).off('persistrecordingschange-' + this.keyInCache);
 };
@@ -125,28 +129,7 @@ Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
     this.vibrate();
 
-    var windowModule = VDRest.app.getModule('Gui.Window'),
-        recording = this.getData('recording');
-
-    if (VDRest.config.getItem('useHtmlPlayer')) {
-
-        if (windowModule.hasVideoPlayer()) {
-            windowModule.getVideoPlayer().changeSrc(recording);
-        } else {
-            $.event.trigger({
-                "type" : "window.request",
-                "payload" : {
-                    "type" : "VideoPlayer",
-                    "data" : {
-                        "sourceModel" : recording
-                    }
-                }
-            });
-        }
-    } else {
-        window.location.href = recording.getStreamUrl();
-    }
-
+    VDRest.app.getModule('Gui.Recordings').getController('List.Recording', {number: this.keyInCache}).startStream();
 };
 
 /**

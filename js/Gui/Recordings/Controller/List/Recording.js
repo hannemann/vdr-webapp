@@ -15,9 +15,21 @@ Gui.Recordings.Controller.List.Recording.prototype = new VDRest.Abstract.Control
 Gui.Recordings.Controller.List.Recording.prototype.cacheKey = 'number';
 
 /**
+ * info about streamdev server
+ * @type {Object}
+ */
+Gui.Recordings.Controller.List.Recording.prototype.streamdevInfo = null;
+
+/**
  * retrieve view
  */
 Gui.Recordings.Controller.List.Recording.prototype.init = function () {
+
+    if (!this.streamdevInfo) {
+        Gui.Recordings.Controller.List.Recording.prototype.streamdevInfo = VDRest.app.getModule('VDRest.Info')
+            .getModel('Info')
+            .getPlugin('streamdev-server');
+    }
 
     this.view = this.module.getView('List.Recording', {
         "number" : this.data.number
@@ -98,39 +110,49 @@ Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
  */
 Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
 
-    var windowModule = VDRest.app.getModule('Gui.Window'),
-        recording = this.dataModel;
-
     this.vibrate();
 
     this.preventClick = undefined;
-    this.clickTimeout = window.setTimeout($.proxy(function () {
+    if (VDRest.info.getStreamer()) {
+        this.clickTimeout = window.setTimeout($.proxy(function () {
 
-        this.vibrate(100);
+            this.vibrate(100);
 
-        this.preventClick = true;
-        e.preventDefault();
+            this.preventClick = true;
+            e.preventDefault();
 
-        if (VDRest.config.getItem('useHtmlPlayer')) {
+            this.startStream();
 
-            if (windowModule.hasVideoPlayer()) {
-                windowModule.getVideoPlayer().changeSrc(recording);
-            } else {
-                $.event.trigger({
-                    "type" : "window.request",
-                    "payload" : {
-                        "type" : "VideoPlayer",
-                        "data" : {
-                            "sourceModel" : recording
-                        }
-                    }
-                });
-            }
+        }, this), 500);
+    }
+};
+
+/**
+ * start streaming
+ */
+Gui.Recordings.Controller.List.Recording.prototype.startStream = function () {
+
+    var windowModule = VDRest.app.getModule('Gui.Window'),
+        recording = this.dataModel;
+
+    if (VDRest.info.canUseHtmlPlayer() && VDRest.info.canRemuxRecordings()) {
+
+        if (windowModule.hasVideoPlayer()) {
+            windowModule.getVideoPlayer().changeSrc(recording);
         } else {
-            window.location.href = recording.getStreamUrl();
+            $.event.trigger({
+                "type": "window.request",
+                "payload": {
+                    "type": "VideoPlayer",
+                    "data": {
+                        "sourceModel": recording
+                    }
+                }
+            });
         }
-
-    }, this), 500);
+    } else {
+        window.location.href = recording.getStreamUrl();
+    }
 };
 
 /**

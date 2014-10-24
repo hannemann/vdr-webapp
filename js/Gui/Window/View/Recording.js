@@ -226,22 +226,23 @@ Gui.Window.View.Recording.prototype.renderWebTab = function () {
  */
 Gui.Window.View.Recording.prototype.getEditConfig = function () {
 
-    var me = this;
+    var me = this, editConfig = {};
 
-    return {
-        "delete":{
-            "type" : "button",
-            "dom":function () {
 
-                var dom = $('<dl class="window-button round delete-button symbol-button"></dl>');
-                this.deleteButton = $('<dt>').html('&#10006;');
+    editConfig.delete = {
+        "type" : "button",
+        "dom":function () {
 
-                return dom.append(this.deleteButton)
-                    .append($('<dd>').text(VDRest.app.translate('Delete Recording')));
-            }
-        },
-        "watch": {
-            "type" : "button",
+            var dom = $('<dl class="window-button round delete-button symbol-button"></dl>');
+            this.deleteButton = $('<dt>').html('&#10006;');
+
+            return dom.append(this.deleteButton)
+                .append($('<dd>').text(VDRest.app.translate('Delete Recording')));
+        }
+    };
+    if (VDRest.info.getStreamer()) {
+        editConfig.watch = {
+            "type": "button",
             "dom": function () {
 
                 var dom = $('<dl class="window-button round watch-button symbol-button vdr-web-symbol"></dl>');
@@ -250,40 +251,41 @@ Gui.Window.View.Recording.prototype.getEditConfig = function () {
                 return dom.append(this.watchButton)
                     .append($('<dd>').text(VDRest.app.translate('Watch Recording')));
             }
-        },
-        "editForm" : {
-            "categories" : {
-                "file" : {
-                    "label" : VDRest.app.translate("File")
-                }
-            },
-            "fields" : {
-                "filename" : {
-                    "type" : "string",
-                    "category" : "file",
-                    "label" : VDRest.app.translate("Filename"),
-                    "value" : this.getNormalizedFileName()
-                },
-                "dirname" : {
-                    "type" : "directory",
-                    "category" : "file",
-                    "label" : VDRest.app.translate("Folder"),
-                    "value" : this.getPath()
-                }
+        };
+    }
+    editConfig.editForm = {
+        "categories" : {
+            "file" : {
+                "label" : VDRest.app.translate("File")
             }
         },
-        "subToFilename":{
-            "type" : "button",
-            "dom":function () {
-
-                me.subToFilenameButton = $('<dl class="window-button round symbol-button generate-button"></dl>');
-                button = $('<dt>').html('&#9734;');
-                text = $('<dd>').text(VDRest.app.translate('Subtitle to Filename'));
-
-                return me.subToFilenameButton.append(button).append(text);
+        "fields" : {
+            "filename" : {
+                "type" : "string",
+                "category" : "file",
+                "label" : VDRest.app.translate("Filename"),
+                "value" : this.getNormalizedFileName()
+            },
+            "dirname" : {
+                "type" : "directory",
+                "category" : "file",
+                "label" : VDRest.app.translate("Folder"),
+                "value" : this.getPath()
             }
         }
-    }
+    };
+    editConfig.subToFilename = {
+        "type" : "button",
+        "dom":function () {
+
+            me.subToFilenameButton = $('<dl class="window-button round symbol-button generate-button"></dl>');
+            button = $('<dt>').html('&#9734;');
+            text = $('<dd>').text(VDRest.app.translate('Subtitle to Filename'));
+
+            return me.subToFilenameButton.append(button).append(text);
+        }
+    };
+    return editConfig;
 };
 
 /**

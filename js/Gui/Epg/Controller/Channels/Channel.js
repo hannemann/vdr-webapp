@@ -113,12 +113,9 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
-    var windowModule = VDRest.app.getModule('Gui.Window'),
-        channel = this.data.dataModel;
-
     this.vibrate();
 
-    if (!this.isMuted) {
+    if (!this.isMuted && VDRest.info.getStreamer()) {
 
         this.preventClick = undefined;
         this.channelClickTimeout = window.setTimeout($.proxy(function () {
@@ -128,28 +125,37 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
             this.preventClick = true;
             e.preventDefault();
 
-            if (true === VDRest.config.getItem('streamdevActive')) {
-
-                if (VDRest.config.getItem('useHtmlPlayer')) {
-
-                    if (windowModule.hasVideoPlayer()) {
-                        windowModule.getVideoPlayer().changeSrc(channel);
-                    } else {
-                        $.event.trigger({
-                            "type" : "window.request",
-                            "payload" : {
-                                "type" : "VideoPlayer",
-                                "data" : {
-                                    "sourceModel" : channel
-                                }
-                            }
-                        });
-                    }
-
-                } else {
-                    window.location.href = channel.getStreamUrl();
-                }
-            }
+            this.startStream();
         }, this), 500);
+    }
+};
+
+/**
+ * start streaming
+ */
+Gui.Epg.Controller.Channels.Channel.prototype.startStream = function () {
+
+    var windowModule = VDRest.app.getModule('Gui.Window'),
+        channel = this.data.dataModel;
+
+
+    if (VDRest.info.canUseHtmlPlayer()) {
+
+        if (windowModule.hasVideoPlayer()) {
+            windowModule.getVideoPlayer().changeSrc(channel);
+        } else {
+            $.event.trigger({
+                "type" : "window.request",
+                "payload" : {
+                    "type" : "VideoPlayer",
+                    "data" : {
+                        "sourceModel" : channel
+                    }
+                }
+            });
+        }
+
+    } else {
+        window.location.href = channel.getStreamUrl();
     }
 };
