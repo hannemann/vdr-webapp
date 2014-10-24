@@ -735,7 +735,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevPa
         );
     }
     src = this.data.sourceModel.getStreamUrl(streamdevParams);
-    if (1==2 && this.data.startTime > 0) {
+    if (this.data.isVideo && this.data.startTime > 0) {
         src += '?pos=time.' + this.data.startTime;
     }
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
