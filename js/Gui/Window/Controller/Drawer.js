@@ -245,16 +245,14 @@ Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
 Gui.Window.Controller.Drawer.prototype.handleFavDown = function (e) {
 
     this.preventClick = undefined;
-
     this.vibrate();
 
     this.channelClickTimeout = window.setTimeout($.proxy(function () {
 
+        this.view.node.on(this.animationEndEvents, $.proxy(this.playFavourite, this, e));
         this.vibrate(100);
-
         this.preventClick = true;
-
-        this.playFavourite(e);
+        this.handleStateChanged(e);
 
     }, this), 500);
 };
@@ -265,19 +263,24 @@ Gui.Window.Controller.Drawer.prototype.handleFavDown = function (e) {
  */
 Gui.Window.Controller.Drawer.prototype.playFavourite = function (e) {
 
-    var channel = $(e.currentTarget).attr('data-channelId');
+    var windowModule = VDRest.app.getModule('Gui.Window'),
+        channel = $(e.currentTarget).attr('data-channelId');
 
     channel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', channel);
 
-    $.event.trigger({
-        "type" : "window.request",
-        "payload" : {
-            "type" : "VideoPlayer",
-            "data" : {
-                "sourceModel" : channel
+    if (windowModule.hasVideoPlayer()) {
+        windowModule.getVideoPlayer().changeSrc(channel);
+    } else {
+        $.event.trigger({
+            "type" : "window.request",
+            "payload" : {
+                "type" : "VideoPlayer",
+                "data" : {
+                    "sourceModel" : channel
+                }
             }
-        }
-    });
+        });
+    }
 };
 
 /**

@@ -620,11 +620,14 @@ Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
 
     if (!this.view.controls.hasClass('show')) return;
 
-    if (this.data.isTv && this.isPlaying) return;
-
     this.vibrate();
 
     e.stopPropagation();
+
+    if (this.data.isTv && this.isPlaying) {
+        this.startPlayback();
+        return;
+    }
 
     this[this.isPlaying ? 'pausePlayback' : 'startPlayback']();
 };
@@ -674,7 +677,17 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 
-    var video = this.getVideo();
+    var video = this.getVideo(), src = this.getStreamUrl();
+
+    if (this.isPlaying) {
+        if (this.oldChannelId && this.oldChannelId === this.data.sourceModel.getData('channel_id')) {
+            return;
+        }
+        if (this.oldChannelId) {
+            this.oldChannelId = undefined;
+        }
+        this.pausePlayback();
+    }
 
     this.isPlaying = true;
     this.view.toggleThrobber();
@@ -682,7 +695,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
     this.view.toggleControls();
     this.settingParams = false;
 
-    video.src = this.getStreamUrl();
+    video.src = src;
     video.play();
 
     $(video).one('playing', $.proxy(function () {
@@ -722,7 +735,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevPa
         );
     }
     src = this.data.sourceModel.getStreamUrl(streamdevParams);
-    if (this.data.startTime > 0) {
+    if (1==2 && this.data.startTime > 0) {
         src += '?pos=time.' + this.data.startTime;
     }
     src += (src.indexOf('?') > -1 ? '&' : '?') + 'd=' + d.getTime() + d.getMilliseconds();
@@ -796,10 +809,6 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     if (this.data.sourceModel == e) {
         return;
     }
-    if (this.isPlaying) {
-        this.pausePlayback();
-    }
-    this.view.setDefaultPoster();
 
     if (e instanceof jQuery.Event) {
 
@@ -809,12 +818,19 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         getter = $(e.target).hasClass('channel-up') ? 'Next' : 'Previous';
         nextChannel = channels['get' + getter + 'Channel'](this.data.sourceModel);
         if (nextChannel) {
+            if (!this.oldChannelId) {
+                this.oldChannelId = this.data.sourceModel.getData('channel_id');
+            }
             this.data.sourceModel = nextChannel;
         } else {
             return;
         }
     } else {
         this.data.sourceModel = e;
+        if (this.isPlaying) {
+            this.pausePlayback();
+        }
+        this.view.setDefaultPoster();
     }
 
     if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
