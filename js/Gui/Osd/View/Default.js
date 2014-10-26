@@ -15,6 +15,7 @@ Gui.Osd.View.Default.prototype = new VDRest.Abstract.View();
 Gui.Osd.View.Default.prototype.init = function () {
 
     this.node = $('<div id="osd">');
+    this.osdWrapper = $('<div id="osd-items-wrapper">').appendTo(this.node);
     this.osd = $('<table id="osd-items">');
     this.colorButtons = $('<div id="osd-buttons">');
 };
@@ -26,7 +27,7 @@ Gui.Osd.View.Default.prototype.render = function () {
 
     var poster;
 
-    this.osd.appendTo(this.node);
+    this.osd.appendTo(this.osdWrapper);
     VDRest.Abstract.View.prototype.render.call(this);
 
     poster = VDRest.app.getModule('Gui.Window').getHelper('VideoPlayer').defaultPoster(this.node.get(0));
