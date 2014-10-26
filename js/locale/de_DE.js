@@ -1,5 +1,6 @@
 VDRest.app.de_DE = {
 
+    "New" : "Neu",
     "Recordings" : "Aufnahmen",
     "Channelview" : "Kanal-Ansicht",
     "Channels" : "Kanäle",

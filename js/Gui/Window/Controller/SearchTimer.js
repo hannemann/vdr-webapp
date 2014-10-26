@@ -32,6 +32,8 @@ Gui.Window.Controller.SearchTimer.prototype.init = function () {
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
+
+    VDRest.helper.log(this);
 };
 
 /**

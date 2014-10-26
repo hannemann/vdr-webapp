@@ -94,7 +94,10 @@ Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
 /**
  * remove event listeners
  */
-Gui.SearchTimer.Controller.List.prototype.removeObserver = function () {};
+Gui.SearchTimer.Controller.List.prototype.removeObserver = function () {
+
+    $(document).off('searchtimersloaded');
+};
 
 /**
  * destroy

@@ -37,3 +37,13 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.flags = {
  * @type {string}
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.cacheKey = 'id';
+
+/**
+ * @type {string}
+ */
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.init = function () {
+
+    if ("" === this.data.id) {
+
+    }
+};

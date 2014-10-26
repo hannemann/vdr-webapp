@@ -111,9 +111,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.update = function (e) {
 /**
  * request edit window
  */
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function (e) {
-
-    console.log(e);
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function () {
 
     $.event.trigger({
         "type" : "window.request",

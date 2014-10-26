@@ -29,16 +29,42 @@ Gui.Window.View.SearchTimer.prototype.isModalTransparent = true;
  */
 Gui.Window.View.SearchTimer.prototype.hasHeader = true;
 
+Gui.Window.View.SearchTimer.prototype.init = function () {
+
+    if (this.getData('is_new')) {
+
+        this.hasHeader = false;
+    }
+
+    Gui.Window.View.Abstract.prototype.init.call(this);
+};
+
 /**
  * render
  */
 Gui.Window.View.SearchTimer.prototype.render = function () {
 
-//    this.addClasses().decorateHeader().decorateBody();
+    this.decorateHeader().decorateBody();
 
     this.node.addClass('collapsed');
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 
     this.node.toggleClass('collapsed expand');
+};
+
+/**
+ * decorate header
+ */
+Gui.Window.View.SearchTimer.prototype.decorateHeader = function () {
+
+    return this;
+};
+
+/**
+ * decorate body
+ */
+Gui.Window.View.SearchTimer.prototype.decorateBody = function () {
+
+    return this;
 };

@@ -46,6 +46,35 @@ Gui.SearchTimer.prototype.startPage = true;
 Gui.SearchTimer.prototype.headline = 'Searchtimer';
 
 /**
+ * context menu definition
+ * @type {{}}
+ */
+Gui.SearchTimer.prototype.contextMenu = {
+
+    "add" : {
+        "labels" : {
+            "on" : 'New',
+            "off" : 'New'
+        },
+        "state" : "on",
+        "scope" : 'Gui.SearchTimer',
+        "fn" : function () {
+
+            $.event.trigger({
+                "type" : "window.request",
+                "payload" : {
+                    "type" : "SearchTimer",
+                    "data" : {
+                        "is_new" : true,
+                        "resource" : VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id":""})
+                    }
+                }
+            })
+        }
+    }
+};
+
+/**
  * dispatch default view
  */
 Gui.SearchTimer.prototype.dispatch = function () {
