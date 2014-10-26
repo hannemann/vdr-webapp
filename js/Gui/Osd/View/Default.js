@@ -18,10 +18,12 @@ Gui.Osd.View.Default.prototype.init = function () {
     this.osdWrapper = $('<div id="osd-items-wrapper">').appendTo(this.node);
     this.osd = $('<table id="osd-items">');
     this.colorButtons = $('<div id="osd-buttons">');
+    this.header = VDRest.app.getModule('Gui.Menubar').getView('Default').getHeader();
+    this.messageBox = $('<div class="osd-message" data-animate="opacity">').appendTo(this.node);
 };
 
 /**
- * initiall render
+ * initial render
  */
 Gui.Osd.View.Default.prototype.render = function () {
 
@@ -82,30 +84,34 @@ Gui.Osd.View.Default.prototype.renderText = function () {
 };
 
 /**
- * add items
+ * add item
  */
 Gui.Osd.View.Default.prototype.addItem = function (item) {
 
-    var node, text = item.content.split('\t'), i= 0, l=text.length, td;
+    var node, text = item.content.split('\t'), i= 0, l=text.length, td, lKey, lText;
 
     if (text) {
         node = $('<tr class="osd-item clearer">');
 
-        //node.html(text);
-
-        for (i;i<l;i++) {
-            text[i] = text[i].replace(/^\s*([0-9]{1,3})\s+/, '<span class="list-key">$1</span>&nbsp;');
-            td = $('<td>').html(text[i]);
-            td.appendTo(node);
+        if (1 === l) {
+            text[i] = text[i].match(/(\s*([0-9]+)\s+)?(.*)/);
+            lKey = RegExp.$2;
+            lText = RegExp.$3;
+            if (lKey) {
+                node.append($('<td class="list-key">' + lKey + '</td>'))
+            }
+            node.append($('<td class="list-text" colspan="10">' + lText + '</td>'))
+        } else {
+            for (i;i<l;i++) {
+                td = $('<td>').html(text[i]);
+                td.appendTo(node);
+            }
         }
-
         if (item.is_selected) {
             node.addClass('selected');
             this.selectedItem = node;
         }
-
         node.appendTo(this.osd);
-
     }
 };
 
@@ -150,9 +156,20 @@ Gui.Osd.View.Default.prototype.renderProgramme = function () {
 };
 
 /**
+ * set message text
+ * @param {String} text
+ */
+Gui.Osd.View.Default.prototype.setMessage = function (text) {
+
+    this.messageBox.text(text);
+};
+
+/**
  * repaint osd
  */
 Gui.Osd.View.Default.prototype.rePaint = function () {
+
+    var title = undefined, message = undefined;
 
     this.colorButtons.empty();
     this.osd.empty();
@@ -165,9 +182,18 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
         } else if (this.data.ChannelOsd) {
             this.addItem({ "content" : this.data.ChannelOsd });
         } else if (this.data.TextOsd) {
+            title = this.data.TextOsd.title;
+            message = this.data.TextOsd.message;
             this.renderText();
         } else if (this.data.ProgrammeOsd) {
             this.renderProgramme()
+        }
+
+        if (title) {
+            this.header.text(title);
+        }
+        if (message && message !== this.messageBox.text()) {
+            this.messageBox.text(message);
         }
     }
 

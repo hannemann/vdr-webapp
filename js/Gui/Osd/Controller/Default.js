@@ -22,6 +22,7 @@ Gui.Osd.Controller.Default.prototype.init = function () {
 
     this.dataModel = VDRest.app.getModule('VDRest.Osd').getModel('Osd');
     this.remote = VDRest.app.getModule('Gui.Remote');
+    this.errors = 0;
 };
 
 /**
@@ -43,7 +44,7 @@ Gui.Osd.Controller.Default.prototype.addObserver = function () {
 
     $(document).on('osdloaded', $.proxy(this.refreshView, this));
 
-    $(document).on('remotekeypress', $.proxy(this.dataModel.loadOsd, this.dataModel));
+    $(document).on('remotekeypress', $.proxy(this.handleRemotePress, this));
 
     this.view.red    && this.view.red.on('click', $.proxy(this.sendKey, this, 'Red'));
     this.view.green  && this.view.green.on('click', $.proxy(this.sendKey, this, 'Green'));
@@ -70,6 +71,9 @@ Gui.Osd.Controller.Default.prototype.removeObserver = function () {
     return this;
 };
 
+/**
+ * start refresh interval
+ */
 Gui.Osd.Controller.Default.prototype.startRefreshInterval = function () {
 
     this.refreshInterval = setInterval(
@@ -78,11 +82,17 @@ Gui.Osd.Controller.Default.prototype.startRefreshInterval = function () {
     );
 };
 
+/**
+ * stop refresh interval
+ */
 Gui.Osd.Controller.Default.prototype.stopRefreshInterval = function () {
 
     clearInterval(this.refreshInterval);
 };
 
+/**
+ * load osd
+ */
 Gui.Osd.Controller.Default.prototype.loadOsd = function () {
 
     this.stopRefreshInterval();
@@ -90,6 +100,15 @@ Gui.Osd.Controller.Default.prototype.loadOsd = function () {
     this.dataModel.loadOsd();
 
     this.startRefreshInterval();
+};
+
+/**
+ * show message
+ * @param {Boolean} state
+ */
+Gui.Osd.Controller.Default.prototype.showMessage = function (state) {
+
+    this.view.messageBox.toggleClass('show', state);
 };
 
 /**
@@ -102,9 +121,35 @@ Gui.Osd.Controller.Default.prototype.refreshView = function (e) {
 
     this.removeObserver();
 
+    if (this.data.Error) {
+        this.errors++ > 10 && history.back();
+    } else {
+        this.errors = 0;
+    }
+
     this.view.rePaint();
 
+    if (this.data.TextOsd && this.data.TextOsd.message && this.data.TextOsd.message !== '') {
+        this.view.setMessage(this.data.TextOsd.message);
+        if (!this.view.messageBox.hasClass('show')) {
+            this.showMessage(true);
+        }
+    } else {
+        this.view.setMessage('');
+        if (this.view.messageBox.hasClass('show')) {
+            this.showMessage(false);
+        }
+    }
+
     this.addObserver();
+};
+
+/**
+ * handle remote press
+ */
+Gui.Osd.Controller.Default.prototype.handleRemotePress = function () {
+
+    this.dataModel.loadOsd.call(this.dataModel);
 };
 
 /**
