@@ -15,7 +15,7 @@ Gui.Osd.View.Default.prototype = new VDRest.Abstract.View();
 Gui.Osd.View.Default.prototype.init = function () {
 
     this.node = $('<div id="osd">');
-    this.osd = $('<div id="osd-items">');
+    this.osd = $('<table id="osd-items">');
     this.colorButtons = $('<div id="osd-buttons">');
 };
 
@@ -85,13 +85,18 @@ Gui.Osd.View.Default.prototype.renderText = function () {
  */
 Gui.Osd.View.Default.prototype.addItem = function (item) {
 
-    var node, text = item.content;
+    var node, text = item.content.split('\t'), i= 0, l=text.length, td;
 
     if (text) {
-        node = $('<pre class="osd-item clearer">');
+        node = $('<tr class="osd-item clearer">');
 
-        text = text.replace(/^\s*([0-9]{1,3})\s+/, '<span class="list-key">$1</span>&nbsp;');
-        node.html(text);
+        //node.html(text);
+
+        for (i;i<l;i++) {
+            text[i] = text[i].replace(/^\s*([0-9]{1,3})\s+/, '<span class="list-key">$1</span>&nbsp;');
+            td = $('<td>').html(text[i]);
+            td.appendTo(node);
+        }
 
         if (item.is_selected) {
             node.addClass('selected');

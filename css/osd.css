@@ -5,18 +5,28 @@
 }
 
 #osd-items {
-    overflow: hidden;
+    overflow: auto;
     position: absolute;
     top: 20px;
     left: 20px;
     right: 20px;
     bottom: 30px;
+    display: block;
+    border-spacing: 0;
 }
 
 .osd-item {
     color: white;
     font-weight: bold;
     white-space: pre-wrap;
+    font-size: 12px;
+    background-color: rgba(100, 100, 100, 0.5);
+}
+.osd-item td {
+    padding: 1px 2px;
+}
+.osd-item:nth-child(2n) {
+    background-color: rgba(125, 125, 125, 0.5);
 }
 .osd-item .list-key {
     display: block;
