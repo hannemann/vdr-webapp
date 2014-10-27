@@ -68,7 +68,7 @@
     display: none !important;
 }
 #broadcasts .broadcasts-list .broadcast div {
-    height: 35px;
+    height: calc(100% - 4px);
     padding: 2px;
     overflow: hidden;
     /*text-overflow: ellipsis;*/
@@ -297,4 +297,38 @@ div#time-line .ql.hour {
 #broadcasts .broadcasts-list .broadcast,
 #broadcasts .broadcasts-list .broadcast.last-visible ~ .broadcast {
     display: none;
+}
+
+@media (min-width: 800px), (min-height: 800px) {
+    #epg-channels .channel {
+        width: 59px;
+        height: 59px;
+    }
+    #broadcasts {
+        background-size: 100% 60px;
+    }
+    #broadcasts .broadcasts-list {
+        height: 60px;
+    }
+    #broadcasts .broadcasts-list .broadcast {
+        height: 59px;
+        font-size: 18px;
+    }
+}
+
+@media (min-width: 1100px), (min-height: 1100px) {
+    #epg-channels .channel {
+        width: 79px;
+        height: 79px;
+    }
+    #broadcasts {
+        background-size: 100% 80px;
+    }
+    #broadcasts .broadcasts-list {
+        height: 80px;
+    }
+    #broadcasts .broadcasts-list .broadcast {
+        height: 79px;
+        font-size: 22px;
+    }
 }

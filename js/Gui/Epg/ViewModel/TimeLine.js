@@ -50,6 +50,11 @@ Gui.Epg.ViewModel.TimeLine.prototype.init = function () {
         return me.getQuarterStart();
     };
 
+    this.data.view.getFirstQuarterWidth = function () {
+
+        return me.getFirstQuarterWidth();
+    };
+
     this.data.view.getQuarterWidth = function () {
 
         return me.getQuarterWidth();
@@ -111,16 +116,25 @@ Gui.Epg.ViewModel.TimeLine.prototype.getQuarterStart = function () {
 };
 
 /**
- * retrieve desired width of quarter node
+ * retrieve desired width of first quarter node
  * @returns {number}
  */
-Gui.Epg.ViewModel.TimeLine.prototype.getQuarterWidth = function () {
+Gui.Epg.ViewModel.TimeLine.prototype.getFirstQuarterWidth = function () {
 
     /** @type {number} duration */
     var start = this.getQuarterStart().getTime(),
-        duration = Math.round( (this.getNextQuarterEnd().getTime() - start ) / 1000);
+        duration = (this.getNextQuarterEnd().getTime() - start ) / 1000;
 
     return Math.round(duration * this.pixelPerSecond);
+};
+
+/**
+ * retrieve desired width of quarter nodes
+ * @returns {Number}
+ */
+Gui.Epg.ViewModel.TimeLine.prototype.getQuarterWidth = function () {
+
+    return Math.round(3600/8 * this.pixelPerSecond);
 };
 
 /**

@@ -59,13 +59,14 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
         newDate = null,
         width = this.node.width(),
         quarterEnd,
-        quarterWidth,
+        firstQuarterWidth,
+        quarterWidth = this.getQuarterWidth(),
 
     /// TODO: Bug zwischen 23:45 und 0:00 <- Datum Falsch
         firstDate;
 
     if (!this.isRendered) {
-        quarterWidth = this.getQuarterWidth();
+        firstQuarterWidth = this.getFirstQuarterWidth();
         quarterEnd = this.getQuarterEnd();
         firstDate = quarterEnd.getTime();
     } else {
@@ -87,13 +88,13 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
                 newDate = quarterEnd.getTime();
             }
         }
-        if (quarterWidth) {
-            markup += '<div data-date="' + firstDate + '" class="ql ' + className + '" style="width: ' + quarterWidth + 'px">' + ql + '</div>';
-            width += quarterWidth;
-            quarterWidth = undefined;
+        if (firstQuarterWidth) {
+            markup += '<div data-date="' + firstDate + '" class="ql ' + className + '" style="width: ' + firstQuarterWidth + 'px">' + ql + '</div>';
+            width += firstQuarterWidth;
+            firstQuarterWidth = undefined;
         } else {
-            markup += '<div' + (newDate ? ' data-date="' + newDate + '"' : '') + ' class="ql ' + className + '">' + ql + '</div>';
-            width += 60;
+            markup += '<div' + (newDate ? ' data-date="' + newDate + '"' : '') + ' class="ql ' + className + '" style="width: ' + quarterWidth + 'px">' + ql + '</div>';
+            width += quarterWidth * 8;
         }
         if (q === 0) {
             if (className.indexOf('even') > -1) {
@@ -102,7 +103,7 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
                 className = className.replace('odd', 'even');
             }
         }
-        markup += '<div class="qr ' + className + '">' + qr + '</div>';
+        markup += '<div class="qr ' + className + '" style="width: ' + quarterWidth + 'px">' + qr + '</div>';
 
         quarterEnd = this.getNextQuarterEnd();
     } while(quarterEnd < end);

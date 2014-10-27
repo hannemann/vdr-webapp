@@ -10,7 +10,10 @@ VDRest.Lib.Config = function () {};
  */
 VDRest.Lib.Config.prototype.init = function () {
 
-	var storage = null;
+	var storage = null, h = document.querySelector('html'), deviceMetrics = {
+        "width" : h.offsetWidth,
+        "height" : h.offsetHeight
+    };
 
 	try {
 
@@ -95,6 +98,16 @@ VDRest.Lib.Config.prototype.init = function () {
 		storage.clear();
 		return this;
 	};
+
+    if (deviceMetrics.width >= 800 || deviceMetrics.height >= 800) {
+
+        VDRest.Lib.Config.prototype.defaults.pixelPerSecond = 3.7333/60;
+    }
+
+    if (deviceMetrics.width >= 1100 || deviceMetrics.height >= 1100) {
+
+        VDRest.Lib.Config.prototype.defaults.pixelPerSecond = 6/60;
+    }
 
     this.initFieldValues();
 
