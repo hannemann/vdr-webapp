@@ -1,10 +1,7 @@
-#remote {
-    height: 51%;
-}
 #remote-buttons {
     width: 300px;
-    max-width: 100%;
-    height: 100%;
+    max-width: calc(100% - 20px);
+    height: calc(100% - 20px);
     padding: 10px;
     text-align: center;
     margin: 0 auto;
@@ -13,7 +10,7 @@
 .remote-group {
     float: left;
     width: 140px;
-    margin: 5px 5px 20px;
+    margin: 5px 5px;
 }
 
 .remote-group .remote-button {
@@ -66,19 +63,28 @@
     right: 0;
 }
 
+.osd-view #remote {
+    height: 215px;
+}
+
 @media (orientation: landscape) {
-    #remote {
+    .osd-view #remote {
         float:left;
-        width: 50%;
+        width: 160px;
     }
-    .remote-group {
-        margin: 5px 0 20px;
+    .osd-view .remote-group {
+        margin: 5px 0;
     }
-    #remote,
-    #remote-buttons {
+    .osd-view #remote {
         height: 100%;
     }
-    #remote-buttons {
-        width: 100%;
+    .osd-view #remote-buttons {
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+    }
+}
+@media (orientation: landscape) and (max-height: 400px) {
+    .osd-view .remote-group {
+        height: calc(100% - 10px);
     }
 }

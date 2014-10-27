@@ -29,6 +29,8 @@ Gui.Osd.View.Default.prototype.render = function () {
 
     var poster;
 
+    $('body').addClass('osd-view');
+
     this.osd.appendTo(this.osdWrapper);
     VDRest.Abstract.View.prototype.render.call(this);
 
