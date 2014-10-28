@@ -352,7 +352,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
                 start = broadcast.getData('start_time');
                 end = broadcast.getData('end_time');
 
-                if (start > visibleEndTime || i === this.broadcasts.length) {
+                if (i > 0 && start > visibleEndTime || i === this.broadcasts.length) {
 
                     this.broadcasts[this.lastVisible].view.node.removeClass('last-visible');
                     this.broadcasts[i - 1].view.node.addClass('last-visible');
