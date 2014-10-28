@@ -128,14 +128,20 @@ VDRest.Abstract.Model.prototype.resultIterator = function (callback, complete) {
 /**
  * default collection iterator
  * @param {function} callback
+ * @param {function} [complete]
  */
-VDRest.Abstract.Model.prototype.collectionIterator = function (callback) {
+VDRest.Abstract.Model.prototype.collectionIterator = function (callback, complete) {
 
     var i = 0, l = this.collection.length;
 
     for (i;i<l;i++) {
 
         callback(this.collection[i]);
+    }
+
+    if ("function" === typeof complete) {
+
+        complete(this.currentResult);
     }
 };
 
