@@ -102,9 +102,7 @@ VDRest.Lib.Config.prototype.init = function () {
     if (deviceMetrics.width >= 800 || deviceMetrics.height >= 800) {
 
         VDRest.Lib.Config.prototype.defaults.pixelPerSecond = 3.7333/60;
-    }
-
-    if (deviceMetrics.width >= 1100 || deviceMetrics.height >= 1100) {
+    } else if (deviceMetrics.width >= 1100 || deviceMetrics.height >= 1100) {
 
         VDRest.Lib.Config.prototype.defaults.pixelPerSecond = 6/60;
     }

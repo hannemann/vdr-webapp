@@ -27,5 +27,7 @@
 .icon-left-dir:before { content: '\62'; } /* 'b' */
 .icon-right-dir:before { content: '\63'; } /* 'c' */
 .icon-up-dir:before { content: '\64'; } /* 'd' */
-.icon-undo:before { content: '\65'; } /* 'e' */
+.icon-folder:before { content: '\65'; } /* 'e' */
+.icon-folder-open:before { content: '\66'; } /* 'f' */
 .icon-info:before { content: '\69'; } /* 'i' */
+.icon-undo:before { content: '\e800'; } /* '' */

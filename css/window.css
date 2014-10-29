@@ -211,7 +211,7 @@ div.window.confirm .body {
 }
 div.window.confirm li {
     text-align: center;
-    font-size: 20px;
+    font-size: 1.25em;
     float: left;
     height: 50%;
     width: 50%;
@@ -248,5 +248,18 @@ div.window.viewport-fullsize {
 }
 
 .alert-info {
-    font-size: 12px;
+    font-size: .75em;
+}
+
+
+@media (min-width: 800px), (min-height: 800px) {
+    .window-input .button {
+        padding: 8px 0;
+    }
+    .context-menu div {
+        font-size: .75em;
+    }
+}
+
+@media (min-width: 1100px), (min-height: 1100px) {
 }

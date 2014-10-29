@@ -19,6 +19,18 @@
       "src": "fontawesome"
     },
     {
+      "uid": "f8aa663c489bcbd6e68ec8147dca841e",
+      "css": "folder",
+      "code": 101,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "c95735c17a10af81448c7fed98a04546",
+      "css": "folder-open",
+      "code": 102,
+      "src": "fontawesome"
+    },
+    {
       "uid": "e99461abfef3923546da8d745372c995",
       "css": "cog",
       "code": 65,
@@ -111,7 +123,7 @@
     {
       "uid": "ce5e29aa5208417700e7f7012a236c00",
       "css": "undo",
-      "code": 101,
+      "code": 59392,
       "src": "iconic"
     },
     {

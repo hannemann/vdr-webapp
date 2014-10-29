@@ -89,13 +89,14 @@ ul#menubar #refresh {
 .simple-list {
     height: 100%;
     overflow: auto;
+    font-size: 1em;
 }
 
 .simple-list .list-item {
     border-bottom: 1px solid white;
     padding: 10px 5px;
     margin: 0 10px;
-    font-size: 12px;
+    font-size: 1em;
 }
 .recordings-list .recordings-path:active,
 .recordings-list .recording:active,

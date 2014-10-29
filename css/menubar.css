@@ -74,3 +74,18 @@
 #button-settings:active {
     background-color: rgba(255,255,255,0.5);
 }
+@media (min-width: 800px), (min-height: 800px) {
+    #menubar {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 1100px), (min-height: 1100px) {
+    #menubar {
+        height: 78px;
+    }
+    #menubar .icon {
+        width: 80px;
+        height: 80px;
+    }
+}
