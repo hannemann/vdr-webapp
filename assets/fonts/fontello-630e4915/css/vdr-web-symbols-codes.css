@@ -29,5 +29,5 @@
 .icon-up-dir:before { content: '\64'; } /* 'd' */
 .icon-folder:before { content: '\65'; } /* 'e' */
 .icon-folder-open:before { content: '\66'; } /* 'f' */
+.icon-left-bold:before { content: '\67'; } /* 'g' */
 .icon-info:before { content: '\69'; } /* 'i' */
-.icon-undo:before { content: '\e800'; } /* '' */

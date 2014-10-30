@@ -115,15 +115,15 @@
       "src": "entypo"
     },
     {
+      "uid": "0222089fb4194cc714dcc1ffd2525c11",
+      "css": "left-bold",
+      "code": 103,
+      "src": "entypo"
+    },
+    {
       "uid": "ccd52a22af21fbaa98a9c85fb50fca6b",
       "css": "info",
       "code": 105,
-      "src": "iconic"
-    },
-    {
-      "uid": "ce5e29aa5208417700e7f7012a236c00",
-      "css": "undo",
-      "code": 59392,
       "src": "iconic"
     },
     {

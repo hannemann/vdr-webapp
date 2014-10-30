@@ -15,7 +15,7 @@ Gui.Remote.View.DPad.prototype.symbolLeft   = 'b';
 Gui.Remote.View.DPad.prototype.symbolRight  = 'c';
 Gui.Remote.View.DPad.prototype.symbolOk     = 'Ok';
 Gui.Remote.View.DPad.prototype.symbolMenu   = 'Menu';
-Gui.Remote.View.DPad.prototype.symbolBack   = 'e';
+Gui.Remote.View.DPad.prototype.symbolBack   = 'g';
 Gui.Remote.View.DPad.prototype.symbolInfo   = 'i';
 
 /**
