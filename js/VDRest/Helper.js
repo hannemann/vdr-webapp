@@ -198,12 +198,11 @@ VDRest.Helper.prototype.sortAlpha = function (a, b) {
  */
 VDRest.Helper.prototype.parseDescription = function (description) {
 
-    var rating = new RegExp('(?:Wertung:|Bewertung:)\\s*([0-9])/[0-9]'),
-        topTipp = new RegExp('(TagesTipp|TopTipp)', 'm');
+    var rating = new RegExp('(((?:[Ww]ertung: *)([0-9])/[0-9])|([*]{1,}))', 'm'),
+        topTipp = new RegExp('Tipp\\]', 'm');
 
     rating.test(description);
-
-    rating = parseInt(RegExp.$1, 10);
+    rating = RegExp.$1 == RegExp.$4 ? RegExp.$1.length : RegExp.$2 ? parseInt(RegExp.$3, 10) : undefined;
 
     this.data.view.getRating = function () {
 
