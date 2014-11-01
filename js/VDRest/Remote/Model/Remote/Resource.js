@@ -47,12 +47,34 @@ VDRest.Remote.Model.Remote.Resource.prototype.send = function (key) {
  */
 VDRest.Remote.Model.Remote.Resource.prototype.sendKbd = function (key) {
 
+    var data = JSON.stringify({"kbd":key});
+
     this.fetchSync({
             "method" : "POST",
-            "url" : this.getBaseUrl() + this.urls.main + '/kbd/' + key,
-            "data" : {
-                "kbd" : key
-            }
+            "url" : this.getBaseUrl() + this.urls.main + '/kbd',
+            "data" : data,
+            "dataType" : 'json'
+        },function () {
+            $.event.trigger({
+                "type" : "remotekeypress"
+            });
+        }
+    );
+};
+
+/**
+ * send key press
+ * @param {String} key
+ */
+VDRest.Remote.Model.Remote.Resource.prototype.sendSeq = function (key) {
+
+    var data = JSON.stringify({"seq":key});
+
+    this.fetchSync({
+            "method" : "POST",
+            "url" : this.getBaseUrl() + this.urls.main + '/seq',
+            "data" : data,
+            "dataType" : 'json'
         },function () {
             $.event.trigger({
                 "type" : "remotekeypress"
