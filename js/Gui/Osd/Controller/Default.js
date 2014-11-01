@@ -42,14 +42,23 @@ Gui.Osd.Controller.Default.prototype.dispatchView = function () {
  */
 Gui.Osd.Controller.Default.prototype.addObserver = function () {
 
+    var me = this;
+
     $(document).on('osdloaded', $.proxy(this.refreshView, this));
 
     $(document).on('remotekeypress', $.proxy(this.handleRemotePress, this));
 
-    this.view.red    && this.view.red.on('click', $.proxy(this.sendKey, this, 'Red'));
-    this.view.green  && this.view.green.on('click', $.proxy(this.sendKey, this, 'Green'));
+    this.view.red && this.view.red.on('click', $.proxy(this.sendKey, this, 'Red'));
+    this.view.green && this.view.green.on('click', $.proxy(this.sendKey, this, 'Green'));
     this.view.yellow && this.view.yellow.on('click', $.proxy(this.sendKey, this, 'Yellow'));
-    this.view.blue   && this.view.blue.on('click', $.proxy(this.sendKey, this, 'Blue'));
+    this.view.blue && this.view.blue.on('click', $.proxy(this.sendKey, this, 'Blue'));
+
+    if (this.getData('TextOsd')) {
+        this.view.items.forEach(function (item) {
+
+            item.on('click', $.proxy(me.addItemEvent, me, item));
+        });
+    }
 
     return this;
 };
@@ -68,7 +77,62 @@ Gui.Osd.Controller.Default.prototype.removeObserver = function () {
     this.view.yellow && this.view.yellow.off('click');
     this.view.blue   && this.view.blue.off('click');
 
+    if (this.getData('TextOsd')) {
+        this.view.items.forEach(function (item) {
+
+            item.off('click');
+        });
+    }
+
     return this;
+};
+
+/**
+ * add event to item
+ * @param {jQuery} item
+ * @param {jQuery.Event} e
+ */
+Gui.Osd.Controller.Default.prototype.addItemEvent = function (item, e) {
+
+    var rows = $(this.view.osd).find('tr'),
+        cells = item.find('td'),
+        selectedIndex, touchedIndex, delta, dir, seq = [], i= 0, key = null;
+
+    selectedIndex = rows.index(this.view.selectedItem);
+    touchedIndex = rows.index($(item));
+    delta = touchedIndex-selectedIndex;
+    dir = delta > 0 ? 'Down' : 'Up';
+
+    if (2 === cells.length) {
+
+        if (cells[0].classList.contains('list-key') && e.target == cells[1]){
+            if (item == this.view.selectedItem) {
+
+                    key = 'Ok';
+            } else {
+                for (i;i< Math.abs(delta);i++) {
+                    seq.push(dir);
+                }
+                seq.push('Ok');
+            }
+        } else {
+            for (i;i< Math.abs(delta);i++) {
+                seq.push(dir);
+            }
+            if (e.target == cells[0]) {
+                seq.push('Left');
+            }
+            if (e.target == cells[1]) {
+                seq.push('Right');
+            }
+        }
+    }
+
+    if (key) {
+        this.sendKey(key);
+    } else if (seq.length > 0) {
+        this.sendSeq(seq);
+    }
 };
 
 /**
@@ -158,7 +222,21 @@ Gui.Osd.Controller.Default.prototype.handleRemotePress = function () {
 Gui.Osd.Controller.Default.prototype.sendKey = function (key) {
 
     this.vibrate();
+    //this.view.toggleThrobber();
     this.module.backend.send(key);
+};
+
+/**
+ * send key
+ * @param {Array} seq
+ */
+Gui.Osd.Controller.Default.prototype.sendSeq = function (seq) {
+
+    if (!seq instanceof Array) return;
+
+    this.vibrate();
+    //this.view.toggleThrobber();
+    this.module.backend.sendSeq(seq);
 };
 
 /**

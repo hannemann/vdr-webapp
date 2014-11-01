@@ -20,6 +20,10 @@ Gui.Osd.View.Default.prototype.init = function () {
     this.colorButtons = $('<div id="osd-buttons">');
     this.header = VDRest.app.getModule('Gui.Menubar').getView('Default').getHeader();
     this.messageBox = $('<div class="osd-message" data-animate="opacity">').appendTo(this.node);
+    this.items = [];
+    this.selectedItem = null;
+    this.prevSelectedItem = null;
+    this.addThrobber();
 };
 
 /**
@@ -73,6 +77,29 @@ Gui.Osd.View.Default.prototype.addButtons = function () {
 };
 
 /**
+ * add throbber
+ */
+Gui.Osd.View.Default.prototype.addThrobber = function () {
+
+    this.throbber = $(
+        '<div style="background-image: url('
+        + VDRest.image.getThrobber()
+        + ')" class="throbber">'
+    );
+    this.throbber.appendTo(this.node);
+
+    return this;
+};
+
+/**
+ * toggle throbber
+ */
+Gui.Osd.View.Default.prototype.toggleThrobber = function () {
+
+    this.throbber.toggleClass('show');
+};
+
+/**
  * render text osd
  */
 Gui.Osd.View.Default.prototype.renderText = function () {
@@ -111,8 +138,10 @@ Gui.Osd.View.Default.prototype.addItem = function (item) {
         }
         if (item.is_selected) {
             node.addClass('selected');
+            this.prevSelectedItem = this.selectedItem;
             this.selectedItem = node;
         }
+        this.items.push(node);
         node.appendTo(this.osd);
     }
 };
@@ -176,6 +205,7 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
     this.colorButtons.empty();
     this.osd.empty();
     this.selectedItem = null;
+    this.items.length = 0;
     this.addButtons();
 
     if (this.data) {
@@ -199,7 +229,7 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
         }
     }
 
-    if (this.selectedItem) {
-        this.selectedItem.get(0).scrollIntoView();
-    }
+    //if (this.selectedItem) {
+    //    this.selectedItem.get(0).scrollIntoView();
+    //}
 };
