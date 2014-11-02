@@ -41,9 +41,9 @@ Gui.Window.Controller.Alert.prototype.addObserver = function () {
  */
 Gui.Window.Controller.Alert.prototype.removeObserver = function () {
 
-    this.view.ok.off('click', $.proxy(this.okAction, this));
+    this.view.ok.off('click');
 
-    $(window).off("resize", $.proxy(this.setPosition, this));
+    $(window).off("resize");
 };
 
 /**

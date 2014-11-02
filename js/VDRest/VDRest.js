@@ -183,7 +183,8 @@ VDRest.App.prototype.locationChange = function () {
 
         this.dispatch(hash);
 
-    } else if (this.observeHash[this.observeHash.length-1] === hash) {
+    }
+    if (this.observeHash[this.observeHash.length-1] === hash) {
 
         this.destroy();
 
