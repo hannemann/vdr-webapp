@@ -199,7 +199,9 @@ VDRest.Helper.prototype.sortAlpha = function (a, b) {
 VDRest.Helper.prototype.parseDescription = function (description) {
 
     var rating = new RegExp('(((?:[Ww]ertung: *)([0-9])/[0-9])|([*]{1,}))', 'm'),
-        topTipp = new RegExp('Tipp\\]', 'm');
+        tipp = new RegExp('\\[Tipp\\]', 'm'),
+        topTipp = new RegExp('\\[TopTipp\\]', 'm'),
+        tagesTipp = new RegExp('\\[TagesTipp\\]', 'm');
 
     rating.test(description);
     rating = RegExp.$1 == RegExp.$4 ? RegExp.$1.length : RegExp.$2 ? parseInt(RegExp.$3, 10) : undefined;
@@ -209,9 +211,19 @@ VDRest.Helper.prototype.parseDescription = function (description) {
         return isNaN(rating) ? 0 : rating;
     };
 
+    this.data.view.getTip = function () {
+
+        return tipp.test(description);
+    };
+
     this.data.view.getTopTip = function () {
 
         return topTipp.test(description);
+    };
+
+    this.data.view.getTipOfTheDay = function () {
+
+        return tagesTipp.test(description);
     };
 
     return this;

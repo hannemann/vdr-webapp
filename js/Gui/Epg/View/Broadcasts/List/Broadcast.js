@@ -57,7 +57,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.decorate = function () {
 
-    this.setWidth().addTitle().addClasses().addChannelViewInfo();
+    this.setWidth().addImage().addTitle().addClasses().addChannelViewInfo();
 };
 
 /**
@@ -94,14 +94,28 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
         this.handleIsRecording(true);
     }
 
+    if (this.hasImages()) {
+        classNames.push('has-image');
+    }
+
     if (rating) {
 
         this.info.addClass('rating-' + rating);
     }
 
+    if (this.getTip()) {
+
+        this.info.addClass('tip');
+    }
+
     if (this.getTopTip()) {
 
-        this.info.addClass('top-tipp');
+        this.info.addClass('top-tip');
+    }
+
+    if (this.getTipOfTheDay()) {
+
+        this.info.addClass('tip-of-the-day');
     }
 
     this.node.addClass(classNames.join(' '));
@@ -115,6 +129,25 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTitle = function () {
 
     $('<div class="title">').text(this.getTitle()).appendTo(this.info);
+
+    return this;
+};
+
+/**
+ * add Title
+ * @returns {Gui.Epg.View.Broadcasts.List.Broadcast}
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
+
+    var img;
+
+    if (this.hasImages()) {
+
+        img = $('<img>').attr('src', this.getImages()[0]);
+
+        $('<div class="broadcast-image">').append(img).prependTo(this.node);
+    }
+
 
     return this;
 };

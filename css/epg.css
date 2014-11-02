@@ -58,20 +58,40 @@
     position: absolute;
     top: 0;
     height: 39px;
-    background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
     font-size: .65em;
     color: white;
-    font-family: Source Sans ProBold, sans-serif
+    font-family: Source Sans ProBold, sans-serif;
+    background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
 }
 #broadcasts .broadcasts-list .broadcast.invisible,
 #broadcasts .broadcasts-list.invisible .broadcast {
     display: none !important;
 }
+#broadcasts .broadcasts-list .broadcast.has-image div.content {
+    background-image: linear-gradient(135deg, dimgrey 15%, rgba(64, 64, 64, 0.5) 85%);
+}
 #broadcasts .broadcasts-list .broadcast div {
     height: calc(100% - 4px);
     padding: 2px;
     overflow: hidden;
-    /*text-overflow: ellipsis;*/
+    position: relative;
+}
+#broadcasts .broadcasts-list .broadcast div.broadcast-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    width: 100%;
+}
+#broadcasts .broadcasts-list .broadcast div.broadcast-image,
+#broadcasts .broadcasts-list .broadcast div.broadcast-image img {
+    height: 100%;
+}
+#broadcasts .broadcasts-list .broadcast div.broadcast-image img {
+    float: right;
+}
+#broadcasts .broadcasts-list .broadcast.has-image div {
+    text-shadow: 1px 1px 7px rgba(0, 0, 0, 1);
 }
 .epg-search-view  .broadcast.timer-exists div.content,
 #broadcasts .broadcasts-list .broadcast.timer-exists div.content {

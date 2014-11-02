@@ -134,7 +134,9 @@ ul {
     content: '★★★★★';
 }
 
-.top-tipp:before,
+.tip:before,
+.top-tip:before,
+.tip-of-the-day:before,
 .is-new:before,
 .edited:before {
     position: absolute;
@@ -146,28 +148,39 @@ ul {
 .edited:before {
     content: 'Z';
 }
-.top-tipp:before {
+.tip:before,
+.top-tip:before,
+.tip-of-the-day:before {
     content: 'Y';
+    color: green;
+    font-family: VDR-web, sans-serif;
+}
+.top-tip:before {
+    color: blue;
+}
+.tip-of-the-day:before {
+    color: red;
 }
 .is-new:before {
     content: 'K';
 }
-.top-tipp.is-new:before {
+.top-tip.is-new:before {
     content: 'Y K';
 }
-.top-tipp.edited:before {
+.top-tip.edited:before {
     content: 'Y Z';
 }
-.top-tipp.is-new.edited:before {
+.top-tip.is-new.edited:before {
     content: 'Y Z K';
 }
-
-
-
-
-.epg-search-view .top-tipp:before {
+.epg-search-view .top-tip:before {
     right: 20px;
 }
+.has-image *:after, .has-image *:before {
+    text-shadow: 1px 1px 7px rgba(0, 0, 0, 1);
+}
+
+
 .throbber {
     display: none;
 }
