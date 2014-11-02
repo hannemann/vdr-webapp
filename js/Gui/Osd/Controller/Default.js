@@ -103,6 +103,13 @@ Gui.Osd.Controller.Default.prototype.addItemEvent = function (item, e) {
     delta = touchedIndex-selectedIndex;
     dir = delta > 0 ? 'Down' : 'Up';
 
+    if (1 === cells.length) {
+        for (i;i< Math.abs(delta);i++) {
+            seq.push(dir);
+        }
+        seq.push('Ok');
+    }
+
     if (2 === cells.length) {
 
         if (cells[0].classList.contains('list-key') && e.target == cells[1]){
