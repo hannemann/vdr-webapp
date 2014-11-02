@@ -140,7 +140,7 @@ ul {
 .is-new:before,
 .edited:before {
     position: absolute;
-    bottom: 1px;
+    bottom: 0;
     right: 5px;
     color: white;
     font-family: VDR-web, sans-serif;
@@ -176,8 +176,11 @@ ul {
 .epg-search-view .top-tip:before {
     right: 20px;
 }
-.has-image *:after, .has-image *:before {
+*:after,
+*:before {
     text-shadow: 1px 1px 7px rgba(0, 0, 0, 1);
+    background: rgba(94, 94, 94, 0.54);
+    border-radius: 5px;
 }
 
 

@@ -127,22 +127,6 @@ Gui.Epg.Controller.Channels.prototype.unmute = function (channel) {
 };
 
 /**
- * save current scroll position
- */
-Gui.Epg.Controller.Channels.prototype.saveState = function () {
-
-    this.setData('top', this.view.node.position().top);
-};
-
-/**
- * recover scroll position
- */
-Gui.Epg.Controller.Channels.prototype.recoverState = function () {
-
-    this.view.node.css({"top" : this.getData('top') + "px"});
-};
-
-/**
  * add event listeners
  */
 Gui.Epg.Controller.Channels.prototype.addObserver = function () {

@@ -49,6 +49,10 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
     }
 
+    this.title.find('span').css({
+        "background-size": this.getWidth() + 'px ' + this.node.height() + 'px'
+    });
+
     this.isRendered = !this.isRendered;
 };
 
@@ -80,7 +84,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.setWidth = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
 
-    var classNames = [], rating = this.getRating();
+    var classNames = ['clearer'], rating = this.getRating();
 
     if (this.getTimerExists()) {
         this.handleTimerExists(true);
@@ -128,7 +132,9 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTitle = function () {
 
-    $('<div class="title">').text(this.getTitle()).appendTo(this.info);
+    this.title = $('<div class="title">').html(
+        '<span>' + this.getTitle() + '</span>'
+    ).appendTo(this.info);
 
     return this;
 };
