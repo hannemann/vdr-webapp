@@ -108,9 +108,7 @@ Gui.Osd.Controller.Default.prototype.addItemEvent = function (item, e) {
             seq.push(dir);
         }
         seq.push('Ok');
-    }
-
-    if (2 === cells.length) {
+    } else if (2 === cells.length) {
 
         if (cells[0].classList.contains('list-key') && e.target == cells[1]){
             if (item == this.view.selectedItem) {
@@ -132,6 +130,10 @@ Gui.Osd.Controller.Default.prototype.addItemEvent = function (item, e) {
             if (e.target == cells[1]) {
                 seq.push('Right');
             }
+        }
+    } else {
+        for (i;i< Math.abs(delta);i++) {
+            seq.push(dir);
         }
     }
 
