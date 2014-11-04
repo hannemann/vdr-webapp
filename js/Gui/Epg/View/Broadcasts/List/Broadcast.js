@@ -15,6 +15,11 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype = new VDRest.Abstract.View();
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.cacheKey = 'channel/id';
 
 /**
+ * @type {Boolean}
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.imageInEpgView = VDRest.config.getItem('showImageInEpgView');
+
+/**
  * initialize dom
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
@@ -52,6 +57,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
     this.title.find('span').css({
         "background-size": this.getWidth() + 'px ' + this.node.height() + 'px'
     });
+    this.addImage();
 
     this.isRendered = !this.isRendered;
 };
@@ -61,7 +67,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.decorate = function () {
 
-    this.setWidth().addImage().addTitle().addClasses().addChannelViewInfo();
+    this.setWidth().addTitle().addClasses().addChannelViewInfo();
 };
 
 /**
@@ -145,13 +151,22 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTitle = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
 
-    var img;
+    var img, src;
 
     if (this.hasImages()) {
+        src = this.getImages()[0];
 
-        img = $('<img>').attr('src', this.getImages()[0]);
+        if (this.imageInEpgView && this.getWidth() >= 45 * 60 * VDRest.config.getItem('pixelPerSecond')) {
+            img = new Image();
+            img.crossOrigin = '';
+            img.height = this.node.height();
+            $('<div class="visible-epg-view broadcast-image">').append(img).prependTo(this.node);
+            this.module.getHelper('Image').getImageGradient(img, src);
+        }
 
-        $('<div class="broadcast-image">').append(img).prependTo(this.node);
+        img = $('<img>').attr('src', src);
+
+        $('<div class="visible-channel-view broadcast-image">').append(img).prependTo(this.node);
     }
 
 

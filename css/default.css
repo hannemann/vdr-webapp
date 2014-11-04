@@ -191,6 +191,12 @@ ul {
     display: block;
 }
 
+img.hidden-for-processing {
+    position: absolute;
+    left: -99999px;
+    top: 0;
+}
+
 
 @media (min-width: 800px), (min-height: 800px) {
     body {

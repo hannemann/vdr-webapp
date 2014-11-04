@@ -275,6 +275,10 @@ div#time-line .ql.hour {
 .channel-view .visible-channel-view {
     display: block;
 }
+.epg-search-view .visible-epg-view,
+.channel-view .visible-epg-view {
+    display: none;
+}
 
 .channel-view #broadcasts {
     width: 100% !important;

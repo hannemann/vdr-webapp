@@ -204,7 +204,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "hapticFeedback"        :   "true",
     "favourites"            :   "",
     "osdDelay"              :   100,
-    "osdLoadInterval"       :   2000
+    "osdLoadInterval"       :   2000,
+    "showImageInEpgView"    :   "true"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -302,6 +303,11 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "gui",
         "type" : "boolean",
         "label" : "Vibration"
+    },
+    "showImageInEpgView" :   {
+        "category" : "gui",
+        "type" : "boolean",
+        "label" : "Show images in EPG view"
     },
     "language" : {
         "category" : "gui",
