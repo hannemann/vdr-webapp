@@ -193,6 +193,14 @@ div#time-line .ql.hour {
     display: block;
 }
 
+
+#epg *:after,
+#epg *:before {
+    text-shadow: 1px 1px 7px rgba(0, 0, 0, 1);
+    background: rgba(94, 94, 94, 0.54);
+    border-radius: 5px;
+}
+
 /* Channel view, EPG Searchresults */
 
 .epg-search-view {
