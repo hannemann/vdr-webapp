@@ -67,9 +67,6 @@
 #broadcasts .broadcasts-list.invisible .broadcast {
     display: none !important;
 }
-#broadcasts .broadcasts-list .broadcast.has-image div.content {
-    background-image: linear-gradient(135deg, dimgrey 15%, rgba(64, 64, 64, 0) 85%);
-}
 #broadcasts .broadcasts-list .broadcast.has-image .title span {
     /*background: rgba(0, 0, 0, 0.19);*/
     border-radius: 5px;
