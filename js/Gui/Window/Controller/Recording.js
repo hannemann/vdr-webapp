@@ -150,7 +150,7 @@ Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
 
     view.destruct();
 
-    this.destructView();
+    history.back();
 };
 
 /**
