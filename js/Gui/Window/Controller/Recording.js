@@ -19,7 +19,7 @@ Gui.Window.Controller.Recording.prototype.cacheKey = 'number';
  */
 Gui.Window.Controller.Recording.prototype.init = function () {
 
-    var recording = this.getData('recording');
+    var recording = this.getData('recording').dataModel;
 
     this.eventPrefix = 'window.recording' + recording.getData('number');
 
@@ -87,7 +87,7 @@ Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
     this.vibrate();
 
     var fields = e.payload,
-        target, recording = this.getData('recording');
+        target, recording = this.getData('recording').dataModel;
 
     if (fields.dirname.getValue() !== '') {
 
@@ -142,7 +142,18 @@ Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
             this.keyInCache
         ),
         view = VDRest.app.getModule('Gui.Recordings')
-            .getView('List.Recording', this.keyInCache);
+            .getView('List.Recording', this.keyInCache),
+        recording = this.getData('recording'),
+        parent = recording.getData('parent'),
+        oldFilesList = parent.getData('files'), newFilesList = [], i = 0, l = oldFilesList.length;
+
+    for(i;i<l;i++) {
+        if (oldFilesList[i] !== recording) {
+            newFilesList.push(oldFilesList[i]);
+        }
+    }
+
+    parent.setData('files', newFilesList);
 
     VDRest.app.getModule('VDRest.Recordings').cache.invalidateAllTypes(model);
 
