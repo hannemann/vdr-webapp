@@ -15,6 +15,12 @@ Gui.Window.View.Recording.prototype = new Gui.Window.View.Abstract();
 Gui.Window.View.Recording.prototype.cacheKey = 'number';
 
 /**
+ * @type {string}
+ */
+Gui.Window.View.Recording.prototype.scraperImageUrl =
+    '//' + VDRest.config.getItem('host') + ':' + VDRest.config.getItem('port') + '/scraper/image/';
+
+/**
  * @type {boolean}
  */
 Gui.Window.View.Recording.prototype.isModal = true;
@@ -60,7 +66,8 @@ Gui.Window.View.Recording.prototype.addClasses = function () {
  */
 Gui.Window.View.Recording.prototype.decorateHeader = function () {
 
-    this.addTitle().addDetails();
+    this.headerContentWrapper = $('<div class="wrapper left">').appendTo(this.header);
+    this.addTitle().addDetails().addFanart();
 
     return this;
 };
@@ -73,7 +80,7 @@ Gui.Window.View.Recording.prototype.addTitle = function () {
 
     this.title = $('<h2 class="window-title left">')
         .text(this.getEventTitle())
-        .appendTo(this.header);
+        .appendTo(this.headerContentWrapper);
 
     return this;
 };
@@ -85,7 +92,7 @@ Gui.Window.View.Recording.prototype.addTitle = function () {
 Gui.Window.View.Recording.prototype.addDetails = function () {
 
     this.details = $('<ul class="window-header-details">')
-        .appendTo(this.header);
+        .appendTo(this.headerContentWrapper);
 
     if (this.hasEventShortText()) {
 
@@ -103,6 +110,34 @@ Gui.Window.View.Recording.prototype.addDetails = function () {
         .appendTo(this.details);
 
     return this;
+};
+
+/**
+ * add fanart if available
+ */
+Gui.Window.View.Recording.prototype.addFanart = function () {
+
+    var fanartUrl, media = this.getAdditionalMedia()[0];
+
+    if (media) {
+
+        if (media.series_id) {
+
+            if (media.fanarts && media.fanarts[0] && media.fanarts[0].path)
+
+            fanartUrl = this.scraperImageUrl + media.fanarts[0].path;
+
+        } else if (media.fanart) {
+
+            fanartUrl = this.scraperImageUrl + media.fanart;
+        }
+        if (fanartUrl) {
+
+            $('<img>').addClass('fanart').attr('src', fanartUrl).appendTo(this.header);
+
+            this.header.addClass('has-fanart');
+        }
+    }
 };
 
 /**

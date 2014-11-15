@@ -54,6 +54,37 @@
     color: inherit;
 }
 
+.window-header.has-fanart {
+    position: relative;
+    z-index: 0;
+    color: white;
+    padding-bottom: 0;
+}
+.window-header.has-fanart:before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+}
+.window-header.has-fanart .wrapper {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+    width: calc(100% - 40px);
+}
+.window-header.has-fanart h2,
+.window-header.has-fanart ul {
+    position: relative;
+    z-index: 1;
+    text-shadow: 2px 3px 4px black;
+}
+.window-header.has-fanart .fanart {
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 0;
+    max-width: 100%;
+}
+
 .window-body {
     white-space: pre-wrap;
 }
