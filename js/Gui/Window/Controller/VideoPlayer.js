@@ -15,6 +15,11 @@ Gui.Window.Controller.VideoPlayer.prototype = new Gui.Window.Controller.Abstract
 Gui.Window.Controller.VideoPlayer.prototype.cacheKey = 'url';
 
 /**
+ * @type {string}
+ */
+Gui.Window.Controller.VideoPlayer.prototype.noTimeUpdateWorkaround = true;
+
+/**
  * initialize view
  */
 Gui.Window.Controller.VideoPlayer.prototype.init = function () {
@@ -81,7 +86,9 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
     this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
     this.view.ctrlMinimize.on('click.'+this.keyInCache, $.proxy(this.toggleMinimize, this));
-    this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
+    if (!this.noTimeUpdateWorkaround) {
+        this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
+    }
     this.view.player.on('stalled', $.proxy(this.handleStalled, this));
     this.addOsdObserver();
     this.addDownloadEvent();
@@ -263,6 +270,11 @@ Gui.Window.Controller.VideoPlayer.prototype.startDownload = function (e) {
  * try to prevent browser from getting unresponsive in case the video stalls
  */
 Gui.Window.Controller.VideoPlayer.prototype.handleStalled = function () {
+
+    // baw.
+    if (this.noTimeUpdateWorkaround) {
+        return;
+    }
 
     var me = this;
 
@@ -677,7 +689,7 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
 
-    var video = this.getVideo(), src = this.getStreamUrl();
+    var video = this.getVideo(), src = this.getStreamUrl(), me=this;
 
     if (this.isPlaying) {
         if (this.oldChannelId && this.oldChannelId === this.data.sourceModel.getData('channel_id')) {
@@ -703,6 +715,13 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
         if (this.data.isVideo) {
             this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
             this.view.updateRecordingEndTime(false);
+        }
+
+        if (this.noTimeUpdateWorkaround) {
+            this.noTimeoutInterval = setInterval(function () {
+                me.data.startTime++;
+                me.view.updateProgress(me.data.isVideo ? me.data.startTime : undefined);
+            }, 1000);
         }
     }, this));
 };
@@ -764,6 +783,10 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
     video.pause();
     video.src = false;
     this.view.ctrlPlay.html(this.view.symbolPlay).removeClass('pause');
+
+    if (this.noTimeUpdateWorkaround) {
+        clearInterval(this.noTimeoutInterval);
+    }
 };
 
 /**
@@ -976,6 +999,7 @@ Gui.Window.Controller.VideoPlayer.prototype.destructView = function () {
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();
+    clearInterval(this.noTimeoutInterval);
 
     VDRest.app.getModule('Gui.Epg').unMute();
 };
