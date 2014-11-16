@@ -50,10 +50,7 @@ Gui.Window.ViewModel.Drawer.prototype.getButtons = function () {
 
         if (current !== i && modules.hasOwnProperty(i) && modules[i].inDrawer && modules[i].headline) {
 
-            if (
-                "undefined" !== typeof modules[i].pluginDependency
-                && !VDRest.info.getPlugin(modules[i].pluginDependency)
-            ) {
+            if (!this.checkDependecies(modules[i])) {
                 continue;
             }
 
@@ -67,4 +64,18 @@ Gui.Window.ViewModel.Drawer.prototype.getButtons = function () {
     }
 
     return collection;
+};
+
+/**
+ * check if possible vdr-plugin dependency is satisfied
+ * @param {Object} module
+ * @returns {bool}
+ */
+Gui.Window.ViewModel.Drawer.prototype.checkDependecies = function (module) {
+
+    if ("undefined" !== typeof module.pluginDependency) {
+
+        return eval(module.pluginDependency.replace(/([a-z0-9]+)/g, $.proxy(VDRest.info.hasPlugin, VDRest.info)))
+    }
+    return true
 };

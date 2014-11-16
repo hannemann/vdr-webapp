@@ -96,6 +96,15 @@ VDRest.Info.Model.Info.prototype.getPlugin = function (name) {
 };
 
 /**
+ * retrieve info about plugin
+ * @returns {Object}
+ */
+VDRest.Info.Model.Info.prototype.hasPlugin = function (name) {
+
+    return !!this.getPlugin(name);
+};
+
+/**
  * normalize version number
  * Version * 10000 + Major * 100 + Minor
  * @param {Object} plugin
