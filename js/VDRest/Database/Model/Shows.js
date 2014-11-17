@@ -24,3 +24,13 @@ VDRest.Database.Model.Shows.prototype.onloadevent = "showsloaded";
  * @type {string}
  */
 VDRest.Database.Model.Shows.prototype.oStore = 'shows';
+
+/**
+ * object store name
+ * @type {string}
+ */
+VDRest.Database.Model.Shows.prototype.init = function () {
+
+    VDRest.Abstract.IndexedDB.prototype.init.apply(this);
+    this.struct = this.module.getResource('Database').obStoresStruct.shows;
+};

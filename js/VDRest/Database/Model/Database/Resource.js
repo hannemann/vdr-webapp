@@ -18,7 +18,7 @@ VDRest.Database.Model.Database.Resource.prototype.dbName = "recordings";
  * default db version -> override!
  * @type {number}
  */
-VDRest.Database.Model.Database.Resource.prototype.dbVersion = 7;
+VDRest.Database.Model.Database.Resource.prototype.dbVersion = 8;
 
 /**
  * db structure
@@ -40,9 +40,9 @@ VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
             "keyPath" : "series_id"
         },
         "indexes" : {
-            "title" : ["name", "name", {"unique" : false}],
-            "release_date" : ["network", "network", {"unique" : false}],
-            "vote_average" : ["rating", "rating", {"unique" : false}]
+            "name" : ["name", "name", {"unique" : false}],
+            "network" : ["network", "network", {"unique" : false}],
+            "rating" : ["rating", "rating", {"unique" : false}]
         }
     },
     "episodes" : {
@@ -50,10 +50,10 @@ VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
             "keyPath" : "episode_id"
         },
         "indexes" : {
-            "title" : ["episode_name", "episode_name", {"unique" : false}],
+            "name" : ["episode_name", "episode_name", {"unique" : false}],
             "series_id" : ["series_id", "series_id", {"unique" : false}],
-            "release_date" : ["network", "network", {"unique" : false}],
-            "vote_average" : ["episode_rating", "episode_rating", {"unique" : false}]
+            "network" : ["network", "network", {"unique" : false}],
+            "rating" : ["episode_rating", "episode_rating", {"unique" : false}]
         }
     }
 };
