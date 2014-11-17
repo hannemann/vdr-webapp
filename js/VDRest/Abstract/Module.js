@@ -252,6 +252,10 @@ VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {
         cacheKey = this.cache.getCacheKey(data, cacheKey);
     }
 
+    if ("undefined" !== typeof cacheKey) {
+        cacheKey = cacheKey.toString().split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+    }
+
     if ("undefined" === typeof cache[cacheKey]) {
 
         instance = VDRest.Lib.factory.getClass(path);
