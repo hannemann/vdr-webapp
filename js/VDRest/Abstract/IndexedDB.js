@@ -25,13 +25,6 @@ VDRest.Abstract.IndexedDB.prototype = new VDRest.Lib.Object();
 VDRest.Abstract.IndexedDB.prototype.cacheKey = undefined;
 
 /**
- * class name
- * @type {string}
- * @private
- */
-VDRest.Abstract.IndexedDB.prototype._class = undefined;
-
-/**
  * default db name -> override!
  * @type {string}
  */
@@ -47,18 +40,23 @@ VDRest.Abstract.IndexedDB.prototype.dbVersion = 1;
  * default db structure -> override!
  * @type {Array}
  */
-VDRest.Abstract.IndexedDB.prototype.obStoresStruct = {};
+VDRest.Abstract.IndexedDB.prototype.obStoresStruct = null;
 
 /**
  * default store -> override!
  * @type {string}
  */
-VDRest.Abstract.IndexedDB.prototype.oStore = '';
+VDRest.Abstract.IndexedDB.prototype.oStore = null;
 
 /**
  * initialize database
+ * @throws {Error}
  */
 VDRest.Abstract.IndexedDB.prototype.init = function () {
+
+    if (!this.oStore && !this.obStoresStruct) {
+        throw new Error('No oStore or obStoresStruct property defined');
+    }
 
     this.request = indexedDB.open(this.dbName, this.dbVersion);
     this.request.onerror = $.proxy(this.onerror, this);
@@ -68,9 +66,9 @@ VDRest.Abstract.IndexedDB.prototype.init = function () {
 
 /**
  * retrieve transaction
- * @param {String} store
+ * @param {String} [store]
  * @param {String} [type]
- * @returns {*}
+ * @returns {IDBTransaction}
  */
 VDRest.Abstract.IndexedDB.prototype.getTransaction = function (store, type) {
 
@@ -78,15 +76,27 @@ VDRest.Abstract.IndexedDB.prototype.getTransaction = function (store, type) {
     store = store || [];
     type = type || 'readwrite';
 
-    if (!store) {
-        for (i in this.obStoresStruct) {
-            if (this.obStoresStruct.hasOwnProperty(i)) {
-                store.push(i);
+    if (store.length === 0) {
+        if (this.obStoresStruct) {
+            for (i in this.obStoresStruct) {
+                if (this.obStoresStruct.hasOwnProperty(i)) {
+                    store.push(i);
+                }
             }
+        } else {
+            store.push(this.oStore);
         }
     }
 
     return this.db.transaction(store, type);
+};
+
+/**
+ * @throws {Error}
+ */
+VDRest.Abstract.IndexedDB.prototype.onupgradeneeded = function () {
+
+    throw new Error('No onupgradeneeded method implemented')
 };
 
 /**
