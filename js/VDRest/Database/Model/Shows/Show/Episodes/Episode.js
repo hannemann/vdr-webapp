@@ -12,7 +12,7 @@ VDRest.Database.Model.Shows.Show.Episodes.Episode.prototype = new VDRest.Databas
 /**
  * @type {String}
  */
-VDRest.Database.Model.Shows.Show.Episodes.Episode.prototype.cacheKey = "series_id/episode_id";
+VDRest.Database.Model.Shows.Show.Episodes.Episode.prototype.cacheKey = "episode_id";
 
 /**
  * @type {String}

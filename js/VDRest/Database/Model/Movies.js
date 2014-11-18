@@ -15,12 +15,13 @@ VDRest.Database.Model.Movies.prototype = new VDRest.Database.Model.Collection();
 VDRest.Database.Model.Movies.prototype.primaryKey = "movie_id";
 
 /**
- * @type {String}
- */
-VDRest.Database.Model.Movies.prototype.onloadevent = "moviesloaded";
-
-/**
  * object store name
  * @type {string}
  */
 VDRest.Database.Model.Movies.prototype.oStore = 'movies';
+
+/**
+ * class of collection items
+ * @type {string}
+ */
+VDRest.Database.Model.Movies.prototype.collectionItemModel = 'Movies.Movie';

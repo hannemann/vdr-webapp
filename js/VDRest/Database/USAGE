@@ -1,0 +1,29 @@
+# Synchronize Database
+
+VDRest.app.getModule('VDRest.Database').getController('Sync').synchronize()
+
+# Load single Episode, Movie, Show
+VDRest.app.getModule('VDRest.Database').getModel('Shows.Show', 71663)
+VDRest.app.getModule('VDRest.Database').getModel('Movies.Movie', 18)
+VDRest.app.getModule('VDRest.Database').getModel('Shows.Show.Episodes.Episode', 117856)
+
+
+# iterate collection, bind scope to callbacks
+
+var doe = function () {};
+bla = new doe();
+s = VDRest.app.getModule('VDRest.Database').getModel('Shows')
+s = VDRest.app.getModule('VDRest.Database').getModel('Shows.Show.Episodes')
+s = VDRest.app.getModule('VDRest.Database').getModel('Movies')
+
+s.each(
+    function(e) {
+        e.each(function (k, v) {
+            console.log(k, v, this);
+        }.bind(this));
+    }.bind(bla),
+
+    function (e) {
+        console.log(e, this);
+    }.bind(bla)
+)
