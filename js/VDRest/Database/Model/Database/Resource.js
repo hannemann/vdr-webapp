@@ -18,7 +18,7 @@ VDRest.Database.Model.Database.Resource.prototype.dbName = "recordings";
  * default db version -> override!
  * @type {number}
  */
-VDRest.Database.Model.Database.Resource.prototype.dbVersion = 8;
+VDRest.Database.Model.Database.Resource.prototype.dbVersion = 1;
 
 /**
  * db structure
