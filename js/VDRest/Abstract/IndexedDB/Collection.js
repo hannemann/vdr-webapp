@@ -65,7 +65,7 @@ VDRest.Abstract.IndexedDB.Collection.prototype.initData = function () {
     this.each = function (callback, complete) {
 
         if (collection.length == 0) {
-            this.load(iterate.bind(this, callback, complete));
+            this.load(callback, complete);
         } else {
             iterate(callback, complete);
         }
@@ -84,14 +84,15 @@ VDRest.Abstract.IndexedDB.Collection.prototype.initData = function () {
      * @param {*} item
      */
     this.addItem = function (item) {
-        collection.push(item);
+        collection.push(this.module.getModel(this.collectionItemModel, item));
+        return collection[collection.length-1];
     };
 };
 
 /**
  * retrieve collection from database
  */
-VDRest.Abstract.IndexedDB.Collection.prototype.load = function (callback) {
+VDRest.Abstract.IndexedDB.Collection.prototype.load = function (callback, complete) {
 
     var transaction = this.getTransaction([this.oStore]),
         store = transaction.objectStore(this.oStore);
@@ -99,11 +100,11 @@ VDRest.Abstract.IndexedDB.Collection.prototype.load = function (callback) {
     store.openCursor().onsuccess = function(event) {
         var cursor = event.target.result;
         if (cursor) {
-            this.addItem(cursor.value);
+            callback(this.addItem(cursor.value));
             cursor.continue();
         }
         else {
-            callback();
+            complete();
         }
     }.bind(this);
 };
