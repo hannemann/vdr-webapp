@@ -1,6 +1,9 @@
 VDRest.Database.Model.Sync = function () {};
 
-VDRest.Database.Model.Sync.prototype = new VDRest.Abstract.IndexedDB();
+/**
+ * @type {VDRest.Lib.Object}
+ */
+VDRest.Database.Model.Sync.prototype = new VDRest.Lib.Object();
 
 /**
  * @type {String}
@@ -20,9 +23,11 @@ VDRest.Database.Model.Sync.prototype.dbVersion = VDRest.Database.Model.Database.
 VDRest.Database.Model.Sync.prototype.init = function () {
 
     this.recordings = [];
-    VDRest.Abstract.IndexedDB.prototype.init.call(this);
 };
 
+/**
+ * synchronize
+ */
 VDRest.Database.Model.Sync.prototype.synchronize = function () {
 
     this.current = 0;
@@ -30,10 +35,14 @@ VDRest.Database.Model.Sync.prototype.synchronize = function () {
     this.addRecording();
 };
 
+/**
+ * add recording to database
+ */
 VDRest.Database.Model.Sync.prototype.addRecording = function () {
 
     if (this.current >= this.recordings.length) {
         VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
+        this.recordings.length = 0;
         return;
     }
 
@@ -62,6 +71,10 @@ VDRest.Database.Model.Sync.prototype.addRecording = function () {
     }
 };
 
+/**
+ * add show to database
+ * @param {Object} media
+ */
 VDRest.Database.Model.Sync.prototype.addSeries = function (media) {
 
     var show;
@@ -76,6 +89,9 @@ VDRest.Database.Model.Sync.prototype.addSeries = function (media) {
     show.persist($.proxy(this.addRecording, this));
 };
 
+/**
+ * copy recordings into array
+ */
 VDRest.Database.Model.Sync.prototype.getRecordings = function () {
 
     var recordings = VDRest.app.getModule('VDRest.Recordings').cache.store.Model['List.Recording'],
