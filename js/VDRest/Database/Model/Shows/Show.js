@@ -5,9 +5,9 @@
 VDRest.Database.Model.Shows.Show = function () {};
 
 /**
- * @type {VDRest.Database.Model.Media}
+ * @type {VDRest.Abstract.IndexedDB.Item}
  */
-VDRest.Database.Model.Shows.Show.prototype = new VDRest.Database.Model.Media();
+VDRest.Database.Model.Shows.Show.prototype = new VDRest.Abstract.IndexedDB.Item();
 
 /**
  * @type {String}

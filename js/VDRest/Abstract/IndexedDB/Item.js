@@ -2,17 +2,17 @@
  * @class
  * @constructor
  */
-VDRest.Database.Model.Media = function () {};
+VDRest.Abstract.IndexedDB.Item = function () {};
 
 /**
  * @type {VDRest.Abstract.Model}
  */
-VDRest.Database.Model.Media.prototype = new VDRest.Lib.Object();
+VDRest.Abstract.IndexedDB.Item.prototype = new VDRest.Lib.Object();
 
 /**
  * initialize data
  */
-VDRest.Database.Model.Media.prototype.initData = function (data) {
+VDRest.Abstract.IndexedDB.Item.prototype.initData = function (data) {
 
     if (!this.resource) {
 
@@ -33,7 +33,7 @@ VDRest.Database.Model.Media.prototype.initData = function (data) {
 /**
  * load data
  */
-VDRest.Database.Model.Media.prototype.load = function (id, callback) {
+VDRest.Abstract.IndexedDB.Item.prototype.load = function (id, callback) {
 
     var request;
 
@@ -49,7 +49,7 @@ VDRest.Database.Model.Media.prototype.load = function (id, callback) {
 /**
  * persist data
  */
-VDRest.Database.Model.Media.prototype.persist = function (callback) {
+VDRest.Abstract.IndexedDB.Item.prototype.persist = function (callback) {
 
     var transaction = this.resource.getTransaction([this.oStore]),
         store = transaction.objectStore(this.oStore);
@@ -67,7 +67,7 @@ VDRest.Database.Model.Media.prototype.persist = function (callback) {
 /**
  * error handler
  */
-VDRest.Database.Model.Media.prototype.onerror = function (e) {
+VDRest.Abstract.IndexedDB.Item.prototype.onerror = function (e) {
 
     VDRest.helper.log(e);
 };

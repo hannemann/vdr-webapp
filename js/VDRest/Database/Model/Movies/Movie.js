@@ -5,9 +5,9 @@
 VDRest.Database.Model.Movies.Movie = function () {};
 
 /**
- * @type {VDRest.Database.Model.Media}
+ * @type {VDRest.Abstract.IndexedDB.Item}
  */
-VDRest.Database.Model.Movies.Movie.prototype = new VDRest.Database.Model.Media();
+VDRest.Database.Model.Movies.Movie.prototype = new VDRest.Abstract.IndexedDB.Item();
 
 /**
  * @type {String}
