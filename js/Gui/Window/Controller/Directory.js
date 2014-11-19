@@ -12,7 +12,7 @@ Gui.Window.Controller.Directory.prototype = new Gui.Window.Controller.Abstract()
 /**
  * @type {string}
  */
-Gui.Window.Controller.Directory.prototype.cacheKey = 'path';
+Gui.Window.Controller.Directory.prototype.cacheKey = 'id';
 
 /**
  * initialize view

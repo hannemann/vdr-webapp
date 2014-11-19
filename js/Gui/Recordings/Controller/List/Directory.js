@@ -87,7 +87,8 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
             "data" : {
                 "listItem" : this.view,
                 "dispatch" : $.proxy(this.view.renderItems, this.view),
-                "path" : this.data.path
+                "path" : this.data.path,
+                "id" : this.data.path.toCacheKey()
             }
         }
     });
