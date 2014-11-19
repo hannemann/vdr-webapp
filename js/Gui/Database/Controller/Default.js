@@ -26,28 +26,6 @@ Gui.Database.Controller.Default.prototype.init = function () {
  */
 Gui.Database.Controller.Default.prototype.dispatchView = function () {
 
-    this.numPad = this.module.getController('NumPad');
-    this.numPad.defaultController = this;
-    this.dPad = this.module.getController('DPad');
-    this.dPad.defaultController = this;
-
-    this.numPad.dispatchView();
-    this.dPad.dispatchView();
-
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-};
-
-/**
- * send key
- * @param {String} key
- * @param {jQuery.Event} e
- */
-Gui.Database.Controller.Default.prototype.sendKey = function (key, e) {
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    this.vibrate();
-    this.module.backend.send(key);
 };

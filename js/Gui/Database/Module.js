@@ -19,20 +19,32 @@ Gui.Database.prototype.namespace = 'Gui';
  * Modulename
  * @type {string}
  */
-Gui.Database.prototype.name = 'Remote';
+Gui.Database.prototype.name = 'Database';
+
+/**
+ * show up in drawer
+ * @type {string}
+ */
+Gui.Database.prototype.inDrawer = true;
+
+/**
+ * start page capable
+ * @type {string}
+ */
+Gui.Database.prototype.startPage = true;
+
+/**
+ * headline in menu bar
+ * @type {string}
+ */
+Gui.Database.prototype.headline = 'Your Media';
 
 /**
  * dispatch default view
- * @param {Object} parentView
  */
-Gui.Database.prototype.dispatch = function (parentView) {
+Gui.Database.prototype.dispatch = function () {
 
-    this.backend = VDRest.app.getModule('VDRest.Remote').getModel('Remote');
-
-    this.getController('Default', {
-        "parentView" : parentView,
-        "keys" : VDRest.app.getModule('VDRest.Remote').getModel('Remote').getKeys()
-    }).dispatchView();
+    this.getController('Default').dispatchView();
 };
 
 /**
@@ -40,8 +52,6 @@ Gui.Database.prototype.dispatch = function (parentView) {
  */
 Gui.Database.prototype.destruct = function () {
 
-    this.getController('NumPad').destructView();
-    this.getController('DPad').destructView();
     this.getController('Default').destructView();
     this.cache.flush();
 };
