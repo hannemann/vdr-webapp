@@ -57,11 +57,25 @@ VDRest.Abstract.IndexedDB.prototype.init = function () {
     if (!this.oStore && !this.obStoresStruct) {
         throw new Error('No oStore or obStoresStruct property defined');
     }
+    this.readyStateChange(1);
 
     this.request = indexedDB.open(this.dbName, this.dbVersion);
     this.request.onerror = $.proxy(this.onerror, this);
     this.request.onsuccess = $.proxy(this.onsuccess, this);
     this.request.onupgradeneeded = $.proxy(this.onupgradeneeded, this);
+    this.readyStateChange(2);
+};
+
+/**
+ * initialize database
+ * @throws {Error}
+ */
+VDRest.Abstract.IndexedDB.prototype.readyStateChange = function (state) {
+
+    this.readystate = state;
+    if ("function" === typeof this.onreadystatechange) {
+        this.onreadystatechange(state);
+    }
 };
 
 /**
@@ -106,6 +120,7 @@ VDRest.Abstract.IndexedDB.prototype.onupgradeneeded = function () {
 VDRest.Abstract.IndexedDB.prototype.onsuccess = function (e) {
 
     this.db = e.target.result;
+    this.readyStateChange(4);
 };
 
 /**
