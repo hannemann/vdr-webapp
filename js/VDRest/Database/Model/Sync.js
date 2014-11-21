@@ -32,6 +32,7 @@ VDRest.Database.Model.Sync.prototype.synchronize = function () {
 
     this.current = 0;
     this.getRecordings();
+    this.unlink();
     this.addRecording();
 };
 
@@ -56,14 +57,14 @@ VDRest.Database.Model.Sync.prototype.addRecording = function () {
 
             media.recording_number = recording.getData('number');
             episode = this.module.getModel('Shows.Show.Episodes.Episode', media);
-            episode.persist($.proxy(this.addSeries, this, media));
+            episode.save(this.addSeries.bind(this, media));
 
         } else if (media.movie_id) {
 
             media.recording_number = recording.getData('number');
             movie = this.module.getModel('Movies.Movie', media);
             this.current++;
-            movie.persist($.proxy(this.addRecording, this));
+            movie.save(this.addRecording.bind(this));
         }
     } else {
         this.current++;
@@ -86,7 +87,7 @@ VDRest.Database.Model.Sync.prototype.addSeries = function (media) {
     show.addEpisode(media);
     this.current++;
 
-    show.persist($.proxy(this.addRecording, this));
+    show.save(this.addRecording.bind(this));
 };
 
 /**
@@ -102,4 +103,16 @@ VDRest.Database.Model.Sync.prototype.getRecordings = function () {
             this.recordings.push(recordings[i]);
         }
     }
+};
+
+/**
+ * delete database items
+ */
+VDRest.Database.Model.Sync.prototype.unlink = function () {
+
+    ['Shows', 'Shows.Show.Episodes', 'Movies'].forEach(function (store) {
+        VDRest.app.getModule('VDRest.Database').getModel(store).each(function (e) {
+            e.unlink();
+        });
+    });
 };

@@ -7,7 +7,7 @@ VDRest.Database.Model.Shows.Show = function () {};
 /**
  * @type {VDRest.Abstract.IndexedDB.Item}
  */
-VDRest.Database.Model.Shows.Show.prototype = new VDRest.Abstract.IndexedDB.Item();
+VDRest.Database.Model.Shows.Show.prototype = new VDRest.Database.Model.Item();
 
 /**
  * @type {String}

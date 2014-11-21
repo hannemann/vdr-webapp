@@ -7,7 +7,7 @@ VDRest.Database.Model.Shows.Show.Episodes = function () {};
 /**
  * @type {VDRest.Abstract.IndexedDB.Collection}
  */
-VDRest.Database.Model.Shows.Show.Episodes.prototype = new VDRest.Database.Model.Collection();
+VDRest.Database.Model.Shows.Show.Episodes.prototype = new VDRest.Database.Model.Database.Collection();
 
 /**
  * @type {String}

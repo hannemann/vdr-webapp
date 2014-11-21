@@ -85,9 +85,11 @@ VDRest.Lib.Image.prototype.transparencyGradientWorkerCode = 'onmessage = functio
  * @param {String} src
  * @param {Number} alpha integer, angle of gradient
  * @param {Number} offset integer, offset of gradient
+ * @param {Number} width integer, width of gradient
+ * @param {function} complete callback
  * @param {String} id
  */
-VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha, offset, id) {
+VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha, offset, width, complete, id) {
 
     img.classList.add('hidden-for-processing');
 
@@ -102,7 +104,7 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
             rows,
             columns,
             transparency,
-            x, y, end, post, callback,
+            x, y, start, end, post, callback,
             gamma = 90, beta = Math.Triangle.getAngle(alpha, gamma);
 
         this.width = Math.round(this.height * (this.naturalWidth / this.naturalHeight));
@@ -118,6 +120,9 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
             return;
         }
 
+        if (width !== 0) {
+            width = width || ca.width-offset;
+        }
         // draw the image into the canvas
         ctx.drawImage(this, 0, 0, ca.width, ca.height);
         // get the image data object
@@ -138,11 +143,16 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
                 /**
                  * iterate columns
                  */
-                y = x * columns * 4 + 3;
+                start = x * columns * 4 + 3;
                 end = (x + 1) * columns * 4;
-                for (y; y < end; y += 4) {
-                    image.data[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;
-                    transparency += Math.floor(100 / ca.width * 255 / 100);
+                for (y = start; y < end; y += 4) {
+                    if (y < start + offset * 4) {
+                        imageData[y] = 0;
+                    } else {
+                        image.data[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;
+                        //transparency += Math.floor(100 / ca.width * 255 / 100);
+                        transparency += 100 / width * 255 / 100;
+                    }
                 }
             }
             //and put the image data back to the canvas
@@ -151,6 +161,9 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
             this.onload = null;
             this.src = ca.toDataURL();
             this.classList.remove('hidden-for-processing');
+            if ("function" === typeof complete) {
+                complete(img);
+            }
 
         } else {
 

@@ -7,27 +7,35 @@ VDRest.Abstract.IndexedDB.Item = function () {};
 /**
  * @type {VDRest.Abstract.Model}
  */
-VDRest.Abstract.IndexedDB.Item.prototype = new VDRest.Lib.Object();
+VDRest.Abstract.IndexedDB.Item.prototype = new VDRest.Abstract.IndexedDB();
 
 /**
  * initialize data
  */
 VDRest.Abstract.IndexedDB.Item.prototype.initData = function (data) {
 
-    if (!this.resource) {
+    var fetch = function () {
+        this.load(data, function (result) {
+            VDRest.Lib.Object.prototype.initData.call(this, result);
+            "function" === typeof this.onload && this.onload(this);
+        }.bind(this));
+    }.bind(this);
 
-        this.resource = this.module.getResource('Database');
-    }
+    VDRest.Abstract.IndexedDB.prototype.initData.call(this);
 
     if (data && "object" !== typeof data) {
 
-        this.load(data, function (result) {
-            VDRest.Lib.Object.prototype.initData.call(this, result);
-        }.bind(this));
+        if (this.readystate < 4) {
+            this.onreadystatechange = function (state) {
+
+                if (4 == state) fetch();
+            }
+        } else {
+            fetch()
+        }
     } else {
         VDRest.Lib.Object.prototype.initData.call(this, data);
     }
-
 };
 
 /**
@@ -35,13 +43,14 @@ VDRest.Abstract.IndexedDB.Item.prototype.initData = function (data) {
  */
 VDRest.Abstract.IndexedDB.Item.prototype.load = function (id, callback) {
 
-    var request;
+    var transaction = this.getTransaction([this.oStore]),
+        store = transaction.objectStore(this.oStore),
+        request;
 
-    request = this.resource.db.transaction(this.oStore)
-        .objectStore(this.oStore).get(id);
+    request = store.get(id);
 
     request.onerror = this.onerror.bind(this);
-    request.onsuccess = onsuccess = function (e) {
+    request.onsuccess = function (e) {
         callback(e.target.result)
     }.bind(this);
 };
@@ -49,25 +58,62 @@ VDRest.Abstract.IndexedDB.Item.prototype.load = function (id, callback) {
 /**
  * persist data
  */
-VDRest.Abstract.IndexedDB.Item.prototype.persist = function (callback) {
+VDRest.Abstract.IndexedDB.Item.prototype.save = function (callback) {
 
-    var transaction = this.resource.getTransaction([this.oStore]),
+    var transaction, store, persist = function () {
+
+        transaction = this.getTransaction([this.oStore]);
         store = transaction.objectStore(this.oStore);
 
-    transaction.onerror = this.onerror.bind(this);
+        transaction.onerror = this.onerror.bind(this);
 
-    if ("function" == typeof callback) {
-        transaction.oncomplete = callback;
+        if ("function" == typeof callback) {
+            transaction.oncomplete = callback;
+        }
+
+        store.delete(this.getData(this.primaryKey));
+        store.add(this.getData());
+        "function" === typeof this.onsave && this.onsave(this);
+
+    }.bind(this);
+
+    if (this.readystate < 4) {
+        this.onreadystatechange = function (state) {
+
+            if (4 == state) persist();
+        }
+    } else {
+        persist()
     }
-
-    store.delete(this.getData(this.primaryKey));
-    store.add(this.getData());
 };
 
 /**
- * error handler
+ * persist data
  */
-VDRest.Abstract.IndexedDB.Item.prototype.onerror = function (e) {
+VDRest.Abstract.IndexedDB.Item.prototype.unlink = function (callback) {
 
-    VDRest.helper.log(e);
+    var transaction, store, unlink = function () {
+
+        transaction = this.getTransaction([this.oStore]);
+        store = transaction.objectStore(this.oStore);
+
+        transaction.onerror = this.onerror.bind(this);
+
+        if ("function" == typeof callback) {
+            transaction.oncomplete = callback;
+        }
+
+        store.delete(this.getData(this.primaryKey));
+        "function" === typeof this.onunlink && this.onunlink(this);
+
+    }.bind(this);
+
+    if (this.readystate < 4) {
+        this.onreadystatechange = function (state) {
+
+            if (4 == state) unlink();
+        }
+    } else {
+        unlink()
+    }
 };

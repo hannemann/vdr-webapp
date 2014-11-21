@@ -7,7 +7,7 @@ VDRest.Database.Model.Movies.Movie = function () {};
 /**
  * @type {VDRest.Abstract.IndexedDB.Item}
  */
-VDRest.Database.Model.Movies.Movie.prototype = new VDRest.Abstract.IndexedDB.Item();
+VDRest.Database.Model.Movies.Movie.prototype = new VDRest.Database.Model.Item();
 
 /**
  * @type {String}

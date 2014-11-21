@@ -16,6 +16,14 @@ VDRest.Abstract.IndexedDB.Collection.prototype.initData = function () {
 
     var collection = [], index = 0;
 
+    VDRest.Abstract.IndexedDB.prototype.initData.call(this);
+
+    this.onreadystatechange = function (state) {
+        if (4 == state && "function" === typeof this.onload) {
+            this.onload(this);
+        }
+    }.bind(this);
+
     /**
      * iterator pattern valid method
      * @returns {boolean}
@@ -65,7 +73,14 @@ VDRest.Abstract.IndexedDB.Collection.prototype.initData = function () {
     this.each = function (callback, complete) {
 
         if (collection.length == 0) {
-            this.load(callback, complete);
+
+            if (this.readystate < 4) {
+                this.onreadystatechange = function (state) {
+                    if (4 == state) this.load(callback, complete);
+                }.bind(this)
+            } else {
+                this.load(callback, complete);
+            }
         } else {
             iterate(callback, complete);
         }
@@ -104,7 +119,7 @@ VDRest.Abstract.IndexedDB.Collection.prototype.load = function (callback, comple
             cursor.continue();
         }
         else {
-            complete();
+            "function" === typeof complete && complete();
         }
     }.bind(this);
 };

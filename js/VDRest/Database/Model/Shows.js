@@ -5,9 +5,9 @@
 VDRest.Database.Model.Shows = function () {};
 
 /**
- * @type {VDRest.Database.Model.Media}
+ * @type {VDRest.Database.Model.Database.Collection}
  */
-VDRest.Database.Model.Shows.prototype = new VDRest.Database.Model.Collection();
+VDRest.Database.Model.Shows.prototype = new VDRest.Database.Model.Database.Collection();
 
 /**
  * @type {String}

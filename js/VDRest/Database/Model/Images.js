@@ -7,7 +7,7 @@ VDRest.Database.Model.Images = function () {};
 /**
  * @type {VDRest.Database.Model.Collection}
  */
-VDRest.Database.Model.Images.prototype = new VDRest.Database.Model.Collection();
+VDRest.Database.Model.Images.prototype = new VDRest.Database.Model.Database.Collection();
 
 /**
  * @type {String}

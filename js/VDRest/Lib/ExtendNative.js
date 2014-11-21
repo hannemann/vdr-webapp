@@ -36,3 +36,12 @@ String.prototype.toCacheKey = function () {
 
     return this.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
 };
+
+/**
+ * capitalize first letter
+ * @returns {String}
+ */
+String.prototype.ucfirst = function () {
+
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
