@@ -18,7 +18,7 @@ VDRest.Database.Model.Database.Resource.prototype.dbName = "recordings";
  * default db version -> override!
  * @type {number}
  */
-VDRest.Database.Model.Database.Resource.prototype.dbVersion = 1;
+VDRest.Database.Model.Database.Resource.prototype.dbVersion = 2;
 
 /**
  * db structure
@@ -54,6 +54,11 @@ VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
             "series_id" : ["series_id", "series_id", {"unique" : false}],
             "network" : ["network", "network", {"unique" : false}],
             "rating" : ["episode_rating", "episode_rating", {"unique" : false}]
+        }
+    },
+    "images" : {
+        "keys" : {
+            "keyPath" : "name"
         }
     }
 };

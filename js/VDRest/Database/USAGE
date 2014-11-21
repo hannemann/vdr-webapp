@@ -16,6 +16,7 @@ s = VDRest.app.getModule('VDRest.Database').getModel('Shows')
 s = VDRest.app.getModule('VDRest.Database').getModel('Shows.Show.Episodes')
 s = VDRest.app.getModule('VDRest.Database').getModel('Movies')
 
+s.each(function(e) {e.each(function (k, v) {console.log(k, v);});},function (e) {console.log(e);})
 s.each(
     function(e) {
         e.each(function (k, v) {
