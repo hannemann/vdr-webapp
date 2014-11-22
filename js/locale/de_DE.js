@@ -261,5 +261,7 @@ VDRest.app.de_DE = {
     "Show first time installation guide": "Zeige Installationsanleitung",
     "not recommended if epg grabbers are in use": "nicht empfohlen wenn EPG grabber verwendet werden",
     "Load events for all channels on startup": "Sendungen für alle Kanäle beim starten laden",
+    "Movies": "Filme",
+    "TV-Shows": "TV-Serien",
     "Window 16/9": "Fenster 16/9"
 };

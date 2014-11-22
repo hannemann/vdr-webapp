@@ -7,8 +7,31 @@
     background: black;
 }
 
+#media-browser .fanart {
+    position: relative;
+}
+
+#media-browser .fanart:before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+}
+
+#media-browser .fanart img.fanart-collage {
+    width: 100%;
+    position: absolute;
+    top: 0;
+}
+
+#media-browser .fanart .fanart-h1 {
+    position: absolute;
+    bottom: 0;
+    text-align: right;
+}
+
 .fanart-h1 {
     font-size: 60px;
+    line-height: 60px;
     font-weight: bold;
     padding: 14px;
     width: calc(100% - 28px);

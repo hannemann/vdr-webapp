@@ -27,37 +27,9 @@ Gui.Database.View.Default.prototype.render = function () {
 };
 
 /**
- * add fanart
+ * destroy
  */
-Gui.Database.View.Default.prototype.addFanarts = function () {
-
-    this.moviesFanart = $('<img>')
-        .attr('src', this.getData('movies_fanart_collage'))
-        .attr('id', 'movie-fanart')
-        .appendTo(this.node);
-
-    $('<div class="fanart-h1 movies">').text(VDRest.app.translate('Movies')).appendTo(this.node);
-
-    this.showsFanart = $('<img>')
-        .attr('src', this.getData('shows_fanart_collage'))
-        .attr('id', 'show-fanart')
-        .appendTo(this.node);
-
-    $('<div class="fanart-h1 shows">').text(VDRest.app.translate('TV-Shows')).appendTo(this.node);
-};
-
-/**
- * add fanart
- */
-Gui.Database.View.Default.prototype.updateFanart = function (type) {
-
-    this[type.replace(/^([a-z]*)_.*/, "$1") + 'Fanart'].attr('src', this.getData(type));
-};
-
-/**
- * add fanart
- */
-Gui.Database.View.Default.prototype.destruct = function (type) {
+Gui.Database.View.Default.prototype.destruct = function () {
     $('body').removeClass('database');
     VDRest.Abstract.View.prototype.destruct.call(this);
 };
