@@ -44,6 +44,8 @@ Gui.Database.prototype.headline = 'Your Media';
  */
 Gui.Database.prototype.dispatch = function () {
 
+    this.backend = VDRest.app.getModule('VDRest.Database');
+
     this.getController('Default').dispatchView();
 };
 
