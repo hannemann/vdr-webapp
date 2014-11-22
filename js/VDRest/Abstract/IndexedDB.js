@@ -49,6 +49,12 @@ VDRest.Abstract.IndexedDB.prototype.obStoresStruct = null;
 VDRest.Abstract.IndexedDB.prototype.oStore = null;
 
 /**
+ * default store -> override!
+ * @type {string}
+ */
+VDRest.Abstract.IndexedDB.prototype.bypassCache = true;
+
+/**
  * initialize database
  * @throws {Error}
  */

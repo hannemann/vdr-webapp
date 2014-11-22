@@ -32,3 +32,7 @@ s.each(
 # Retrieve item
 
 VDRest.app.getModule('VDRest.Database').getModel('Images.Image', 'movies_fanart_collage').getData('data_url')
+
+
+# Fanart erstellen
+VDRest.app.getModule('Gui.Database').getController('Default').generateFanart('movies')
