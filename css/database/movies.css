@@ -1,0 +1,9 @@
+#movie-fanart {
+    width: 100%;
+}
+
+.fanart-h1.movies {
+    position: absolute;
+    top: 111px;
+    text-align: right;
+}

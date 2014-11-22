@@ -1,0 +1,17 @@
+.database #menubar,
+.database #viewport {
+    background-color: black;
+}
+
+.database .context-menu {
+    background: black;
+}
+
+.fanart-h1 {
+    font-size: 60px;
+    font-weight: bold;
+    padding: 14px;
+    width: calc(100% - 28px);
+    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75), 3px -3px 10px rgba(0, 0, 0, 0.75), 3px 3px 10px rgba(0, 0, 0, 0.75), 0 3px 10px rgba(0, 0, 0, 0.75);
+    text-transform: uppercase;
+}
