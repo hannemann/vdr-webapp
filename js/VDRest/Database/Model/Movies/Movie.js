@@ -24,3 +24,9 @@ VDRest.Database.Model.Movies.Movie.prototype.primaryKey = "movie_id";
  * @type {string}
  */
 VDRest.Database.Model.Movies.Movie.prototype.oStore = 'movies';
+
+/**
+ * collection model name
+ * @type {string}
+ */
+VDRest.Database.Model.Movies.Movie.prototype.collectionModel = 'Movies';

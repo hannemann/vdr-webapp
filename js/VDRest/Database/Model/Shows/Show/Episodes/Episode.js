@@ -24,3 +24,9 @@ VDRest.Database.Model.Shows.Show.Episodes.Episode.prototype.primaryKey = "episod
  * @type {string}
  */
 VDRest.Database.Model.Shows.Show.Episodes.Episode.prototype.oStore = 'episodes';
+
+/**
+ * collection model name
+ * @type {string}
+ */
+VDRest.Database.Model.Shows.Show.Episodes.Episode.prototype.collectionModel = 'Shows.Show.Episodes';

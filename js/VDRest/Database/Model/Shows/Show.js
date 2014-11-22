@@ -26,6 +26,12 @@ VDRest.Database.Model.Shows.Show.prototype.primaryKey = "series_id";
 VDRest.Database.Model.Shows.Show.prototype.oStore = 'shows';
 
 /**
+ * collection model name
+ * @type {string}
+ */
+VDRest.Database.Model.Shows.Show.prototype.collectionModel = 'Shows';
+
+/**
  * add episode to show
  * @param {Object} media
  */

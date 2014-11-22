@@ -117,3 +117,11 @@ VDRest.Abstract.IndexedDB.Item.prototype.unlink = function (callback) {
         unlink()
     }
 };
+
+/**
+ * retrieve collection model
+ */
+VDRest.Abstract.IndexedDB.Item.prototype.getCollection = function () {
+
+    return this.module.getModel(this.collectionModel);
+};

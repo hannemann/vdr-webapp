@@ -24,3 +24,9 @@ VDRest.Database.Model.Images.Image.prototype.primaryKey = "name";
  * @type {string}
  */
 VDRest.Database.Model.Images.Image.prototype.oStore = 'images';
+
+/**
+ * collection model name
+ * @type {string}
+ */
+VDRest.Database.Model.Images.Image.prototype.collectionModel = 'Images';
