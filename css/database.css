@@ -7,8 +7,14 @@
     background: black;
 }
 
+#media-browser {
+    backface-visibility: hidden;
+    perspective: 1000;
+}
+
 #media-browser .fanart {
     position: relative;
+    border-bottom: 2px solid white;
 }
 
 #media-browser .fanart:before {
@@ -19,6 +25,7 @@
 
 #media-browser .fanart img.fanart-collage {
     width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
 }
@@ -30,11 +37,43 @@
 }
 
 .fanart-h1 {
-    font-size: 60px;
-    line-height: 60px;
+    font-size: 3em;
+    line-height: 1;
     font-weight: bold;
     padding: 14px;
     width: calc(100% - 28px);
     text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75), 3px -3px 10px rgba(0, 0, 0, 0.75), 3px 3px 10px rgba(0, 0, 0, 0.75), 0 3px 10px rgba(0, 0, 0, 0.75);
     text-transform: uppercase;
+}
+
+@media (orientation: portrait) {
+    #media-browser {
+        transition: All 0s !important;
+        transform: translateX(0) !important;
+    }
+}
+
+@media (orientation: landscape) {
+    .database #menubar {
+        display: none;
+    }
+
+    .database #viewport {
+        top: 0;
+        height: 100%;
+    }
+
+    #media-browser {
+        width: calc(3 * 100%);
+        height: 100%;
+    }
+
+    #media-browser .fanart {
+        float: left;
+        width: 33.333333%;
+    }
+
+    .fanart-h1 {
+        font-size: 6em;
+    }
 }
