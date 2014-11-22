@@ -64,3 +64,27 @@ Gui.Database.View.Fanarts.prototype.addHeader = function () {
 
     return this;
 };
+
+/**
+ * add spinner
+ * @returns {Gui.Database.View.Fanarts}
+ */
+Gui.Database.View.Fanarts.prototype.addThrobber = function () {
+
+    this.throbber = $('<div style="background-image: url(' + VDRest.image.getThrobber() + ')">')
+        .addClass('throbber show center has-background ')
+        .appendTo(this.node);
+
+    return this;
+};
+
+/**
+ * add spinner
+ * @returns {Gui.Database.View.Fanarts}
+ */
+Gui.Database.View.Fanarts.prototype.removeThrobber = function () {
+
+    this.throbber.remove();
+
+    return this;
+};

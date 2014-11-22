@@ -42,17 +42,21 @@ Gui.Database.Controller.Fanarts.prototype.initBackendAndDispatch = function () {
 };
 
 /**
- * initialize view
+ * generate Fanart
  */
 Gui.Database.Controller.Fanarts.prototype.generateFanart = function () {
 
     var me = this,
         backendType = this.data.id + '_fanart_collage',
         fanartModel = this.module.backend.getModel('Images.Image', backendType);
+
+    this.view.addThrobber();
+
     this.module.getModel('Fanart').createFanartCollage(this.data.type, fanartModel, function () {
         me.view
             .setData('data_url', fanartModel.getData('data_url'))
             .updateImage();
 
+        me.view.removeThrobber();
     });
 };
