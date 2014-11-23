@@ -7,11 +7,6 @@
     background: black;
 }
 
-#media-browser {
-    backface-visibility: hidden;
-    perspective: 1000;
-}
-
 #media-browser .fanart {
     position: relative;
     border-bottom: 2px solid white;
@@ -48,7 +43,7 @@
 
 @media (orientation: portrait) {
     #media-browser {
-        transition: All 0s !important;
+        transition: transform 0s !important;
         transform: translateX(0) !important;
     }
 }
