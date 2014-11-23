@@ -516,4 +516,5 @@ Gui.Window.Controller.Drawer.prototype.destructView = function () {
     } else {
         this.cancelTriggerAnimation = undefined;
     }
+    this.module.popRegister();
 };

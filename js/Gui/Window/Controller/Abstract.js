@@ -112,4 +112,6 @@ Gui.Window.Controller.Abstract.prototype.destructView = function () {
     });
 
     $document.off("destruct.window-" + this.keyInCache);
+
+    this.module.popRegister();
 };

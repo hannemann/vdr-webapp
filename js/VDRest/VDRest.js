@@ -103,7 +103,8 @@ VDRest.App.prototype.run = function () {
     }
 
     if ("object" === typeof window.onhashchange) {
-        window.onhashchange = this.locationChange.bind(this);
+        window.addEventListener('hashchange', this.locationChange.bind(this));
+
     } else {
         this.pollLocation();
     }

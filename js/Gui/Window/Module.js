@@ -68,6 +68,8 @@ Gui.Window.prototype.init = function () {
 
     var me = this;
 
+    this.windows = [];
+
     VDRest.Abstract.Module.prototype.init.call(this);
 
     $document.on('window.request', function (e) {
@@ -104,7 +106,24 @@ Gui.Window.prototype.dispatch = function (payload) {
         }
 
         controller.dispatchView();
+
+        this.register(controller);
     }
+};
+
+Gui.Window.prototype.register = function (controller) {
+
+    this.windows.push(controller);
+};
+
+Gui.Window.prototype.popRegister = function () {
+
+    this.windows.pop();
+};
+
+Gui.Window.prototype.count = function () {
+
+    return this.windows.length;
 };
 
 /**

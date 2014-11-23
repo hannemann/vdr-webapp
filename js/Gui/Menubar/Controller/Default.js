@@ -87,6 +87,7 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
     this.view.titleWrapper.on('click', this.onIconClick.bind(this));
 
     $document.on('dispatch.after', this.handlePostDispatch.bind(this));
+    window.addEventListener('hashchange', this.handlePostDispatch.bind(this));
     $document.on('window.request window.close', this.handlePostDispatch.bind(this));
 
     this.view.settingsButton.on('click', this.requestContextMenu.bind(this));
@@ -161,10 +162,9 @@ Gui.Menubar.Controller.Default.prototype.showContextMenu = function () {
  */
 Gui.Menubar.Controller.Default.prototype.isStartPage = function () {
 
-    return (
-            VDRest.config.getItem('start') === VDRest.app.getCurrent()
-            && document.querySelectorAll('.window').length === 0
-        ) || "undefined" !== typeof this.initial
+    var w = VDRest.app.getModule('Gui.Window');
+
+    return ( VDRest.config.getItem('start') === VDRest.app.getCurrent() && w.count() === 0 ) || "undefined" !== typeof this.initial
 };
 
 /**
