@@ -41,6 +41,11 @@
     text-transform: uppercase;
 }
 
+.database .window {
+    background: black;
+    border: none;
+}
+
 @media (orientation: portrait) {
     #media-browser {
         transition: transform 0s !important;

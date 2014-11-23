@@ -7,3 +7,20 @@
     top: 111px;
     text-align: right;
 }
+
+/* List */
+
+.database-collection.movies .list-item {
+    border-bottom: 1px solid rgb(32, 32, 32);
+    padding: 3px;
+}
+
+.database-collection.movies .list-item .poster {
+    float: left;
+    width: 54px;
+    margin-right: 5px;
+}
+
+.database-collection.movies .list-item .title {
+    font-weight: bold;
+}

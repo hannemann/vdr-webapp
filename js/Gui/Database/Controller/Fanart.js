@@ -39,7 +39,7 @@ Gui.Database.Controller.Fanart.prototype.dispatchView = function () {
  */
 Gui.Database.Controller.Fanart.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.handleClick.bind(this));
+    this.view.node.on('mouseup', this.handleClick.bind(this));
 };
 
 /**
@@ -47,12 +47,25 @@ Gui.Database.Controller.Fanart.prototype.addObserver = function () {
  */
 Gui.Database.Controller.Fanart.prototype.removeObserver = function () {
 
-    this.view.node.off('click');
+    this.view.node.off('mouseup');
 };
 
 Gui.Database.Controller.Fanart.prototype.handleClick = function () {
 
-    console.log('Click');
+    console.log('Click!');
+
+    var controller = this.module.getController(this.data.id.ucfirst());
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "DatabaseList",
+            "hashSuffix": '~' + this.data.id,
+            "data": {
+                "dispatch": controller.dispatchView.bind(controller)
+            }
+        }
+    });
 };
 
 /**
