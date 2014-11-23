@@ -2,23 +2,23 @@
  * @class
  * @constructor
  */
-Gui.Database.View.Fanarts = function () {
+Gui.Database.View.Fanart = function () {
 };
 
 /**
  * @type {VDRest.Abstract.View}
  */
-Gui.Database.View.Fanarts.prototype = new VDRest.Abstract.View();
+Gui.Database.View.Fanart.prototype = new VDRest.Abstract.View();
 
 /**
  * @type {String}
  */
-Gui.Database.View.Fanarts.prototype.cacheKey = 'id';
+Gui.Database.View.Fanart.prototype.cacheKey = 'id';
 
 /**
  * initialize node
  */
-Gui.Database.View.Fanarts.prototype.init = function () {
+Gui.Database.View.Fanart.prototype.init = function () {
 
     this.node = $('<div class="fanart ' + this.data.type + '">');
 };
@@ -26,7 +26,7 @@ Gui.Database.View.Fanarts.prototype.init = function () {
 /**
  * render fanart
  */
-Gui.Database.View.Fanarts.prototype.render = function () {
+Gui.Database.View.Fanart.prototype.render = function () {
 
     this.addImage().addHeader();
 
@@ -36,7 +36,7 @@ Gui.Database.View.Fanarts.prototype.render = function () {
 /**
  * add image
  */
-Gui.Database.View.Fanarts.prototype.addImage = function () {
+Gui.Database.View.Fanart.prototype.addImage = function () {
 
     this.image = $('<img class="fanart-collage">')
         .attr('src', this.getData('data_url'))
@@ -48,7 +48,7 @@ Gui.Database.View.Fanarts.prototype.addImage = function () {
 /**
  * update image
  */
-Gui.Database.View.Fanarts.prototype.updateImage = function () {
+Gui.Database.View.Fanart.prototype.updateImage = function () {
 
     this.image.attr('src', this.getData('data_url'));
 };
@@ -56,7 +56,7 @@ Gui.Database.View.Fanarts.prototype.updateImage = function () {
 /**
  * add heading
  */
-Gui.Database.View.Fanarts.prototype.addHeader = function () {
+Gui.Database.View.Fanart.prototype.addHeader = function () {
 
     this.header = $('<div class="fanart-h1">')
         .text(VDRest.app.translate(this.data.header))
@@ -67,9 +67,9 @@ Gui.Database.View.Fanarts.prototype.addHeader = function () {
 
 /**
  * add spinner
- * @returns {Gui.Database.View.Fanarts}
+ * @returns {Gui.Database.View.Fanart}
  */
-Gui.Database.View.Fanarts.prototype.addThrobber = function () {
+Gui.Database.View.Fanart.prototype.addThrobber = function () {
 
     this.throbber = $('<div style="background-image: url(' + VDRest.image.getThrobber() + ')">')
         .addClass('throbber show center has-background ')
@@ -80,9 +80,9 @@ Gui.Database.View.Fanarts.prototype.addThrobber = function () {
 
 /**
  * add spinner
- * @returns {Gui.Database.View.Fanarts}
+ * @returns {Gui.Database.View.Fanart}
  */
-Gui.Database.View.Fanarts.prototype.removeThrobber = function () {
+Gui.Database.View.Fanart.prototype.removeThrobber = function () {
 
     this.throbber.remove();
 

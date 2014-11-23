@@ -37,13 +37,13 @@ Gui.Database.Controller.Default.prototype.dispatchView = function () {
  */
 Gui.Database.Controller.Default.prototype.initFanarts = function () {
 
-    this.tiles.push(this.module.getController('Fanarts', {
+    this.tiles.push(this.module.getController('Fanart', {
         "id": "movies",
         "header": "Movies",
         "type": "movies",
         "parent": this
     }));
-    this.tiles.push(this.module.getController('Fanarts', {
+    this.tiles.push(this.module.getController('Fanart', {
         "id": "shows",
         "header": "TV-Shows",
         "type": "shows",
