@@ -10,6 +10,9 @@ Gui.Database.View.Movies = function () {
  */
 Gui.Database.View.Movies.prototype = new Gui.Database.View.List();
 
+/**
+ * initialize node
+ */
 Gui.Database.View.Movies.prototype.init = function () {
 
     this.node = $('<div class="database-collection movies">');

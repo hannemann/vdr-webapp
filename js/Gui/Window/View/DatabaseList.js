@@ -20,11 +20,13 @@ Gui.Window.View.DatabaseList.prototype.render = function () {
 
     this.addClasses();
 
-    this.data.dispatch(this);
-
     Gui.Window.View.Abstract.prototype.render.call(this);
 
     this.node.toggleClass('collapsed expand');
+
+    this.node.one(VDRest.Abstract.Controller.prototype.animationEndEvents, function () {
+        this.data.dispatch(this);
+    }.bind(this));
 };
 
 /**
@@ -33,7 +35,7 @@ Gui.Window.View.DatabaseList.prototype.render = function () {
  */
 Gui.Window.View.DatabaseList.prototype.addClasses = function () {
 
-    var classNames = ['viewport-fullsize', 'collapsed'];
+    var classNames = ['viewport-fullsize', 'collapsed', 'database-list'];
 
     this.node.addClass(classNames.join(' '));
     return this;

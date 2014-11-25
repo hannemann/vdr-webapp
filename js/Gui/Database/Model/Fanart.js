@@ -1,3 +1,7 @@
+/**
+ * @class
+ * @constructor
+ */
 Gui.Database.Model.Fanart = function () {
 };
 
@@ -43,6 +47,12 @@ Gui.Database.Model.Fanart.prototype.createFanartCollage = function (type, model,
     }
 };
 
+/**
+ * create collage from fanarts
+ * @param {Array} fanarts
+ * @param {VDRest.Database.Model.Images.Image} model
+ * @param {Function} callback
+ */
 Gui.Database.Model.Fanart.prototype.createCollage = function (fanarts, model, callback) {
 
     var ca = document.createElement('canvas'),

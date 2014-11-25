@@ -10,28 +10,75 @@ Gui.Database.View.List.Movie = function () {
  */
 Gui.Database.View.List.Movie.prototype = new Gui.Database.View.List.Item();
 
-
+/**
+ * render
+ */
 Gui.Database.View.List.Movie.prototype.render = function () {
 
-    this.addPoster().addTitle();
+    this.addImage('fanart')
+        .addImage('poster')
+        .addText('title')
+        .addText('tagline')
+        .addText('genres')
+        .addVoteAverage()
+        .addText('overview');
 
     VDRest.Abstract.View.prototype.render.call(this);
 };
 
-Gui.Database.View.List.Movie.prototype.addPoster = function () {
+/**
+ * add an image
+ * @param {String} type fanart, poster...
+ * @returns {Gui.Database.View.List.Movie}
+ */
+Gui.Database.View.List.Movie.prototype.addImage = function (type) {
 
-    this.poster = $('<img>').attr('src', this.baseImageUrl + this.data.media.poster);
+    if (this.data.media[type] != '') {
+        this[type] = $('<img>').attr('src', this.baseImageUrl + this.data.media[type]);
 
-    this.poster.addClass('poster').appendTo(this.node);
+        this[type].addClass(type).appendTo(this.node);
+    }
 
     return this;
 };
 
-Gui.Database.View.List.Movie.prototype.addTitle = function () {
+/**
+ * add text
+ * @param type
+ * @returns {Gui.Database.View.List.Movie}
+ */
+Gui.Database.View.List.Movie.prototype.addText = function (type) {
 
-    this.title = $('<div>').html(this.data.media.title);
+    if (this.data.media[type] != '') {
+        this[type] = $('<div>').html(this.data.media[type]);
 
-    this.title.addClass('title').appendTo(this.node);
+        this[type].addClass(type).appendTo(this.node);
+    }
+
+    return this;
+};
+
+/**
+ * add vote average
+ * @returns {Gui.Database.View.List.Movie}
+ */
+Gui.Database.View.List.Movie.prototype.addVoteAverage = function () {
+
+    var x = 10, star;
+
+    if (this.data.media.vote_average != '') {
+        this.voteAverage = $('<div>')
+            .html('<span class="vote-numeric">' + this.data.media.vote_average.toPrecision(2) + '</span>');
+
+        for (x; x > 0; x--) {
+            star = $('<span>').text('★').prependTo(this.voteAverage);
+            if (x <= Math.round(this.data.media.vote_average)) {
+                star.addClass('vote');
+            }
+        }
+
+        this.voteAverage.addClass('vote-average').appendTo(this.node);
+    }
 
     return this;
 };

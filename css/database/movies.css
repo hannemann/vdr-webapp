@@ -10,17 +10,77 @@
 
 /* List */
 
+.window.database-list {
+    background-color: rgba(0, 0, 0, .85);
+    z-index: 0;
+}
+
 .database-collection.movies .list-item {
     border-bottom: 1px solid rgb(32, 32, 32);
     padding: 3px;
+    z-index: 0;
+}
+
+.database-collection.movies .list-item .fanart {
+    display: none;
+}
+
+.database-collection.movies .list-item .poster,
+.database-collection.movies .list-item div {
+    position: relative;
+    z-index: 1;
 }
 
 .database-collection.movies .list-item .poster {
     float: left;
-    width: 54px;
+    width: 55px;
     margin-right: 5px;
 }
 
 .database-collection.movies .list-item .title {
     font-weight: bold;
+}
+
+.database-collection.movies .list-item .tagline {
+    font-size: 10px;
+}
+
+.database-collection.movies .list-item .overview {
+    font-size: 12px;
+    line-height: 14px;
+    height: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.database-collection.movies .list-item .genres {
+    font-size: 12px;
+}
+
+.database-collection.movies.display-item .vote-average,
+.database-collection.movies .list-item .vote-average {
+    font-size: 12px;
+    text-align: right;
+}
+
+.database-collection.movies.display-item .vote-average span,
+.database-collection.movies .list-item .vote-average span {
+    width: auto;
+    display: inline;
+    float: none;
+    border: none;
+    color: #535353;
+    font-size: 8px;
+}
+
+.database-collection.movies.display-item span.vote,
+.database-collection.movies .list-item span.vote {
+    color: #ffaf17;
+}
+
+.database-collection.movies.display-item span.vote-numeric,
+.database-collection.movies .list-item span.vote-numeric {
+    font-size: 10px;
+    color: white;
 }

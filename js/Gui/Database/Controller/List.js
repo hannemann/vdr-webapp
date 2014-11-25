@@ -11,6 +11,11 @@ Gui.Database.Controller.List = function () {
 Gui.Database.Controller.List.prototype = new VDRest.Abstract.Controller();
 
 /**
+ * bypass caching mechanism
+ */
+Gui.Database.Controller.List.prototype.bypassCache = true;
+
+/**
  * retrieve collection model
  * @param {String} type
  */

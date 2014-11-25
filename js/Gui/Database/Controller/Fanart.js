@@ -52,8 +52,6 @@ Gui.Database.Controller.Fanart.prototype.removeObserver = function () {
 
 Gui.Database.Controller.Fanart.prototype.handleClick = function () {
 
-    console.log('Click!');
-
     var controller = this.module.getController(this.data.id.ucfirst());
 
     $.event.trigger({
