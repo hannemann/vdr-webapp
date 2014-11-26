@@ -74,7 +74,7 @@ Gui.Database.Controller.Fanart.prototype.initBackendAndDispatch = function () {
     this.backend = this.module.backend.getModel('Images.Image', this.data.id + '_fanart_collage');
     this.backend.onload = function (fanart) {
         if (!fanart.hasData('data_url')) {
-            this.generateFanart();
+            this.generate();
         } else {
             this.view.setData('data_url', fanart.getData('data_url'));
         }
@@ -85,7 +85,7 @@ Gui.Database.Controller.Fanart.prototype.initBackendAndDispatch = function () {
 /**
  * generate Fanart
  */
-Gui.Database.Controller.Fanart.prototype.generateFanart = function () {
+Gui.Database.Controller.Fanart.prototype.generate = function () {
 
     var me = this,
         backendType = this.data.id + '_fanart_collage',

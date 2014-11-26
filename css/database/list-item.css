@@ -1,0 +1,74 @@
+/* List */
+
+.window.database-list {
+    background-color: rgba(0, 0, 0, .85);
+    z-index: 0;
+}
+
+.database-collection .list-item {
+    border-bottom: 1px solid rgb(32, 32, 32);
+    padding: 3px;
+    z-index: 0;
+}
+
+.database-collection .list-item .fanart {
+    display: none;
+}
+
+.database-collection .list-item .poster,
+.database-collection .list-item div {
+    position: relative;
+    z-index: 1;
+}
+
+.database-collection .list-item .poster {
+    float: left;
+    width: 55px;
+    margin-right: 5px;
+}
+
+.database-collection .list-item .name,
+.database-collection .list-item .title {
+    font-weight: bold;
+}
+
+.database-collection .list-item .tagline {
+    font-size: 10px;
+}
+
+.database-collection .list-item .overview {
+    font-size: 12px;
+    line-height: 14px;
+    height: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.database-collection .list-item .genre,
+.database-collection .list-item .genres {
+    font-size: 12px;
+}
+
+.database-collection .rating {
+    font-size: 12px;
+    text-align: right;
+}
+
+.database-collection .rating span {
+    width: auto;
+    display: inline;
+    float: none;
+    border: none;
+    color: #535353;
+    font-size: 8px;
+}
+
+.database-collection span.vote {
+    color: #ffaf17;
+}
+
+.database-collection span.vote-numeric {
+    font-size: 10px;
+    color: white;
+}

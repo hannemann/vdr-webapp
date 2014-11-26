@@ -1,0 +1,154 @@
+
+.database-collection.display-item {
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: transform .2s, opacity .2s;
+    opacity: 0;
+    transform: scale(.5, .5);
+    background-color: rgba(0, 0, 0, 0.9);
+    backface-visibility: hidden;
+}
+
+.database-collection.display-item.show {
+    position: absolute;
+    z-index: 1;
+    opacity: 1;
+    transform: scale(1, 1) translateY(0);
+    perspective: 1000px;
+    perspective-origin: 50% 75%;
+    overflow: auto;
+}
+
+.database-collection.display-item .fanart {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.database-collection.display-item .poster {
+    width: 100px;
+    float: left;
+    margin: 0 0.6em 0;
+}
+
+.database-collection.display-item .name,
+.database-collection.display-item .title {
+    font-size: 1.5em;
+}
+
+.database-collection.display-item .overview {
+    clear: left;
+    font-size: 14px;
+    padding: .9em;
+}
+
+.database-collection.display-item .name,
+.database-collection.display-item .title,
+.database-collection.display-item .tagline,
+.database-collection.display-item .genre,
+.database-collection.display-item .genres,
+.database-collection.display-item .rating {
+    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px 3px 10px rgba(0, 0, 0, 0.75),
+    0 3px 10px rgba(0, 0, 0, 0.75);
+}
+
+.database-collection.display-item .name,
+.database-collection.display-item .title,
+.database-collection.display-item .tagline,
+.database-collection.display-item .genre,
+.database-collection.display-item .genres,
+.database-collection.display-item .overview,
+.database-collection.display-item .rating span.vote-numeric {
+    font-weight: bold;
+}
+
+.database-collection.display-item .rating {
+    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px 3px 10px rgba(0, 0, 0, 0.75),
+    0 3px 10px rgba(0, 0, 0, 0.75);
+    padding-right: .5em;
+}
+
+.database-collection.display-item .rating span {
+    font-size: 12px;
+}
+
+.database-collection.display-item .rating span.vote-numeric {
+    font-size: 14px;
+}
+
+@media (orientation: landscape) {
+
+    .database-collection.display-item .fanart {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        margin: 0;
+    }
+
+    .database-collection.display-item .poster {
+        transform: rotateY(60deg);
+        border-radius: 8px;
+        position: absolute;
+        bottom: 1em;
+        backface-visibility: hidden;
+        float: none;
+        margin: 0;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        box-shadow: -4px 0 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .database-collection.display-item .title,
+    .database-collection.display-item .name {
+        font-size: 2.5em;
+    }
+
+    .database-collection.display-item .title,
+    .database-collection.display-item .name {
+        padding: 0 1.5%;
+        position: relative;
+    }
+
+    .database-collection.display-item .overview {
+        background-color: rgba(0, 0, 0, 0.5);
+        height: 5.2em;
+        overflow: auto;
+        font-size: .9em;
+        border: .5em solid transparent;
+        border-radius: .5em;
+        position: absolute;
+        left: 100px;
+        bottom: 1em;
+        width: calc(100% - 2em - 100px);
+        padding: 0;
+    }
+
+    .database-collection.display-item .rating,
+    .database-collection.display-item .genre,
+    .database-collection.display-item .genres {
+        position: absolute;
+    }
+
+    .database-collection.display-item .genre,
+    .database-collection.display-item .genres {
+        bottom: 6.5em;
+        left: calc(.5em + 100px);
+    }
+
+    .database-collection.display-item .rating {
+        right: 2em;
+        bottom: 8.5em;
+        padding: 0;
+    }
+}

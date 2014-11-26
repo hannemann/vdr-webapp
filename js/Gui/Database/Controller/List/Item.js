@@ -36,3 +36,63 @@ Gui.Database.Controller.List.Item.prototype.dispatchView = function () {
 
     this.addObserver();
 };
+
+/**
+ * add event listeners
+ */
+Gui.Database.Controller.List.Item.prototype.addObserver = function () {
+
+    this.view.node.on('click', this.handleClick.bind(this));
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Database.Controller.List.Item.prototype.removeObserver = function () {
+
+    this.view.node.off('click');
+};
+
+/**
+ * handle click event
+ */
+Gui.Database.Controller.List.Item.prototype.handleClick = function () {
+
+    VDRest.app.addDestroyer('hashChanged', this.removeItem.bind(this));
+    VDRest.app.observe();
+    VDRest.app.setLocationHash('DatabaseList~DisplayItem');
+    this.displayItem();
+};
+
+/**
+ * toggle display of single item on
+ * @returns {Gui.Database.Controller.List.Movie}
+ */
+Gui.Database.Controller.List.Item.prototype.displayItem = function () {
+
+    var typeClassName = this.data.type.toLowerCase() + 's';
+
+    this.clone = this.view.node.clone();
+
+    this.clone.toggleClass('database-collection display-item hidden list-item ' + typeClassName);
+    this.clone.appendTo('body');
+    setTimeout(function () {
+        this.clone.toggleClass('hidden show');
+    }.bind(this), 20);
+
+    return this;
+};
+
+/**
+ * toggle display of single item off
+ * @returns {Gui.Database.Controller.List.Movie}
+ */
+Gui.Database.Controller.List.Item.prototype.removeItem = function () {
+
+    this.clone.toggleClass('hidden show');
+    this.clone.one(VDRest.Abstract.Controller.prototype.transitionEndEvents, function () {
+        this.clone.remove();
+    }.bind(this));
+
+    return this;
+};
