@@ -35,4 +35,4 @@ VDRest.app.getModule('VDRest.Database').getModel('Images.Image', 'movies_fanart_
 
 
 # Fanart erstellen
-VDRest.app.getModule('Gui.Database').getController('Default').generateFanart('movies')
+VDRest.app.getModule('Gui.Database').getController('Fanart', 'shows').generate()

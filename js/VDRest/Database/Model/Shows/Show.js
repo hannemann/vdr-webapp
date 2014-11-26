@@ -7,7 +7,7 @@ VDRest.Database.Model.Shows.Show = function () {};
 /**
  * @type {VDRest.Abstract.IndexedDB.Item}
  */
-VDRest.Database.Model.Shows.Show.prototype = new VDRest.Database.Model.Item();
+VDRest.Database.Model.Shows.Show.prototype = new VDRest.Database.Model.Database.Item();
 
 /**
  * @type {String}
@@ -66,4 +66,35 @@ VDRest.Database.Model.Shows.Show.prototype.initMedia = function (media) {
     };
 
     return series_data;
+};
+
+/**
+ * initialize data object
+ * @param {String} type
+ * @param {Number} index
+ * @returns {String|Boolean}
+ */
+VDRest.Database.Model.Shows.Show.prototype.getImage = function (type, index) {
+
+    if (this.data[type] && this.data[type] instanceof Array && this.data[type][index]) {
+        return this.data[type][index];
+    }
+
+    return false;
+};
+
+/**
+ * retrieve rating
+ * @param {Number} [precision]
+ * @returns {String|Boolean}
+ */
+VDRest.Database.Model.Shows.Show.prototype.getRating = function (precision) {
+
+    precision = precision || 2;
+
+    if (this.data.rating && this.data.rating != '') {
+        return this.data.rating.toPrecision(precision)
+    }
+
+    return false;
 };

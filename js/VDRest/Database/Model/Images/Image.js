@@ -7,7 +7,7 @@ VDRest.Database.Model.Images.Image = function () {};
 /**
  * @type {VDRest.Abstract.IndexedDB.Item}
  */
-VDRest.Database.Model.Images.Image.prototype = new VDRest.Database.Model.Item();
+VDRest.Database.Model.Images.Image.prototype = new VDRest.Database.Model.Database.Item();
 
 /**
  * @type {String}
