@@ -1,4 +1,11 @@
-VDRest.Helper = function () {};
+VDRest.Helper = function () {
+
+    this.isTouchDevice = "ontouchstart" in document;
+
+    if (this.isTouchDevice) {
+        document.body.classList.add('is-touch');
+    }
+};
 
 /**
  * retrieve instance of Date

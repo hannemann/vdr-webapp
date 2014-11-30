@@ -55,13 +55,12 @@ Gui.Epg.Controller.TimeLine.prototype.removeObserver = function () {
 
 /**
  * handle scroll events
+ * @param {{x: Number, y: Number}|Event} [e]
  */
 Gui.Epg.Controller.TimeLine.prototype.handleScroll = function (e) {
 
-    var scroll = this.broadcastsWrapper.scrollLeft * -1,
+    var scroll = e.x ? e.x : this.broadcastsWrapper.scrollLeft * -1,
         ddOffset = this.broadcastsWrapper.offsetLeft, me = this;
-
-    scroll = e.x;
 
     if (this.view.node.is(':visible')) {
 

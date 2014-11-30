@@ -117,12 +117,6 @@ Gui.Epg.Controller.Epg.prototype.getViewPort = function () {
  */
 Gui.Epg.Controller.Epg.prototype.getBroadcasts = function () {
 
-    //if (!this.broadcastsView) {
-    //
-    //    this.broadcastsView = this.module.getView('Broadcasts');
-    //}
-    //return this.broadcastsView;
-
     if (!this.broadcastsController) {
 
         this.broadcastsController = this.module.getController('Broadcasts');
@@ -144,6 +138,19 @@ Gui.Epg.Controller.Epg.prototype.getMetrics = function () {
 };
 
 /**
+ * retrieve current scroll left
+ * @returns {Number}
+ */
+Gui.Epg.Controller.Epg.prototype.getScrollLeft = function () {
+
+    if (!VDRest.helper.isTouchDevice) {
+        return this.broadcastsController.view.wrapper.scrollLeft();
+    } else {
+        return this.broadcastsController.touchScroll.slide.getTranslate(false).x;
+    }
+};
+
+/**
  * set metrics object
  */
 Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
@@ -151,7 +158,6 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
     var viewPort = this.getViewPort().node,
         vOffset = viewPort.offset(),
         broadcasts = this.getBroadcasts(),
-        bTranslate = broadcasts.touchScroll.slide.getTranslate(false),
         bOffset = broadcasts.view.node.offset();
 
     this.metrics = {

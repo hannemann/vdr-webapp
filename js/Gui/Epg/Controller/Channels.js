@@ -181,12 +181,11 @@ Gui.Epg.Controller.Channels.prototype.dispatchChannels = function () {
 
 /**
  * handle scroll events
+ * @param {{x: Number, y: Number}|Event} [e]
  */
 Gui.Epg.Controller.Channels.prototype.handleScroll = function (e) {
 
-    var scroll = this.broadcastsWrapper.scrollTop * -1;
-
-    scroll = e.y;
+    var scroll = e.y ? e.y : this.broadcastsWrapper.scrollTop * -1;
 
     if (!this.channelView) {
         this.node.style.transform = "translateY(" + scroll + "px)";

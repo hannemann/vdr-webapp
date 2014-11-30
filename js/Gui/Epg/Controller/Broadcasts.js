@@ -23,11 +23,13 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.timeLineController = this.module.getController('TimeLine');
     this.handleScrollBroadcasts = this.fnHandleScrollBroadcasts.bind(this);
 
-    this.touchScroll = new TouchScroll({
-        "scroller" : this.view.wrapper[0],
-        "allowedDirections" : ['x', "y"],
-        "onmove" : this.handleScroll.bind(this)
-    })
+    if (VDRest.helper.isTouchDevice) {
+        this.touchScroll = new TouchScroll({
+            "scroller" : this.view.wrapper[0],
+            "allowedDirections" : ['x', "y"],
+            "onmove" : this.handleScroll.bind(this)
+        })
+    }
 };
 
 Gui.Epg.Controller.Broadcasts.prototype.width = function () {
@@ -63,7 +65,9 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
 
-    //this.view.wrapper.get(0).onscroll = $.proxy(this.handleScroll, this);
+    if (!VDRest.helper.isTouchDevice) {
+        this.view.wrapper.get(0).onscroll = $.proxy(this.handleScroll, this);
+    }
 };
 
 /**
@@ -71,7 +75,9 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
 
-    //$(this.view.wrapper).off('scroll', this.handleScroll);
+    if (!VDRest.helper.isTouchDevice) {
+        $(this.view.wrapper).off('scroll', this.handleScroll);
+    }
 };
 
 /**

@@ -31,7 +31,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isVisible = true;
 Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
 
     this.epgController = this.module.getController('Epg');
-    this.broadcastsWrapper = this.epgController.getBroadcasts().view.wrapper;
+    this.broadcastsController = this.epgController.getBroadcasts();
+    this.broadcastsWrapper = this.broadcastsController.view.wrapper;
     this.broadcasts = [];
     this.view = this.module.getView('Broadcasts.List', {
         "channel_id" : this.data.channel_id
@@ -200,38 +201,21 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
     var me = this, isInView;
 
-    !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
-    !!this.visibleTimeout && clearTimeout(this.visibleTimeout);
-
     if (!this.isChannelView) {
 
         isInView = this.isInView();
 
         if (isInView) {
-
-            this.scrollTimeout = setTimeout(function () {
-
-                me.updateList();
-
-            }, 200);
+            me.updateList();
         }
 
         if (this.isVisible != isInView) {
-
-            this.visibleTimeout = setTimeout(function () {
-
-                me.view.setIsVisible(isInView);
-                me.isVisible = isInView;
-
-            }, 200);
+            me.view.setIsVisible(isInView);
+            me.isVisible = isInView;
         }
     } else if (this.view.node.hasClass('active')) {
 
-        this.scrollTimeout = setTimeout(function () {
-
-            me.updateList();
-
-        }, 200);
+        me.updateList();
     }
 };
 
@@ -287,7 +271,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
                 < this.broadcasts[l - 1].view.getRight()
             ) {
 
-                this.epgController.getBroadcasts().view.node.width(metrics.win.width + this.broadcasts[l - 1].view.getRight());
+                this.broadcastsController.view.node.width(metrics.win.width + this.broadcasts[l - 1].view.getRight());
             }
 
             this.toggleBroadcastsVisibility();
@@ -316,11 +300,11 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
     var i,
         l = this.broadcasts.length,
-        wrapperWidth = this.broadcastsWrapper.get(0).offsetWidth,
-        currentScrollLeft = Math.abs(this.epgController.getBroadcasts().touchScroll.slide.getTranslate(false).x),
+        wrapperWidth = this.broadcastsController.view.wrapper[0].offsetWidth,
+        currentScrollLeft = Math.abs(this.epgController.getScrollLeft()),
         currentScrollDate = new Date((currentScrollLeft / this.pixelPerSecond) * 1000 + this.fromTime),
-        currentSrcollTime = currentScrollDate.getTime() / 1000,
-        visibleEndDate = new Date((wrapperWidth / this.pixelPerSecond) * 1000 + currentSrcollTime * 1000),
+        currentScrollTime = currentScrollDate.getTime() / 1000,
+        visibleEndDate = new Date((wrapperWidth / this.pixelPerSecond) * 1000 + currentScrollTime * 1000),
         visibleEndTime = visibleEndDate.getTime() / 1000,
         broadcast, start, end;
 
@@ -335,7 +319,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
                 start = broadcast.getData('start_time');
                 end = broadcast.getData('end_time');
 
-                if (end > currentSrcollTime && start <= currentSrcollTime) {
+                if (end > currentScrollTime && start <= currentScrollTime) {
 
                     this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
                     this.broadcasts[i].view.node.addClass('first-visible');
@@ -386,7 +370,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
                 start = broadcast.getData('start_time');
                 end = broadcast.getData('end_time');
 
-                if (end <= currentSrcollTime || i === 0) {
+                if (end <= currentScrollTime || i === 0) {
 
                     this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
                     this.broadcasts[i].view.node.addClass('first-visible');
