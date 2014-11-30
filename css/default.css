@@ -202,8 +202,4 @@ img.hidden-for-processing {
     body {
         font-size: 28px;
     }
-    #viewport {
-        top: 90px;
-        height: calc(100% - 90px);
-    }
 }
