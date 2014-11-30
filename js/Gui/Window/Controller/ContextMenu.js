@@ -62,11 +62,14 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
     if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
 
         this.view.node.find('.config-button')
-            .one('mousedown', $.proxy(this.handleConfig, this));
+            .one('mousedown', this.handleConfig.bind(this));
     }
 
+    this.view.node.find('.fullscreen-button')
+        .one('mousedown', this.handleFullscreen.bind(this));
+
     this.view.node.find('.reload-button')
-        .one('mousedown', $.proxy(this.handleReload, this));
+        .one('mousedown', this.handleReload.bind(this));
 
     this.view.modalOverlay.one('click', $.proxy(function () {
 
@@ -122,4 +125,58 @@ Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
 
         location.reload();
     });
+};
+
+/**
+ * reload page
+ */
+Gui.Window.Controller.ContextMenu.prototype.handleFullscreen = function () {
+
+    this.vibrate();
+
+    $(document).one(this.animationEndEvents, function () {
+
+        location.reload();
+    });
+};
+Gui.Window.Controller.ContextMenu.prototype.handleFullscreen = function () {
+
+    this[VDRest.helper.getIsFullscreen() ? 'cancelFullscreen' : 'requestFullscreen']();
+};
+
+/**
+ * hides status bar and dims buttons
+ * use video tag if one day all the bugs are fixed
+ * (no custom controls possible, garbled playback for some time after change)
+ */
+Gui.Window.Controller.ContextMenu.prototype.requestFullscreen = function () {
+
+    if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+        (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        if (document.documentElement.requestFullScreen) {
+            document.documentElement.requestFullScreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullScreen) {
+            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+    }
+
+    this.view.node.find('.fullscreen-button').html(VDRest.app.translate('Exit fullscreen'));
+};
+
+/**
+ * leave fullscreen
+ */
+Gui.Window.Controller.ContextMenu.prototype.cancelFullscreen = function () {
+
+    if (document.cancelFullScreen) {
+        document.cancelFullScreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.webkitCancelFullScreen) {
+        document.webkitCancelFullScreen();
+    }
+
+    this.view.node.find('.fullscreen-button').html(VDRest.app.translate('Go fullscreen'));
 };

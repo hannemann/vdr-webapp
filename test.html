@@ -108,6 +108,7 @@
             left: 40px;
             height: calc(100% - 21px);
             overflow: auto;
+            overflow: hidden;
         }
         #events {
             background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
@@ -204,6 +205,8 @@
 
 
     <script type="text/javascript" src="js/VDRest/Lib/jquery-2.1.0.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchScroll.js"></script>
     <script type="text/javascript">
 
         $(function () {
@@ -233,7 +236,7 @@
                 channel = $('<div class="channel">');
                 channel.appendTo(events);
 
-                for (var x=0;x<150;x++) {
+                for (var x=0;x<20;x++) {
 
                     width = Math.floor(Math.random() * 150) + 1;
 
@@ -251,6 +254,18 @@
                     left += width;
                 }
             }
+
+            new TouchScroll({
+                scroller:document.querySelector('#events-wrapper'),
+                allowedDirections : ['x', "y"],
+                onmove : function (e) {
+//                    console.log(e);
+
+                    timeline[0].style.transform = 'translateX(' + e.x + 'px)';
+                    channels[0].style.transform = 'translateY(' + e.y + 'px)';
+
+                }
+            });
         });
 
     </script>
@@ -272,7 +287,7 @@
                 <!--<div class="channel"></div>-->
             </div>
             <div id="events-wrapper">
-                <div id="events">
+                <div id="events" class="slide">
                     <!--<div class="channel">-->
                         <!--<div class="broadcast"></div>-->
                         <!--<div class="broadcast"></div>-->

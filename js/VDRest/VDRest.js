@@ -90,6 +90,8 @@ VDRest.App.prototype.run = function () {
 
     this.language = VDRest.config.getItem('language');
 
+    this.startedFullscreen = VDRest.helper.getIsFullscreen();
+
     if (this.isRegistered(startConfig)) {
 
         start = startConfig;

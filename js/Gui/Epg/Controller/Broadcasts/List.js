@@ -31,7 +31,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isVisible = true;
 Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
 
     this.epgController = this.module.getController('Epg');
-    this.broadcastsWrapper = this.epgController.getBroadcasts().wrapper;
+    this.broadcastsWrapper = this.epgController.getBroadcasts().view.wrapper;
     this.broadcasts = [];
     this.view = this.module.getView('Broadcasts.List', {
         "channel_id" : this.data.channel_id
@@ -283,11 +283,11 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
             // adjust width of parentView
             if (
-                (this.epgController.getBroadcasts().node.width() - metrics.win.width)
+                (metrics.broadcasts.width - metrics.win.width)
                 < this.broadcasts[l - 1].view.getRight()
             ) {
 
-                this.epgController.getBroadcasts().node.width(metrics.win.width + this.broadcasts[l - 1].view.getRight());
+                this.epgController.getBroadcasts().view.node.width(metrics.win.width + this.broadcasts[l - 1].view.getRight());
             }
 
             this.toggleBroadcastsVisibility();
@@ -317,7 +317,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
     var i,
         l = this.broadcasts.length,
         wrapperWidth = this.broadcastsWrapper.get(0).offsetWidth,
-        currentScrollLeft = this.broadcastsWrapper.scrollLeft(),
+        currentScrollLeft = Math.abs(this.epgController.getBroadcasts().touchScroll.slide.getTranslate(false).x),
         currentScrollDate = new Date((currentScrollLeft / this.pixelPerSecond) * 1000 + this.fromTime),
         currentSrcollTime = currentScrollDate.getTime() / 1000,
         visibleEndDate = new Date((wrapperWidth / this.pixelPerSecond) * 1000 + currentSrcollTime * 1000),

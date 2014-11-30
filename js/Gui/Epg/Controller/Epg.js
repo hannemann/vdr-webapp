@@ -117,11 +117,17 @@ Gui.Epg.Controller.Epg.prototype.getViewPort = function () {
  */
 Gui.Epg.Controller.Epg.prototype.getBroadcasts = function () {
 
-    if (!this.broadcastsView) {
+    //if (!this.broadcastsView) {
+    //
+    //    this.broadcastsView = this.module.getView('Broadcasts');
+    //}
+    //return this.broadcastsView;
 
-        this.broadcastsView = this.module.getView('Broadcasts');
+    if (!this.broadcastsController) {
+
+        this.broadcastsController = this.module.getController('Broadcasts');
     }
-    return this.broadcastsView;
+    return this.broadcastsController;
 };
 
 /**
@@ -144,8 +150,9 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
 
     var viewPort = this.getViewPort().node,
         vOffset = viewPort.offset(),
-        broadcasts = this.getBroadcasts().node,
-        bOffset = broadcasts.offset();
+        broadcasts = this.getBroadcasts(),
+        bTranslate = broadcasts.touchScroll.slide.getTranslate(false),
+        bOffset = broadcasts.view.node.offset();
 
     this.metrics = {
         "win" : {
@@ -161,8 +168,8 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
         "broadcasts" : {
             "top" : bOffset.top,
             "left" : bOffset.left,
-            "width" : broadcasts.width(),
-            "height" : broadcasts.height()
+            "width" : broadcasts.view.node.width(),
+            "height" : broadcasts.view.node.height()
         }
     };
 };

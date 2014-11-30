@@ -21,6 +21,23 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
     this.channelsController = this.module.getController('Channels');
     this.timeLineController = this.module.getController('TimeLine');
+    this.handleScrollBroadcasts = this.fnHandleScrollBroadcasts.bind(this);
+
+    this.touchScroll = new TouchScroll({
+        "scroller" : this.view.wrapper[0],
+        "allowedDirections" : ['x', "y"],
+        "onmove" : this.handleScroll.bind(this)
+    })
+};
+
+Gui.Epg.Controller.Broadcasts.prototype.width = function () {
+
+    return this.view.node.width();
+};
+
+Gui.Epg.Controller.Broadcasts.prototype.height = function () {
+
+    return this.view.node.height();
 };
 
 /**
@@ -46,7 +63,7 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
 
-    this.view.wrapper.get(0).onscroll = $.proxy(this.handleScroll, this);
+    //this.view.wrapper.get(0).onscroll = $.proxy(this.handleScroll, this);
 };
 
 /**
@@ -54,23 +71,30 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
 
-    $(this.view.wrapper).off('scroll', this.handleScroll);
+    //$(this.view.wrapper).off('scroll', this.handleScroll);
 };
 
 /**
  * handle scroll events
  */
-Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function () {
+Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function (e) {
+
+    this.channelsController.handleScroll(e);
+    this.timeLineController.handleScroll(e);
+
+    !!this.scrollTimeout && clearTimeout(this.scrollTimeout);
+
+    this.scrollTimeout = setTimeout(this.handleScrollBroadcasts, 200);
+};
+
+Gui.Epg.Controller.Broadcasts.prototype.fnHandleScrollBroadcasts = function (e) {
 
     var i;
-
-    this.channelsController.handleScroll();
-    this.timeLineController.handleScroll();
 
     for (i in this.broadcastLists) {
         if (this.broadcastLists.hasOwnProperty(i)) {
 
-            this.broadcastLists[i].handleScroll();
+            this.broadcastLists[i].handleScroll(e);
         }
     }
 };

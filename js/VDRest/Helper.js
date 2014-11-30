@@ -246,4 +246,27 @@ VDRest.Helper.prototype.stopPropagation = function (e) {
     }
 };
 
+/**
+ * determine if app runs in fullscreen
+ */
+VDRest.Helper.prototype.getIsFullscreen = function () {
+
+
+    var isFullscreen = false;
+
+    if ("undefined" != typeof document.fullScreen) {
+        isFullscreen = document.fullScreen;
+    }
+
+    if ("undefined" != typeof document.mozFullscreen) {
+        isFullscreen = document.mozFullscreen;
+    }
+
+    if ("undefined" != typeof document.webkitIsFullScreen) {
+        isFullscreen = document.webkitIsFullScreen;
+    }
+
+    return isFullscreen;
+};
+
 VDRest.helper = new VDRest.Helper();
