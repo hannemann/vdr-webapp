@@ -35,7 +35,7 @@ TouchMove.prototype.init = function (options) {
  */
 TouchMove.prototype.initEvents = function () {
 
-    if ("undefined" !== typeof document.ontouchstart) {
+    if ("ontouchstart" in document) {
 
         this.startEvent = 'touchstart';
         this.moveEvent = 'touchmove';
