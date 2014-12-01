@@ -1,5 +1,5 @@
 /**
- * @typedef {{}} TouchSlide.Options
+ * @typedef {{}} TouchMove.Options
  * @var {HTMLElement} slide
  * @var {String[]} [allowedOrientations]
  * @var {String[]} [allowedDirections]
@@ -17,7 +17,7 @@ TouchMove = function () {};
 
 /**
  * initialize
- * @param {TouchSlide.Options} options
+ * @param {TouchMove.Options} options
  */
 TouchMove.prototype.init = function (options) {
 
@@ -29,6 +29,11 @@ TouchMove.prototype.init = function (options) {
     this.allowedOrientations = options.allowedOrientations || ['portrait', 'landscape'];
     this.allowedDirections = options.allowedDirections || ['x', 'y'];
 };
+
+/**
+ * frames per second
+ */
+TouchMove.prototype.fps = 60;
 
 /**
  * init event names
@@ -55,13 +60,14 @@ TouchMove.prototype.initEvents = function () {
 TouchMove.prototype.start = function (e) {
 
     this.slide.resetTransition();
-    this.resetStates()
-        .setStartTime()
-        .setStartPosition()
-        .saveState()
-    ;
+    this.setStartTime()
+        .setStartPosition();
 
     this.eventStartPosition = this.getEventPosition(e);
+    this.lastEventPosition = this.eventStartPosition;
+
+    this.slide.elem.addEventListener(this.moveEvent, this.handlerMove);
+    document.addEventListener(this.stopEvent, this.handlerUp);
 };
 
 /**
@@ -72,34 +78,19 @@ TouchMove.prototype.move = function (e) {
 
     var ePos = this.getEventPosition(e);
 
-    this.saveState();
-
     this.slide.translate({
-        "x" : this.isAllowedX() ? ePos.x - this.eventStartPosition.x : 0,
-        "y" : this.isAllowedY() ? ePos.y - this.eventStartPosition.y : 0
+        "x": this.isAllowedX() ? ePos.x - this.lastEventPosition.x : 0,
+        "y": this.isAllowedY() ? ePos.y - this.lastEventPosition.y : 0
     });
+
+    this.lastEventPosition = ePos;
 };
 
 TouchMove.prototype.end = function () {
 
+    this.slide.elem.removeEventListener(this.moveEvent, this.handlerMove);
+    document.removeEventListener(this.stopEvent, this.handlerUp);
     this.setEndTime().setEndPosition().setSpeed();
-
-    this.saveState();
-};
-
-TouchMove.prototype.saveState = function () {
-
-    this.states.push({
-        "time" : new Date().getTime(),
-        "slidePos" : this.slide.getTranslate(false)
-    });
-    return this;
-};
-
-TouchMove.prototype.resetStates = function () {
-
-    this.states = [];
-    return this;
 };
 
 /**
@@ -347,16 +338,16 @@ TouchMove.Slide.prototype.translate = function (delta) {
 
     this.elem.style.transform = 'translate(' + next.x + 'px, ' + next.y + 'px) translateZ(0)';
 
+    this.current = next;
+
     if ("function" === typeof this.callback) {
         this.callback(next);
     }
 };
 
-
-
 TouchMove.Slide.prototype.getNext = function (delta) {
 
-    var nextX, nextY;
+    var nextX, nextY, maxX = false, minX = false, maxY = false, minY = false;
 
     this.scrollDirection = {
         "x" : delta.x > 0 ? "right" : "left",
@@ -368,17 +359,27 @@ TouchMove.Slide.prototype.getNext = function (delta) {
 
     this.setDimensions();
 
-
-    if (this.scrollDirection.x === 'right' && nextX > 0) {
+    if (this.scrollDirection.x === 'right' && nextX >= 0) {
         nextX = 0;
-    } else if (this.scrollDirection.x === 'left' && nextX < this.min.x) {
+        maxX = true;
+    } else if (this.scrollDirection.x === 'left' && nextX <= this.min.x) {
         nextX = this.min.x;
+        minX = true;
     }
 
-    if (this.scrollDirection.y === 'down' && nextY > 0) {
+    if (this.scrollDirection.y === 'down' && nextY >= 0) {
         nextY = 0;
-    } else if (this.scrollDirection.y === 'up' && nextY < this.min.y) {
+        maxY = true;
+    } else if (this.scrollDirection.y === 'up' && nextY <= this.min.y) {
         nextY = this.min.y;
+        minY = true;
+    }
+
+    if (maxX && (minY || maxY) || minX && (maxY || minY)) {
+        console.log('Maxed!');
+        if ("function" === typeof this.onscrollend) {
+            this.onscrollend();
+        }
     }
 
     return {
