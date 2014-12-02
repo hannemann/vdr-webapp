@@ -8,7 +8,7 @@
 TouchMove.Slider = function (elem, wrapper, onmove) {
     this.elem = elem;
     this.wrapper = wrapper;
-    this.callback = onmove;
+    this.onmove = onmove;
     this.setDimensions()
         .resetTransform()
         .resetTransition()
@@ -32,7 +32,7 @@ TouchMove.Slider.prototype.setDimensions = function () {
 };
 
 /**
- * apply default matrix
+ * apply hidden back face visibility to improve performance
  * @returns {TouchMove.Slider}
  */
 TouchMove.Slider.prototype.hideBackface = function () {
@@ -42,7 +42,7 @@ TouchMove.Slider.prototype.hideBackface = function () {
 };
 
 /**
- * apply default matrix
+ * apply default perspective to improve performance
  * @returns {TouchMove.Slider}
  */
 TouchMove.Slider.prototype.setPerspective = function () {
@@ -67,7 +67,7 @@ TouchMove.Slider.prototype.resetTransform = function () {
  */
 TouchMove.Slider.prototype.resetTransition = function () {
 
-    this.elem.style.transition = 'transform 0s';
+    this.elem.style.transition = 'transform 0s linear';
     return this;
 };
 
@@ -81,13 +81,12 @@ TouchMove.Slider.prototype.getTransform = function () {
 };
 
 /**
- * get translation
- * @param {Boolean} update shall update data?
- * @returns {{x: Number, y: Number}}
+ * retrieve current state
+ * @returns {{x: Number, y: Number, tick: DOMHighResTimeStamp}}
  */
-TouchMove.Slider.prototype.getTranslate = function (update) {
+TouchMove.Slider.prototype.getState = function () {
 
-    var posX = 4, posY = 5, matrix = this.getTransform(), current;
+    var posX = 4, posY = 5, matrix = this.getTransform();
 
     if (this.is3dMatrix(matrix)) {
         posX = 12;
@@ -96,17 +95,48 @@ TouchMove.Slider.prototype.getTranslate = function (update) {
 
     matrix = matrix.replace(/[^0-9.,-]/g, '').split(',');
 
-    current = {
+    return this.createState({
         "x": parseFloat(matrix[posX]),
         "y": parseFloat(matrix[posY])
-    };
+    });
+};
 
-    if (update) {
+/**
+ * retrieve state object
+ * @param pos
+ * @returns {{x: Number, y: Number, tick: DOMHighResTimeStamp}}
+ */
+TouchMove.Slider.prototype.createState = function (pos) {
 
-        this.current = current
+    return {
+        "x" : pos.x,
+        "y" : pos.y,
+        "tick" : performance.now()
     }
+};
 
-    return current;
+/**
+ * save state
+ * @returns {TouchMove.Slider}
+ */
+TouchMove.Slider.prototype.saveState = function (state) {
+
+    state = state || this.getState();
+
+    this.states.push(state);
+
+    return this;
+};
+
+/**
+ * reset states array
+ * @returns {TouchMove.Slider}
+ */
+TouchMove.Slider.prototype.resetStates = function () {
+
+    this.states = [this.getState()];
+
+    return this;
 };
 
 /**
@@ -128,11 +158,17 @@ TouchMove.Slider.prototype.translate = function (delta) {
 
     this.elem.style.transform = 'translate(' + next.x + 'px, ' + next.y + 'px) translateZ(0)';
 
-    this.current = next;
+    this.saveState(this.createState(next));
+    this.fireCallbacks(next);
+};
 
-    if ("function" === typeof this.callback) {
-        this.callback(next);
-    }
+/**
+ * @param {{x: Number, y: Number}} next
+ */
+TouchMove.Slider.prototype.fireCallbacks = function (next) {
+
+    if ("function" === typeof this.onmove) this.onmove(next);
+    if ("function" === typeof this.onscrollend && this.reachedEnd(next)) this.onscrollend();
 };
 
 /**
@@ -142,38 +178,67 @@ TouchMove.Slider.prototype.translate = function (delta) {
  */
 TouchMove.Slider.prototype.getNext = function (delta) {
 
-    var nextX, nextY;
+    this.setDimensions().setDirections(delta);
 
-    this.scrollDirection = {
+    return {
+        "x": this.getOutOfBoundsX(this.states[this.states.length - 1].x + delta.x),
+        "y": this.getOutOfBoundsY(this.states[this.states.length - 1].y + delta.y)
+    };
+};
+
+/**
+ * determine if end position has been reached
+ * @param {{x: Number, y: Number}} pos
+ * @returns {boolean}
+ */
+TouchMove.Slider.prototype.reachedEnd = function (pos) {
+
+    var endLeft = (pos.x == 0 && (pos.y == 0 || pos.y == this.min.y)),
+        endRight = (pos.x == this.min.x && (pos.y == 0 || pos.y == this.min.y));
+
+    return endLeft || endRight;
+};
+
+/**
+ * @param {{x: Number, y: Number}} delta
+ * @returns {TouchMove.Slider}
+ */
+TouchMove.Slider.prototype.setDirections = function (delta) {
+
+    this.scrollDirections = {
         "x": delta.x > 0 ? "right" : "left",
         "y": delta.y > 0 ? "down" : "up"
     };
 
-    nextX = this.current.x + delta.x;
-    nextY = this.current.y + delta.y;
+    return this;
+};
 
-    this.setDimensions();
+/**
+ * determine if posX is out of bounds
+ * @param {Number} posX
+ * @returns {Number}
+ */
+TouchMove.Slider.prototype.getOutOfBoundsX = function (posX) {
 
-    if (this.scrollDirection.x === 'right' && nextX >= 0) {
-        nextX = 0;
-    } else if (this.scrollDirection.x === 'left' && nextX <= this.min.x) {
-        nextX = this.min.x;
+    if (this.scrollDirections.x === 'right' && posX >= 0) {
+        return 0;
+    } else if (this.scrollDirections.x === 'left' && posX <= this.min.x) {
+        return this.min.x;
     }
+    return posX;
+};
 
-    if (this.scrollDirection.y === 'down' && nextY >= 0) {
-        nextY = 0;
-    } else if (this.scrollDirection.y === 'up' && nextY <= this.min.y) {
-        nextY = this.min.y;
+/**
+ * determine if posY is out of bounds
+ * @param {Number} posY
+ * @returns {Number}
+ */
+TouchMove.Slider.prototype.getOutOfBoundsY = function (posY) {
+
+    if (this.scrollDirections.y === 'down' && posY >= 0) {
+        return 0;
+    } else if (this.scrollDirections.y === 'up' && posY <= this.min.y) {
+        return this.min.y;
     }
-
-    if (nextX == 0 && (nextY == 0 || nextY == this.min.y) || nextX == this.min.x && (nextY == 0 || nextY == this.min.y)) {
-        if ("function" === typeof this.onscrollend) {
-            this.onscrollend();
-        }
-    }
-
-    return {
-        "x": nextX,
-        "y": nextY
-    };
+    return posY;
 };

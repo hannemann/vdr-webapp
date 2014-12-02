@@ -1,11 +1,34 @@
 /**
  * @typedef {{}} TouchMove.Options
- * @var {HTMLElement} slide
+ * @var {HTMLElement} scroller
+ * @var {HTMLElement} slider
+ * @var {TouchMove.Tiles} [tiles]
  * @var {String[]} [allowedOrientations]
  * @var {String[]} [allowedDirections]
- * @var {TouchSlide.Borders}
- * @var {Number} [maxDelta]
- * @var {TouchSlide.Tiles} [tiles]
+ */
+
+/**
+ * @typedef {Number} DOMHighResTimeStamp
+ */
+
+/**
+ * @typedef {{}} performance
+ * @method {DOMHighResTimeStamp} now
+ */
+
+/**
+ * @typedef {Function} requestAnimationFrame
+ * @param {Function}
+ */
+
+/**
+ * @typedef {Function} cancelAnimationFrame
+ * @param {Number}
+ */
+
+/**
+ * @typedef {{}} TouchEvent
+ * @property {Array} changedTouches
  */
 
 
@@ -13,7 +36,10 @@
  * @class
  * @constructor
  */
-TouchMove = function () {};
+TouchMove = function (options) {
+
+    options && this.init(options);
+};
 
 /**
  * initialize
@@ -22,18 +48,13 @@ TouchMove = function () {};
 TouchMove.prototype.init = function (options) {
 
     this.initEvents();
-
     this.scroller = options.scroller;
     this.slider = new TouchMove.Slider(this.scroller.querySelector('.slide'), this.scroller, options.onmove);
     this.tiles = new TouchMove.Tiles(this.slider);
     this.allowedOrientations = options.allowedOrientations || ['portrait', 'landscape'];
     this.allowedDirections = options.allowedDirections || ['x', 'y'];
+    this.apply();
 };
-
-/**
- * frames per second
- */
-TouchMove.prototype.fps = 60;
 
 /**
  * init event names
@@ -54,7 +75,7 @@ TouchMove.prototype.initEvents = function () {
 };
 
 /**
- * apply
+ * apply events
  */
 TouchMove.prototype.apply = function () {
 
@@ -65,12 +86,14 @@ TouchMove.prototype.apply = function () {
 };
 
 /**
- * save start state
+ * prepare animation start
  * @param {TouchEvent|MouseEvent} e
  */
 TouchMove.prototype.start = function (e) {
 
-    this.slider.resetTransition();
+    this.slider
+        .resetStates()
+        .resetTransition();
     this.setStartTime()
         .setStartPosition();
 
@@ -82,21 +105,26 @@ TouchMove.prototype.start = function (e) {
 };
 
 /**
- * save start state
+ * move slider
  * @param {TouchEvent|MouseEvent} e
  */
 TouchMove.prototype.move = function (e) {
 
     var ePos = this.getEventPosition(e);
 
-    this.slider.translate({
-        "x": this.isAllowedX() ? ePos.x - this.lastEventPosition.x : 0,
-        "y": this.isAllowedY() ? ePos.y - this.lastEventPosition.y : 0
-    });
+    if (this.isAllowedOrientation()) {
+        requestAnimationFrame(this.slider.translate.bind(this.slider, {
+            "x": this.isAllowedX() ? ePos.x - this.lastEventPosition.x : 0,
+            "y": this.isAllowedY() ? ePos.y - this.lastEventPosition.y : 0
+        }));
+    }
 
     this.lastEventPosition = ePos;
 };
 
+/**
+ * detach event listeners, store animation end parameters
+ */
 TouchMove.prototype.end = function () {
 
     this.slider.elem.removeEventListener(this.moveEvent, this.handlerMove);
@@ -126,46 +154,46 @@ TouchMove.prototype.getEventPosition = function (e) {
 };
 
 /**
- * determine start position
+ * store start position
  * @returns {TouchMove}
  */
 TouchMove.prototype.setStartPosition = function () {
 
-    this.startPosition = this.slider.getTranslate(true);
+    this.startPosition = this.slider.getState();
     return this;
 };
 
 /**
- * determine start position
+ * store end position
  * @returns {TouchMove}
  */
 TouchMove.prototype.setEndPosition = function () {
 
-    this.endPosition = this.slider.getTranslate(true);
+    this.endPosition = this.slider.getState();
     return this;
 };
 
 /**
- * set timestamp of touchstart
+ * set timestamp of touch start
  * @returns {TouchMove}
  */
 TouchMove.prototype.setStartTime = function () {
 
-    this.startTime = new Date().getTime();
+    this.startTime = performance.now();
     return this;
 };
 /**
- * set timestamp of touchstart
+ * set timestamp of touch end
  * @returns {TouchMove}
  */
 TouchMove.prototype.setEndTime = function () {
 
-    this.endTime = new Date().getTime();
+    this.endTime = performance.now();
     return this;
 };
 
 /**
- * retrieve speed
+ * set overall speed
  * @returns {TouchMove}
  */
 TouchMove.prototype.setSpeed = function () {
@@ -207,7 +235,7 @@ TouchMove.prototype.isAllowedOrientation = function () {
 };
 
 /**
- * determine current device orientation
+ * retrieve current device orientation
  * @returns {string}
  */
 TouchMove.prototype.getOrientation = function () {
