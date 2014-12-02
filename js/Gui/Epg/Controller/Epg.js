@@ -146,7 +146,7 @@ Gui.Epg.Controller.Epg.prototype.getScrollLeft = function () {
     if (!VDRest.helper.isTouchDevice) {
         return this.broadcastsController.view.wrapper.scrollLeft();
     } else {
-        return this.broadcastsController.touchScroll.slide.getTranslate(false).x;
+        return this.broadcastsController.touchScroll.slider.getTranslate(false).x;
     }
 };
 
