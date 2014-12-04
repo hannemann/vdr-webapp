@@ -15,6 +15,11 @@ TouchMove.Scroll.prototype = new TouchMove();
 /**
  * @type {number}
  */
+TouchMove.Scroll.prototype.minFps = 60;
+
+/**
+ * @type {number}
+ */
 TouchMove.Scroll.prototype.timeConstant = 325 / 60;
 
 /**
@@ -105,15 +110,18 @@ TouchMove.Scroll.prototype.calculateVelocity = function () {
         lastState = states[0],
         delta = {};
 
+    lastState.elapsed = 0;
+
     this.timeValue = this.timeConstant * fps;
 
     for (i;i<l;i++) {
-        elapsed = Math.round(states[i].tick - lastState.tick);
         delta.x = Math.abs(states[i].x - lastState.x);
         delta.y = Math.abs(states[i].y - lastState.y);
+        elapsed = lastState.elapsed * .2 + .8 * Math.round(states[i].tick - lastState.tick);
         lastState = states[i];
-        vx = (1000/fps) * delta.x / (1 + elapsed);
-        vy = (1000/fps) * delta.y / (1 + elapsed);
+        lastState.elapsed = elapsed;
+        vx = (1000/fps) * delta.x / elapsed;
+        vy = (1000/fps) * delta.y / elapsed;
         this.velocity.x = .8 * vx + .2 * this.velocity.x;
         this.velocity.y = .8 * vy + .2 * this.velocity.y;
     }
