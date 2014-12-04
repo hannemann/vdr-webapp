@@ -93,7 +93,7 @@ TouchMove.Slider.prototype.getState = function () {
         posY = 13
     }
 
-    matrix = matrix.replace(/[^0-9.,-]/g, '').split(',');
+    matrix = matrix.replace('matrix3d', '').replace(/[^0-9.,-]/g, '').split(',');
 
     return this.createState({
         "x": parseFloat(matrix[posX]),
