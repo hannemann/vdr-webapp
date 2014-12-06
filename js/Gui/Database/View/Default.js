@@ -14,7 +14,7 @@ Gui.Database.View.Default.prototype = new VDRest.Abstract.View();
  */
 Gui.Database.View.Default.prototype.init = function () {
 
-    this.node = $('<div id="media-browser">');
+    this.node = $('<div id="media-browser" class="fanart-slider">');
     $('body').addClass('database');
 };
 

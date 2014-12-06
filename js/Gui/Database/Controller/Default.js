@@ -21,6 +21,7 @@ Gui.Database.Controller.Default.prototype.init = function () {
     this.view.setParentView(
         VDRest.app.getModule('Gui.Viewport').getView('Default')
     );
+    this.initFanarts();
 };
 
 /**
@@ -29,7 +30,9 @@ Gui.Database.Controller.Default.prototype.init = function () {
 Gui.Database.Controller.Default.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-    this.initFanarts().initTouchSlider();
+    setTimeout(function () {
+        this.initTouchSlider();
+    }.bind(this), 200);
 };
 
 /**
@@ -58,29 +61,12 @@ Gui.Database.Controller.Default.prototype.initFanarts = function () {
  */
 Gui.Database.Controller.Default.prototype.initTouchSlider = function () {
 
-    new VDRest.Lib.TouchSlide({
-        "slide": this.view.node.get(0),
-        "borders": {
-            "x": {
-                "min": function () {
-                    return -window.innerWidth;
-                },
-                "max": function () {
-                    return window.innerWidth * (this.tiles.length - 1);
-                }.bind(this)
-            },
-            "y": {
-                "min": 1,
-                "max": 1
-            }
-        },
-        "allowedOrientations": ['landscape'],
-        "allowedDirections": ['x'],
-        "maxDelta": 50,
-        "tiles": {
-            "x": this.tiles.length,
-            "y": 1
-        }
+    var wrapper = document.querySelector('#viewport');
+
+    new TouchMove.Slide({
+        "wrapper" : wrapper,
+        "sliderClassName" : 'fanart-slider',
+        "allowedOrientations" : ['landscape']
     });
 
     return this;
