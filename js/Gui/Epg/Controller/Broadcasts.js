@@ -25,8 +25,7 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
 
     if (VDRest.helper.isTouchDevice) {
         this.touchScroll = new TouchMove.Scroll({
-            "scroller" : this.view.wrapper[0],
-            "allowedDirections" : ['x', "y"],
+            "wrapper" : this.view.wrapper[0],
             "onmove" : this.handleScroll.bind(this)
         })
     }

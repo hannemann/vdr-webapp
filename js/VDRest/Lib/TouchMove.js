@@ -1,10 +1,11 @@
 /**
  * @typedef {{}} TouchMove.Options
- * @var {HTMLElement} scroller
+ * @var {HTMLElement} wrapper
  * @var {HTMLElement} slider
  * @var {TouchMove.Tiles} [tiles]
  * @var {String[]} [allowedOrientations]
  * @var {String[]} [allowedDirections]
+ * @var {String[]} [sliderClassName]
  */
 
 /**
@@ -47,17 +48,34 @@ TouchMove = function (options) {
  */
 TouchMove.prototype.init = function (options) {
 
-    this.initEvents();
-    this.scroller = options.scroller;
-    this.slider = new TouchMove.Slider(this.scroller.querySelector('.slide'), this.scroller, options.onmove);
-    this.tiles = new TouchMove.Tiles(this.slider);
     this.allowedOrientations = options.allowedOrientations || ['portrait', 'landscape'];
     this.allowedDirections = options.allowedDirections || ['x', 'y'];
-    this.apply();
+
+    this.initElements(options).initEvents().apply();
+};
+
+/**
+ * @param {TouchMove.Options} options
+ * @returns {TouchMove}
+ */
+TouchMove.prototype.initElements = function (options) {
+
+    var sliderClassName = options.sliderClassName || '.touchmove-slide';
+
+    if (!options.wrapper) {
+        throw new Error('TouchMove: No wrapper specified');
+    }
+
+    this.wrapper = options.wrapper;
+    this.slider = new TouchMove.Slider(this.wrapper.querySelector(sliderClassName), this.wrapper, options.onmove);
+    this.tiles = new TouchMove.Tiles(this.slider);
+
+    return this;
 };
 
 /**
  * init event names
+ * @returns {TouchMove}
  */
 TouchMove.prototype.initEvents = function () {
 
@@ -72,6 +90,8 @@ TouchMove.prototype.initEvents = function () {
         this.moveEvent = 'mousemove';
         this.stopEvent = 'mouseup';
     }
+
+    return this;
 };
 
 /**
@@ -90,6 +110,10 @@ TouchMove.prototype.apply = function () {
  * @param {TouchEvent|MouseEvent} e
  */
 TouchMove.prototype.start = function (e) {
+
+    if (e instanceof MouseEvent) {
+        e.preventDefault();
+    }
 
     this.slider
         .resetStates()
@@ -110,6 +134,9 @@ TouchMove.prototype.start = function (e) {
  */
 TouchMove.prototype.move = function (e) {
 
+    e.preventDefault();
+    this.preventEndEvent = true;
+
     var ePos = this.getEventPosition(e);
 
     if (this.isAllowedOrientation()) {
@@ -124,8 +151,14 @@ TouchMove.prototype.move = function (e) {
 
 /**
  * detach event listeners, store animation end parameters
+ * @param {TouchEvent|MouseEvent} e
  */
-TouchMove.prototype.end = function () {
+TouchMove.prototype.end = function (e) {
+
+    if (this.preventEndEvent) {
+        e.preventDefault();
+        this.preventEndEvent = false;
+    }
 
     this.slider.elem.removeEventListener(this.moveEvent, this.handlerMove);
     document.removeEventListener(this.stopEvent, this.handlerUp);
@@ -139,16 +172,15 @@ TouchMove.prototype.end = function () {
  */
 TouchMove.prototype.getEventPosition = function (e) {
 
-    if (e instanceof TouchEvent) {
-
+    if (e instanceof MouseEvent) {
         return {
-            "x" : e.changedTouches[0].clientX,
-            "y" : e.changedTouches[0].clientY
+            "x" : e.clientX,
+            "y" : e.clientY
         };
     } else {
         return {
-            "x" : e.x,
-            "y" : e.y
+            "x" : e.changedTouches[0].clientX,
+            "y" : e.changedTouches[0].clientY
         };
     }
 };

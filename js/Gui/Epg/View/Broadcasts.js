@@ -17,7 +17,7 @@ Gui.Epg.View.Broadcasts.prototype = new VDRest.Abstract.View();
 Gui.Epg.View.Broadcasts.prototype.init = function () {
 
     this.wrapper = $('<div id="broadcasts-wrapper">');
-    this.node = $('<div id="broadcasts" class="slide">')
+    this.node = $('<div id="broadcasts" class="touchmove-slide">')
         .appendTo(this.wrapper);
 };
 

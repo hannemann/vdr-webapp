@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+
+    <style type="text/css">
+
+        #wrapper3d {
+            perspective: 1000px;
+            height: 500px;
+            width: 500px;
+            border: 1px solid red;
+            position: relative;
+            margin-bottom: 100px;
+        }
+
+        .layer {
+            position: absolute;
+            transition: transform .2s ease-out, opacity .2s linear;
+            top: 0; right: 0; bottom: 0; left: 0;
+            opacity: .5;
+            color: white;
+            font-size: 34px;
+        }
+
+        .layer img {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+        }
+
+        #layer1 {
+            transform: translate3d(0,0,-1000px);
+            background: rgba(0,0,0,0.5);
+        }
+        #layer2 {
+            transform: translate3d(0,0,0);
+            background: rgba(0,0,0,0.5);
+            opacity: 1;
+        }
+        #layer3 {
+            transform: translate3d(0,0,1000px);
+            background: rgba(0,0,0,0.5);
+        }
+
+        div[onclick] {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+
+        var matrix3d = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
+
+        function zoomIn() {
+
+            var layers = document.querySelectorAll('.layer');
+
+            Array.prototype.forEach.call(layers, function(layer) {
+
+                var matrix = window.getComputedStyle(layer).getPropertyValue('transform'),
+                    opacity;
+
+                if (matrix.indexOf('3d') < 0) {
+                    matrix = matrix3d;
+                }
+                matrix = matrix.replace('matrix3d', '').replace(/[^0-9.,-]/g, '').split(',');
+
+                matrix[14] = parseInt(matrix[14], 10) + 1000;
+
+                opacity = matrix[14] == 0 ? 1 : .5;
+
+                layer.style.transform = 'matrix3d(' + matrix.join(', ') + ')';
+                layer.style.opacity = opacity;
+
+            });
+
+        }
+
+        function zoomOut() {
+
+            var layers = document.querySelectorAll('.layer');
+
+            Array.prototype.forEach.call(layers, function(layer) {
+
+                var matrix = window.getComputedStyle(layer).getPropertyValue('transform'),
+                        opacity;
+
+                if (matrix.indexOf('3d') < 0) {
+                    matrix = matrix3d;
+                }
+                matrix = matrix.replace('matrix3d', '').replace(/[^0-9.,-]/g, '').split(',');
+
+                matrix[14] = parseInt(matrix[14], 10) - 1000;
+
+                opacity = matrix[14] == 0 ? 1 : .5;
+
+                layer.style.transform = 'matrix3d(' + matrix.join(', ') + ')';
+                layer.style.opacity = opacity;
+
+            });
+
+        }
+
+    </script>
+
+</head>
+<body>
+
+
+<div id="wrapper3d">
+
+    <div id="layer1" class="layer"><img src="assets/testpics/wiese.jpg" onclick="console.log('layer-1')"></div>
+    <div id="layer2" class="layer"><img src="assets/testpics/see.jpg" onclick="console.log('layer-2')"></div>
+    <div id="layer3" class="layer"><img src="assets/testpics/wasserfall.jpg" onclick="console.log('layer-3')"></div>
+
+</div>
+
+<div onclick="zoomIn()">Zoom in</div>
+
+<div onclick="zoomOut()">Zoom out</div>
+
+
+</body>
+</html>

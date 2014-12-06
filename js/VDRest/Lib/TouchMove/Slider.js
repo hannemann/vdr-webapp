@@ -6,6 +6,11 @@
  * @constructor
  */
 TouchMove.Slider = function (elem, wrapper, onmove) {
+
+    if (!elem) {
+        throw new Error('Could not find slider');
+    }
+
     this.elem = elem;
     this.wrapper = wrapper;
     this.onmove = onmove;
@@ -18,7 +23,16 @@ TouchMove.Slider = function (elem, wrapper, onmove) {
 };
 
 /**
- * compute and apply necessary width of slide
+ * compute and set min values
+ * @returns {Boolean}
+ */
+TouchMove.Slider.prototype.isHorizontal = function () {
+
+    return getComputedStyle(this.elem.querySelector('div')).getPropertyValue('float') === 'left';
+};
+
+/**
+ * compute and set min values
  * @returns {TouchMove.Slider}
  */
 TouchMove.Slider.prototype.setDimensions = function () {
@@ -27,6 +41,28 @@ TouchMove.Slider.prototype.setDimensions = function () {
         "x": this.wrapper.clientWidth - this.elem.offsetWidth,
         "y": this.wrapper.clientHeight - this.elem.offsetHeight
     };
+
+    return this;
+};
+
+/**
+ * set width of slide
+ * @returns {TouchMove.Slider}
+ */
+TouchMove.Slider.prototype.setWidth = function (width) {
+
+    this.elem.style.width = width + 'px';
+
+    return this;
+};
+
+/**
+ * set height of slide
+ * @returns {TouchMove.Slider}
+ */
+TouchMove.Slider.prototype.setHeight = function (height) {
+
+    this.elem.style.height = height + 'px';
 
     return this;
 };
@@ -67,7 +103,18 @@ TouchMove.Slider.prototype.resetTransform = function () {
  */
 TouchMove.Slider.prototype.resetTransition = function () {
 
-    this.elem.style.transition = 'transform 0s linear';
+    this.setTransition('transform 0s linear');
+    return this;
+};
+
+/**
+ * set transform transition
+ * @param {String} transition
+ * @returns {TouchMove.Slider}
+ */
+TouchMove.Slider.prototype.setTransition = function (transition) {
+
+    this.elem.style.transition = transition;
     return this;
 };
 
@@ -156,7 +203,7 @@ TouchMove.Slider.prototype.translate = function (delta) {
 
     var next = this.getNext(delta);
 
-    this.elem.style.transform = 'translate(' + next.x + 'px, ' + next.y + 'px) translateZ(0)';
+    this.elem.style.transform = 'translate3d(' + next.x + 'px, ' + next.y + 'px, 0)';
 
     this.saveState(this.createState(next));
     this.fireCallbacks(next);

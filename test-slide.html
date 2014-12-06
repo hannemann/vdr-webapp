@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+
+    <style type="text/css">
+
+        #wrapper {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .touchmove-slide {
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        .touchmove-slide div {
+            float: left;
+            width: 500px;
+            height: 500px;
+        }
+
+    </style>
+
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Slide.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Slider.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Tiles.js"></script>
+
+
+</head>
+<body>
+
+<div id="wrapper">
+
+
+    <div class="touchmove-slide">
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+        <div><img src="assets/testpics/see.jpg"></div>
+        <div><img src="assets/testpics/wasserfall.jpg"></div>
+        <div><img src="assets/testpics/wiese.jpg"></div>
+    </div>
+
+
+</div>
+
+
+
+<script type="text/javascript">
+
+    var touchSlide = new TouchMove.Slide({
+        "wrapper" : wrapper
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.touchmove-slide div'), function (tile) {
+
+        tile.addEventListener('click', function () {
+            console.log(this);
+        });
+    });
+
+</script>
+
+</body>
+</html>

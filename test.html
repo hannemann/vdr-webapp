@@ -207,6 +207,8 @@
     <script type="text/javascript" src="js/VDRest/Lib/jquery-2.1.0.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Scroll.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Slider.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Tiles.js"></script>
     <script type="text/javascript">
 
         $(function () {
@@ -249,14 +251,16 @@
                                 left: left + 'px',
                                 width: width + 'px'
                             })
-                            .appendTo(channel);
+                            .appendTo(channel).on('click', function () {
+                                console.log(this);
+                            });
 
                     left += width;
                 }
             }
 
-            new TouchScroll({
-                scroller:document.querySelector('#events-wrapper'),
+            new TouchMove.Scroll({
+                wrapper:document.querySelector('#events-wrapper'),
                 allowedDirections : ['x', "y"],
                 onmove : function (e) {
 //                    console.log(e);
@@ -287,7 +291,7 @@
                 <!--<div class="channel"></div>-->
             </div>
             <div id="events-wrapper">
-                <div id="events" class="slide">
+                <div id="events" class="touchmove-slide">
                     <!--<div class="channel">-->
                         <!--<div class="broadcast"></div>-->
                         <!--<div class="broadcast"></div>-->
