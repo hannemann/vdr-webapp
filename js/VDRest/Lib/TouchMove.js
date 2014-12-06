@@ -60,14 +60,18 @@ TouchMove.prototype.init = function (options) {
  */
 TouchMove.prototype.initElements = function (options) {
 
-    var sliderClassName = options.sliderClassName || '.touchmove-slide';
+    var sliderClassName = options.sliderClassName || 'touchmove-slide';
 
     if (!options.wrapper) {
         throw new Error('TouchMove: No wrapper specified');
     }
 
     this.wrapper = options.wrapper;
-    this.slider = new TouchMove.Slider(this.wrapper.querySelector(sliderClassName), this.wrapper, options.onmove);
+    this.slider = new TouchMove.Slider(
+        this.wrapper.querySelector('.' + sliderClassName.replace('.', '')),
+        this.wrapper,
+        options.onmove
+    );
     this.tiles = new TouchMove.Tiles(this.slider);
 
     return this;
