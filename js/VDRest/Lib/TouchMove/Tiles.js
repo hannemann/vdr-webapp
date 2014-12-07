@@ -9,11 +9,14 @@ TouchMove.Tiles = function (slider) {
 
 /**
  * retrieve sum of tiles width and margins
+ * @param {NodeList} [tiles]
  * @returns {number}
  */
-TouchMove.Tiles.prototype.getTilesWidth = function () {
+TouchMove.Tiles.prototype.getTilesWidth = function (tiles) {
     var width = 0;
-    Array.prototype.forEach.call(this.tiles, function (tile) {
+    tiles = tiles || this.tiles;
+
+    Array.prototype.forEach.call(tiles, function (tile) {
         var s = getComputedStyle(tile),
             m = parseInt(s.getPropertyValue('margin-left'), 10) + parseInt(s.getPropertyValue('margin-right'), 10);
 
@@ -25,11 +28,14 @@ TouchMove.Tiles.prototype.getTilesWidth = function () {
 
 /**
  * retrieve sum of tiles height and margins
+ * @param {NodeList} [tiles]
  * @returns {number}
  */
-TouchMove.Tiles.prototype.getTilesHeight = function () {
+TouchMove.Tiles.prototype.getTilesHeight = function (tiles) {
     var height = 0;
-    Array.prototype.forEach.call(this.tiles, function (tile) {
+    tiles = tiles || this.tiles;
+
+    Array.prototype.forEach.call(tiles, function (tile) {
         var s = getComputedStyle(tile),
             m = parseInt(s.getPropertyValue('margin-top'), 10) + parseInt(s.getPropertyValue('margin-bottom'), 10);
 

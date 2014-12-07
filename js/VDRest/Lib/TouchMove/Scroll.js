@@ -128,13 +128,19 @@ TouchMove.Scroll.prototype.snapToGrid = function (delta) {
 
     delta = delta || {"x" : 0, "y" : 0};
 
-    snap.x = Math.round((state.x + delta.x) / this.grid.x) * this.grid.x;
-    snap.y = Math.round((state.y + delta.y) / this.grid.y) * this.grid.y;
-    delta.x = snap.x - state.x;
-    delta.y = snap.y - state.y;
+    if (this.grid.x && this.grid.x > 0) {
+        snap.x = Math.round((state.x + delta.x) / this.grid.x) * this.grid.x;
+        delta.x = snap.x - state.x;
+    }
+    if (this.grid.y && this.grid.y > 0) {
+        snap.y = Math.round((state.y + delta.y) / this.grid.y) * this.grid.y;
+        delta.y = snap.y - state.y;
+    }
 
     if (this.grid.easing) {
-        this.slider.setTransition('transform ' + this.grid.easing + ')');
+        this.slider.setTransition('transform ' + this.grid.easing);
+    } else {
+        this.slider.setTransition('transform .1s ease-in-out');
     }
 
     this.slider.translate(delta);

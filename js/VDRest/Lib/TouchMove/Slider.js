@@ -267,6 +267,10 @@ TouchMove.Slider.prototype.setDirections = function (delta) {
  */
 TouchMove.Slider.prototype.getOutOfBoundsX = function (posX) {
 
+    if (posX === 0 || posX === this.min.x) {
+        return posX;
+    }
+
     if (this.scrollDirections.x === 'right' && posX >= 0) {
         return 0;
     } else if (this.scrollDirections.x === 'left' && posX <= this.min.x) {
@@ -281,6 +285,10 @@ TouchMove.Slider.prototype.getOutOfBoundsX = function (posX) {
  * @returns {Number}
  */
 TouchMove.Slider.prototype.getOutOfBoundsY = function (posY) {
+
+    if (posY === 0 || posY === this.min.y) {
+        return posY;
+    }
 
     if (this.scrollDirections.y === 'down' && posY >= 0) {
         return 0;
