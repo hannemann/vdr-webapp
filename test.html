@@ -263,12 +263,11 @@
                 wrapper:document.querySelector('#events-wrapper'),
                 allowedDirections : ['x', "y"],
                 onmove : function (e) {
-//                    console.log(e);
-
                     timeline[0].style.transform = 'translateX(' + e.x + 'px)';
                     channels[0].style.transform = 'translateY(' + e.y + 'px)';
 
                 }
+//                ,grid : {"x" : 100, "y" : 40, "easing" : ".1s cubic-bezier(.45,.42,.77,1.25"}
             });
         });
 

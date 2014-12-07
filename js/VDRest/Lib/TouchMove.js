@@ -2,10 +2,10 @@
  * @typedef {{}} TouchMove.Options
  * @var {HTMLElement} wrapper
  * @var {HTMLElement} slider
- * @var {TouchMove.Tiles} [tiles]
  * @var {String[]} [allowedOrientations]
  * @var {String[]} [allowedDirections]
- * @var {String[]} [sliderClassName]
+ * @var {String} [sliderClassName]
+ * @var {{x: Number, y: Number, [easing]: String, [threshold]: Number}} grid
  */
 
 /**

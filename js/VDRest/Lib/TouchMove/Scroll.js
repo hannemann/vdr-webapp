@@ -5,17 +5,14 @@
  */
 TouchMove.Scroll = function (options) {
     TouchMove.prototype.init.call(this, options);
+
+    this.grid = options.grid || {"x" : 0, "y" : 0, "easing" : undefined, "threshold" : undefined};
 };
 
 /**
  * @type {TouchMove}
  */
 TouchMove.Scroll.prototype = new TouchMove();
-
-/**
- * @type {number}
- */
-TouchMove.Scroll.prototype.minFps = 60;
 
 /**
  * @type {number}
@@ -73,7 +70,12 @@ TouchMove.Scroll.prototype.easeOut = function () {
     }.bind(this);
 
     if (this.velocity.x > 10 || this.velocity.x < -10 || this.velocity.y > 10 || this.velocity.y < -10) {
+
         this.currentFrame = requestAnimationFrame(this.stepEasing.bind(this));
+
+    } else if (this.grid.x > 0 || this.grid.y > 0) {
+
+        this.snapToGrid();
     }
 };
 
@@ -84,17 +86,58 @@ TouchMove.Scroll.prototype.stepEasing = function (tick) {
 
     var elapsed = tick - this.endTime,
         delta = {
-        "x": this.amplitude.x * Math.exp(-elapsed / this.timeValue),
-        "y": this.amplitude.y * Math.exp(-elapsed / this.timeValue)
-    };
+            "x": this.amplitude.x * Math.exp(-elapsed / this.timeValue),
+            "y": this.amplitude.y * Math.exp(-elapsed / this.timeValue)
+        };
 
-    if (!this.stopEasing && (delta.x > 0.5 || delta.y > 0.5)) {
+    if (this.snaps(delta)) {
+
+        this.snapToGrid(delta);
+
+    } else if (!this.stopEasing && (delta.x > 0.5 || delta.y > 0.5)) {
+
         delta.x *= this.slider.scrollDirections.x == "right" ? 1 : -1;
         delta.y *= this.slider.scrollDirections.y == "down" ? 1 : -1;
-        this.slider.translate(delta, tick);
+
+        this.slider.translate(delta);
         this.currentFrame = requestAnimationFrame(this.stepEasing.bind(this));
     }
 
+};
+
+/**
+ * determine if slider should snap to grid
+ * @param {{x: Number, y: Number}} delta
+ * @returns {boolean}
+ */
+TouchMove.Scroll.prototype.snaps = function (delta) {
+
+    var threshold = this.grid.threshold || 5;
+
+    return !this.stopEasing && (this.grid.x > 0 || this.grid.y > 0) && delta.x <= threshold && delta.y <= threshold;
+};
+
+/**
+ * snap to grid
+ * @param {{x: Number, y: Number}} [delta]
+ */
+TouchMove.Scroll.prototype.snapToGrid = function (delta) {
+
+    var state = this.slider.getState(),
+        snap = {};
+
+    delta = delta || {"x" : 0, "y" : 0};
+
+    snap.x = Math.round((state.x + delta.x) / this.grid.x) * this.grid.x;
+    snap.y = Math.round((state.y + delta.y) / this.grid.y) * this.grid.y;
+    delta.x = snap.x - state.x;
+    delta.y = snap.y - state.y;
+
+    if (this.grid.easing) {
+        this.slider.setTransition('transform ' + this.grid.easing + ')');
+    }
+
+    this.slider.translate(delta);
 };
 
 /**
