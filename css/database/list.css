@@ -1,0 +1,146 @@
+div.window.database-list .title,
+.database-collection.display-item .name,
+.database-collection.display-item .title,
+.database-collection.display-item .tagline,
+.database-collection.display-item .genre,
+.database-collection.display-item .genres,
+.database-collection.display-item .rating {
+    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px 3px 10px rgba(0, 0, 0, 0.75),
+    0 3px 10px rgba(0, 0, 0, 0.75);
+}
+div.window.database-list .title,
+.database-collection.display-item .name,
+.database-collection.display-item .title,
+.database-collection.display-item .tagline,
+.database-collection.display-item .genre,
+.database-collection.display-item .genres,
+.database-collection.display-item .overview,
+.database-collection.display-item .rating span.vote-numeric {
+    font-weight: bold;
+}
+
+.database-collection.display-item .rating {
+    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px -3px 10px rgba(0, 0, 0, 0.75),
+    3px 3px 10px rgba(0, 0, 0, 0.75),
+    0 3px 10px rgba(0, 0, 0, 0.75);
+    padding-right: .5em;
+}
+
+.database-collection.display-item .rating span {
+    font-size: 12px;
+}
+
+.database-collection.display-item .rating span.vote-numeric {
+    font-size: 14px;
+}
+
+
+@media (orientation: portrait) {
+    div.window .database-collection {
+        width: auto !important;
+        transform: translate3d(0,0,0) !important;
+    }
+    div.window.database-list > .fanart,
+    div.window.database-list > .title {
+        display: none;
+    }
+
+    div.window .database-collection .list-item .poster {
+        transform: none !important;
+    }
+}
+
+@media (orientation: landscape) {
+    div.window.database-list {
+        overflow: hidden;
+    }
+    div.window.database-list > .fanart {
+        width: 100%;
+        position: absolute;
+        top: 0; left: 0;
+    }
+    div.window.database-list .transparent {
+        opacity: 0 !important;
+    }
+
+    div.window.database-list .title,
+    div.window.database-list > .fanart {
+        transition: opacity .5s linear;
+    }
+
+    div.window.database-list .title,
+    .database-collection.display-item .title,
+    .database-collection.display-item .name {
+        font-size: 2.5em;
+        z-index: 1;
+    }
+
+    div.window.database-list .title,
+    .database-collection.display-item .title,
+    .database-collection.display-item .name {
+        padding: 0 1.5%;
+        position: absolute;
+        top: 0; left: 0;
+    }
+
+    div.window.database-list .window-body {
+        height: 200px;
+        position: absolute;
+        bottom: 20px;
+        width: 70px;
+        left: 50px;
+    }
+
+    div.window .database-collection {
+        min-width: 100%;
+        height: 82px;
+        position: absolute;
+        bottom: 0; left: 0;
+        z-index: 0;
+    }
+    div.window .database-collection .list-item {
+        border: none;
+        padding: 0;
+        width: 59px;
+        float: left;
+        height: 86px;
+        position: relative;
+        perspective: 1000px;
+        perspective-origin: center bottom;
+        z-index: 0;
+        margin: 0 3px;
+        background: rgba(255,255,255,0.5);
+        border-radius: 5px;
+    }
+    div.window .database-collection .list-item .poster {
+        margin: 0;
+        border: 2px solid dimgrey;
+        border-radius: 5px;
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        height: calc(100% - 4px);
+    }
+    div.window .database-collection .list-item div {
+        display: none;
+    }
+
+    div.window .database-collection .list-item div img.poster {
+        width: 100px;
+        height: 150px;
+        border: 2px solid #696969;
+        border-radius: 5px;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    div.window .database-collection .list-item div.active img.poster,
+    div.window .database-collection .list-item div.previous img.poster {
+        box-shadow: 0 0 50px black;
+    }
+}

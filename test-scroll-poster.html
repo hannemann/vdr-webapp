@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+
+    <style type="text/css">
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        h1 {
+            font-size: 3em;
+            line-height: 1;
+            font-weight: bold;
+            padding: 14px;
+            width: calc(100% - 28px);
+            text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75), 3px -3px 10px rgba(0, 0, 0, 0.75), 3px 3px 10px rgba(0, 0, 0, 0.75), 0 3px 10px rgba(0, 0, 0, 0.75);
+            text-transform: uppercase;
+            color: white;
+            position: absolute;
+        }
+
+        #viewport {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background: black;
+        }
+
+        .fanart {
+            width: 100%;
+            transition: opacity .2s linear;
+            position: absolute;
+            top: 0; left: 0;
+        }
+        .transparent {
+            opacity: 0;
+        }
+
+        #wrapper {
+            position: absolute;
+            bottom: 20px;
+            width: 110px;
+            height: 300px;
+            left: 50px;
+        }
+
+        #slide-lane {
+            position: absolute;
+            bottom: 20px; left: 0;
+            height: 160px;
+            width: 100%;
+            /*background: rgba(0,0,0,0.5);*/
+            background: linear-gradient(135deg, rgba(76, 76, 76, 0.8) 0%,rgba(89, 89, 89, 0.8) 12%,rgba(102, 102, 102, 0.5) 25%,rgba(71, 71, 71, 0.8) 39%,rgba(44, 44, 44, 0.9) 50%,rgba(0, 0, 0, 0.8) 51%,rgba(17, 17, 17, 0.8) 60%,rgba(43, 43, 43, 0.8) 76%,rgba(28, 28, 28, 0.8) 91%,rgba(19, 19, 19, 0.9) 100%);
+        }
+
+        .touchmove-slide {
+            position: absolute;
+            bottom: 0; left: 0;
+            z-index: 0;
+        }
+
+        .touchmove-slide div {
+            float: left;
+            width: 110px;
+            height: 160px;
+            position: relative;
+            perspective: 1000px;
+            perspective-origin: center bottom;
+            z-index: 0;
+        }
+
+        .touchmove-slide div img {
+            width: 100px;
+            height: 150px;
+            border: 2px solid #696969;
+            border-radius: 5px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .touchmove-slide div.active img,
+        .touchmove-slide div.previous img {
+            box-shadow: 0px 0px 50px black;
+        }
+
+    </style>
+
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Scroll.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Slider.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Tiles.js"></script>
+
+
+</head>
+<body>
+<div id="viewport">
+    <img class="fanart" src="assets/testpics/fanart0.jpg">
+    <h1>Van Helsing</h1>
+    <div id="slide-lane"></div>
+    <div id="wrapper">
+
+
+        <div class="touchmove-slide">
+            <div><img src="assets/testpics/poster0.jpg"></div>
+            <div><img src="assets/testpics/poster1.jpg"></div>
+            <div><img src="assets/testpics/poster2.jpg"></div>
+            <div><img src="assets/testpics/poster3.jpg"></div>
+            <div><img src="assets/testpics/poster4.jpg"></div>
+            <div><img src="assets/testpics/poster0.jpg"></div>
+            <div><img src="assets/testpics/poster1.jpg"></div>
+            <div><img src="assets/testpics/poster2.jpg"></div>
+            <div><img src="assets/testpics/poster3.jpg"></div>
+            <div><img src="assets/testpics/poster4.jpg"></div>
+            <div><img src="assets/testpics/poster0.jpg"></div>
+            <div><img src="assets/testpics/poster1.jpg"></div>
+            <div><img src="assets/testpics/poster2.jpg"></div>
+            <div><img src="assets/testpics/poster3.jpg"></div>
+            <div><img src="assets/testpics/poster4.jpg"></div>
+            <div><img src="assets/testpics/poster0.jpg"></div>
+            <div><img src="assets/testpics/poster1.jpg"></div>
+            <div><img src="assets/testpics/poster2.jpg"></div>
+            <div><img src="assets/testpics/poster3.jpg"></div>
+            <div><img src="assets/testpics/poster4.jpg"></div>
+            <div><img src="assets/testpics/poster0.jpg"></div>
+            <div><img src="assets/testpics/poster1.jpg"></div>
+            <div><img src="assets/testpics/poster2.jpg"></div>
+            <div><img src="assets/testpics/poster3.jpg"></div>
+            <div><img src="assets/testpics/poster4.jpg"></div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var tiles = document.querySelectorAll('.touchmove-slide div'),
+            width = TouchMove.Tiles.prototype.getTilesWidth(tiles),
+            tileWidth = width / tiles.length,
+            active = 0,
+            startActive = active * tileWidth,
+            highlightPosZ = 350,
+            info = [],
+            viewport = document.querySelector('#viewport');
+
+    info.push({
+        "title" : 'Van Helsing'
+    });
+    info.push({
+        "title" : 'Das fünfte Element'
+    });
+    info.push({
+        "title" : 'Metropolis'
+    });
+    info.push({
+        "title" : 'Fluch der Karibik'
+    });
+    info.push({
+        "title" : '2001 - Odyssee im Weltraum'
+    });
+
+    document.querySelector('.touchmove-slide').style.width = width + 'px';
+
+
+    /**
+     * aktiver div: z-index: 1, bild: transform: translateZ(350px);
+     *
+     */
+
+
+    highlightActive = function (pos) {
+
+        var dist = Math.abs((Math.round(pos.x) - startActive) / tileWidth),
+            active = Math.floor(dist),
+            distP = Math.round((dist-active)*100),
+            previousP = Math.round((highlightPosZ/100) * (100-distP)),
+            nextP = Math.round((highlightPosZ/100) * distP),
+            fanart, oldFanart;
+
+        if (active > tiles.length - 1) return;
+
+        requestAnimationFrame(function () {
+
+//        Array.prototype.forEach.call(tiles, function (tile) {
+            Array.prototype.slice.call(tiles, active-5, active+5).forEach(function (tile) {
+                tile.querySelector('img').style.transform = '';
+                tile.style.zIndex = 0;
+                tile.classList.remove('active');
+                tile.classList.remove('previous');
+            });
+
+            tiles[active].querySelector('img').style.transform = 'translateZ(' + previousP + 'px)';
+            tiles[active].style.zIndex = distP > 50 ? 0 : 1;
+            tiles[active].classList.add('previous');
+
+            if (active + 1 < tiles.length) {
+                tiles[active + 1].querySelector('img').style.transform = 'translateZ(' + nextP + 'px)';
+                tiles[active + 1].style.zIndex = distP > 50 ? 1 : 0;
+                tiles[active + 1].classList.add('active');
+            }
+
+            if (distP === 0) {
+
+                oldFanart = document.querySelector('.fanart');
+                fanart = new Image();
+                fanart.classList.add('fanart');
+                fanart.classList.add('transparent');
+                fanart.onload = function () {
+                    oldFanart.classList.add('transparent');
+                    fanart.classList.remove('transparent');
+                    document.addEventListener('transitionend', function (e) {
+                        if (e.target === oldFanart) {
+                            oldFanart.parentNode.removeChild(oldFanart);
+                        }
+                    });
+                };
+                viewport.insertBefore(fanart, viewport.firstChild);
+                fanart.src = 'assets/testpics/fanart' + active%5 + '.jpg';
+                document.querySelector('h1').innerHTML = info[active%5].title;
+
+                Array.prototype.forEach.call(tiles, function (tile) {
+                    tile.querySelector('img').style.transform = '';
+                    tile.style.zIndex = 0;
+                    tile.classList.remove('active');
+                    tile.classList.remove('previous');
+                });
+                if (active + 1 < tiles.length) {
+                    tiles[active + 1].style.zIndex = 0;
+                    tiles[active + 1].classList.remove('previous');
+                    tiles[active + 1].classList.remove('active');
+                }
+                tiles[active].classList.remove('previous');
+                tiles[active].classList.add('active');
+                tiles[active].querySelector('img').style.transform = 'translateZ(350px)';
+                tiles[active].style.zIndex = 1;
+            }
+        });
+    };
+
+    tiles[active].querySelector('img').style.transform = 'translateZ(350px)';
+    tiles[active].style.zIndex = 1;
+    tiles[active].classList.add('active');
+    var touchSlide = new TouchMove.Scroll({
+        "wrapper" : wrapper,
+        "allowedDirections" : ["x"],
+        "grid" : {"x" : tileWidth},
+        "onmove" : highlightActive
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.touchmove-slide div'), function (tile) {
+
+        tile.addEventListener('click', function () {
+            console.log(this);
+        });
+    });
+
+</script>
+
+</body>
+</html>

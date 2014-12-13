@@ -23,10 +23,6 @@ Gui.Window.View.DatabaseList.prototype.render = function () {
     Gui.Window.View.Abstract.prototype.render.call(this);
 
     this.node.toggleClass('collapsed expand');
-
-    this.node.one(VDRest.Abstract.Controller.prototype.animationEndEvents, function () {
-        this.data.dispatch(this);
-    }.bind(this));
 };
 
 /**

@@ -27,6 +27,10 @@ Gui.Window.Controller.DatabaseList.prototype.init = function () {
     this.view.setParentView(
         VDRest.app.getModule('Gui.Viewport').getView('Default')
     );
+
+    this.view.node.one(VDRest.Abstract.Controller.prototype.animationEndEvents, function () {
+        this.data.dispatch(this.view);
+    }.bind(this));
 };
 
 /**

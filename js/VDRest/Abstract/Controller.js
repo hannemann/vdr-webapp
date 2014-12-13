@@ -75,6 +75,30 @@ VDRest.Abstract.Controller.prototype.transitionEndEvents = function () {
 }();
 
 /**
+ * transitionEnd event names
+ * @returns {string}
+ */
+VDRest.Abstract.Controller.prototype.transitionEndEvent = function () {
+
+    if ('ontransitionend' in window) {
+        return 'transitionend';
+    }
+
+    if ('onwebkittransitionend' in window) {
+        return 'webkittransitionend';
+    }
+
+    if ('onotransitionend' in window) {
+        return 'otransitionend'
+    }
+
+    if ('onmstransitionend' in window) {
+        return 'otransitionend'
+    }
+
+}();
+
+/**
  * render view
  */
 VDRest.Abstract.Controller.prototype.dispatchView = function () {

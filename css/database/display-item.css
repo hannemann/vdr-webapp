@@ -36,55 +36,22 @@
     margin: 0 0.6em 0;
 }
 
-.database-collection.display-item .name,
-.database-collection.display-item .title {
-    font-size: 1.5em;
-}
-
 .database-collection.display-item .overview {
     clear: left;
     font-size: 14px;
     padding: .9em;
 }
+@media (orientation: portrait) {
 
-.database-collection.display-item .name,
-.database-collection.display-item .title,
-.database-collection.display-item .tagline,
-.database-collection.display-item .genre,
-.database-collection.display-item .genres,
-.database-collection.display-item .rating {
-    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
-    3px -3px 10px rgba(0, 0, 0, 0.75),
-    3px 3px 10px rgba(0, 0, 0, 0.75),
-    0 3px 10px rgba(0, 0, 0, 0.75);
+    .database-collection.display-item .name,
+    .database-collection.display-item .title {
+        font-size: 1.5em;
+    }
+
+    .database-collection.display-item .poster {
+        transform: none !important;
+    }
 }
-
-.database-collection.display-item .name,
-.database-collection.display-item .title,
-.database-collection.display-item .tagline,
-.database-collection.display-item .genre,
-.database-collection.display-item .genres,
-.database-collection.display-item .overview,
-.database-collection.display-item .rating span.vote-numeric {
-    font-weight: bold;
-}
-
-.database-collection.display-item .rating {
-    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
-    3px -3px 10px rgba(0, 0, 0, 0.75),
-    3px 3px 10px rgba(0, 0, 0, 0.75),
-    0 3px 10px rgba(0, 0, 0, 0.75);
-    padding-right: .5em;
-}
-
-.database-collection.display-item .rating span {
-    font-size: 12px;
-}
-
-.database-collection.display-item .rating span.vote-numeric {
-    font-size: 14px;
-}
-
 @media (orientation: landscape) {
 
     .database-collection.display-item .fanart {
@@ -98,7 +65,7 @@
     }
 
     .database-collection.display-item .poster {
-        transform: rotateY(60deg);
+        transform: rotateY(60deg) !important;
         border-radius: 8px;
         position: absolute;
         bottom: 1em;
@@ -107,17 +74,6 @@
         margin: 0;
         border: 2px solid rgba(255, 255, 255, 0.5);
         box-shadow: -4px 0 0 rgba(255, 255, 255, 0.5);
-    }
-
-    .database-collection.display-item .title,
-    .database-collection.display-item .name {
-        font-size: 2.5em;
-    }
-
-    .database-collection.display-item .title,
-    .database-collection.display-item .name {
-        padding: 0 1.5%;
-        position: relative;
     }
 
     .database-collection.display-item .overview {

@@ -20,5 +20,5 @@ Gui.Database.View.List.prototype.bypassCache = true;
  */
 Gui.Database.View.List.prototype.init = function () {
 
-    this.node = $('<div class="database-collection ' + this.id.toLowerCase() + '">');
+    this.node = $('<div class="database-collection ' + this.id.toLowerCase() + ' database-collection-slider">');
 };
