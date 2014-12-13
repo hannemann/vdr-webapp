@@ -113,9 +113,12 @@ VDRest.Abstract.IndexedDB.Collection.prototype.load = function (callback, comple
         store = transaction.objectStore(this.oStore);
 
     store.openCursor().onsuccess = function(event) {
-        var cursor = event.target.result;
+        var cursor = event.target.result, item;
         if (cursor) {
-            callback(this.addItem(cursor.value));
+            item = this.addItem(cursor.value);
+            if ("function" === typeof callback) {
+                callback(item);
+            }
             cursor.continue();
         }
         else {

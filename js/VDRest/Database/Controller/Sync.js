@@ -12,11 +12,12 @@ VDRest.Database.Controller.Sync.prototype = new VDRest.Abstract.Controller();
 /**
  * synchronize recordings
  */
-VDRest.Database.Controller.Sync.prototype.synchronize = function () {
+VDRest.Database.Controller.Sync.prototype.synchronize = function (callback) {
 
     var recordings = VDRest.app.getModule('VDRest.Recordings').getModel('List');
 
     this.syncModel = this.module.getModel('Sync');
+    this.syncModel.callback = callback;
 
     this.addObserver();
 

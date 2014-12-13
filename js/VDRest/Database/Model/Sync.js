@@ -44,6 +44,9 @@ VDRest.Database.Model.Sync.prototype.addRecording = function () {
     if (this.current >= this.recordings.length) {
         VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
         this.recordings.length = 0;
+        if ("function" === typeof this.callback) {
+            this.callback();
+        }
         return;
     }
 

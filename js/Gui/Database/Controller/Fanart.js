@@ -79,6 +79,13 @@ Gui.Database.Controller.Fanart.prototype.initBackendAndDispatch = function () {
             this.view.setData('data_url', fanart.getData('data_url'));
         }
         this.dispatchView();
+
+        $.event.trigger({
+            "type" : "databaseslidertiledispatch",
+            "payload" : {
+                "fanart" : this
+            }
+        });
     }.bind(this);
 };
 
