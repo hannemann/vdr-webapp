@@ -9,5 +9,6 @@
     .database-collection.movies.display-item .tagline {
         padding: 0 1.5%;
         position: relative;
+        top: 3.5em;
     }
 }

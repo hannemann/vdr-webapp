@@ -43,6 +43,10 @@
 }
 @media (orientation: portrait) {
 
+    .database-collection.display-item {
+        top: 50px;
+    }
+
     .database-collection.display-item .name,
     .database-collection.display-item .title {
         font-size: 1.5em;
