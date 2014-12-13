@@ -35,6 +35,9 @@ Gui.Database.Controller.Default.prototype.init = function () {
     }.bind(this);
 };
 
+/**
+ * handle backends initialized
+ */
 Gui.Database.Controller.Default.prototype.oninitbackends = function () {
 
     this.backendsReady++;

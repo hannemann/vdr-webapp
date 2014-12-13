@@ -36,6 +36,8 @@ Gui.Database.Controller.List.prototype.init = function () {
     this.tiles = [];
 
     this.getCollection(this.id);
+
+    this.module.currentList = this;
 };
 
 /**
@@ -54,14 +56,22 @@ Gui.Database.Controller.List.prototype.dispatchView = function (parentView) {
 
     this.view.node[0].style.width = '0px';
 
-    this.collection.each(this.dispatchItem.bind(this));
+    this.collection.sort(this.collection.sortRating, false, function () {
+        this.collection.each(this.dispatchItem.bind(this));
+    }.bind(this));
 };
 
+/**
+ * add event listeners
+ */
 Gui.Database.Controller.List.prototype.addObserver = function () {
 
     document.addEventListener(this.transitionEndEvent, this.handleTransitionEnd.bind(this));
 };
 
+/**
+ * remove event listeners
+ */
 Gui.Database.Controller.List.prototype.removeObserver = function () {
 
     document.removeEventListener(this.transitionEndEvent, this.handleTransitionEnd);
@@ -88,6 +98,81 @@ Gui.Database.Controller.List.prototype.dispatchItem = function (item) {
 };
 
 /**
+ * create input window for search in title
+ */
+Gui.Database.Controller.List.prototype.search = function () {
+
+    var data = {
+        "type": "string",
+        "dom": $('<label class="clearer text">'),
+        "showInfo": true
+    };
+
+    $('<span>').text(VDRest.app.translate('Search')).appendTo(data.dom);
+
+    data.gui = $('<input type="text" name="search">')
+        .appendTo(data.dom);
+
+    data.gui.on('change', function (e) {
+        var value = e.target.value;
+        this.collection.search(value, function () {
+            this.filterItems(this.collection.searchResult);
+        }.bind(this));
+    }.bind(this));
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "Input",
+            "data": data
+        }
+    });
+};
+
+/**
+ * reset items list
+ */
+Gui.Database.Controller.List.prototype.resetItems = function () {
+
+    this.filterItems('');
+    this.view.node[0].style.width = this.allTiles.length * this.sliderTileWidth + 'px';
+};
+
+/**
+ * filter items list
+ * items not in ids array will be hidden
+ * if empty string is given, all items reappear
+ *
+ * @param {Array|String} ids       array of ids of items that are not filtered
+ */
+Gui.Database.Controller.List.prototype.filterItems = function (ids) {
+
+    if (!this.allTiles) {
+        this.allTiles = this.tiles;
+    }
+
+    this.resetHighlightImages();
+    this.currentActive = 0;
+    this.currentPrevious = 1;
+
+    this.tiles = [];
+
+    this.allTiles.forEach(function (tile) {
+        var id = parseInt(tile.dataset.id, 10);
+        if (ids != '' && ids.indexOf(id) < 0) {
+            tile.style.display = 'none';
+        } else {
+            tile.style.display = '';
+            this.tiles.push(tile);
+        }
+    }.bind(this));
+
+    this.view.node[0].style.width = ids.length * this.sliderTileWidth + 'px';
+
+    this.highlightActive(this.scroller.slider.getState());
+};
+
+/**
  * apply scroller to item list
  */
 Gui.Database.Controller.List.prototype.applyScroller = function () {
@@ -104,7 +189,7 @@ Gui.Database.Controller.List.prototype.applyScroller = function () {
     this.currentActive = 0;
     this.currentPrevious = 1;
 
-    this.slider = new TouchMove.Scroll({
+    this.scroller = new TouchMove.Scroll({
         "wrapper" : this.view.node[0].parentNode,
         "sliderClassName" : "database-collection-slider",
         "allowedDirections" : ["x"],
@@ -293,6 +378,11 @@ Gui.Database.Controller.List.prototype.addFanart = function (active) {
 
     return this;
 };
+
+/**
+ * @typedef {{}} TransitionEvent
+ * @property {HTMLElement} target
+ */
 
 /**
  * handle transition ended

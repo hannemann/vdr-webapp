@@ -14,7 +14,7 @@ Gui.Database.View.List.Item.prototype.bypassCache = true;
 
 Gui.Database.View.List.Item.prototype.init = function () {
 
-    this.node = $('<div class="list-item clearer">');
+    this.node = $('<div class="list-item clearer" data-id="' + this.data.media.id + '">');
 
     this.baseUrl = VDRest.Api.Resource.prototype.getBaseUrl();
 
