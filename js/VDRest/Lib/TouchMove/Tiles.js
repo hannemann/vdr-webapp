@@ -1,9 +1,9 @@
 /**
- * @param {TouchMove.Slider} slider
+ * @param {NodeList} tiles
  * @constructor
  */
-TouchMove.Tiles = function (slider) {
-    this.tiles = slider.elem.querySelectorAll('div');
+TouchMove.Tiles = function (tiles) {
+    this.tiles = tiles;
     this.length = this.tiles.length;
 };
 

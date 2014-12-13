@@ -72,7 +72,7 @@ TouchMove.prototype.initElements = function (options) {
         this.wrapper,
         options.onmove
     );
-    this.tiles = new TouchMove.Tiles(this.slider);
+    this.tiles = new TouchMove.Tiles(this.wrapper.querySelectorAll('.' + sliderClassName.replace('.', '') + ' > div'));
 
     return this;
 };
