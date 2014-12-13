@@ -115,6 +115,10 @@ TouchMove.prototype.apply = function () {
  */
 TouchMove.prototype.start = function (e) {
 
+    if (!this.isAllowedOrientation()) {
+        return;
+    }
+
     if (e instanceof MouseEvent) {
         e.preventDefault();
     }

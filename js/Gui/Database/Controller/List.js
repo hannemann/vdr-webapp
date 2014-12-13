@@ -108,6 +108,7 @@ Gui.Database.Controller.List.prototype.applyScroller = function () {
         "wrapper" : this.view.node[0].parentNode,
         "sliderClassName" : "database-collection-slider",
         "allowedDirections" : ["x"],
+        "allowedOrientations" : ["landscape"],
         "grid" : {"x" : this.sliderTileWidth},
         "onmove" : this.highlightActive.bind(this)
     });

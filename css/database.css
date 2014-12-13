@@ -51,6 +51,7 @@
         transition: transform 0s !important;
         transform: translateX(0) !important;
         width: 100% !important;
+        height: auto !important;
     }
 }
 
