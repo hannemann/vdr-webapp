@@ -63,7 +63,24 @@ Gui.Database.Controller.Default.prototype.oninitbackends = function () {
 Gui.Database.Controller.Default.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+    this.addObserver();
+};
+
+/**
+ * add event listeners
+ */
+Gui.Database.Controller.Default.prototype.addObserver = function () {
+
     $(document).on('databaseslidertiledispatch', this.initTouchSlider.bind(this));
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Database.Controller.Default.prototype.removeObserver = function () {
+
+    $(document).off('databaseslidertiledispatch');
 };
 
 /**
