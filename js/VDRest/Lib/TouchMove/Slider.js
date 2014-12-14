@@ -28,6 +28,8 @@ TouchMove.Slider = function (elem, wrapper, onmove) {
 	if(state.x === 0 && state.y === 0) {
 		this.resetTransform();
 	}
+
+    this.sliderStyle = getComputedStyle(this.elem);
 };
 
 TouchMove.Slider.prototype.getVendorPrefix = function () {
@@ -59,6 +61,24 @@ TouchMove.Slider.prototype.setDimensions = function () {
     };
 
     return this;
+};
+
+/**
+ * get width of slide
+ * @returns {Number}
+ */
+TouchMove.Slider.prototype.getWidth = function () {
+
+    return parseInt(this.sliderStyle.getPropertyValue('width'), 10);
+};
+
+/**
+ * get height of slide
+ * @returns {Number}
+ */
+TouchMove.Slider.prototype.getHeight = function () {
+
+    return parseInt(this.sliderStyle.getPropertyValue('height'), 10);
 };
 
 /**

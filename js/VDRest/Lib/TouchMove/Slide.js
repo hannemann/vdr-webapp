@@ -8,7 +8,6 @@ TouchMove.Slide = function (options) {
 	if (!options) return;
 
     TouchMove.prototype.init.call(this, options);
-    this.setAxis().setDimSlide();
 };
 
 /**
@@ -28,20 +27,23 @@ TouchMove.Slide.prototype.setAxis = function () {
     return this;
 };
 
+TouchMove.Slide.prototype.start = function (e) {
+
+    this.setAxis().setDimSlide();
+    TouchMove.prototype.start.call(this, e);
+};
+
 /**
  * set tile and slider dimensions
  * @returns {TouchMove.Slide}
  */
 TouchMove.Slide.prototype.setDimSlide = function () {
 
-    if ('x' === this.axis) {
-        this.dimSlide = this.tiles.getTilesWidth();
-        this.slider.setWidth(this.dimSlide);
-    } else {
-        this.dimSlide = this.tiles.getTilesHeight();
-        this.slider.setHeight(this.dimSlide);
+    this.dimTile = this.tiles['getTile' + ('x' === this.axis ? 'Width' : 'Height')]();
+    this.dimSlide = this.dimTile * this.tiles.length;
+    if (this.isAllowedOrientation() && this.slider.getWidth() !== this.dimSlide) {
+        this.slider['set' + ('x' === this.axis ? 'Width' : 'Height')](this.dimSlide);
     }
-    this.dimTile = this.dimSlide / this.tiles.length;
 
     return this;
 };

@@ -8,6 +8,34 @@ TouchMove.Tiles = function (tiles) {
 };
 
 /**
+ * retrieve sum of tile width and margins
+ * @returns {number}
+ */
+TouchMove.Tiles.prototype.getTileWidth = function () {
+    var width = 0,
+        s = getComputedStyle(this.tiles[0]),
+        m = parseInt(s.getPropertyValue('margin-left'), 10) + parseInt(s.getPropertyValue('margin-right'), 10);
+
+    width += m + this.tiles[0].offsetWidth;
+
+    return width;
+};
+
+/**
+ * retrieve sum of tile height and margins
+ * @returns {number}
+ */
+TouchMove.Tiles.prototype.getTileHeight = function () {
+    var height = 0,
+        s = getComputedStyle(this.tiles[0]),
+        m = parseInt(s.getPropertyValue('margin-top'), 10) + parseInt(s.getPropertyValue('margin-bottom'), 10);
+
+    height += m + this.tiles[0].offsetHeight;
+
+    return height;
+};
+
+/**
  * retrieve sum of tiles width and margins
  * @param {NodeList} [tiles]
  * @returns {number}
