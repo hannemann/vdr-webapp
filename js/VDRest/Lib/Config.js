@@ -219,6 +219,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "loadAllChannelsInitially": "false",
     "useHtmlPlayer"         :   "false",
     "defaultSorting"        :   "dateDesc",
+    "databaseDefaultSorting": "sortRecordingDateDesc",
     "videoQualitySize"      :   "320x180",
     "videoQualityBitrate"   :   "512K",
     "hapticFeedback"        :   "true",

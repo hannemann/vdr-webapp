@@ -4,7 +4,8 @@ div.window.database-list .title,
 .database-collection.display-item .tagline,
 .database-collection.display-item .genre,
 .database-collection.display-item .genres,
-.database-collection.display-item .rating {
+.database-collection.display-item .rating,
+.database-collection.display-item .recording-title {
     text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
     3px -3px 10px rgba(0, 0, 0, 0.75),
     3px 3px 10px rgba(0, 0, 0, 0.75),
@@ -17,7 +18,8 @@ div.window.database-list .title,
 .database-collection.display-item .genre,
 .database-collection.display-item .genres,
 .database-collection.display-item .overview,
-.database-collection.display-item .rating span.vote-numeric {
+.database-collection.display-item .rating span.vote-numeric,
+.database-collection.display-item .recording-title {
     font-weight: bold;
 }
 
@@ -80,10 +82,10 @@ div.window.database-list .title,
 
     div.window.database-list .title,
     .database-collection.display-item .title,
-    .database-collection.display-item .name {
+    .database-collection.display-item .name,
+    .database-collection.display-item .recording-title {
         padding: 0 1.5%;
-        position: absolute;
-        top: 0; left: 0;
+        position: relative;
     }
 
     div.window.database-list .window-body {

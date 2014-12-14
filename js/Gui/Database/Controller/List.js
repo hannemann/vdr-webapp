@@ -46,6 +46,8 @@ Gui.Database.Controller.List.prototype.init = function () {
  */
 Gui.Database.Controller.List.prototype.dispatchView = function (parentView) {
 
+    var reverseSorting;
+
     this.view.setParentView({
         "node": parentView.body
     });
@@ -56,9 +58,11 @@ Gui.Database.Controller.List.prototype.dispatchView = function (parentView) {
 
     this.view.node[0].style.width = '0px';
 
-    this.collection.sort(this.collection.sortRating, false, function () {
-        this.collection.each(this.dispatchItem.bind(this));
-    }.bind(this));
+    this.currentSorting = VDRest.config.getItem('databaseDefaultSorting');
+
+    reverseSorting = this.currentSorting.indexOf('Desc') > -1;
+
+    this.sort(this.currentSorting.replace(/(Asc|Desc)$/, ''), reverseSorting);
 };
 
 /**
@@ -95,6 +99,53 @@ Gui.Database.Controller.List.prototype.dispatchItem = function (item) {
     if (!this.scrollerReady && this.tiles.length * this.sliderTileWidth > window.innerWidth) {
         this.applyScroller();
     }
+};
+
+/**
+ * sort by method
+ * @param {String} method
+ * @param {Boolean} reverse
+ */
+Gui.Database.Controller.List.prototype.sort = function (method, reverse) {
+
+    reverse = !!reverse;
+
+    this.collection.sort(this.collection[method], reverse, function () {
+        this.resetContextMenuSortStates();
+        VDRest.app.getCurrent(true).contextMenu[method].state = reverse ? 'on' : 'off';
+        this.currentSorting = method + (reverse ? 'Desc' : 'Asc');
+        VDRest.config.setItem('databaseDefaultSorting', this.currentSorting);
+        if (this.tiles.length > 0) {
+            this.currentActive = 0;
+            this.currentPrevious = 1;
+            this.resetHighlightImages();
+        }
+        this.tiles = [];
+        this.allTiles = undefined;
+        this.view.node.empty();
+        this.collection.each(this.dispatchItem.bind(this));
+        this.highlightActive(this.scroller.slider.getState());
+    }.bind(this));
+};
+
+/**
+ * reset sorting states in context menu
+ */
+Gui.Database.Controller.List.prototype.resetContextMenuSortStates = function () {
+
+    var methods = {
+        "sortRecordingDate": "off",
+        "sortReleaseDate": "off",
+        "sortAlpha": "on",
+        "sortRating": "off"
+    }, contextMenu = VDRest.app.getCurrent(true).contextMenu, i;
+
+    for (i in methods) {
+        if (methods.hasOwnProperty(i)) {
+            contextMenu[i].state = methods[i];
+        }
+    }
+
 };
 
 /**
@@ -329,6 +380,8 @@ Gui.Database.Controller.List.prototype.removeTransparentItems = function () {
  */
 Gui.Database.Controller.List.prototype.toggleTitle = function (active) {
 
+    this.currentTitle.style.position = 'absolute';
+    this.currentTitle.style.top = 0;
     this.currentTitle.classList.add('transparent');
     this.oldTitle = this.currentTitle;
 
@@ -398,4 +451,10 @@ Gui.Database.Controller.List.prototype.handleTransitionEnd = function (e) {
         this.oldFanart.parentNode.removeChild(this.oldFanart);
         this.oldFanart = null;
     }
+};
+
+Gui.Database.Controller.List.prototype.destructView = function () {
+
+    this.module.currentList = undefined;
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

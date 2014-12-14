@@ -24,6 +24,10 @@ Gui.Database.View.List.Movie.prototype.render = function () {
         .addText('overview', this.data.media.getText('overview'))
     ;
 
+    if (this.data.media.getText('title') !== this.data.media.getText('recording_title')) {
+        this.addText('recording-title', VDRest.app.translate('Recording title') + ': ' + this.data.media.getText('recording_title'));
+    }
+
     VDRest.Abstract.View.prototype.render.call(this);
 };
 

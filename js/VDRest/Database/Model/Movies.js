@@ -56,8 +56,24 @@ VDRest.Database.Model.Movies.prototype.sortReleaseDate = function (a, b) {
     b.data.release_date.match(/(\d{4}).(\d{2}).(\d{2})/);
     b = new Date(parseInt(RegExp.$1, 10), parseInt(RegExp.$2, 10) - 1, parseInt(RegExp.$3, 10)).getTime();
 
-    if (a > b) return -1;
-    if (a < b) return 1;
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+};
+
+/**
+ * sort by release date, newest first
+ * @param a
+ * @param b
+ * @returns {number}
+ */
+VDRest.Database.Model.Movies.prototype.sortRecordingDate = function (a, b) {
+
+    a = a.data.recording_date;
+    b = b.data.recording_date;
+
+    if (a < b) return -1;
+    if (a > b) return 1;
     return 0;
 };
 
@@ -72,8 +88,8 @@ VDRest.Database.Model.Movies.prototype.sortRating = function (a, b) {
     a = a.data.vote_average;
     b = b.data.vote_average;
 
-    if (a > b) return -1;
-    if (a < b) return 1;
+    if (a < b) return -1;
+    if (a > b) return 1;
     return 0;
 };
 

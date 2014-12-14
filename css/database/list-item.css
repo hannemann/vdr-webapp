@@ -32,7 +32,8 @@
     font-weight: bold;
 }
 
-.database-collection .list-item .tagline {
+.database-collection .list-item .tagline,
+.database-collection .list-item .recording-title {
     font-size: 10px;
 }
 

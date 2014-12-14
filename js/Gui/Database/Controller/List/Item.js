@@ -58,6 +58,7 @@ Gui.Database.Controller.List.Item.prototype.removeObserver = function () {
  */
 Gui.Database.Controller.List.Item.prototype.handleClick = function () {
 
+    this.vibrate();
     VDRest.app.addDestroyer('hashChanged', this.removeItem.bind(this));
     VDRest.app.observe();
     VDRest.app.setLocationHash('DatabaseList~DisplayItem');

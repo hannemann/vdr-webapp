@@ -60,6 +60,7 @@ Gui.Database.Controller.Fanart.prototype.handleClick = function () {
             "type": "DatabaseList",
             "hashSuffix": '~' + this.data.id,
             "data": {
+                "controller": controller,
                 "dispatch": controller.dispatchView.bind(controller)
             }
         }

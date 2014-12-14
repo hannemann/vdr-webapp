@@ -38,6 +38,7 @@ Gui.Window.Controller.DatabaseList.prototype.init = function () {
  */
 Gui.Window.Controller.DatabaseList.prototype.destructView = function () {
 
+    this.data.controller.destructView();
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
 };

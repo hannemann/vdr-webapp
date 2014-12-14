@@ -263,5 +263,18 @@ VDRest.app.de_DE = {
     "Load events for all channels on startup": "Sendungen für alle Kanäle beim starten laden",
     "Movies": "Filme",
     "TV-Shows": "TV-Serien",
+    "Recording title": "Aufnahme Titel",
+    "It seems that your database hasn't been synchronized yet. Should we do this now?": "Scheinbar wurden deine Aufnahmen noch nicht synchronisiert. Sollen wir das jetzt tun?",
+    "Synchronize": "Synchronisieren",
+    "Generate Movie Fanart": "Filme Fanart generieren",
+    "Generate TV-Shows Fanart": "Serien Fanart generieren",
+    "Recording Date &#8595;": "Aufnahme Datum &#8595;",
+    "Title &#8595;": "Titel &#8595;",
+    "Release Date &#8595;": "Premiere Datum &#8595;",
+    "Rating &#8595;": "Bewertung &#8595;",
+    "Recording Date &#8593;": "Aufnahme Datum &#8593;",
+    "Title &#8593;": "Titel &#8593;",
+    "Release Date &#8593;": "Premiere Datum &#8593;",
+    "Rating &#8593;": "Bewertung &#8593;",
     "Window 16/9": "Fenster 16/9"
 };
