@@ -52,9 +52,17 @@ VDRest.Database.Model.Sync.prototype.addRecording = function () {
 
     var recording = this.recordings[this.current],
         media = recording.getData('additional_media')[0],
-        episode, movie;
+        episode, movie, recModel;
+
+    recModel = this.module.getModel('Recordings.Recording', recording.getData());
+    recModel.save();
 
     if (media) {
+
+        media.recording_date = recording.getData('event_start_time');
+        media.recording_title = recording.getData('event_title');
+        media.recording_file_name = recording.getData('file_name');
+        media.recording_relative_file_name = recording.getData('relative_file_name');
 
         if (media.series_id) {
 
@@ -113,7 +121,7 @@ VDRest.Database.Model.Sync.prototype.getRecordings = function () {
  */
 VDRest.Database.Model.Sync.prototype.unlink = function () {
 
-    ['Shows', 'Shows.Show.Episodes', 'Movies'].forEach(function (store) {
+    ['Shows', 'Shows.Show.Episodes', 'Movies', 'Recordings'].forEach(function (store) {
         VDRest.app.getModule('VDRest.Database').getModel(store).each(function (e) {
             e.unlink();
         });

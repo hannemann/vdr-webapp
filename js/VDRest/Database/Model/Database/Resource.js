@@ -25,6 +25,14 @@ VDRest.Database.Model.Database.Resource.prototype.dbVersion = 2;
  * @type {Object}
  */
 VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
+    "recordings": {
+        "keys": {
+            "keyPath": "number"
+        },
+        "indexes": {
+            "number": ["number", "number", {"unique": true}]
+        }
+    },
     "movies" : {
         "keys" : {
             "keyPath" : "movie_id"
@@ -32,6 +40,7 @@ VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
         "indexes" : {
             "title" : ["title", "title", {"unique" : false}],
             "release_date" : ["release_date", "release_date", {"unique" : false}],
+            "recording_date": ["recording_date", "recording_date", {"unique": false}],
             "vote_average" : ["vote_average", "vote_average", {"unique" : false}]
         }
     },
@@ -52,6 +61,7 @@ VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
         "indexes" : {
             "name" : ["episode_name", "episode_name", {"unique" : false}],
             "series_id" : ["series_id", "series_id", {"unique" : false}],
+            "recording_date": ["recording_date", "recording_date", {"unique": false}],
             "network" : ["network", "network", {"unique" : false}],
             "rating" : ["episode_rating", "episode_rating", {"unique" : false}]
         }

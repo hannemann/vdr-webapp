@@ -40,6 +40,25 @@ Gui.Database.prototype.startPage = true;
 Gui.Database.prototype.headline = 'Your Media';
 
 /**
+ * context menu definition
+ * @type {{}}
+ */
+Gui.Database.prototype.contextMenu = {
+
+    "sync": {
+        "labels": {
+            "on": 'Synchronize',
+            "off": 'Synchronize'
+        },
+        "state": "on",
+        "scope": 'Gui.Database',
+        "fn": function () {
+            VDRest.app.getModule('VDRest.Database').getController('Sync').synchronize();
+        }
+    }
+};
+
+/**
  * dispatch default view
  */
 Gui.Database.prototype.dispatch = function () {
