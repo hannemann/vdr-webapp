@@ -78,7 +78,7 @@ Gui.Window.View.Select.prototype.prepareValue = function (value) {
 
     type = this.data.multiselect ? 'checkbox' : 'radio';
 
-    value.dom = $('<label>');
+    value.dom = $('<label class="clearer">');
 
     if (value.image) {
         html += '<img src="' + value.image + '">';
