@@ -1,4 +1,5 @@
 div.window.database-list .title,
+div.window.database-list .name,
 .database-collection.display-item .name,
 .database-collection.display-item .title,
 .database-collection.display-item .tagline,
@@ -12,6 +13,7 @@ div.window.database-list .title,
     0 3px 10px rgba(0, 0, 0, 0.75);
 }
 div.window.database-list .title,
+div.window.database-list .name,
 .database-collection.display-item .name,
 .database-collection.display-item .title,
 .database-collection.display-item .tagline,
@@ -69,11 +71,13 @@ div.window.database-list .title,
     }
 
     div.window.database-list .title,
+    div.window.database-list .name,
     div.window.database-list > .fanart {
         transition: opacity .5s linear;
     }
 
     div.window.database-list .title,
+    div.window.database-list .name,
     .database-collection.display-item .title,
     .database-collection.display-item .name {
         font-size: 2.5em;
@@ -81,6 +85,7 @@ div.window.database-list .title,
     }
 
     div.window.database-list .title,
+    div.window.database-list .name,
     .database-collection.display-item .title,
     .database-collection.display-item .name,
     .database-collection.display-item .recording-title {

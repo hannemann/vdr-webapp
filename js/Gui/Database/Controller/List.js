@@ -38,6 +38,8 @@ Gui.Database.Controller.List.prototype.init = function () {
     this.getCollection(this.id);
 
     this.module.currentList = this;
+
+    this.currentSorting = VDRest.config.getItem('databaseDefaultSorting');
 };
 
 /**
@@ -45,8 +47,6 @@ Gui.Database.Controller.List.prototype.init = function () {
  * @param {Gui.Window.View.Abstract} parentView
  */
 Gui.Database.Controller.List.prototype.dispatchView = function (parentView) {
-
-    var reverseSorting;
 
     this.view.setParentView({
         "node": parentView.body
@@ -56,13 +56,10 @@ Gui.Database.Controller.List.prototype.dispatchView = function (parentView) {
 
     this.addObserver();
 
-    this.view.node[0].style.width = '0px';
-
-    this.currentSorting = VDRest.config.getItem('databaseDefaultSorting');
-
-    reverseSorting = this.currentSorting.indexOf('Desc') > -1;
-
-    this.sort(this.currentSorting.replace(/(Asc|Desc)$/, ''), reverseSorting);
+    this.sort(
+        this.currentSorting.replace(/(Asc|Desc)$/, ''),
+        this.currentSorting.indexOf('Desc') > -1
+    );
 };
 
 /**
@@ -78,7 +75,7 @@ Gui.Database.Controller.List.prototype.addObserver = function () {
  */
 Gui.Database.Controller.List.prototype.removeObserver = function () {
 
-    document.removeEventListener(this.transitionEndEvent, this.handleTransitionEnd);
+    document.removeEventListener(this.transitionEndEvent, this.handleTransitionEnd.bind(this));
 };
 
 /**
@@ -94,7 +91,7 @@ Gui.Database.Controller.List.prototype.dispatchItem = function (item) {
         {"parent": this, "media": item, "type": sing}
     ).dispatchView();
     this.tiles.push(this.view.node[0].lastChild);
-    this.view.node[0].style.width = parseInt(this.view.node[0].style.width, 10) + this.sliderTileWidth + 'px';
+    this.view.setWidth(parseInt(this.view.node[0].style.width, 10) + this.sliderTileWidth);
 
     if (!this.scrollerReady && this.tiles.length * this.sliderTileWidth > window.innerWidth) {
         this.applyScroller();
@@ -186,7 +183,7 @@ Gui.Database.Controller.List.prototype.search = function () {
 Gui.Database.Controller.List.prototype.resetItems = function () {
 
     this.filterItems('');
-    this.view.node[0].style.width = this.allTiles.length * this.sliderTileWidth + 'px';
+    this.view.setWidth(this.allTiles.length * this.sliderTileWidth);
 };
 
 /**
@@ -218,7 +215,7 @@ Gui.Database.Controller.List.prototype.filterItems = function (ids) {
         }
     }.bind(this));
 
-    this.view.node[0].style.width = ids.length * this.sliderTileWidth + 'px';
+    this.view.setWidth(ids.length * this.sliderTileWidth);
 
     this.highlightActive(this.scroller.slider.getState());
 };
@@ -233,9 +230,10 @@ Gui.Database.Controller.List.prototype.applyScroller = function () {
     this.highlightPosZ = 350;
     this.viewport = this.view.node[0].parentNode.parentNode;
 
-    this.applyHighlight(active, this.highlightPosZ, 1, 'active');
-
-    this.addTitle(active).addFanart(active);
+    this.view
+        .applyHighlight(this.tiles[active], this.highlightPosZ, 1, 'active')
+        .addTitle(this.tiles[active])
+        .addFanart(this.tiles[active]);
 
     this.currentActive = 0;
     this.currentPrevious = 1;
@@ -270,11 +268,11 @@ Gui.Database.Controller.List.prototype.highlightActive = function (pos) {
 
         this.resetHighlightImages();
 
-        this.applyHighlight(active, previousP, distP > 50 ? 0 : 1, 'previous');
+        this.view.applyHighlight(this.tiles[active], previousP, distP > 50 ? 0 : 1, 'previous');
 
         if (active + 1 < this.tiles.length) {
 
-            this.applyHighlight(active + 1, nextP, distP > 50 ? 1 : 0, 'active')
+            this.view.applyHighlight(this.tiles[active + 1], nextP, distP > 50 ? 1 : 0, 'active')
         }
 
         this.currentPrevious = active;
@@ -298,45 +296,9 @@ Gui.Database.Controller.List.prototype.highlightActive = function (pos) {
  */
 Gui.Database.Controller.List.prototype.resetHighlightImages = function () {
 
-    this.removeHighlight(this.currentActive)
-        .removeHighlight(this.currentPrevious);
-
-    return this;
-};
-
-/**
- * remove highlight styles from specific element in scroller
- * @param index
- * @returns {Gui.Database.Controller.List}
- */
-Gui.Database.Controller.List.prototype.removeHighlight = function (index) {
-
-    var img = this.tiles[index].querySelector('img.poster'),
-        classList = this.tiles[index].classList;
-
-    if (img) img.style.transform = '';
-    this.tiles[index].style.zIndex = 0;
-    classList.remove('previous', 'active');
-
-    return this;
-};
-
-/**
- * apply highlight styles to specific element in scroller
- * @param {Number} index
- * @param {Number} zPos
- * @param {Number} zIndex
- * @param {String} className
- * @returns {Gui.Database.Controller.List}
- */
-Gui.Database.Controller.List.prototype.applyHighlight = function (index, zPos, zIndex, className) {
-
-    var img = this.tiles[index].querySelector('img.poster'),
-        classList = this.tiles[index].classList;
-
-    if (img) img.style.transform = 'translateZ(' + zPos + 'px)';
-    this.tiles[index].style.zIndex = zIndex;
-    classList.add(className);
+    this.view
+        .removeHighlight(this.tiles[this.currentActive])
+        .removeHighlight(this.tiles[this.currentPrevious]);
 
     return this;
 };
@@ -348,18 +310,19 @@ Gui.Database.Controller.List.prototype.handleScrollerSnap = function (active) {
 
     this.removeTransparentItems();
 
-    this.toggleTitle(active)
-        .toggleFanart(active);
+    this.view
+        .toggleTitle(this.tiles[active])
+        .toggleFanart(this.tiles[active]);
 
     Array.prototype.forEach.call(this.tiles, function (tile, index) {
-        this.removeHighlight(arguments[1]);
+        this.view.removeHighlight(this.tiles[arguments[1]]);
     }.bind(this));
 
     if (active + 1 < this.tiles.length) {
-        this.removeHighlight(active + 1);
+        this.view.removeHighlight(this.tiles[active + 1]);
     }
     this.tiles[active].classList.remove('previous');
-    this.applyHighlight(active, this.highlightPosZ, 1, 'active');
+    this.view.applyHighlight(this.tiles[active], this.highlightPosZ, 1, 'active');
 };
 
 /**
@@ -371,65 +334,6 @@ Gui.Database.Controller.List.prototype.removeTransparentItems = function () {
     Array.prototype.forEach.call(this.viewport.querySelectorAll('.transparent'), function (elem) {
         elem.parentNode.removeChild(elem);
     });
-};
-
-/**
- * toggle title
- * @param {Number} active
- * @returns {Gui.Database.Controller.List}
- */
-Gui.Database.Controller.List.prototype.toggleTitle = function (active) {
-
-    this.currentTitle.style.position = 'absolute';
-    this.currentTitle.style.top = 0;
-    this.currentTitle.classList.add('transparent');
-    this.oldTitle = this.currentTitle;
-
-    return this.addTitle(active);
-};
-
-/**
- * add title
- * @param {Number} active
- * @returns {Gui.Database.Controller.List}
- */
-Gui.Database.Controller.List.prototype.addTitle = function (active) {
-
-    this.currentTitle = this.tiles[active].querySelector('div.title').cloneNode(true);
-    this.viewport.insertBefore(this.currentTitle, this.viewport.firstChild);
-
-    return this;
-};
-
-/**
- * toggle fanart
- * @param {Number} active
- * @returns {Gui.Database.Controller.List}
- */
-Gui.Database.Controller.List.prototype.toggleFanart = function (active) {
-
-    if (this.currentFanart) {
-        this.currentFanart.classList.add('transparent');
-        this.oldFanart = this.currentFanart;
-    }
-
-    return this.addFanart(active);
-};
-
-/**
- * add fanart
- * @param {Number} active
- * @returns {Gui.Database.Controller.List}
- */
-Gui.Database.Controller.List.prototype.addFanart = function (active) {
-
-    this.currentFanart = this.tiles[active].querySelector('img.fanart');
-    if (this.currentFanart) {
-        this.currentFanart = this.currentFanart.cloneNode(false);
-        this.viewport.insertBefore(this.currentFanart, this.viewport.firstChild);
-    }
-
-    return this;
 };
 
 /**
