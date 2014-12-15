@@ -58,6 +58,7 @@ VDRest.Epg.prototype.initTimes = function (custom) {
 VDRest.Epg.prototype.initLate = function () {
 
     this.getModel('Observer');
+    this.getModel('Channels').initChannels();
 };
 
 /**

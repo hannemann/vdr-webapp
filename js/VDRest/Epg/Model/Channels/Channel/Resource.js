@@ -25,6 +25,9 @@ VDRest.Epg.Model.Channels.Channel.Resource.prototype.urls = {
     "channelList" : "channels/.json"
 };
 
+
+VDRest.Epg.Model.Channels.Channel.Resource.prototype.noThrobber = true;
+
 /**
  * url store
  * @type {{channelList: string}}
