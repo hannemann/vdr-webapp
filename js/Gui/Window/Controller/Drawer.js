@@ -265,10 +265,13 @@ Gui.Window.Controller.Drawer.prototype.handleFavDown = function (e) {
  */
 Gui.Window.Controller.Drawer.prototype.playFavourite = function (e) {
 
-    VDRest.app.getModule('Gui.Epg').getController(
-        'Channels.Channel',
-        $(e.currentTarget).attr('data-channelId')
-    ).startStream();
+    Gui.Epg.Controller.Channels.Channel.prototype.startStream(
+        VDRest.app.getModule('VDRest.Epg').getModel(
+            'Channels.Channel',
+            $(e.currentTarget).attr('data-channelId')
+        )
+    );
+
 };
 
 /**

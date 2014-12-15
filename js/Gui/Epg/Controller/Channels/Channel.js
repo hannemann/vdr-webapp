@@ -132,12 +132,13 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
 /**
  * start streaming
+ * @param {VDRest.Epg.Model.Channels.Channel} [channel]
  */
-Gui.Epg.Controller.Channels.Channel.prototype.startStream = function () {
+Gui.Epg.Controller.Channels.Channel.prototype.startStream = function (channel) {
 
-    var windowModule = VDRest.app.getModule('Gui.Window'),
-        channel = this.data.dataModel;
+    var windowModule = VDRest.app.getModule('Gui.Window');
 
+    channel = channel || this.data.dataModel;
 
     if (VDRest.info.canUseHtmlPlayer()) {
 

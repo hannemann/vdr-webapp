@@ -310,10 +310,15 @@ VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function () {
     var i = 0, l = this.collection.length, cur,
         d=new Date(),
         now = d.getTime()/1000,
+        end;
+
+    if (l > 0 && (this.collection[l-1].getData('end_time') <= now || this.collection[0].getData('start_time') > now)) {
+
         end = new Date(this.collection[0].getData('start_date').getTime() - 1);
-
-    if (l > 0 && this.collection[l-1].getData('end_time') <= now || this.collection[0].getData('start_time') > now) {
-
+        this.getByTime(d, end, false);
+        l = this.collection.length;
+    } else if (l === 0) {
+        end = new Date(Date.now() + 3600 * 6 * 1000);
         this.getByTime(d, end, false);
         l = this.collection.length;
     }

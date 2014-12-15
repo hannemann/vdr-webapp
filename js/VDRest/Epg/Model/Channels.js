@@ -96,3 +96,22 @@ VDRest.Epg.Model.Channels.prototype.getPreviousChannel = function (channel) {
     }
     return false;
 };
+
+/**
+ * retrieve channel by name
+ * @param {String} name
+ */
+VDRest.Epg.Model.Channels.prototype.getChannelByName = function (name) {
+
+    var channel;
+
+    this.collection.every(function (item) {
+        if (item.getData('name') === name) {
+            channel = item;
+            return false;
+        }
+        return true;
+    });
+
+    return channel;
+};
