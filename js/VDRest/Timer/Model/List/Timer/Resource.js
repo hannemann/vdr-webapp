@@ -80,7 +80,7 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.deleteTimer = function (adapter
 
     data = adapter.getData();
 
-    url = this.getBaseUrl() + '/timers/' + data.timer_id;
+    url = this.getBaseUrl() + 'timers/' + data.timer_id;
 
     $.event.trigger({
         "type" : "window.request",
