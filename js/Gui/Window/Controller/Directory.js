@@ -25,7 +25,7 @@ Gui.Window.Controller.Directory.prototype.init = function () {
     this.oldHeader = this.header.text();
     this.header.text(path.replace('root~', '').replace(/~/g, '/'));
 
-    this.eventPrefix = 'window.directory.' + path.replace(/\s/g, '.');
+    this.eventPrefix = 'window.directory.' + path.replace(/\s/g, '.').toCacheKey();
 
     this.view = this.module.getView('Directory', this.data);
 
