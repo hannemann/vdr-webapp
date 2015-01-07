@@ -209,11 +209,13 @@ Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
  */
 Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
 
-    var epg = VDRest.app.getModule('Gui.Epg'),
-        top,
-        wrapper = epg.getView('Broadcasts').wrapper,
+    var source, dest, delta,
+        epg = VDRest.app.getModule('Gui.Epg'),
+        wrapperTop = epg.getView('Broadcasts').wrapper.offset().top,
         channelId = $(e.currentTarget).attr('data-channelId'),
-        channel = epg.getView('Channels.Channel', channelId).node;
+        channel = epg.getView('Channels.Channel', channelId).node,
+        slider = epg.getController('Broadcasts').touchScroll.slider,
+        sliderState = slider.getState();
 
     e.preventDefault();
     e.stopPropagation();
@@ -224,10 +226,15 @@ Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
             window.clearTimeout(this.channelClickTimeout);
         }
 
-        top = epg.getView('Broadcasts.List', channelId)
-            .node.offset().top - wrapper.offset().top + wrapper.scrollTop();
+        source = Math.abs(sliderState.y);
+        dest = Math.abs(epg.getView('Broadcasts.List', channelId).node.offset().top - sliderState.y);
 
-        wrapper.scrollTop(top);
+        delta = {
+            "x": 0,
+            "y": source - dest + wrapperTop
+        };
+
+        slider.translate(delta);
 
         this.handleStateChanged(e);
 

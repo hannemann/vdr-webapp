@@ -17,6 +17,7 @@ TouchMove.Slider = function (elem, wrapper, onmove) {
     this.setDimensions()
         .resetTransform()
         .resetTransition()
+        .resetStates()
         .hideBackface()
         .setPerspective()
     ;
@@ -225,11 +226,13 @@ TouchMove.Slider.prototype.fireCallbacks = function (next) {
  */
 TouchMove.Slider.prototype.getNext = function (delta) {
 
+    var state = this.getState();
+
     this.setDimensions().setDirections(delta);
 
     return {
-        "x": this.getOutOfBoundsX(this.states[this.states.length - 1].x + delta.x),
-        "y": this.getOutOfBoundsY(this.states[this.states.length - 1].y + delta.y)
+        "x": this.getOutOfBoundsX(state.x + delta.x),
+        "y": this.getOutOfBoundsY(state.y + delta.y)
     };
 };
 
