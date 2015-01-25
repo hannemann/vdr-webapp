@@ -70,8 +70,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.unmute = function () {
 Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
 
     this.view.node
-        .on('mouseup', $.proxy(this.handleUp, this))
-        .on('mousedown', $.proxy(this.handleDown, this));
+        .on('mouseup touchend', this.handleUp.bind(this))
+        .on('mousedown touchstart', this.handleDown.bind(this));
 };
 
 /**
@@ -79,9 +79,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
 
-    this.view.node
-        .off('mouseup', $.proxy(this.handleUp, this))
-        .off('mousedown', $.proxy(this.handleDown, this));
+    this.view.node.off('touchend touchstart mouseup mousedown');
 };
 
 /**
@@ -113,6 +111,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
+    e.preventDefault();
     this.vibrate();
 
     if (!this.isMuted && VDRest.info.getStreamer()) {
@@ -123,7 +122,6 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
             this.vibrate(100);
 
             this.preventClick = true;
-            e.preventDefault();
 
             this.startStream();
         }, this), 500);
