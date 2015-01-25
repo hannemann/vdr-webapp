@@ -117,7 +117,7 @@ Gui.Window.View.Recording.prototype.addDetails = function () {
  */
 Gui.Window.View.Recording.prototype.addFanart = function () {
 
-    var fanartUrl, media = this.getAdditionalMedia()[0];
+    var fanartUrl, media = this.getAdditionalMedia();
 
     if (media) {
 
