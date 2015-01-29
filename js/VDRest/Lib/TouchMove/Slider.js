@@ -7,20 +7,47 @@
  */
 TouchMove.Slider = function (elem, wrapper, onmove) {
 
+	var state;
+
     if (!elem) {
         throw new Error('Could not find slider');
     }
 
     this.elem = elem;
+	this.getVendorPrefix();
     this.wrapper = wrapper;
     this.onmove = onmove;
     this.setDimensions()
-        .resetTransform()
         .resetTransition()
         .resetStates()
         .hideBackface()
         .setPerspective()
     ;
+
+	state = this.getState();
+	if(state.x === 0 && state.y === 0) {
+		this.resetTransform();
+	}
+};
+
+TouchMove.Slider.prototype.getVendorPrefix = function () {
+
+	if ("undefined" !== typeof this.elem.style.webkitTransform) {
+		this.prefix = '-webkit-';
+		this.jsStyle = 'webkitTransform';
+	} else if ("undefined" !== typeof this.elem.style.mozTransform) {
+		this.prefix = '-moz-';
+		this.jsStyle = 'mozTransform';
+	} else if ("undefined" !== typeof this.elem.style.msTransform) {
+		this.prefix = '-ms-';
+		this.jsStyle = 'msTransform';
+	} else if ("undefined" !== typeof this.elem.style.oTransform) {
+		this.prefix = '-o-';
+		this.jsStyle = 'oTransform';
+	} else {
+		this.prefix = '';
+		this.jsStyle = 'transform';
+	}
 };
 
 /**
@@ -94,7 +121,7 @@ TouchMove.Slider.prototype.setPerspective = function () {
  */
 TouchMove.Slider.prototype.resetTransform = function () {
 
-    this.elem.style.transform = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
+    this.elem.style[this.jsStyle] = 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)';
     return this;
 };
 
@@ -104,7 +131,7 @@ TouchMove.Slider.prototype.resetTransform = function () {
  */
 TouchMove.Slider.prototype.resetTransition = function () {
 
-    this.setTransition('transform 0s linear');
+	this.setTransition(this.prefix + 'transform 0s linear');
     return this;
 };
 
@@ -125,7 +152,13 @@ TouchMove.Slider.prototype.setTransition = function (transition) {
  */
 TouchMove.Slider.prototype.getTransform = function () {
 
-    return window.getComputedStyle(this.elem).getPropertyValue('transform');
+	var transform = window.getComputedStyle(this.elem).getPropertyValue(this.prefix + 'transform');
+
+	if ("none" === transform) {
+		this.resetTransform();
+		transform = window.getComputedStyle(this.elem).getPropertyValue(this.prefix + 'transform');
+	}
+	return transform;
 };
 
 /**
@@ -204,7 +237,7 @@ TouchMove.Slider.prototype.translate = function (delta) {
 
     var next = this.getNext(delta);
 
-    this.elem.style.transform = 'translate3d(' + next.x + 'px, ' + next.y + 'px, 0)';
+    this.elem.style[this.jsStyle] = 'translate3d(' + next.x + 'px, ' + next.y + 'px, 0)';
 
     this.saveState(this.createState(next));
     this.fireCallbacks(next);

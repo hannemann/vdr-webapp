@@ -5,6 +5,8 @@
  */
 TouchMove.Slide = function (options) {
 
+	if (!options) return;
+
     TouchMove.prototype.init.call(this, options);
     this.setAxis().setDimSlide();
 };
@@ -59,14 +61,24 @@ TouchMove.Slide.prototype.hasEnded = function () {
 };
 
 /**
+ * handle touch start
+ * @param {Event} e
+ */
+TouchMove.Slide.prototype.start = function (e) {
+
+	this.setDimSlide();
+	TouchMove.prototype.start.call(this, e);
+};
+
+/**
  * handle touch stop
  * @param {Event} e
  */
 TouchMove.Slide.prototype.end = function (e) {
 
-    TouchMove.prototype.end.call(this, e);
-    this.setEndTransition();
-    requestAnimationFrame(this.getTransformEnd.bind(this));
+	TouchMove.prototype.end.call(this, e);
+	this.setEndTransition();
+	requestAnimationFrame(this.getTransformEnd.bind(this));
 };
 
 /**
@@ -99,7 +111,7 @@ TouchMove.Slide.prototype.getRemainDuration = function () {
  */
 TouchMove.Slide.prototype.setEndTransition = function () {
 
-    this.slider.setTransition('transform ' + this.getRemainDuration() + 's ease-out');
+    this.slider.setTransition(this.slider.prefix + 'transform ' + this.getRemainDuration() + 's ease-out');
 
     return this;
 };
@@ -111,7 +123,7 @@ TouchMove.Slide.prototype.setEndTransition = function () {
 TouchMove.Slide.prototype.getTransformEnd = function () {
 
     var end = this.getEndPos();
-    this.slider.elem.style.transform =  'translate3d(' + end.x + 'px, ' + end.y + 'px, ' + end.z + 'px)'
+    this.slider.elem.style[this.slider.jsStyle] =  'translate3d(' + end.x + 'px, ' + end.y + 'px, ' + end.z + 'px)'
 };
 
 /**
@@ -129,7 +141,7 @@ TouchMove.Slide.prototype.getEndPos = function () {
 
     if ((this.sliderSpeed[this.axis] < 350 && 100 * Math.abs(this.startPosition[this.axis] - this.endPosition[this.axis]) / this.dimTile < 25) || this.animateMaxed) {
         endPos[this.axis] = this.startPosition[this.axis];
-        this.slider.setTransition('transform .3s ease-out');
+        this.slider.setTransition(this.slider.prefix + 'transform .3s ease-out');
     } else {
 
         if (this.slider.scrollDirections[this.axis] == dir) {

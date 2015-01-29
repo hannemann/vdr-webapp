@@ -138,7 +138,7 @@ TouchMove.prototype.start = function (e) {
  */
 TouchMove.prototype.move = function (e) {
 
-    e.preventDefault();
+    //e.preventDefault();
     this.preventEndEvent = true;
 
     var ePos = this.getEventPosition(e);
@@ -278,3 +278,13 @@ TouchMove.prototype.getOrientation = function () {
 
     return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
 };
+
+/** Polyfills */
+
+if ("undefined" === typeof window.performance) {
+	window.performance = {
+		"now" : function () {
+			return Date.now();
+		}
+	}
+}
