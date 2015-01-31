@@ -51,7 +51,7 @@ VDRest.Database.Model.Sync.prototype.addRecording = function () {
     }
 
     var recording = this.recordings[this.current],
-        media = recording.getData('additional_media')[0],
+        media = recording.getData('additional_media'),
         episode, movie, recModel;
 
     recModel = this.module.getModel('Recordings.Recording', recording.getData());
