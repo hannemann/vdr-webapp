@@ -34,6 +34,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
         "view" : this.view,
         "resource" : this.data.dataModel
     });
+
+    this.addObserver();
 };
 
 /**
@@ -42,8 +44,6 @@ Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
 Gui.Epg.Controller.Channels.Channel.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-
-    this.addObserver();
 };
 
 /**

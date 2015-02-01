@@ -47,14 +47,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.fromTime = this.module.getFromDate().getTime();
     this.initial = true;
+
+    this.addObserver();
 };
 
 /**
  * init listeners, fetch first items, dispatch
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
-
-    this.addObserver();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
@@ -133,11 +133,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.attachChannelView = function () {
 
     this.view.node.addClass('active');
     this.view.setIsVisible('true');
-    // update list before trigger loading of remaining broadcasts
-    // to prevent already loaded broadcasts to reside at the end of the list
-    // if they haven't been rendered yet
+    this.broadcastsController.saveState();
+    this.broadcastsController.scrollTop();
     this.updateList();
-    this.getStoreModel().getOneDay();
 };
 
 /**
@@ -181,6 +179,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
             for (i;i<l;i++) {
                 newBroadcasts[i].dispatchView();
             }
+            this.isLoading = false;
         }
 
     }, this));
@@ -188,7 +187,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
     newBroadcasts = [];
     // runs in endless loop if previous collection had items but current not
     // trigger update ONLY if collection.length is not 0!!!
-    if (collection.collection.length > 0 && isInView) {
+    if (collection.collection.length > 0 && isInView && !this.isChannelView) {
 
         this.updateList();
     }
@@ -199,23 +198,23 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
 
-    var me = this, isInView;
+    var isInView;
 
     if (!this.isChannelView) {
 
         isInView = this.isInView();
 
         if (isInView) {
-            me.updateList();
+            this.updateList();
         }
 
         if (this.isVisible != isInView) {
-            me.view.setIsVisible(isInView);
-            me.isVisible = isInView;
+            this.view.setIsVisible(isInView);
+            this.isVisible = isInView;
         }
-    } else if (this.view.node.hasClass('active')) {
+    } else if (this.view.node.hasClass('active') && !this.isLoading) {
 
-        me.updateList();
+        this.updateList();
     }
 };
 
@@ -251,7 +250,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
             // dispatch broadcast if its not but should be
             if (!this.broadcasts[i].view.isRendered
-                && this.broadcasts[i].view.getLeft() + vOffset.left < metrics.win.width
+                && (this.broadcasts[i].view.getLeft() + vOffset.left < metrics.win.width || this.isChannelView)
             ) {
 
                 this.broadcasts[i].dispatchView();
@@ -282,6 +281,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
                 this.broadcasts[l - 1].view.getOffset().top + this.broadcasts[l - 1].view.node.height() - 100 <
                 metrics.win.height
             ) {
+                this.isLoading = true;
                 this.getStoreModel().getOneDay();
             }
 

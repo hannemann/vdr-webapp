@@ -62,12 +62,12 @@ Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
         }
 
         this.channelView = e.payload.view;
-        this.module.getController('Broadcasts.List', this.channelView.keyInCache).attachChannelView();
 
         for (i; i < l; i++) {
 
             this.module.getController('Broadcasts.List', this.channelsList[i].keyInCache).isChannelView = true;
         }
+        this.module.getController('Broadcasts.List', this.channelView.keyInCache).attachChannelView();
 
         this.channelView.setIsActive();
 
@@ -131,8 +131,8 @@ Gui.Epg.Controller.Channels.prototype.unmute = function (channel) {
  */
 Gui.Epg.Controller.Channels.prototype.addObserver = function () {
 
-    $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
-    $(document).on('epg.channelview', $.proxy(this.handleChannelView, this));
+    $(document).one('channelsloaded', this.iterateChannels.bind(this));
+    $(document).on('epg.channelview', this.handleChannelView.bind(this));
 };
 
 /**
@@ -185,7 +185,7 @@ Gui.Epg.Controller.Channels.prototype.dispatchChannels = function () {
  */
 Gui.Epg.Controller.Channels.prototype.handleScroll = function (e) {
 
-    var scroll = e.y ? e.y : this.broadcastsWrapper.scrollTop * -1;
+    var scroll = (e && e.y) ? e.y : this.broadcastsWrapper.scrollTop * -1;
 
     if (!this.channelView) {
         this.node.style.transform = "translateY(" + scroll + "px)";

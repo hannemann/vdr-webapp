@@ -117,11 +117,7 @@ Gui.Epg.Controller.Epg.prototype.getViewPort = function () {
  */
 Gui.Epg.Controller.Epg.prototype.getBroadcasts = function () {
 
-    if (!this.broadcastsController) {
-
-        this.broadcastsController = this.module.getController('Broadcasts');
-    }
-    return this.broadcastsController;
+    return this.broadcasts;
 };
 
 /**
@@ -144,9 +140,9 @@ Gui.Epg.Controller.Epg.prototype.getMetrics = function () {
 Gui.Epg.Controller.Epg.prototype.getScrollLeft = function () {
 
     if (!VDRest.helper.isTouchDevice) {
-        return this.broadcastsController.view.wrapper.scrollLeft();
+        return this.broadcasts.view.wrapper.scrollLeft();
     } else {
-        return this.broadcastsController.touchScroll.slider.getState().x;
+        return this.broadcasts.touchScroll.slider.getState().x;
     }
 };
 
@@ -192,7 +188,16 @@ Gui.Epg.Controller.Epg.prototype.setIsChannelView = function (e) {
     if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
 
         channels.view.node.css({"top":0});
-        this.module.getController('Broadcasts').saveState();
+        //if (VDRest.helper.isTouchDevice) {
+        //
+        //    this.broadcasts.touchScroll.slider.translate({
+        //        "x": this.broadcasts.getData('state').x * -1,
+        //        "y": this.broadcasts.getData('state').y * -1
+        //    });
+        //} else {
+        //    this.broadcasts.view.wrapper.scrollTop(0);
+        //    this.broadcasts.view.wrapper.scrollLeft(0);
+        //}
         this.view.node.addClass('channel-view');
         this.isChannelView = true;
 
@@ -201,7 +206,7 @@ Gui.Epg.Controller.Epg.prototype.setIsChannelView = function (e) {
         this.view.node.removeClass('channel-view');
         this.isChannelView = false;
         channels.view.node.css({"top":""});
-        this.module.getController('Broadcasts').recoverState();
+        this.broadcasts.recoverState();
     }
 
     return this;
@@ -221,9 +226,9 @@ Gui.Epg.Controller.Epg.prototype.getIsChannelView = function () {
  */
 Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 
-    $(window).on('orientationchange.epg-controller', $.proxy(this.handleOrientationChange, this));
-    $(window).on('resize', $.proxy(this.setMetrics, this));
-    $(document).on('epg.channelview', $.proxy(this.setIsChannelView, this));
+    $(window).on('orientationchange.epg-controller', this.handleOrientationChange.bind(this));
+    $(window).on('resize', this.setMetrics.bind(this));
+    $(document).on('epg.channelview', this.setIsChannelView.bind(this));
 };
 
 /**
@@ -232,8 +237,8 @@ Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
 
     $(window).off('orientationchange.epg-controller');
-    $(window).off('resize', $.proxy(this.setMetrics, this));
-    $(document).off('epg.channelview', $.proxy(this.setIsChannelView, this));
+    $(window).off('resize');
+    $(document).off('epg.channelview');
 };
 
 /**

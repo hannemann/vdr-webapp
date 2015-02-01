@@ -29,6 +29,8 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
             "onmove" : this.handleScroll.bind(this)
         })
     }
+
+    this.addObserver();
 };
 
 Gui.Epg.Controller.Broadcasts.prototype.width = function () {
@@ -47,8 +49,6 @@ Gui.Epg.Controller.Broadcasts.prototype.height = function () {
 Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-
-    this.addObserver();
 
     if (this.dataModel.getCollection().length) {
         this.iterateChannels({
@@ -157,13 +157,40 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 };
 
 /**
+ * scroll to top position
+ */
+Gui.Epg.Controller.Broadcasts.prototype.scrollTop = function () {
+
+    var state;
+
+    if (VDRest.helper.isTouchDevice) {
+
+        state = this.touchScroll.slider.getState();
+        this.touchScroll.slider.translate({
+            "x": state.x * -1,
+            "y": state.y * -1
+        });
+    } else {
+        this.view.wrapper.scrollTop(0);
+        this.view.wrapper.scrollLeft(0);
+    }
+};
+
+/**
  * save current scroll position
  */
 Gui.Epg.Controller.Broadcasts.prototype.saveState = function () {
 
-    this.setData('scrollTop', this.view.wrapper.scrollTop());
+    if (this.hasData('state')) return;
 
-    this.setData('scrollLeft', this.view.wrapper.scrollLeft());
+    if (VDRest.helper.isTouchDevice) {
+        this.setData('state', this.touchScroll.slider.getState());
+    } else {
+        this.setData('state', {
+            "top": this.view.wrapper.scrollTop(),
+            "left": this.view.wrapper.scrollLeft()
+        });
+    }
 };
 
 /**
@@ -171,9 +198,19 @@ Gui.Epg.Controller.Broadcasts.prototype.saveState = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.recoverState = function () {
 
-    this.view.wrapper.scrollTop(this.getData('scrollTop'));
+    if (VDRest.helper.isTouchDevice) {
+        this.scrollTop();
+        this.touchScroll.slider.translate({
+            "x": this.getData('state').x,
+            "y": this.getData('state').y
+        });
+    } else {
+        this.view.wrapper.scrollTop(this.getData('state').top);
+        this.view.wrapper.scrollLeft(this.getData('state').left);
+    }
 
-    this.view.wrapper.scrollLeft(this.getData('scrollLeft'));
+    this.unsData('state');
+
 };
 
 /**

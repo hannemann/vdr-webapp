@@ -92,6 +92,17 @@ VDRest.Lib.Object.prototype.setData = function (option, value) {
 };
 
 /**
+ *
+ * @param {String} option
+ * @return {VDRest.Lib.Object}
+ */
+VDRest.Lib.Object.prototype.unsData = function (option) {
+
+    delete this.data[option];
+    return this;
+};
+
+/**
  * determine if object has option in its store
  * @param {string} option
  * @returns {boolean}
