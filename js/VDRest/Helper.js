@@ -226,7 +226,7 @@ VDRest.Helper.prototype.parseDescription = function (description) {
  */
 VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
 
-    var streamdevParams = [];
+    var streamdevParams = [], url, port = VDRest.config.getItem('streamdevPort');
 
     streamdevParams.push(VDRest.config.getItem('streamdevParams'));
 
@@ -234,12 +234,15 @@ VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
         streamdevParams = streamdevParams.concat(extraParams);
     }
 
-    return VDRest.config.getItem('streamdevProtocol')
+    url = VDRest.config.getItem('streamdevProtocol')
         + '://'
-        + VDRest.config.getItem('streamdevHost')
-        + ':'
+    + VDRest.config.getItem('streamdevHost');
+
+    if (port !== 443 && port !== 80) {
+        url += ':'
         + VDRest.config.getItem('streamdevPort')
-        + '/' + streamdevParams.join(';') + '/';
+    }
+    return url + '/' + streamdevParams.join(';') + '/';
 };
 
 /**

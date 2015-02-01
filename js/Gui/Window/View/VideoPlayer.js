@@ -134,7 +134,10 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
     this.player = $('<video preload="none" class="normal-size">');
     this.video = this.player.get(0);
     this.controls = $('<div class="html5-player-controls show" data-animate="opacity">');
-    this.player.prop('crossOrigin', 'anonymous');
+
+    if (location.host != VDRest.config.getItem('host')) {
+        this.player.prop('crossOrigin', 'anonymous');
+    }
 
     this.initPlayer();
 
