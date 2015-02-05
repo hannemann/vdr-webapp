@@ -371,13 +371,30 @@ div#time-line .ql.hour {
     div#time-line {
         padding-left: 60px;
     }
+    #epg-channels {
+        width: 59px;
+    }
     #epg-channels .channel {
         width: 59px;
         height: 59px;
     }
+    .channel-view #epg-channels {
+        height: 105px;
+    }
+    .channel-view #epg-channels .channel {
+        top: -3px;
+    }
+    .channel-view #epg-channels .channel.active {
+        width: 79px;
+        height: 79px;
+    }
     #broadcasts-wrapper {
         left: 60px;
         width: calc(100% - 60px);
+    }
+    .channel-view #broadcasts-wrapper {
+        top: 105px;
+        height: calc(100% - 105px);
     }
     #broadcasts {
         background-size: 100% 60px;
@@ -402,6 +419,9 @@ div#time-line .ql.hour {
         height: 36px;
         line-height: 36px;
     }
+    #epg-channels {
+        width: 79px;
+    }
     #epg-channels .channel {
         width: 79px;
         height: 79px;
@@ -411,9 +431,23 @@ div#time-line .ql.hour {
         top: 41px;
         height: calc(100% - 41px);
     }
+    .channel-view #epg-channels {
+        height: 115px;
+    }
+    .channel-view #epg-channels .channel {
+        top: 2px;
+    }
+    .channel-view #epg-channels .channel.active {
+        width: 89px;
+        height: 89px;
+    }
     #broadcasts-wrapper {
         left: 80px;
         width: calc(100% - 80px);
+    }
+    .channel-view #broadcasts-wrapper {
+        top: 115px;
+        height: calc(100% - 115px);
     }
     #broadcasts {
         background-size: 100% 80px;
