@@ -181,14 +181,17 @@ Gui.Epg.Controller.Channels.prototype.dispatchChannels = function () {
 
 /**
  * handle scroll events
- * @param {{x: Number, y: Number}|Event} [e]
+ * @param {{x: Number, y: Number, jsStyle: String}|Event} [e]
  */
 Gui.Epg.Controller.Channels.prototype.handleScroll = function (e) {
 
     var scroll = (e && e.y) ? e.y : this.broadcastsWrapper.scrollTop * -1;
 
+    e = e || {};
+
     if (!this.channelView) {
-        this.node.style.transform = "translateY(" + scroll + "px)";
+        e.jsStyle = e.jsStyle || TouchMove.Helper.getTransformVendorPrefix(this.node).jsStyle;
+        this.node.style[e.jsStyle] = "translateY(" + scroll + "px)";
     }
 };
 

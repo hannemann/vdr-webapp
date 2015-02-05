@@ -55,16 +55,20 @@ Gui.Epg.Controller.TimeLine.prototype.removeObserver = function () {
 
 /**
  * handle scroll events
- * @param {{x: Number, y: Number}|Event} [e]
+ * @param {{x: Number, y: Number, jsStyle: String}|Event} [e]
  */
 Gui.Epg.Controller.TimeLine.prototype.handleScroll = function (e) {
 
     var scroll = e.x ? e.x : this.broadcastsWrapper.scrollLeft * -1,
         ddOffset = this.broadcastsWrapper.offsetLeft, me = this;
 
+    e = e || {};
+
     if (this.view.node.is(':visible')) {
 
-        this.node.style.transform = "translateX(" + scroll + "px)";
+        e.jsStyle = e.jsStyle || TouchMove.Helper.getTransformVendorPrefix(this.node).jsStyle;
+
+        this.node.style[e.jsStyle] = "translateX(" + scroll + "px)";
 
         this.view.node.find('*[data-date]').each(function (k, v) {
             var d = $(v);

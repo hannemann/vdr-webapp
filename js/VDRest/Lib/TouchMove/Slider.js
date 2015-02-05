@@ -31,23 +31,11 @@ TouchMove.Slider = function (elem, wrapper, onmove) {
 };
 
 TouchMove.Slider.prototype.getVendorPrefix = function () {
+    
+    var o = TouchMove.Helper.getTransformVendorPrefix(this.elem);
 
-	if ("undefined" !== typeof this.elem.style.webkitTransform) {
-		this.prefix = '-webkit-';
-		this.jsStyle = 'webkitTransform';
-	} else if ("undefined" !== typeof this.elem.style.mozTransform) {
-		this.prefix = '-moz-';
-		this.jsStyle = 'mozTransform';
-	} else if ("undefined" !== typeof this.elem.style.msTransform) {
-		this.prefix = '-ms-';
-		this.jsStyle = 'msTransform';
-	} else if ("undefined" !== typeof this.elem.style.oTransform) {
-		this.prefix = '-o-';
-		this.jsStyle = 'oTransform';
-	} else {
-		this.prefix = '';
-		this.jsStyle = 'transform';
-	}
+    this.prefix = o.prefix;
+    this.jsStyle = o.jsStyle;
 };
 
 /**
@@ -247,6 +235,9 @@ TouchMove.Slider.prototype.translate = function (delta) {
  * @param {{x: Number, y: Number}} next
  */
 TouchMove.Slider.prototype.fireCallbacks = function (next) {
+
+    next.prefix = this.prefix;
+    next.jsStyle = this.jsStyle;
 
     if ("function" === typeof this.onmove) this.onmove(next);
     if ("function" === typeof this.onscrollend && this.reachedEnd(next)) this.onscrollend();
