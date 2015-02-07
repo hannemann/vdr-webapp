@@ -71,7 +71,9 @@ Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
 
     this.view.node
         .on('mouseup touchend', this.handleUp.bind(this))
-        .on('mousedown touchstart', this.handleDown.bind(this));
+        .on('mousedown touchstart', this.handleDown.bind(this))
+        .on('mousemove touchmove', this.preventAll.bind(this))
+    ;
 };
 
 /**
@@ -79,7 +81,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
 
-    this.view.node.off('touchend touchstart mouseup mousedown');
+    this.view.node.off('touchend touchstart mouseup mousedown mousemove touchmove');
 };
 
 /**
@@ -111,8 +113,10 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
-    e.preventDefault();
-    this.vibrate();
+    if (!this.module.getController('Epg').getIsChannelView()) {
+        e.preventDefault();
+        this.vibrate();
+    }
 
     if (!this.isMuted && VDRest.info.getStreamer()) {
 
@@ -125,6 +129,21 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
             this.startStream();
         }, this), 500);
+    }
+};
+
+/**
+ * prevent all actions
+ */
+Gui.Epg.Controller.Channels.Channel.prototype.preventAll = function () {
+
+    if (this.module.getController('Epg').getIsChannelView()) {
+
+        this.preventClick = true;
+
+        if ("undefined" !== typeof this.channelClickTimeout) {
+            window.clearTimeout(this.channelClickTimeout);
+        }
     }
 };
 
