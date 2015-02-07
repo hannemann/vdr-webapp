@@ -63,11 +63,12 @@ Gui.Menubar.Controller.Default.prototype.showThrobber = function () {
 /**
  * hide spinner in upper right corner
  * decrease calls
+ * @param {jQuery.Event} e
  */
-Gui.Menubar.Controller.Default.prototype.hideThrobber = function (force) {
+Gui.Menubar.Controller.Default.prototype.hideThrobber = function (e) {
 
     this.throbberCalls--;
-    if (this.throbberCalls <= 0 || force) {
+    if (this.throbberCalls <= 0 || e.force) {
         this.view.throbber.toggleClass('show', false);
         this.view.settingsButton.show();
         this.throbberCalls = 0;
@@ -79,15 +80,19 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (force) {
  */
 Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
-    $(document).on('drawer.statechanged', $.proxy(this.onDrawerReady, this));
+    $(document).on('drawer.statechanged', this.onDrawerReady.bind(this));
 
-    $(document).on('drawer.animate', $.proxy(this.onDrawerAnimate, this));
+    $(document).on('drawer.animate', this.onDrawerAnimate.bind(this));
 
-    this.view.titleWrapper.on('click', $.proxy(this.onIconClick, this));
+    this.view.titleWrapper.on('click', this.onIconClick.bind(this));
 
-    $(document).on('dispatch.after', $.proxy(this.handlePostDispatch, this));
+    $(document).on('dispatch.after', this.handlePostDispatch.bind(this));
 
-    this.view.settingsButton.on('click', $.proxy(this.requestContextMenu, this));
+    this.view.settingsButton.on('click', this.requestContextMenu.bind(this));
+
+    $(document).on('showThrobber', this.showThrobber.bind(this));
+    $(document).on('hideThrobber', this.hideThrobber.bind(this));
+    this.view.throbber.on('click', $.xhrPool.abortAll.bind($.xhrPool));
 };
 
 /**

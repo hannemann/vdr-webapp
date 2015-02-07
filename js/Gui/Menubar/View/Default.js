@@ -76,6 +76,7 @@ Gui.Menubar.View.Default.prototype.getHeader = function () {
 Gui.Menubar.View.Default.prototype.addThrobber = function () {
 
     this.throbber = $('<div style="background: url(' + VDRest.image.getThrobber() + ')" class="throbber">')
+        .html('<div>&#10006;</div>')
         .appendTo(this.node);
 
     return this;
@@ -87,7 +88,7 @@ Gui.Menubar.View.Default.prototype.addThrobber = function () {
  */
 Gui.Menubar.View.Default.prototype.addSettingsButton = function () {
 
-    this.settingsButton = $('<div id="button-settings">')
+    this.settingsButton = $('<div id="button-settings">').html('&vellip;')
         .appendTo(this.node);
 
     return this;

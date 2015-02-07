@@ -14,6 +14,23 @@ VDRest.Api.Resource = function () {
      * @type {Boolean}
      */
     this.refreshCache = false;
+
+    $.xhrPool = [];
+    $.xhrPool.abortAll = function () {
+        $(this).each(function (i, jqXHR) {   //  cycle through list of recorded connection
+            jqXHR.abort();  //  aborts connection
+            $.xhrPool.splice(i, 1); //  removes from list by index
+        });
+    };
+    $.ajaxSetup({
+        beforeSend: function (jqXHR) {
+            $.xhrPool.push(jqXHR);
+        }, //  annd connection to list
+        complete: function (jqXHR) {
+            var i = $.xhrPool.indexOf(jqXHR);   //  get index for current connection completed
+            if (i > -1) $.xhrPool.splice(i, 1); //  removes from list by index
+        }
+    });
 };
 
 VDRest.Api.Resource.prototype = new VDRest.Lib.Object();
@@ -107,7 +124,10 @@ VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
     var me = this;
 
     if (!this.noThrobber) {
-        VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+
+        $.event.trigger({
+            "type": "showThrobber"
+        });
     }
 
     $.ajax(
@@ -137,7 +157,10 @@ VDRest.Api.Resource.prototype.fetchSync = function (request, callback) {
     var data;
 
     if (!this.noThrobber) {
-        VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+
+        $.event.trigger({
+            "type": "showThrobber"
+        });
     }
 
     request.async = false;
@@ -173,7 +196,7 @@ VDRest.Api.Resource.prototype.onError = function (e) {
 
     VDRest.helper.log(e);
 
-    if (0 === e.readyState && 0 === e.status) {
+    if (0 === e.readyState && 0 === e.status && e.statusText !== 'abort') {
 
         $.event.trigger({
             "type": "window.request",
@@ -208,6 +231,8 @@ VDRest.Api.Resource.prototype.onComplete = function () {
 
     if (!this.noThrobber) {
 
-        VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
+        $.event.trigger({
+            "type": "hideThrobber"
+        });
     }
 };
