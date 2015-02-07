@@ -81,6 +81,8 @@
     float: right;
     margin: 7px 0;
     color: rgba(255, 255, 255, .7);
+    cursor: default;
+    font-weight: bold;
 }
 #button-settings:active {
     background-color: rgba(255,255,255,0.5);

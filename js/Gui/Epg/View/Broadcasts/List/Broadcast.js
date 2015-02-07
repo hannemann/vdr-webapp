@@ -197,6 +197,12 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
         )
         .appendTo(this.channelView);
 
+    $('<div>')
+        .addClass('description')
+        .html(this.getDescription())
+        .appendTo(this.channelView);
+
+
     this.channelView.appendTo(this.info);
 
     return this;

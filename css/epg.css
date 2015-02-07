@@ -313,7 +313,7 @@ div#time-line .ql.hour {
 .epg-search-view .broadcast div.broadcast-image,
 .channel-view #broadcasts .broadcasts-list .broadcast div.broadcast-image {
     width: 15%;
-    float: right;
+    float: left;
     height: auto;
     position: static;
     margin: 10px;
@@ -356,8 +356,9 @@ div#time-line .ql.hour {
     border-radius: 5px;
 }
 
-
-
+.channel-view #broadcasts .broadcast .visible-channel-view .description {
+    height: calc(.75em * 5);
+}
 #broadcasts .broadcasts-list .broadcast.first-visible,
 #broadcasts .broadcasts-list .broadcast.first-visible ~ .broadcast {
     display: block;
