@@ -69,11 +69,19 @@ Gui.Epg.Controller.Channels.Channel.prototype.unmute = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
 
-    this.view.node
-        .on('mouseup touchend', this.handleUp.bind(this))
-        .on('mousedown touchstart', this.handleDown.bind(this))
-        .on('mousemove touchmove', this.preventAll.bind(this))
-    ;
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node
+            .on('touchend', this.handleUp.bind(this))
+            .on('touchstart', this.handleDown.bind(this))
+            .on('touchmove', this.preventAll.bind(this))
+        ;
+    } else {
+        this.view.node
+            .on('mouseup', this.handleUp.bind(this))
+            .on('mousedown', this.handleDown.bind(this))
+            .on('mousemove', this.preventAll.bind(this))
+        ;
+    }
 };
 
 /**
@@ -87,11 +95,15 @@ Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
 /**
  * handle mouseup
  */
-Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
+Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
+
+    e.preventDefault();
 
     if (!this.isMuted) {
 
         if ("undefined" === typeof this.preventClick) {
+
+            this.vibrate();
 
             if ("undefined" !== typeof this.channelClickTimeout) {
                 window.clearTimeout(this.channelClickTimeout);
@@ -105,30 +117,31 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function () {
             }
         }
     }
+    document.onselectstart = function () {
+        return true
+    };
 };
 
 /**
  * handle mousedown
- * @param {jQuery.Event} e
  */
-Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
+Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function () {
 
-    if (!this.module.getController('Epg').getIsChannelView()) {
-        e.preventDefault();
-        this.vibrate();
-    }
+    document.onselectstart = function () {
+        return false
+    };
 
+    this.preventClick = undefined;
     if (!this.isMuted && VDRest.info.getStreamer()) {
 
-        this.preventClick = undefined;
-        this.channelClickTimeout = window.setTimeout($.proxy(function () {
+        this.channelClickTimeout = window.setTimeout(function () {
 
             this.vibrate(100);
 
             this.preventClick = true;
 
             this.startStream();
-        }, this), 500);
+        }.bind(this), 500);
     }
 };
 
