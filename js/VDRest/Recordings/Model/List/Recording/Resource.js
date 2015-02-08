@@ -47,7 +47,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
         "payload" : {
             "type" : "Confirm",
             "data" : {
-                "message" : "Delete Recording '" + message + "'?",
+                "message": VDRest.app.translate("Delete Recording") + " '" + message + "'?",
                 "id" : 'delete.recording' + obj.getNumber()
             }
         }

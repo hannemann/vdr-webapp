@@ -47,7 +47,7 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.addOrUpdateTimer = function (ad
         event = 'created';
     }
 
-    request.url = this.getBaseUrl() + '/timers';
+    request.url = this.getBaseUrl() + 'timers';
     request.method = method;
     request.data = data;
 
@@ -87,7 +87,7 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.deleteTimer = function (adapter
         "payload" : {
             "type" : "Confirm",
             "data" : {
-                "message" : "Delete Timer?",
+                "message": VDRest.app.translate("Delete Timer") + '?',
                 "id" : 'delete.timer' + data.timer_id
             }
         }
