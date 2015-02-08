@@ -79,6 +79,22 @@ VDRest.Api.Resource.prototype.load = function (options) {
 
         async = options.async !== false;
 
+    if (this.locationIsSecure() && !this.requestIsSecure()) {
+
+        $.event.trigger({
+            "type": "window.request",
+            "payload": {
+                "type": "Alert",
+                "data": {
+                    "message": "Blocked Content",
+                    "info": "Location is secured via SSL but requested data from an insecure resource.",
+                    "settings": true
+                }
+            }
+        });
+        return false;
+    }
+
     if ("function" !== typeof callback) {
 
         callback = this.onSuccess;
@@ -204,7 +220,8 @@ VDRest.Api.Resource.prototype.onError = function (e) {
                 "type": "Alert",
                 "data": {
                     "message": "Error loading resource",
-                    "info": "Please make sure that your device is connected to the Network and that host and port settings are set properly"
+                    "info": "Please make sure that your device is connected to the Network and that host and port settings are set properly",
+                    "settings": true
                 }
             }
         });
@@ -235,4 +252,20 @@ VDRest.Api.Resource.prototype.onComplete = function () {
             "type": "hideThrobber"
         });
     }
+};
+
+/**
+ * Determine if app has been loaded via SSL
+ * @returns {boolean}
+ */
+VDRest.Api.Resource.prototype.locationIsSecure = function () {
+    return location.protocol.indexOf('s') > -1;
+};
+
+/**
+ * Determine if request will be done via SSL
+ * @returns {boolean}
+ */
+VDRest.Api.Resource.prototype.requestIsSecure = function () {
+    return VDRest.config.getItem('protocol').indexOf('s') > -1;
 };

@@ -22,7 +22,7 @@ VDRest.Epg.Model.Channels.Channel.Resource.prototype._class = 'VDRest.Epg.Model.
  */
 VDRest.Epg.Model.Channels.Channel.Resource.prototype.urls = {
 
-    "channelList" : "channels/.json"
+    "channelList": "channels.json"
 };
 
 

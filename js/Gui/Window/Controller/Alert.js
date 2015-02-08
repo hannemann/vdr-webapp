@@ -31,9 +31,13 @@ Gui.Window.Controller.Alert.prototype.init = function () {
  */
 Gui.Window.Controller.Alert.prototype.addObserver = function () {
 
-    this.view.ok.one('click', $.proxy(this.okAction, this));
+    this.view.ok.one('click', this.okAction.bind(this));
 
-    $(window).on("resize", $.proxy(this.setPosition, this));
+    if (this.data.settings) {
+        this.view.settings.one('click', this.settingsAction.bind(this))
+    }
+
+    $(window).on("resize", this.setPosition.bind(this));
 };
 
 /**
@@ -54,6 +58,20 @@ Gui.Window.Controller.Alert.prototype.okAction = function () {
     this.vibrate();
 
     history.back();
+};
+
+/**
+ * request configuration page
+ */
+Gui.Window.Controller.Alert.prototype.settingsAction = function () {
+
+    this.vibrate();
+
+    $(document).one(this.animationEndEvents, function () {
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+        VDRest.app.dispatch('Gui.Config');
+    }.bind(this));
+    this.view.node.toggleClass('collapse expand');
 };
 
 /**
