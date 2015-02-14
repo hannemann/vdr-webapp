@@ -5,18 +5,33 @@
 ### GENERAL CONFIG START
 ###
 # Pick one of DSL/WLAN
-QUALITY="MOBIL"
+QUALITY="DSL1000"
 TYPE=mpeg
 CHANNELS=2
 DEBUG=1
 RAND=${RANDOM:-$$}
 PID=$$
+FIFO=/tmp/externremux-${PID}
 FPS=25
 AUDIO_STREAM=0
 AUDIO_CHANNELS=2
 declare -A HEADER=()
 ###
 ### GENERAL CONFIG END
+
+# The following parameters are recognized:
+#
+# PROG   actual remux program
+# VC     video codec
+# VBR    video bitrate (kbit)
+# VOPTS  custom video options
+# WIDTH  scale video to width
+# HEIGHT scale video to height
+# FPS    output frames per second
+# AC     audio codec
+# ABR    audio bitrate (kbit)
+# AOPTS  custom audio options
+#
 
 
 function log {
@@ -38,6 +53,20 @@ function error
         exit 1
 }
 
+###
+#
+# perform sanity checks
+#
+###
+PROG=$(which ffmpeg)
+[ -x ${PROG} ] || PROG='/opt/ffmpeg/bin/ffmpeg'
+[ -x ${PROG} ] || PROG=$(which avconv)
+
+if [ ! -x ${PROG} ]; then
+	error 'No ffmpeg binary found'
+	exit 1;
+fi
+
 getParentPid () { ps -p $1 -o ppid=; }
 getChildPids () { ps --ppid $1 -o pid=; }
 getRequestId () { echo $(echo $QUERY_STRING | egrep --color=none -o "d=[0-9]+" | cut -d'=' -f2);  }
@@ -58,7 +87,7 @@ if grep "$REMOTE_ADDR" /tmp/externremux-env-* > /dev/null && [ 2 = 1 ]; then
 	for i in  $(grep -H "$REMOTE_ADDR" /tmp/externremux-env-* | cut -d: -f1 |cut -d- -f3); do 
 		log "Found PID: $i"
 
-		if ! egrep "QUERY_STRING.*d=$(getRequestId)" /tmp/externremux-env-$i; then
+		if ! egrep "QUERY_STRING.*d=$(getRequestId)" /tmp/externremux-env-${i}; then
 			log "Found stream to kill within pid $i"
 #			log "kill parent process $(getParentPid $i)"
 #			kill -1 $(getParentPid $i) 
@@ -72,11 +101,9 @@ fi
 
 
 
-ENV=/tmp/externremux-env-$PID
-echo '' $ENV
-printenv >> $ENV
-
-FIFO=/tmp/externremux-$PID
+ENV=/tmp/externremux-env-${PID}
+#echo '' ${ENV}
+printenv >> ${ENV}
 
 ###
  # check if user agent is chromecast
@@ -86,86 +113,6 @@ echo $HTTP_USER_AGENT | grep CrKey > /dev/null && CHROMECAST=1 || CHROMECAST=0
 echo ${PATH_INFO##*\/} | grep '.rec' > /dev/null && RECORDING=1 || RECORDING=0
 
 log "Is Chromecast: $CHROMECAST"
-
-QUALITY=${REMUX_PARAM_QUALITY:-$QUALITY}
-log "Requested Quality: $QUALITY"
-case "$QUALITY" in
-	WLAN|wlan)
-		VBR=1024K
-		ABR=128K
-		WIDTH=640
-		HEIGHT=360
-		;;
-	SLOW|slow)
-		VBR=1024K
-		ABR=128K
-		WIDTH=480
-		HEIGHT=270
-		;;
-	MOBIL|mobil)
-		VBR=512K
-		ABR=128K
-		WIDTH=320
-		HEIGHT=180
-		;;
-	HD|hd)
-		VBR=2048K
-		VBR=1024K
-		ABR=128K
-		WIDTH=1280
-		HEIGHT=720
-		;;
-	PREVIEW|preview)
-		VBR=16K
-		WIDTH=32
-		HEIGHT=18
-		;;
-	*) 
-		error "Unknown quality '$QUALITY'"
-		;;
-esac
-
-TYPE=${REMUX_PARAM_TYPE:-$TYPE}
-
-log "TYPE: $TYPE"
-case "$REMUX_VPID" in
-	''|0|1) 
-
-		CONTENTTYPE='audio/mpeg'
-		;;
-	*)	
-		if [ $CHROMECAST -gt 0 ]; then
-			CONTENTTYPE='video/mkv'
-			VBR=1024K
-			ABR=720K
-			WIDTH=1280
-			HEIGHT=720
-		elif [ "$TYPE" = "webm" ]; then
-			CONTENTTYPE='video/webm'
-		elif [ "$TYPE" = "mp4" ]; then
-			CONTENTTYPE='video/mp4'
-		elif [ "$TYPE" = "mkv" ]; then
-			CONTENTTYPE='video/mkv'
-		elif [ "$TYPE" = "download" ]; then
-			CONTENTTYPE='application/octet-stream'
-		elif [ "$TYPE" = "poster" ]; then
-			CONTENTTYPE='image/jpeg'
-		else
-			CONTENTTYPE='video/mpeg'
-		fi
-	;;
-esac
-
-log "CONTENTTYPE: $CONTENTTYPE"
-
-ABR=${REMUX_PARAM_ABR:-$ABR}
-VBR=${REMUX_PARAM_VBR:-$VBR}
-VSIZE=${REMUX_PARAM_VSIZE:-$VSIZE}
-FPS=${REMUX_PARAM_FPS:-$FPS}
-WIDTH=${REMUX_PARAM_WIDTH:-$WIDTH}
-HEIGHT=${REMUX_PARAM_HEIGHT:-$HEIGHT}
-AUDIO_STREAM=${REMUX_PARAM_ASTR:-$AUDIO_STREAM}
-AUDIO_CHANNELS=${REMUX_PARAM_ACHAN:-$AUDIO_CHANNELS}
 
 function sendHeaders {
 
@@ -192,7 +139,7 @@ function startFifo {
 	log "Create FIFO"
 	# create FIFO and read from it in the background
 	COMMAND=${COMMAND/-i/-i - 0<&3}
-	COMMAND=$COMMAND" -y $FIFO"
+	COMMAND=${COMMAND}" -y $FIFO"
 	mkfifo "$FIFO"
 	trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; fuser -k '$FIFO'; rm '$FIFO'; rm '$ENV'" EXIT HUP INT TERM ABRT PIPE CHLD
 	cat "$FIFO" <&- &
@@ -206,7 +153,7 @@ function startPipe {
 
 	log "omit fifo"
 	COMMAND=${COMMAND/-i/-i -}
-	COMMAND=$COMMAND" pipe:1"
+	COMMAND=${COMMAND}" pipe:1"
 	trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; rm '$ENV'" EXIT HUP INT TERM ABRT PIPE CHLD
 }
 
@@ -255,18 +202,35 @@ function audioAac {
  #
  # @see https://trac.ffmpeg.org/wiki/Scaling%20%28resizing%29%20with%20ffmpeg
 ###
+function setDeinterlace {
+
+	YADIF=', yadif'
+}
+
 function setFilter {
 
 	log "Set filters"
 
-	VSIZE="scale=sar*iw*min($WIDTH/iw\,$HEIGHT/ih):ih*min($WIDTH/iw\,$HEIGHT/ih), pad=$WIDTH:$HEIGHT:($WIDTH-iw*min($WIDTH/iw\,$HEIGHT/ih))/2:($HEIGHT-ih*min($WIDTH/iw\,$HEIGHT/ih))/2"
+	FILTER=''
 
+	if ( [ "$WIDTH" != "" ] && [ "$HEIGHT" != "" ] ) || [ "$DEINTERLACE" != "" ]; then
+
+		if [ "$WIDTH" != "" ] && [ "$HEIGHT" != "" ]; then
+
+			FILTER="-filter:v "
+			FILTER=${FILTER}" \"scale=sar*iw*min($WIDTH/iw\,$HEIGHT/ih):ih*min($WIDTH/iw\,$HEIGHT/ih), pad=$WIDTH:$HEIGHT:($WIDTH-iw*min($WIDTH/iw\,$HEIGHT/ih))/2:($HEIGHT-ih*min($WIDTH/iw\,$HEIGHT/ih))/2"
+			FILTER=${FILTER}${YADIF}
+			FILTER=${FILTER}'"'
+		fi
+
+
+	fi
 	#Läuft nicht mit VLC
 	#VSIZE="scale=trunc(oh*a/2)*2:$HEIGHT"
 	#VSIZE="scale=-1:$HEIGHT"
 
 	#FILTER="-filter:v \"${VSIZE}, yadif\" -filter:a \"volume=1\""
-	FILTER="-filter:v \"${VSIZE}, yadif\""
+	#FILTER="-filter:v \"${VSIZE} yadif\""
 }
 
 function setHeaders {
@@ -274,10 +238,9 @@ function setHeaders {
 	log "Setting download headers"
 
 	DURATION=120000
-        DURATION=${REMUX_PARAM_DUR:-$DURATION}
-
-        FILENAME="foo.webm"
-        FILENAME=${REMUX_PARAM_FILENAME:-$FILENAME}
+	DURATION=${REMUX_PARAM_DUR:-$DURATION}
+	FILENAME="foo.webm"
+	FILENAME=${REMUX_PARAM_FILENAME:-$FILENAME}
 
 	HEADER[connection]="Connection: keep-alive"
 	HEADER[duration]="X-Content-Duration: $DURATION"
@@ -307,12 +270,17 @@ function containerWebm {
 
 function containerMp4 {
 	log "set container format mp4"
-	CONTAINER="-f mp4 -movflags frag_keyframe+empty_moov"
+	CONTAINER="-f mp4"
 }
 
 function containerMpegTs {
 	log "set container format mpegts"
 	CONTAINER="-f mpegts"
+}
+
+function containerFlv {
+	log "set container format mpegts"
+	CONTAINER="-f flv"
 }
 ###
  # remux using libvpx and webm
@@ -323,17 +291,11 @@ function containerMpegTs {
 function remux_vpx {
 
 	log "Set video codec libvpx, container webm"
-
 	THREADS="-threads 2"
 	MAP=""
 	VENC="-c:v libvpx -qmin 0 -qmax 50 -crf 5 -b:v ${VBR} -deadline realtime -bufsize 128M"
 	AENC="-c:a ${AUDIO}"
-
-	# very important to specify -re as first option used
-	# makes sure not to encode too fast since the browser
-	# seems to buffer the video and stops downloading
-	# if buffer is full? Results in timeout...
-	COMMAND="ffmpeg  -i ${THREADS} ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
+	COMMAND=${PROG}" -i ${THREADS} ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
 	STREAMTYPE=pipe
 }
 
@@ -342,21 +304,18 @@ function remux_preview {
 	VENC="-c:v libvpx -crf 10 -b:v ${VBR} -deadline realtime -bufsize 128M"
 	AENC="-an"
 	FILTER="-vf \"select='eq(pict_type\\,I)',scale=$WIDTH:$HEIGHT\""
-	COMMAND="ffmpeg  -i ${FILTER} -r 1 ${VENC} ${AENC} ${CONTAINER}"
+	COMMAND=${PROG}" -i ${FILTER} -r 1 ${VENC} ${AENC} ${CONTAINER}"
 	STREAMTYPE=pipe
 }
 
 function pipe_previewfile {
 
-	cat 0<&3 > /dev/null 
-	
+	cat 0<&3 > /dev/null
 	$SIZE=$(stat -c %s $1)
 	DURATION=${REMUX_PARAM_DUR:-$DURATION}
-
 	setHeaders
 	HEADER[contentlength]="Content-Length: $SIZE"
-
-	COMMAND="ffmpeg -i $1 -c:v copy -an -f webm"
+	COMMAND=${PROG}" -i $1 -c:v copy -an -f webm"
 
 }
 ###
@@ -366,16 +325,11 @@ function pipe_previewfile {
 function remux_x264 {
 
 	log "set video codec x264, container mpegts"
-	VENC="-vcodec libx264 -preset veryfast -b:v ${VBR} -bufsize 128K"
-#	VENC="-vcodec copy"
-	AENC="-acodec ${AUDIO}"
+	VENC="-c:v libx264 -preset veryfast -b:v ${VBR} -bufsize 128K"
+	AENC="-c:a ${AUDIO}"
 	MAP="-map 0:v -map 0:a:$AUDIO_STREAM"
-#	MAP="-map 0:0 -map 0:1"
-	COMMAND="ffmpeg -i ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
+	COMMAND=${PROG}" -i ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
 	STREAMTYPE=pipe
-
-	# Alt
-	#COMMAND="ffmpeg -f mpegts -i - -threads 2 -filter:v \"${VSIZE}, yadif\" ${FPS:+-r $FPS} -vcodec libx264 -maxrate ${VBR} -bufsize 1024K -acodec ${AUDIO} -f mpegts pipe:1"
 }
 
 ###
@@ -387,7 +341,7 @@ function remux_chromecast {
 	MAP="-map 0:v -map 0:a"
 	VENC="-vcodec libx264 -preset veryfast -b:v ${VBR} -bufsize 1024K"
 	AENC="-acodec ${AUDIO}"
-	COMMAND="ffmpeg -f mpegts -i ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
+	COMMAND=${PROG}" -f mpegts -i ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
 	STREAMTYPE=fifo
 }
 
@@ -402,7 +356,8 @@ function remux_mp4 {
 	log "set video codec x264, container mp4"
 	VENC="-bsf:v h264_mp4toannexb -flags -global_header -c:v libx264 -maxrate ${VBR} -bufsize 1024K"
 	AENC="-c:a ${AUDIO}"
-	COMMAND="ffmpeg -f mpegts -re -i ${THREADS} ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
+	FLAGS="-movflags frag_keyframe+empty_moov"
+	COMMAND=${PROG}" -f mpegts -re -i ${THREADS} ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER} ${FLAGS}"
 	STREAMTYPE=pipe
 }
 
@@ -413,31 +368,19 @@ function captureFrame {
 
 	log "Capture frame"
 	CONTAINER="-f image2"
-	COMMAND="ffmpeg -f mpegts -i - -q:v 2 ${FILTER} ${CONTAINER} -vframes 1 /tmp/externremux-$PID.jpg"
+	COMMAND=${PROG}" -f mpegts -i - -q:v 2 ${FILTER} ${CONTAINER} -vframes 1 /tmp/externremux-$PID.jpg"
 	log "Executing: $COMMAND"
-	eval $COMMAND
-	SIZE=$(stat -c %s /tmp/externremux-$PID.jpg)
+	eval ${COMMAND}
+	SIZE=$(stat -c %s /tmp/externremux-${PID}.jpg)
 	HEADER[disposition]="Content-Disposition: attachment; filename=\"externremux-$PID.jpg\""
 	HEADER[contentlength]="Content-Length: $SIZE"
 	HEADER[accesscontrol]="Access-Control-Allow-Origin: *"
 
 	sendHeaders
 	startFifo
-        cat /tmp/externremux-$PID.jpg > "$FIFO"
-	rm /tmp/externremux-$PID.jpg
+	cat /tmp/externremux-${PID}.jpg > "$FIFO"
+	rm /tmp/externremux-${PID}.jpg
 	exit 0
-}
-###
- # Capture first frame of stream
-###
-function captureFrame2 {
-
-	log "Capture frame"
-	CONTAINER="-f image2"
-	COMMAND="ffmpeg -i -q:v 2 ${FILTER} ${CONTAINER} -vframes 1"
-	HEADER[disposition]="Content-Disposition: attachment; filename=\"externremux-$PID.jpg\""
-	HEADER[accesscontrol]="Access-Control-Allow-Origin: *"
-	STREAMTYPE=pipe
 }
 
 ###
@@ -454,13 +397,17 @@ function startStream {
 			;;
 	esac
 
-	if [ "$TYPE" = "stream" ] && [ $RECORDING -gt 0 ] && [ "$QUALITY" != "preview" ] && [ "$TYPE" != "poster" ]; then
-		COMMAND=${COMMAND/ffmpeg /ffmpeg -re }
+	# very important to specify -re as first option used
+	# makes sure not to encode too fast since the browser
+	# seems to buffer the video and stops downloading
+	# if buffer is full? Results in timeout...
+	if [ "$TYPE" = "stream" ] && [ ${RECORDING} -gt 0 ] && [ "$QUALITY" != "preview" ] && [ "$TYPE" != "poster" ]; then
+		COMMAND=${COMMAND/${PROG} /${PROG} -re }
 	fi
 
 	sendHeaders
 	log "Start transcoding: $COMMAND"
-	eval $COMMAND
+	eval ${COMMAND}
 }
 
 ###
@@ -487,9 +434,67 @@ function startStream {
 #
 ###
 
+TYPE=${REMUX_PARAM_TYPE:-$TYPE}
+
+log "TYPE: $TYPE"
+case "$REMUX_VPID" in
+	''|0|1)
+		CONTENTTYPE='audio/mpeg'
+		;;
+	*)
+		if [ ${CHROMECAST} -gt 0 ]; then
+			CONTENTTYPE='video/mkv'
+			VBR=1024K
+			ABR=720K
+			WIDTH=1280
+			HEIGHT=720
+		elif [ "$TYPE" = "webm" ]; then
+			CONTENTTYPE='video/webm'
+		elif [ "$TYPE" = "mp4" ]; then
+			CONTENTTYPE='video/mp4'
+		elif [ "$TYPE" = "mkv" ]; then
+			CONTENTTYPE='video/mkv'
+		elif [ "$TYPE" = "flv" ]; then
+			CONTENTTYPE='video/x-flv'
+		elif [ "$TYPE" = "download" ]; then
+			CONTENTTYPE='application/octet-stream'
+		elif [ "$TYPE" = "poster" ]; then
+			CONTENTTYPE='image/jpeg'
+		else
+			CONTENTTYPE='video/mpeg'
+		fi
+	;;
+esac
+
+log "CONTENTTYPE: $CONTENTTYPE"
+
+QUALITY=${REMUX_PARAM_QUALITY:-$QUALITY}
+case "$QUALITY" in
+	DSL1000|dsl1000)   VBR="96K";   ABR="96K";  WIDTH=160; HEIGHT=90;;
+	DSL2000|dsl2000)   VBR="128K";  ABR="96K";  WIDTH=160; HEIGHT=90;;
+	DSL3000|dsl3000)   VBR="256K";  ABR="96K";  WIDTH=320; HEIGHT=180;;
+	DSL6000|dsl6000)   VBR="378K";  ABR="96K";  WIDTH=320; HEIGHT=180;;
+	DSL16000|dsl16000) VBR="512K";  ABR="128K"; WIDTH=480; HEIGHT=270;;
+	WLAN11|wlan11)     VBR="768K";  ABR="128K"; WIDTH=640; HEIGHT=360;;
+	WLAN54|wlan54)     VBR="2048K"; ABR="128K"; WIDTH=800; HEIGHT=450;;
+	LAN10|lan10)       VBR="4096K"; ABR='128K';  WIDTH=1280; HEIGHT=720;;
+	*)                 error "Unknown quality '$QUALITY'";;
+esac
+
+ABR=${REMUX_PARAM_ABR:-$ABR}
+VBR=${REMUX_PARAM_VBR:-$VBR}
+WIDTH=${REMUX_PARAM_WIDTH:-$WIDTH}
+HEIGHT=${REMUX_PARAM_HEIGHT:-$HEIGHT}
+VSIZE=${REMUX_PARAM_VSIZE:-$VSIZE}
+FPS=${REMUX_PARAM_FPS:-$FPS}
+AUDIO_STREAM=${REMUX_PARAM_ASTR:-$AUDIO_STREAM}
+AUDIO_CHANNELS=${REMUX_PARAM_ACHAN:-$AUDIO_CHANNELS}
+DEINTERLACE=${REMUX_PARAM_DLACE:-$DEINTERLACE}
+
 if [ "$REMUX_PARAM_PROG" = "cat"  ]; then
 	remux_cat
 else
+	#setDeinterlace
 	setFilter
 	if [ "$QUALITY" = "preview" ]; then
 		setHeaders
@@ -500,7 +505,7 @@ else
 		containerMatroska
 		audioAac
 		remux_x264
-	elif [ $CHROMECAST -gt 0 ]; then
+	elif [ ${CHROMECAST} -gt 0 ]; then
 		containerMatroska
 		audioAac
 		remux_chromecast
@@ -524,11 +529,17 @@ else
 		containerMp4
 		audioLame
 		remux_mp4
+	elif [ "$TYPE" = "flv"  ]; then
+		TYPE=stream
+		setHeaders
+		containerFlv
+		audioLame
+		remux_x264
 	elif [ "$TYPE" = "poster" ]; then
-#		captureFrame2
 		captureFrame
 	else 
 		TYPE=stream
+		setHeaders
 		containerMpegTs
 		audioLame
 		remux_x264
