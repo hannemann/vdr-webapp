@@ -4,6 +4,10 @@
  */
 VDRest.Lib.Config = function () {};
 
+VDRest.Lib.Config.prototype.availableLanguages = {
+    "de" : "de_DE"
+};
+
 /**
  * read from and write to localStorage
  * @constructor
@@ -57,7 +61,11 @@ VDRest.Lib.Config.prototype.init = function () {
 
 		if (!value && typeof this.defaults[k] !== 'undefined') {
 
-			value = this.defaults[k];
+            if ("function" === typeof this.defaults[k]) {
+                value = this.defaults[k]();
+            } else {
+                value = this.defaults[k];
+            }
 		}
 
         if (this.fields[k]) {
@@ -182,17 +190,24 @@ VDRest.Lib.Config.prototype.defaults = {
     "port"                  :   "8002",
     "recordingStartMargin"  :   "120",
     "recordingEndMargin"    :   "600",
-    "protocol"              :   "http",
+    "protocol"              :   function() {
+        return location.protocol.replace(/[^htps]/, '');
+    },
     "pixelPerSecond"        :   2/60,
-    "streamdevProtocol"     :   "http",
+    "streamdevProtocol"     :   function() {
+        return location.protocol.replace(/[^htps]/, '');
+    },
     "streamdevHost"         :   "",
     "streamdevPort"         :   "3000",
-    "streamdevParams"       :   "EXT;QUALITY=SLOW",
+    "streamdevParams"       :   "EXT",
     "streamdevContainer"    :   "mkv",
     "streamDownload"        :   "false",
     "theme"                 :   "default",
     "autoVps"               :   "false",
-    "language"              :   "en_US",
+    "language"              :   function () {
+        var lang = navigator.language.split('_')[0];
+        return VDRest.Lib.Config.prototype.availableLanguages[lang] || "en_US";
+    },
     "showRadio"             :   "false",
     "channelLimit"          :   "100",
     "startChannel"          :   "1",
@@ -281,7 +296,7 @@ VDRest.Lib.Config.prototype.fields = {
 
             return pages;
         }
-    },
+    },/*
     "theme"          :   {
         "category" : "gui",
         "type" : "enum",
@@ -298,7 +313,7 @@ VDRest.Lib.Config.prototype.fields = {
                 "value" : "black"
             }
         }
-    },
+    },*/
     "hapticFeedback" :   {
         "category" : "gui",
         "type" : "boolean",
