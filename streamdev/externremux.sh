@@ -8,7 +8,7 @@
 QUALITY="DSL1000"
 TYPE=mpeg
 CHANNELS=2
-DEBUG=1
+DEBUG=0
 RAND=${RANDOM:-$$}
 PID=$$
 FIFO=/tmp/externremux-${PID}
@@ -79,31 +79,11 @@ log "VPID: $REMUX_VPID"
 log "ParentPid: $(getParentPid $$)"
 log "Request id: $(getRequestId)"
 
-###
- # deactivated experiment to kill other remux processes
-###
-if grep "$REMOTE_ADDR" /tmp/externremux-env-* > /dev/null && [ 2 = 1 ]; then
-	log "Already streaming to client $REMOTE_ADDR"
-	for i in  $(grep -H "$REMOTE_ADDR" /tmp/externremux-env-* | cut -d: -f1 |cut -d- -f3); do 
-		log "Found PID: $i"
 
-		if ! egrep "QUERY_STRING.*d=$(getRequestId)" /tmp/externremux-env-${i}; then
-			log "Found stream to kill within pid $i"
-#			log "kill parent process $(getParentPid $i)"
-#			kill -1 $(getParentPid $i) 
-#			for n in $(getChildPids $i); do
-#				log "kill child process $n"
-#				kill -1 $n
-#			done
-		fi
-	done
+if [ "$DEBUG" = 1 ]; then
+	ENV=/tmp/externremux-env-${PID}
+	printenv >> ${ENV}
 fi
-
-
-
-ENV=/tmp/externremux-env-${PID}
-#echo '' ${ENV}
-printenv >> ${ENV}
 
 ###
  # check if user agent is chromecast
@@ -141,7 +121,12 @@ function startFifo {
 	COMMAND=${COMMAND/-i/-i - 0<&3}
 	COMMAND=${COMMAND}" -y $FIFO"
 	mkfifo "$FIFO"
-	trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; fuser -k '$FIFO'; rm '$FIFO'; rm '$ENV'" EXIT HUP INT TERM ABRT PIPE CHLD
+
+	if [ "$DEBUG" = 1 ]; then
+		trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; fuser -k '$FIFO'; rm '$FIFO'; rm '$ENV'" EXIT HUP INT TERM ABRT PIPE CHLD
+	else
+		trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; fuser -k '$FIFO'; rm '$FIFO'" EXIT HUP INT TERM ABRT PIPE CHLD
+	fi
 	cat "$FIFO" <&- &
 	exec 3<&0
 }
@@ -154,7 +139,11 @@ function startPipe {
 	log "omit fifo"
 	COMMAND=${COMMAND/-i/-i -}
 	COMMAND=${COMMAND}" pipe:1"
-	trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; rm '$ENV'" EXIT HUP INT TERM ABRT PIPE CHLD
+	if [ "$DEBUG" = 1 ]; then
+		trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; rm '$ENV'" EXIT HUP INT TERM ABRT PIPE CHLD
+	else
+		trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1" EXIT HUP INT TERM ABRT PIPE CHLD
+	fi
 }
 
 ###
