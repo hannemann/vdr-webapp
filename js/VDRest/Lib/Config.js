@@ -212,6 +212,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "channelLimit"          :   "100",
     "startChannel"          :   "1",
     "useSlowServerStrategy" :   "true",
+    "loadAllChannelsInitially": "false",
     "useHtmlPlayer"         :   "false",
     "defaultSorting"        :   "dateDesc",
     "videoQualitySize"      :   "320x180",
@@ -374,11 +375,17 @@ VDRest.Lib.Config.prototype.fields = {
         "label" : "Port",
         "info" : "Needs reload of app"
     },
-    "useSlowServerStrategy" :   {
+    "loadAllChannelsInitially": {
         "category" : "server",
         "type" : "boolean",
-        "label" : "Resource efficient loading",
+        "label": "Load events for all channels on startup",
         "info" : "Loads data synchronized to not burn slow CPU\'s"
+    },
+    "useSlowServerStrategy": {
+        "category": "server",
+        "type": "boolean",
+        "label": "Resource efficient loading",
+        "info": "Loads data synchronized to not burn slow CPU\'s"
     },
     "osdDelay"              :   {
         "category" : "osd",

@@ -93,7 +93,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getStoreModel = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
 
-    this.getStoreModel().getNextBroadcasts();
+    if (VDRest.config.getItem('loadAllChannelsInitially') || this.isInView()) {
+        this.getStoreModel().getNextBroadcasts();
+    }
 };
 
 /**
