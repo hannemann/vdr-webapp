@@ -119,9 +119,8 @@ Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
 
 /**
  * handle mousedown
- * @param {jQuery.Event} e
  */
-Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
+Gui.Recordings.Controller.List.Recording.prototype.handleDown = function () {
 
     document.onselectstart = function () {
         return false
