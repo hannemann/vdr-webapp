@@ -34,6 +34,7 @@ Gui.Osd.Controller.Default.prototype.dispatchView = function () {
     this.addObserver();
     this.dataModel.loadOsd();
     this.remote.dispatch(this.parentView);
+    this.scrollAfterLoad = true;
     this.startRefreshInterval();
 };
 
@@ -44,19 +45,19 @@ Gui.Osd.Controller.Default.prototype.addObserver = function () {
 
     var me = this;
 
-    $(document).on('osdloaded', $.proxy(this.refreshView, this));
+    $(document).on('osdloaded', this.refreshView.bind(this));
 
-    $(document).on('remotekeypress', $.proxy(this.handleRemotePress, this));
+    $(document).on('remotekeypress', this.handleRemotePress.bind(this));
 
-    this.view.red && this.view.red.on('click', $.proxy(this.sendKey, this, 'Red'));
-    this.view.green && this.view.green.on('click', $.proxy(this.sendKey, this, 'Green'));
-    this.view.yellow && this.view.yellow.on('click', $.proxy(this.sendKey, this, 'Yellow'));
-    this.view.blue && this.view.blue.on('click', $.proxy(this.sendKey, this, 'Blue'));
+    this.view.red && this.view.red.on('click', this.sendKey.bind(this, 'Red'));
+    this.view.green && this.view.green.on('click', this.sendKey.bind(this, 'Green'));
+    this.view.yellow && this.view.yellow.on('click', this.sendKey.bind(this, 'Yellow'));
+    this.view.blue && this.view.blue.on('click', this.sendKey.bind(this, 'Blue'));
 
     if (this.getData('TextOsd')) {
         this.view.items.forEach(function (item) {
 
-            item.on('click', $.proxy(me.addItemEvent, me, item));
+            item.on('click', me.addItemEvent.bind(me, item));
         });
     }
 
@@ -150,7 +151,7 @@ Gui.Osd.Controller.Default.prototype.addItemEvent = function (item, e) {
 Gui.Osd.Controller.Default.prototype.startRefreshInterval = function () {
 
     this.refreshInterval = setInterval(
-        $.proxy(this.dataModel.loadOsd, this.dataModel),
+        this.dataModel.loadOsd.bind(this.dataModel),
         VDRest.config.getItem('osdLoadInterval')
     );
 };
@@ -201,6 +202,10 @@ Gui.Osd.Controller.Default.prototype.refreshView = function (e) {
     }
 
     this.view.rePaint();
+    if (this.scrollAfterLoad) {
+        this.scrollAfterLoad = undefined;
+        this.view.scrollIntoView();
+    }
 
     if (this.data.TextOsd && this.data.TextOsd.message && this.data.TextOsd.message !== '') {
         this.view.setMessage(this.data.TextOsd.message);
@@ -222,6 +227,7 @@ Gui.Osd.Controller.Default.prototype.refreshView = function (e) {
  */
 Gui.Osd.Controller.Default.prototype.handleRemotePress = function () {
 
+    this.scrollAfterLoad = true;
     this.dataModel.loadOsd.call(this.dataModel);
 };
 
@@ -232,6 +238,7 @@ Gui.Osd.Controller.Default.prototype.sendKey = function (key) {
 
     this.vibrate();
     //this.view.toggleThrobber();
+    this.scrollAfterLoad = true;
     this.module.backend.send(key);
 };
 
@@ -245,6 +252,7 @@ Gui.Osd.Controller.Default.prototype.sendSeq = function (seq) {
 
     this.vibrate();
     //this.view.toggleThrobber();
+    this.scrollAfterLoad = true;
     this.module.backend.sendSeq(seq);
 };
 

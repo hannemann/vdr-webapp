@@ -117,7 +117,7 @@ Gui.Osd.View.Default.prototype.renderText = function () {
  */
 Gui.Osd.View.Default.prototype.addItem = function (item) {
 
-    var node, text = item.content.split('\t'), i= 0, l=text.length, td, lKey, lText;
+    var node, text = item.content.split('\t'), i = 0, l = text.length, td, lKey, lText, colspan = 2;
 
     if (text) {
         node = $('<tr class="osd-item clearer">');
@@ -127,9 +127,10 @@ Gui.Osd.View.Default.prototype.addItem = function (item) {
             lKey = RegExp.$2;
             lText = RegExp.$3;
             if (lKey) {
+                colspan--;
                 node.append($('<td class="list-key">' + lKey + '</td>'))
             }
-            node.append($('<td class="list-text" colspan="10">' + lText + '</td>'))
+            node.append($('<td class="list-text" colspan="' + colspan + '">' + lText + '</td>'))
         } else {
             for (i;i<l;i++) {
                 td = $('<td>').html(text[i]);
@@ -228,8 +229,20 @@ Gui.Osd.View.Default.prototype.rePaint = function () {
             this.messageBox.text(message);
         }
     }
+};
 
-    //if (this.selectedItem) {
-    //    this.selectedItem.get(0).scrollIntoView();
-    //}
+Gui.Osd.View.Default.prototype.scrollIntoView = function () {
+
+    var sTop, wHeight, wTop;
+
+    if (this.selectedItem) {
+
+        sTop = this.selectedItem.offset().top;
+        wTop = this.osdWrapper.offset().top;
+        wHeight = this.osdWrapper.height();
+
+        if (( sTop > wHeight + wTop ) || ( sTop < wTop )) {
+            this.selectedItem.get(0).scrollIntoView();
+        }
+    }
 };
