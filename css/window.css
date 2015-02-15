@@ -131,6 +131,7 @@
     width: 60px;
     height:60px;
     font-family: sans-serif;
+    position: relative;
 }
 .window-button.vdr-web-symbol dt {
     font-family: VDR-web, sans-serif;
@@ -190,6 +191,17 @@
     width: 100%;
     height: 100%;
     box-shadow: 0 0 5px 0 black;
+}
+
+.web-button.imdb dt img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: auto;
+    height: auto;
 }
 .web-button.imdb dt img:active {
     box-shadow: 0 0 40px 0 rgb(255, 163, 0), 0 0 30px #FFFFFF inset;

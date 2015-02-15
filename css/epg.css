@@ -33,7 +33,7 @@
 
 #epg-channels .channel:active {
     z-index: 1;
-    box-shadow: 0 0 40px 0 red;
+    box-shadow: 0 0 40px 0 blue;
 }
 
 #broadcasts-wrapper {
