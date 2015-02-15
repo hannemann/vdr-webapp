@@ -71,9 +71,17 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 
     this.view.node.on('click', $.proxy(this.requestWindowAction, this));
 
-    this.view.node
-        .on('mouseup', $.proxy(this.handleUp, this))
-        .on('mousedown', $.proxy(this.handleDown, this));
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node
+            .on('touchend', this.handleUp.bind(this))
+            .on('touchstart', this.handleDown.bind(this))
+        ;
+    } else {
+        this.view.node
+            .on('mouseup', this.handleUp.bind(this))
+            .on('mousedown', this.handleDown.bind(this))
+        ;
+    }
 };
 
 /**
@@ -81,9 +89,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
  */
 Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () {
 
-    this.view.node.off('click');
-
-    this.view.node.off('mouseup mousedown');
+    this.view.node.off('click touchend touchstart mouseup mousedown ');
 };
 
 /**
@@ -92,9 +98,13 @@ Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () 
  */
 Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
 
+    e.preventDefault();
+
     if (!this.isMuted) {
 
         if ("undefined" === typeof this.preventClick) {
+
+            this.vibrate();
 
             if ("undefined" !== typeof this.clickTimeout) {
                 window.clearTimeout(this.clickTimeout);
@@ -102,6 +112,9 @@ Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
             this.requestWindowAction(e)
         }
     }
+    document.onselectstart = function () {
+        return true
+    };
 };
 
 /**
@@ -110,7 +123,9 @@ Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
  */
 Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
 
-    this.vibrate();
+    document.onselectstart = function () {
+        return false
+    };
 
     this.preventClick = undefined;
     if (VDRest.info.getStreamer()) {
@@ -119,7 +134,6 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
             this.vibrate(100);
 
             this.preventClick = true;
-            e.preventDefault();
 
             this.startStream();
 
