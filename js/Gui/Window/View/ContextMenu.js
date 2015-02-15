@@ -74,10 +74,10 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
             .appendTo(this.node);
     }
 
-    if (!VDRest.app.startedFullscreen) {
-        $('<div class="fullscreen-button">').text(VDRest.app.translate('Go fullscreen'))
-            .appendTo(this.node);
-    }
+    //if (!VDRest.app.startedFullscreen) {
+    //    $('<div class="fullscreen-button">').text(VDRest.app.translate('Go fullscreen'))
+    //        .appendTo(this.node);
+    //}
 
     $('<div class="reload-button">').text(VDRest.app.translate('Reload App'))
         .appendTo(this.node);

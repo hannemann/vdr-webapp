@@ -220,7 +220,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "favourites"            :   "",
     "osdDelay"              :   100,
     "osdLoadInterval"       :   2000,
-    "showImageInEpgView"    :   "true"
+    "showImageInEpgView": "true",
+    "firstTime": "true"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -247,6 +248,9 @@ VDRest.Lib.Config.prototype.categories = {
     },
     "gui" : {
         "label" : 'User Interface'
+    },
+    "misc": {
+        "label": 'Misc.'
     }
 };
 
@@ -419,7 +423,8 @@ VDRest.Lib.Config.prototype.fields = {
     "autoVps"   :   {
         "category" : "timer",
         "type" : "boolean",
-        "label" : "Use VPS if available"
+        "label": "Use VPS if available",
+        "info": "not recommended if epg grabbers are in use"
     },
     "streamdevActive"    :   {
         "category" : "streaming",
@@ -533,7 +538,12 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "boolean",
         "label" : "Download",
-        "info" : "Enable download of transcoded Recordings. Does not work on Android powered devices. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska."
+        "info": "Enable download of transcoded Recordings. Does work on Android powered devices if you delegate the download to Firefox for Android. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska."
+    },
+    "firstTime": {
+        "category": "misc",
+        "type": "boolean",
+        "label": "Show first time installation guide"
     },
     "debug"             :   {
         "category" : "dev",

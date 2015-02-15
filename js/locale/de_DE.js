@@ -79,12 +79,15 @@ VDRest.app.de_DE = {
     "Takes effect after reload" : "Aktiv nach Neustart",
     "e.g.: Force usage of VLC" : "z.B. um VLC zu erzwingen",
     "Watch Recording" : "Aufnahme Ansehen",
-    "Enable download of transcoded Recordings. Does not work on Android powered devices. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska." : "Download transkodierter Aufnahmen anbieten. Funktioniert nicht auf Android Geräten. Downloads werden mit den aktuellen Qualitätseinstellungen per libx264 und aac transkodiert. Container ist Matroska.",
+    "Enable download of transcoded Recordings. Does work on Android powered devices if you delegate the download to Firefox for Android. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska.": "Download transkodierter Aufnahmen anbieten. Funktioniert auf Android Geräten wenn der Download mit Firefox für Android geöffnet wird. Downloads werden mit den aktuellen Qualitätseinstellungen per libx264 und aac transkodiert. Container ist Matroska.",
     "Favourites" : "Favoriten",
     "OSD Settings" : "OSD Einstellungen",
     "No OSD opened!" : "Kein OSD geöffnet!",
     "OSD Delay (ms)" : "OSD Verzögerung (ms)",
     "Time to wait after key press before OSD is refreshed" : "Zeit die nach Knopfdruck gewartet wird, bevor das OSD aktualisiert wird.",
     "OSD refresh interval (ms)" : "OSD Aktualisierungsintervall (ms)",
-    "Show images in EPG view" : "Bilder in EPG Ansicht zeigen"
+    "Show images in EPG view": "Bilder in EPG Ansicht zeigen",
+    "Misc.": "Sonstiges",
+    "Show first time installation guide": "Zeige Installationsanleitung",
+    "not recommended if epg grabbers are in use": "nicht empfohlen wenn EPG grabber verwendet werden"
 };

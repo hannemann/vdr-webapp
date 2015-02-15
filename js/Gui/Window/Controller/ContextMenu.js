@@ -65,8 +65,8 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
             .one('mousedown', this.handleConfig.bind(this));
     }
 
-    this.view.node.find('.fullscreen-button')
-        .one('mousedown', this.handleFullscreen.bind(this));
+    //this.view.node.find('.fullscreen-button')
+    //    .one('mousedown', this.handleFullscreen.bind(this));
 
     this.view.node.find('.reload-button')
         .one('mousedown', this.handleReload.bind(this));

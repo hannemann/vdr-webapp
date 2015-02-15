@@ -81,9 +81,11 @@ Gui.Window.prototype.init = function () {
  */
 Gui.Window.prototype.dispatch = function (payload) {
 
-    var me = this, suffix = payload.type, controller;
+    var module, suffix = payload.type, controller;
 
-    controller = me.getController(payload.type, payload.data);
+    module = payload.module || this;
+
+    controller = module.getController(payload.type, payload.data);
 
     if (!(controller.singleton && controller.view.isRendered)) {
 

@@ -1,0 +1,13 @@
+.first-time .window-header img {
+    display: block;
+    margin: 0 auto;
+}
+
+.first-time .window-body {
+    padding: 10px;
+    text-align: justify;
+}
+
+.first-time .window-body p {
+    margin-bottom: 12px;
+}

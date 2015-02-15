@@ -30,6 +30,23 @@ Gui.Config.Controller.Settings.prototype.init = function () {
         me.persist();
     }
 };
+/**
+ * dispatch
+ */
+Gui.Config.Controller.Settings.prototype.dispatchView = function () {
+
+    Gui.Form.Controller.Abstract.prototype.dispatchView.call(this);
+
+    if (VDRest.config.getItem('firstTime') === true) {
+        $.event.trigger({
+            "type": "window.request",
+            "payload": {
+                "type": "Window.FirstTime",
+                "module": this.module
+            }
+        });
+    }
+};
 
 /**
  * persist settings
