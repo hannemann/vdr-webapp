@@ -378,13 +378,12 @@ VDRest.Lib.Config.prototype.fields = {
     "loadAllChannelsInitially": {
         "category" : "server",
         "type" : "boolean",
-        "label": "Load events for all channels on startup",
-        "info" : "Loads data synchronized to not burn slow CPU\'s"
+        "label": "Load events for all channels on startup"
     },
     "useSlowServerStrategy": {
         "category": "server",
         "type": "boolean",
-        "label": "Resource efficient loading",
+        "label": "Load synced",
         "info": "Loads data synchronized to not burn slow CPU\'s"
     },
     "osdDelay"              :   {

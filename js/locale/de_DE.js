@@ -67,7 +67,7 @@ VDRest.app.de_DE = {
     "Use HTML5 Video Player" : "HTML5 Video Player benutzen",
     "An extended externremux.sh is needed" : "Es wird eine erweiterte externremux.sh benötigt",
     "Loads data synchronized to not burn slow CPU\'s" : "Daten synchron laden, um langsamere CPU\'s zu schonen",
-    "Resource efficient loading" : "Resourcenschonendes Laden",
+    "Load synced": "Synchrones Laden",
     "Date &#8595;" : "Datum &#8595;",
     "Date &#8593;" : "Datum &#8593;",
     "Newest first" : "Neueste zuerst",
