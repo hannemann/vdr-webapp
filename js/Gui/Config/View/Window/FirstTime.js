@@ -14,6 +14,8 @@ Gui.Config.View.Window.FirstTime.prototype.isModal = true;
 
 Gui.Config.View.Window.FirstTime.prototype.hasHeader = true;
 
+Gui.Config.View.Window.FirstTime.prototype.hasCloseButton = true;
+
 /**
  * decorate and render
  */
