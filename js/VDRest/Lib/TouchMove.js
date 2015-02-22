@@ -160,7 +160,9 @@ TouchMove.prototype.move = function (e) {
 TouchMove.prototype.end = function (e) {
 
     if (this.preventEndEvent) {
-        e.preventDefault();
+        if (e.cancelable) {
+            e.preventDefault();
+        }
         this.preventEndEvent = false;
     }
 
