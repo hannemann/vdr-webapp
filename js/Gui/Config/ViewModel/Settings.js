@@ -68,6 +68,10 @@ Gui.Config.ViewModel.Settings.prototype.defineViewMethod = function (name, field
 
         this.definePrimitive(name, field);
     }
+
+    if ("info" === field.type) {
+        field.module = this.module;
+    }
 };
 
 /**

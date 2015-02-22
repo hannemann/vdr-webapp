@@ -61,7 +61,10 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
                 this.addClickHandler(this.view.data.fields[i]);
             }
 
-            this.addChangeHandler(this.view.data.fields[i], i);
+            if (this.view.data.fields[i].type !== 'info') {
+
+                this.addChangeHandler(this.view.data.fields[i], i);
+            }
         }
     }
 
@@ -97,6 +100,11 @@ Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {
         if ("directory" === e.data.field.type) {
 
             type = 'DirectoryChooser';
+        }
+
+        if ("info" === e.data.field.type) {
+
+            type = e.data.field.window;
         }
 
         this.vibrate();
@@ -188,11 +196,15 @@ Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
 
     for (i in this.view.data.fields) {
 
-        if (this.view.data.fields.hasOwnProperty(i) && this.view.data.fields[i].hasOwnProperty('dom')) {
+        if (this.view.data.fields.hasOwnProperty(i)) {
 
-            this.view.data.fields[i].dom.off('click');
+            if (this.view.data.fields[i].dom) {
+                this.view.data.fields[i].dom.off('click');
+            }
 
-            this.view.data.fields[i].gui.off('change');
+            if (this.view.data.fields[i].gui) {
+                this.view.data.fields[i].gui.off('change');
+            }
         }
     }
 
@@ -262,14 +274,22 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
  */
 Gui.Form.Controller.Abstract.prototype.requestInput = function (field, type) {
 
+    var payload;
+
     if (false === field.disabled) {
+
+        payload = {
+            "type": type,
+            "data": field
+        };
+
+        if (field.module) {
+            payload.module = field.module;
+        }
 
         $.event.trigger({
             "type" : "window.request",
-            "payload" : {
-                "type" : type,
-                "data" : field
-            }
+            "payload": payload
         });
     }
 };

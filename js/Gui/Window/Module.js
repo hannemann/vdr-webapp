@@ -85,6 +85,10 @@ Gui.Window.prototype.dispatch = function (payload) {
 
     module = payload.module || this;
 
+    if ("string" === typeof module) {
+        module = VDRest.app.getModule(module);
+    }
+
     controller = module.getController(payload.type, payload.data);
 
     if (!(controller.singleton && controller.view.isRendered)) {

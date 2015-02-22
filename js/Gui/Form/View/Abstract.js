@@ -106,6 +106,11 @@ Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
 
         this.getDirectory(id, field);
     }
+
+    if ("info" === field.type) {
+
+        this.getInfo(id, field);
+    }
 };
 
 /**
@@ -211,6 +216,18 @@ Gui.Form.View.Abstract.prototype.getDirectory = function (id, field) {
     field.gui.attr('type', 'text');
 
     field.dom.append(field.gui);
+};
+
+/**
+ * add button for info window
+ * @param {string} id
+ * @param {{}} field
+ */
+Gui.Form.View.Abstract.prototype.getInfo = function (id, field) {
+
+    this.decorateField(id, field);
+
+    field.gui = undefined;
 };
 
 /**
