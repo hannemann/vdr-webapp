@@ -74,6 +74,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
     if (VDRest.helper.isTouchDevice) {
         this.view.node
             .on('touchend', this.handleUp.bind(this))
+            .on('touchmove', this.handleMove.bind(this))
             .on('touchstart', this.handleDown.bind(this))
         ;
     } else {
@@ -89,7 +90,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
  */
 Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () {
 
-    this.view.node.off('click touchend touchstart mouseup mousedown ');
+    this.view.node.off('click touchend touchstart touchmove mouseup mousedown ');
 };
 
 /**
@@ -115,6 +116,18 @@ Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
     document.onselectstart = function () {
         return true
     };
+};
+
+/**
+ * prevent click on move
+ */
+Gui.Recordings.Controller.List.Recording.prototype.handleMove = function () {
+
+    this.preventClick = true;
+
+    if ("undefined" !== typeof this.clickTimeout) {
+        window.clearTimeout(this.clickTimeout);
+    }
 };
 
 /**
