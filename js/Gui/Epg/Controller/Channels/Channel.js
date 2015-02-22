@@ -114,6 +114,12 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
                 this.vibrate();
 
                 this.module.getController('Channels').handleChannelView({"payload" : this});
+            } else {
+                this.module.contextMenu.Channelview.state = "on";
+                $.event.trigger({
+                    "type": "epg.channelview",
+                    "payload": this
+                });
             }
         }
     }

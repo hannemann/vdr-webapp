@@ -188,18 +188,10 @@ Gui.Epg.Controller.Epg.prototype.setIsChannelView = function (e) {
     if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
 
         channels.view.node.css({"top":0});
-        //if (VDRest.helper.isTouchDevice) {
-        //
-        //    this.broadcasts.touchScroll.slider.translate({
-        //        "x": this.broadcasts.getData('state').x * -1,
-        //        "y": this.broadcasts.getData('state').y * -1
-        //    });
-        //} else {
-        //    this.broadcasts.view.wrapper.scrollTop(0);
-        //    this.broadcasts.view.wrapper.scrollLeft(0);
-        //}
         this.view.node.addClass('channel-view');
         this.isChannelView = true;
+
+        e.payload.view.scrollIntoView();
 
     } else {
 
