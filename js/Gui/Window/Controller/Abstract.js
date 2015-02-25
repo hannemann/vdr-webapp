@@ -14,8 +14,6 @@ Gui.Window.Controller.Abstract.prototype = new VDRest.Abstract.Controller();
  */
 Gui.Window.Controller.Abstract.prototype.init = function () {
 
-    VDRest.app.addDestroyer(this.eventPrefix + '.hashChanged', $.proxy(this.destructView, this));
-
     this.view.setParentView({
         "node" :$('body')
     });
