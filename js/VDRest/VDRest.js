@@ -194,6 +194,21 @@ VDRest.App.prototype.locationChange = function () {
 
 };
 
+/**
+ * Method adds callback to queue that is called if eventName is fired
+ *
+ * @param {String} eventName
+ * @param {Function} callback
+ * @param {String} newState
+ */
+VDRest.App.prototype.saveHistoryState = function (eventName, callback, newState) {
+
+    this.addDestroyer(eventName, callback);
+    this.observe();
+    this.setLocationHash(newState);
+
+};
+
 VDRest.App.prototype.observe = function (hash) {
 
     this.observeHash.push(hash || this.getLocationHash() || VDRest.config.getItem('start'));
