@@ -34,6 +34,7 @@ VDRest.Remote.Model.Remote.prototype.keys = [
  */
 VDRest.Remote.Model.Remote.prototype.send = function (key) {
 
+    this.data.currentKey = key;
     this.module.getResource('Remote').send(key);
 };
 
@@ -43,6 +44,7 @@ VDRest.Remote.Model.Remote.prototype.send = function (key) {
  */
 VDRest.Remote.Model.Remote.prototype.sendKbd = function (key) {
 
+    this.data.currentKey = key;
     this.module.getResource('Remote').sendKbd(key);
 };
 
@@ -52,6 +54,7 @@ VDRest.Remote.Model.Remote.prototype.sendKbd = function (key) {
  */
 VDRest.Remote.Model.Remote.prototype.sendSeq = function (key) {
 
+    this.data.currentKey = key;
     this.module.getResource('Remote').sendSeq(key);
 };
 

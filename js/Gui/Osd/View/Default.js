@@ -46,6 +46,25 @@ Gui.Osd.View.Default.prototype.render = function () {
 };
 
 /**
+ * add overlay to screen to prevent clicks
+ */
+Gui.Osd.View.Default.prototype.muteScreen = function () {
+    if (!this.modal) {
+        this.modal = $('<div class="modal-overlay transparent">').appendTo('body');
+    }
+};
+
+/**
+ * remove overlay
+ */
+Gui.Osd.View.Default.prototype.unmuteScreen = function () {
+    if (this.modal) {
+        this.modal.remove();
+        this.modal = undefined;
+    }
+};
+
+/**
  * add color buttons
  */
 Gui.Osd.View.Default.prototype.addButtons = function () {

@@ -151,9 +151,15 @@ Gui.Osd.Controller.Default.prototype.addItemEvent = function (item, e) {
 Gui.Osd.Controller.Default.prototype.startRefreshInterval = function () {
 
     this.refreshInterval = setInterval(
-        this.dataModel.loadOsd.bind(this.dataModel),
+        this.refreshLoad.bind(this),
         VDRest.config.getItem('osdLoadInterval')
     );
+};
+
+Gui.Osd.Controller.Default.prototype.refreshLoad = function () {
+
+    this.view.muteScreen();
+    this.dataModel.loadOsd();
 };
 
 /**
@@ -162,6 +168,7 @@ Gui.Osd.Controller.Default.prototype.startRefreshInterval = function () {
 Gui.Osd.Controller.Default.prototype.stopRefreshInterval = function () {
 
     clearInterval(this.refreshInterval);
+    this.refreshInterval = undefined;
 };
 
 /**
@@ -170,10 +177,9 @@ Gui.Osd.Controller.Default.prototype.stopRefreshInterval = function () {
 Gui.Osd.Controller.Default.prototype.loadOsd = function () {
 
     this.stopRefreshInterval();
+    this.view.muteScreen();
 
     this.dataModel.loadOsd();
-
-    this.startRefreshInterval();
 };
 
 /**
@@ -220,6 +226,10 @@ Gui.Osd.Controller.Default.prototype.refreshView = function (e) {
     }
 
     this.addObserver();
+    this.view.unmuteScreen();
+    if (!this.refreshInterval) {
+        this.startRefreshInterval();
+    }
 };
 
 /**
@@ -227,7 +237,12 @@ Gui.Osd.Controller.Default.prototype.refreshView = function (e) {
  */
 Gui.Osd.Controller.Default.prototype.handleRemotePress = function () {
 
+    if (this.data.state && this.data.state === 'closed' && this.remote.backend.data.currentKey === 'Back') {
+        history.back();
+    }
+
     this.scrollAfterLoad = true;
+    this.view.muteScreen();
     this.dataModel.loadOsd.call(this.dataModel);
 };
 
@@ -237,7 +252,7 @@ Gui.Osd.Controller.Default.prototype.handleRemotePress = function () {
 Gui.Osd.Controller.Default.prototype.sendKey = function (key) {
 
     this.vibrate();
-    //this.view.toggleThrobber();
+    this.view.muteScreen();
     this.scrollAfterLoad = true;
     this.module.backend.send(key);
 };
@@ -251,7 +266,7 @@ Gui.Osd.Controller.Default.prototype.sendSeq = function (seq) {
     if (!seq instanceof Array) return;
 
     this.vibrate();
-    //this.view.toggleThrobber();
+    this.view.muteScreen();
     this.scrollAfterLoad = true;
     this.module.backend.sendSeq(seq);
 };
@@ -261,6 +276,8 @@ Gui.Osd.Controller.Default.prototype.sendSeq = function (seq) {
  */
 Gui.Osd.Controller.Default.prototype.destructView = function () {
 
+    this.view.unmuteScreen();
+    
     this.stopRefreshInterval();
 
     VDRest.app.getModule('Gui.Remote').destruct();

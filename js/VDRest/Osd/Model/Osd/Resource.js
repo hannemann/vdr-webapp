@@ -17,6 +17,13 @@ VDRest.Osd.Model.Osd.Resource.prototype = new VDRest.Api.Resource();
 VDRest.Osd.Model.Osd.Resource.prototype._class = 'VDRest.Osd.Model.Osd.Resource';
 
 /**
+ * class name
+ * @type {string}
+ * @private
+ */
+VDRest.Osd.Model.Osd.Resource.prototype.noThrobber = true;
+
+/**
  * url store
  * @type {{channelList: string}}
  */
@@ -37,9 +44,13 @@ VDRest.Osd.Model.Osd.Resource.prototype.onError = function (e) {
         message = e.statusText;
     }
 
-    this.dataModel.triggerOsdLoaded({
-        "responseJSON": {
-            "Error" : {"content":VDRest.app.translate(message)}
-        }
-    });
+    message = {
+        "Error": {"content": VDRest.app.translate(message)}
+    };
+
+    if (e.statusText.indexOf('No OSD opened') > -1) {
+        message.state = 'closed';
+    }
+
+    this.dataModel.triggerOsdLoaded(message);
 };

@@ -36,7 +36,6 @@ VDRest.Osd.Model.Osd.prototype.loadOsd = function () {
     setTimeout($.proxy(function () {
         this.resource.load({
             "url" : "main",
-            "async" : false,
             "callback" : $.proxy(this.triggerOsdLoaded, this)
         });
     }, this), VDRest.config.getItem('osdDelay'));
@@ -48,7 +47,7 @@ VDRest.Osd.Model.Osd.prototype.loadOsd = function () {
  */
 VDRest.Osd.Model.Osd.prototype.triggerOsdLoaded = function (result) {
 
-    this.currentOsd = result.responseJSON;
+    this.currentOsd = result;
     $.event.trigger({
         "type" : "osdloaded",
         "payload" : {

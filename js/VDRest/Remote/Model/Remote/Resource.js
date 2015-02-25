@@ -9,6 +9,9 @@ VDRest.Remote.Model.Remote.Resource = function () {};
  */
 VDRest.Remote.Model.Remote.Resource.prototype = new VDRest.Api.Resource();
 
+
+//VDRest.Remote.Model.Remote.Resource.prototype.noThrobber = true;
+
 /**
  * class name
  * @type {string}
@@ -30,7 +33,7 @@ VDRest.Remote.Model.Remote.Resource.prototype.urls = {
  */
 VDRest.Remote.Model.Remote.Resource.prototype.send = function (key) {
 
-    this.fetchSync({
+    this.fetchAsync({
             "method" : "POST",
             "url" : this.getBaseUrl() + this.urls.main + '/' + key
         },function () {
@@ -49,7 +52,7 @@ VDRest.Remote.Model.Remote.Resource.prototype.sendKbd = function (key) {
 
     var data = JSON.stringify({"kbd":key});
 
-    this.fetchSync({
+    this.fetchAsync({
             "method" : "POST",
             "url" : this.getBaseUrl() + this.urls.main + '/kbd',
             "data" : data,
@@ -70,7 +73,7 @@ VDRest.Remote.Model.Remote.Resource.prototype.sendSeq = function (key) {
 
     var data = JSON.stringify({"seq":key});
 
-    this.fetchSync({
+    this.fetchAsync({
             "method" : "POST",
             "url" : this.getBaseUrl() + this.urls.main + '/seq',
             "data" : data,
@@ -81,4 +84,11 @@ VDRest.Remote.Model.Remote.Resource.prototype.sendSeq = function (key) {
             });
         }
     );
+};
+
+VDRest.Remote.Model.Remote.Resource.prototype.onError = function (e) {
+
+    if (!e.status || (e.status && e.status != 200)) {
+        VDRest.Api.Resource.onError.call(this, arguments)
+    }
 };
