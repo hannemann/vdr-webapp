@@ -56,19 +56,11 @@ Gui.Epg.prototype.contextMenu = {
 
             if ("off" === this.contextMenu.Channelview.state) {
 
-                this.contextMenu.Channelview.state = "on";
-                $.event.trigger({
-                    "type" : "epg.channelview",
-                    "payload" : this.getController('Channels').channelsList[0]
-                });
+                this.toggleChannelView(this.getController('Channels').channelsList[0]);
 
             } else {
 
-                this.contextMenu.Channelview.state = "off";
-                $.event.trigger({
-                    "type" : "epg.channelview",
-                    "payload" : false
-                });
+                this.toggleChannelView();
             }
         }
     },
@@ -252,6 +244,31 @@ Gui.Epg.prototype.unMute = function () {
 
     VDRest.Abstract.Module.prototype.unMute.call(this);
     this.getController('Epg').recover();
+};
+
+/**
+ * toggle channel view
+ * @param {Gui.Epg.Controller.Channels.Channel} [channel]
+ */
+Gui.Epg.prototype.toggleChannelView = function (channel) {
+
+    if (
+        channel instanceof Gui.Epg.Controller.Channels.Channel && !this.getController('Epg').getIsChannelView()
+    ) {
+
+        this.contextMenu.Channelview.state = "on";
+        $.event.trigger({
+            "type": "epg.channelview",
+            "payload": channel
+        });
+    } else {
+
+        this.contextMenu.Channelview.state = "off";
+        $.event.trigger({
+            "type": "epg.channelview",
+            "payload": false
+        });
+    }
 };
 
 /**

@@ -24,6 +24,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.isMuted = false;
  */
 Gui.Epg.Controller.Channels.Channel.prototype.init = function () {
 
+    this.eventPrefix = 'channel_view.' + this.data.channel_id.replace(/\s/g, '.').toCacheKey();
+
     this.view = this.module.getView('Channels.Channel', {
         "channel_id" : this.data.channel_id
     });
@@ -97,6 +99,8 @@ Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
 
+    var channelsController;
+
     e.preventDefault();
 
     if (!this.isMuted) {
@@ -115,11 +119,13 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
 
                 this.module.getController('Channels').handleChannelView({"payload" : this});
             } else {
-                this.module.contextMenu.Channelview.state = "on";
-                $.event.trigger({
-                    "type": "epg.channelview",
-                    "payload": this
-                });
+
+                VDRest.app.saveHistoryState(
+                    this.eventPrefix + '.hashChanged',
+                    this.module.toggleChannelView.bind(this.module),
+                    'channelView'
+                );
+                this.module.toggleChannelView(this);
             }
         }
     }
