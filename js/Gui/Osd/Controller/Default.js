@@ -277,7 +277,7 @@ Gui.Osd.Controller.Default.prototype.sendSeq = function (seq) {
 Gui.Osd.Controller.Default.prototype.destructView = function () {
 
     this.view.unmuteScreen();
-    
+
     this.stopRefreshInterval();
 
     VDRest.app.getModule('Gui.Remote').destruct();

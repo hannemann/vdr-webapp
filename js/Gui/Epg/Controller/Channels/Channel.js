@@ -99,8 +99,6 @@ Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
 
-    var channelsController;
-
     e.preventDefault();
 
     if (!this.isMuted) {
