@@ -25,32 +25,29 @@ Gui.Window.Controller.Timer.prototype.init = function () {
 
     this.view = this.module.getView('Timer', this.data);
 
-    this.getBroadcast();
-
-    this.module.getViewModel('Timer', {
-        "id" : this.data.id,
-        "view" : this.view,
-        "resource" : this.data.resource,
-        "broadcast" : this.broadcast
-    });
-
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
 
 /**
  * load broadcast
  */
-Gui.Window.Controller.Timer.prototype.getBroadcast = function () {
+Gui.Window.Controller.Timer.prototype.getBroadcast = function (callback) {
 
-    var channel, me = this,
-        broadcastHelper = VDRest.app.getModule('VDRest.Timer').getHelper('Broadcast');
+    var broadcastHelper = VDRest.app.getModule('VDRest.Timer').getHelper('Broadcast');
+
+    this.broadcast = new VDRest.Lib.Object();
 
     if (this.data.resource.event_id > 0) {
 
-        this.broadcast = VDRest.app.getModule('VDRest.Epg')
+        VDRest.app.getModule('VDRest.Epg')
             .loadModel(
             'Channels.Channel.Broadcast',
-            this.data.resource.channel + '/' + this.data.resource.event_id
+            this.data.resource.channel + '/' + this.data.resource.event_id,
+            function (broadcast) {
+
+                this.broadcast = broadcast;
+                callback();
+            }.bind(this)
         );
 
     } else {
@@ -61,9 +58,9 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function () {
 
             e.iterate(function (broadcast) {
 
-                if (broadcastHelper.match(me.data.resource, broadcast.data)) {
+                if (broadcastHelper.match(this.data.resource, broadcast.data)) {
 
-                    me.broadcast = broadcast;
+                    this.broadcast = broadcast;
 
                     return false;
                 }
@@ -74,31 +71,24 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function () {
                     candidate = broadcast;
                     duration = broadcast.data.duration;
                 }
-            });
+            }.bind(this), function () {
 
-            if (!me.broadcast) {
+                callback();
+            }.bind(this));
 
-                me.broadcast = candidate;
+            if (!this.broadcast) {
+
+                this.broadcast = candidate;
             }
-        });
+        }.bind(this));
 
-        channel = VDRest.app.getModule('VDRest.Epg').loadModel('Channels.Channel', this.data.resource.channel);
+        VDRest.app.getModule('VDRest.Epg').loadModel('Channels.Channel', this.data.resource.channel, function (channel) {
 
-        channel.getByTime(
-            new Date(this.data.resource.start_timestamp),
-            new Date(this.data.resource.stop_timestamp),
-            false
-        );
-    }
-
-    if (this.broadcast instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
-
-        this.view.setHasBroadcast();
-        this.data.resource.event_id = this.broadcast.getData('id');
-
-    } else {
-
-        this.broadcast = new VDRest.Lib.Object();
+            channel.getByTime(
+                new Date(this.data.resource.start_timestamp),
+                new Date(this.data.resource.stop_timestamp)
+            );
+        }.bind(this));
     }
 };
 
@@ -107,11 +97,27 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function () {
  */
 Gui.Window.Controller.Timer.prototype.dispatchView = function () {
 
-    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+    this.getBroadcast(function () {
 
-    this.addObserver();
+        if (this.broadcast instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
 
-    this.timerActiveAction();
+            this.view.setHasBroadcast();
+            this.data.resource.event_id = this.broadcast.getData('id');
+        }
+
+        this.module.getViewModel('Timer', {
+            "id": this.data.id,
+            "view": this.view,
+            "resource": this.data.resource,
+            "broadcast": this.broadcast
+        });
+
+        Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+
+        this.addObserver();
+
+        this.timerActiveAction();
+    }.bind(this));
 };
 
 /**

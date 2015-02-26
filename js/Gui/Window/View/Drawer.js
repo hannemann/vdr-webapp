@@ -119,18 +119,23 @@ Gui.Window.View.Drawer.prototype.addInfo = function () {
 
     if (info.hasData('channel')) {
 
-        channel = VDRest.app.getModule('VDRest.Epg').loadModel('Channels.Channel', info.getData('channel'));
+        channel = VDRest.app.getModule('VDRest.Epg').loadModel(
+            'Channels.Channel',
+            info.getData('channel'),
+            function (channel) {
 
-        if (channel.hasData('image')) {
+                if (channel.hasData('image')) {
 
-            $('<img>').attr('src', channel.getData('image')).appendTo(onAir);
+                    $('<img>').attr('src', channel.getData('image')).appendTo(onAir);
 
-        } else {
+                } else {
 
-            $('<div>').text(channel.getData('name') + ' - ').appendTo(onAir)
-        }
+                    $('<div>').text(channel.getData('name') + ' - ').appendTo(onAir)
+                }
 
-        $('<span>').text(info.getData('title')).appendTo(onAir);
+                $('<span>').text(info.getData('title')).appendTo(onAir);
+            }
+        );
 
     } else if (info.hasData('video')) {
 

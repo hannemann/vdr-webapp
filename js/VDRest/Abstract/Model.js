@@ -180,14 +180,18 @@ VDRest.Abstract.Model.prototype.getCollection = function () {
 };
 
 /**
+ * ** deprecated **
+ *
+ *
  * load single data set identified by cache key
  * create collection model instance if not cached already
  * @param cacheKey
+ * @param {Function} callback
  * @returns {boolean}
  */
-VDRest.Abstract.Model.prototype.loadCollectionItem = function (cacheKey) {
+VDRest.Abstract.Model.prototype.loadCollectionItem = function (cacheKey, callback) {
 
-    var model = false, data;
+    var model = false;
 
     if ("undefined" !== typeof this.collectionItemModel) {
 
@@ -196,26 +200,25 @@ VDRest.Abstract.Model.prototype.loadCollectionItem = function (cacheKey) {
             && this.cache[this.collectionItemModel][cacheKey]
         ) {
 
-            model = this.cache[this.collectionItemModel][cacheKey];
+            callback(this.cache[this.collectionItemModel][cacheKey]);
 
         } else {
 
-            data = this.module.getResource(this.collectionItemModel, cacheKey)
+            this.module.getResource(this.collectionItemModel, cacheKey)
                 .setIdUrl(cacheKey)
                 .load({
-                    "async" : false,
+                    "callback": function (response) {
+
+                        model = this.module.getModel(
+                            this.collectionItemModel,
+                            response[this.resultCollection][0]
+                        );
+
+                        callback(model);
+                    }.bind(this),
                     "url" : "byId"
-                });
-
-            if (data) {
-
-                model = this.module.getModel(
-                    this.collectionItemModel,
-                    data.responseJSON[this.resultCollection][0]
-                );
-            }
+                })
+            ;
         }
     }
-
-    return model;
 };

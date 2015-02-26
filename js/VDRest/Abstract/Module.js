@@ -51,17 +51,14 @@ VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey, callback)
     var cache = this.cache.getStore('Model', type),
         path = this.namespace + '.' + this.name + '.Model.' + type,
         constructor,
-        data,
         model;
 
     if ("undefined" !== typeof cache[cacheKey]) {
 
-        return cache[cacheKey];
-    }
+        callback(cache[cacheKey]);
 
-    constructor = VDRest.Lib.factory.getConstructor(path);
-
-    if ("function" === typeof callback) {
+    } else {
+        constructor = VDRest.Lib.factory.getConstructor(path);
 
         this.getResource(type, this.getResourceInitData(path, cacheKey))
             .setIdUrl(cacheKey)
@@ -76,26 +73,8 @@ VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey, callback)
                     callback(model);
                 }.bind(this),
                 "url": "byId"
-            });
-
-    } else {
-
-        data = this.getResource(type, this.getResourceInitData(path, cacheKey))
-            .setIdUrl(cacheKey)
-            .load({
-                "async": false,
-                "url": "byId"
-            });
-
-        if (data) {
-
-            model = this.getModel(
-                type,
-                data.responseJSON[constructor.prototype.resultJSON][0]
-            );
-        }
-
-        return model;
+            }
+        );
     }
 };
 
