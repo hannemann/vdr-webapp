@@ -43,9 +43,10 @@ VDRest.Abstract.Module.prototype.init = function () {
  * retrieve model
  * @param {String} type
  * @param {Object} cacheKey
+ * @param {Function} callback
  * @return {*}
  */
-VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey) {
+VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey, callback) {
 
     var cache = this.cache.getStore('Model', type),
         path = this.namespace + '.' + this.name + '.Model.' + type,
@@ -60,22 +61,42 @@ VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey) {
 
     constructor = VDRest.Lib.factory.getConstructor(path);
 
-    data = this.getResource(type, this.getResourceInitData(path, cacheKey))
-        .setIdUrl(cacheKey)
-        .load({
-            "async" : false,
-            "url" : "byId"
-        });
+    if ("function" === typeof callback) {
 
-    if (data) {
+        this.getResource(type, this.getResourceInitData(path, cacheKey))
+            .setIdUrl(cacheKey)
+            .load({
+                "callback": function (response) {
 
-        model = this.getModel(
-            type,
-            data.responseJSON[constructor.prototype.resultJSON][0]
-        );
+                    model = this.getModel(
+                        type,
+                        response[constructor.prototype.resultJSON][0]
+                    );
+
+                    callback(model);
+                }.bind(this),
+                "url": "byId"
+            });
+
+    } else {
+
+        data = this.getResource(type, this.getResourceInitData(path, cacheKey))
+            .setIdUrl(cacheKey)
+            .load({
+                "async": false,
+                "url": "byId"
+            });
+
+        if (data) {
+
+            model = this.getModel(
+                type,
+                data.responseJSON[constructor.prototype.resultJSON][0]
+            );
+        }
+
+        return model;
     }
-
-    return model;
 };
 
 /**

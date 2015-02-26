@@ -107,23 +107,26 @@ Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
  */
 Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
 
-    var timer = VDRest.app.getModule('VDRest.Timer')
-        .loadModel('List.Timer', this.data.dataModel.data.timer_id);
-
     this.vibrate();
 
-    $.event.trigger({
-        "type" : "window.request",
-        "payload" : {
-            "type" : "Timer",
-            "data" : {
-                "id" : timer.data.id,
-                "resource" : timer.data,
-                "activeTab" : 'edit',
-                "dontDeleteListItem" : true
-            }
-        }
-    });
+    VDRest.app.getModule('VDRest.Timer').loadModel(
+        'List.Timer',
+        this.data.dataModel.data.timer_id,
+        function (timer) {
+            $.event.trigger({
+                "type": "window.request",
+                "payload": {
+                    "type": "Timer",
+                    "data": {
+                        "id": timer.data.id,
+                        "resource": timer.data,
+                        "activeTab": 'edit',
+                        "dontDeleteListItem": true
+                    }
+                }
+            });
+        });
+
 };
 
 /**
