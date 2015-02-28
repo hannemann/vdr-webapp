@@ -97,7 +97,7 @@ VDRest.Abstract.Model.prototype.triggerCollectionLoaded = function () {
         "type"          : this.events.collectionloaded,
         "collection"    : this.currentResult,
         "_class"        : this._class,
-        "iterate"       : $.proxy(this.resultIterator, this)
+        "iterate": this.resultIterator.bind(this)
     });
 };
 

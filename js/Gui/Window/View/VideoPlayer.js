@@ -139,8 +139,6 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
         this.player.prop('crossOrigin', 'anonymous');
     }
 
-    this.initPlayer();
-
     $('body').addClass('has-video-player');
 };
 
@@ -148,6 +146,8 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
  * decorate and render
  */
 Gui.Window.View.VideoPlayer.prototype.render = function () {
+
+    this.initPlayer();
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 
@@ -561,7 +561,7 @@ Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
     } else if (this.data.isTv) {
 
         now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.data.sourceModel.getCurrentBroadcast();
+        broadcast = this.getData('current_broadcast');
         if (broadcast) {
             percentage = 100 - (
                 100 * (
@@ -606,7 +606,7 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
         );
         duration = helper.getDurationAsString(duration, true);
     } else {
-        broadcast = this.data.sourceModel.getCurrentBroadcast();
+        broadcast = this.getData('current_broadcast');
         start = helper.getTimeString(broadcast.getData('start_date'));
         end = helper.getTimeString(broadcast.getData('end_date'));
         duration = helper.getDurationAsString(broadcast.getData('duration'), true);
@@ -673,7 +673,7 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
             time = this.getData('startTime') + this.video.currentTime;
         } else {
             now = parseInt(new Date().getTime() / 1000, 10);
-            broadcast = this.data.sourceModel.getCurrentBroadcast();
+            broadcast = this.getData('current_broadcast');
             if (broadcast) {
                 time = now - broadcast.getData('start_time');
             } else {
@@ -754,7 +754,7 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
             clearTimeout(this.changeTitleTimeout);
         }
 
-        broadcast = sourceModel.getCurrentBroadcast();
+        broadcast = this.getData('current_broadcast');
         if (broadcast) {
             this.title.text(broadcast.getData('title'));
             if ('' !== broadcast.getData('short_text')) {

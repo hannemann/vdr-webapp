@@ -135,7 +135,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
         .setUrl(from)
         .load({
             "url" : 'broadcastsHourly',
-            "callback" : $.proxy(this.processCollection, this)
+            "callback": this.processCollection.bind(this)
         });
 };
 
@@ -143,9 +143,8 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
  * retrieve Broadcast models from point of time
  * @param {Date} from - Date object start
  * @param {Date} [to] - Date object end
- * @param {Boolean} [async] - load asynchronous
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to, async) {
+VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to) {
 
     var
         /** @type {VDRest.Epg.Model.Channels.Channel.Broadcast[]} */
@@ -161,11 +160,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to, asyn
         l=this.collection.length,
 
         /** @type {VDRest.Epg.Model.Channels.Channel.Broadcast} */
-        broadcast,
-
-        data;
-
-    async = async !== false;
+        broadcast;
 
     from = from && from instanceof Date ? from : this.getFromDate();
     lastEndTime = from;
@@ -194,26 +189,12 @@ VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to, asyn
     // load additional broadcasts if last match starts before endtime exceeds
     if (lastEndTime < to) {
 
-        data = {
-            "url" : 'broadcastsHourly',
-            "async" : async
-        };
-
-        if (async) {
-            data.callback = $.proxy(this.processCollection, this);
-        }
-
-        data = this.getResource()
+        this.getResource()
             .setUrl(lastEndTime, to)
-            .load(data);
-
-        if (!async) {
-
-            if (data.responseJSON && data.responseJSON[this.resultCollection]) {
-                this.processCollection(data.responseJSON);
-                this.triggerCollectionLoaded();
-            }
-        }
+            .load({
+                "url": 'broadcastsHourly',
+                "callback": this.processCollection.bind(this)
+            });
     } else {
 
         this.currentResult = collection;
@@ -236,44 +217,36 @@ VDRest.Epg.Model.Channels.Channel.prototype.getAllRemaining = function () {
         .setUrl(from, 0)
         .load({
             "url" : 'broadcastsHourly',
-            "callback" : $.proxy(this.processCollection, this)
+            "callback": this.processCollection.bind(this)
         });
 };
 
 /**
  * fetch all remaining events
- * @param {Boolean} [async]
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getOneDay = function (async) {
+VDRest.Epg.Model.Channels.Channel.prototype.getOneDay = function () {
 
     var from = this.collection.length > 0
         ? this.collection[this.collection.length-1].data.end_date
         : this.getFromDate();
 
-    async = "undefined" === typeof async ? true : async;
-
     this.getResource()
         .setUrl(from, new Date(from.getTime() + 1000 * 60 * 60 * 24))
         .load({
-            "async" : async,
             "url" : 'broadcastsHourly',
-            "callback" : $.proxy(this.processCollection, this)
+            "callback": this.processCollection.bind(this)
         });
 };
 
 /**
  * fetch all remaining events
- * @param {Boolean} [async]
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getCurrent = function (async) {
-
-    async = "undefined" === typeof async ? true : async;
+VDRest.Epg.Model.Channels.Channel.prototype.getCurrent = function () {
 
     this.getResource()
         .load({
-            "async" : async,
             "url" : 'current',
-            "callback" : $.proxy(this.processCollection, this)
+            "callback": this.processCollection.bind(this)
         });
 };
 
@@ -303,9 +276,10 @@ VDRest.Epg.Model.Channels.Channel.prototype.getStreamUrl = function (streamdevPa
 
 /**
  * retrieve current broadcast
+ * @param {Function} callback
  * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast|Boolean}
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function () {
+VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function (callback) {
 
     var i = 0, l = this.collection.length, cur,
         d=new Date(),
@@ -315,22 +289,28 @@ VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function () {
     if (l > 0 && (this.collection[l-1].getData('end_time') <= now || this.collection[0].getData('start_time') > now)) {
 
         end = new Date(this.collection[0].getData('start_date').getTime() - 1);
-        this.getByTime(d, end, false);
-        l = this.collection.length;
     } else if (l === 0) {
         end = new Date(Date.now() + 3600 * 6 * 1000);
-        this.getByTime(d, end, false);
+    }
+
+    $(window).one('broadcastsloaded-' + this.getData('channel_id'), function () {
+
+        var found = false;
         l = this.collection.length;
-    }
+        for (i; i < l; i++) {
+            cur = this.collection[i];
 
-    for (i;i<l;i++) {
-        cur = this.collection[i];
-
-        if (cur.getData('start_time') <= now && cur.getData('end_time') >= now) {
-            return cur;
+            if (cur.getData('start_time') <= now && cur.getData('end_time') >= now) {
+                found = true;
+                callback(cur);
+            }
         }
-    }
-    return false;
+        if (!found) {
+            callback(false);
+        }
+    }.bind(this));
+
+    this.getByTime(d, end);
 };
 
 /**

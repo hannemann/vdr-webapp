@@ -75,9 +75,7 @@ VDRest.Api.Resource.prototype.load = function (options) {
 
         method = options.method || 'GET',
 
-        callback = options.callback || undefined,
-
-        async = options.async !== false;
+        callback = options.callback || undefined;
 
     if (this.locationIsSecure() && !this.requestIsSecure()) {
 
@@ -116,16 +114,6 @@ VDRest.Api.Resource.prototype.load = function (options) {
             request.data = options.data;
         }
 
-        if (!async) {
-
-            return this.fetchSync(request, callback);
-        }
-
-        if (VDRest.config.getItem('useSlowServerStrategy')) {
-
-            request.async = false;
-        }
-
         this.fetchAsync(request, callback);
     }
 };
@@ -162,42 +150,6 @@ VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
 
             me.onComplete.apply(me, arguments)
         });
-};
-
-/**
- * fetch data synchronous, return data and fire callback if requested
- * @returns {{}|boolean}
- */
-VDRest.Api.Resource.prototype.fetchSync = function (request, callback) {
-
-    var data;
-
-    if (!this.noThrobber) {
-
-        $.event.trigger({
-            "type": "showThrobber"
-        });
-    }
-
-    request.async = false;
-
-    data = $.ajax(request);
-
-    this.onComplete(data);
-
-    if (data.readyState === 4 && data.status === 200) {
-
-        this.responseCache[request.url] = data;
-        "function" === typeof callback && callback(data);
-
-        return data;
-
-    } else {
-
-        this.onError(data);
-
-        return false;
-    }
 };
 
 /**

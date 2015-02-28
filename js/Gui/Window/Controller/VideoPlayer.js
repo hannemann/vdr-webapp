@@ -24,8 +24,6 @@ Gui.Window.Controller.VideoPlayer.prototype.noTimeUpdateWorkaround = true;
  */
 Gui.Window.Controller.VideoPlayer.prototype.init = function () {
 
-    var now, broadcast;
-
     this.module.setVideoPlayer(this);
     this.eventPrefix = 'window.videoplayer';
     this.data.isTv = false;
@@ -35,16 +33,6 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.data.progress = '0:00:00';
     this.settingParams = false;
     this.spooling = false;
-
-    if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
-
-        this.data.isTv = true;
-        now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.data.sourceModel.getCurrentBroadcast();
-        this.data.startTime = now - broadcast.getData('start_time');
-    } else {
-        this.data.isVideo = true;
-    }
 
     this.view = this.module.getView('VideoPlayer', this.data);
 
@@ -60,13 +48,29 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 
-    VDRest.app.getModule('Gui.Epg').mute();
+    var callback = function () {
 
-    this.addObserver();
+        VDRest.app.getModule('Gui.Epg').mute();
 
-    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+        Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
+        this.addObserver();
+
+        this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
+    }.bind(this);
+
+    if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
+
+        this.data.isTv = true;
+        this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
+            this.view.setData('current_broadcast', broadcast);
+            this.data.startTime = parseInt(Date.now() / 1000, 10) - broadcast.getData('start_time');
+            callback();
+        }.bind(this));
+    } else {
+        this.data.isVideo = true;
+        callback();
+    }
 };
 
 /**
@@ -76,20 +80,20 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
 
     var helper = this.helper();
 
-    this.view.volumeWrapper.on('mousedown touchstart', $.proxy(this.volumeDown, this));
+    this.view.volumeWrapper.on('mousedown touchstart', this.volumeDown.bind(this));
     this.view.volumeWrapper.on('click', helper.stopPropagation);
-    this.view.sizeSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
-    this.view.bitrateSelect.on('mousedown touchstart', $.proxy(this.qualitySelectDown, this));
-    this.view.controls.on('click.'+this.keyInCache, $.proxy(this.toggleControls, this));
-    this.view.ctrlQuality.on('click.'+this.keyInCache, $.proxy(this.toggleQuality, this));
-    this.view.ctrlStop.on('click.'+this.keyInCache, $.proxy(this.stopPlayback, this));
-    this.view.ctrlPlay.on('click.'+this.keyInCache, $.proxy(this.togglePlayback, this));
-    this.view.ctrlFullScreen.on('click.'+this.keyInCache, $.proxy(this.toggleFullScreen, this));
-    this.view.ctrlMinimize.on('click.'+this.keyInCache, $.proxy(this.toggleMinimize, this));
+    this.view.sizeSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
+    this.view.bitrateSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
+    this.view.controls.on('click.' + this.keyInCache, this.toggleControls.bind(this));
+    this.view.ctrlQuality.on('click.' + this.keyInCache, this.toggleQuality.bind(this));
+    this.view.ctrlStop.on('click.' + this.keyInCache, this.stopPlayback.bind(this));
+    this.view.ctrlPlay.on('click.' + this.keyInCache, this.togglePlayback.bind(this));
+    this.view.ctrlFullScreen.on('click.' + this.keyInCache, this.toggleFullScreen.bind(this));
+    this.view.ctrlMinimize.on('click.' + this.keyInCache, this.toggleMinimize.bind(this));
     if (!this.noTimeUpdateWorkaround) {
-        this.view.player.on('timeupdate', $.proxy(this.view.updateProgress, this.view));
+        this.view.player.on('timeupdate', this.view.updateProgress.bind(this.view));
     }
-    this.view.player.on('stalled', $.proxy(this.handleStalled, this));
+    this.view.player.on('stalled', this.handleStalled.bind(this));
     this.addOsdObserver();
     this.addDownloadEvent();
 
@@ -98,7 +102,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
     } else {
         $(this.view.player).one(
             'playing',
-            $.proxy(this.view.updateRecordingStartEndTime, this.view)
+            this.view.updateRecordingStartEndTime.bind(this.view)
         );
     }
 };
@@ -108,8 +112,8 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.addZappObserver = function () {
 
-    this.view.ctrlChannelUp.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
-    this.view.ctrlChannelDown.on('click.'+this.keyInCache, $.proxy(this.changeSrc, this));
+    this.view.ctrlChannelUp.on('click.' + this.keyInCache, this.changeSrc.bind(this));
+    this.view.ctrlChannelDown.on('click.' + this.keyInCache, this.changeSrc.bind(this));
 };
 
 /**
@@ -117,8 +121,8 @@ Gui.Window.Controller.VideoPlayer.prototype.addZappObserver = function () {
  */
 Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
 
-    this.view.osd.on('mouseup touchend', $.proxy(this.toggleControls, this));
-    this.view.osd.on('touchstart mousedown', $.proxy(this.setTimeDown, this));
+    this.view.osd.on('mouseup touchend', this.toggleControls.bind(this));
+    this.view.osd.on('touchstart mousedown', this.setTimeDown.bind(this));
 };
 
 /**
@@ -127,7 +131,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
 Gui.Window.Controller.VideoPlayer.prototype.addDownloadEvent = function () {
 
     if ("undefined" !== typeof this.view.ctrlDownload) {
-        this.view.ctrlDownload.on('click', $.proxy(this.startDownload, this));
+        this.view.ctrlDownload.on('click', this.startDownload.bind(this));
     }
 };
 
@@ -183,6 +187,15 @@ Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
  * @param {jQuery.Event} e
  */
 Gui.Window.Controller.VideoPlayer.prototype.toggleControls = function (e) {
+
+    if (this.oldChannelId && this.oldChannelId !== this.data.sourceModel.getData('channel_id')) {
+        this.data.sourceModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', this.oldChannelId);
+        this.oldChannelId = undefined;
+        this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
+            this.view.setData('current_broadcast', broadcast);
+            this.view.initOsd();
+        }.bind(this));
+    }
 
     if ("undefined" === typeof this.stopToggleControls) {
 
@@ -316,8 +329,8 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
     }
     this.qualityDelta = 0;
 
-    $(document).on('mousemove.qualityselect touchmove.qualitySelect', $.proxy(this.qualitySelectMove, this));
-    $(document).one('mouseup.qualitySelect touchend.qualitySelect', $.proxy(this.qualitySelectUp, this));
+    $(document).on('mousemove.qualityselect touchmove.qualitySelect', this.qualitySelectMove.bind(this));
+    $(document).one('mouseup.qualitySelect touchend.qualitySelect', this.qualitySelectUp.bind(this));
 };
 
 /**
@@ -409,7 +422,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
 
     e.stopPropagation();
     e.preventDefault();
-    $(document).one('mouseup.videoplayer-volume touchend.videoplayer-volume', $.proxy(this.volumeUp, this));
+    $(document).one('mouseup.videoplayer-volume touchend.videoplayer-volume', this.volumeUp.bind(this));
 
     this.view.stopHideControls();
     if ('touchstart' === e.type) {
@@ -419,13 +432,13 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
     }
     $(document).on(
         'mousemove.videoplayer-volume touchmove.videoplayer-volume',
-        $.proxy(this.volumeMove, this)
+        this.volumeMove.bind(this)
     );
     this.isAllowedUpdateVolume = false;
-    this.view.volumeIndicator.on(this.transitionEndEvents, $.proxy(function () {
+    this.view.volumeIndicator.on(this.transitionEndEvents, function () {
         this.view.volumeIndicator.off(this.transitionEndEvents);
         this.isAllowedUpdateVolume = true;
-    }, this));
+    }.bind(this));
     this.view.toggleVolumeIndicator(true);
     this.view.toggleVolumeSliderActiveState();
     this.vibrate();
@@ -500,7 +513,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     e.stopPropagation();
     e.preventDefault();
 
-    this.spoolTimeout = setTimeout($.proxy(this.spool, this), 2000);
+    this.spoolTimeout = setTimeout(this.spool.bind(this), 2000);
 
     this.view.stopHideControls();
     if (this.isPlaying) {
@@ -509,13 +522,13 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
     this.settingParams = true;
     if ('touchstart' === e.type) {
         this.timelineSlidePos = e.originalEvent.changedTouches[0].pageX;
-        $(document).one('touchend.videoplayer-time', $.proxy(this.setTimeUp, this));
+        $(document).one('touchend.videoplayer-time', this.setTimeUp.bind(this));
     } else {
         this.timelineSlidePos = e.pageX;
-        $(document).one('mouseup.videoplayer-time', $.proxy(this.setTimeUp, this));
+        $(document).one('mouseup.videoplayer-time', this.setTimeUp.bind(this));
     }
     this.timelineDownPos = this.timelineSlidePos;
-    $(document).on('mousemove.videoplayer-time touchmove.videoplayer-time', $.proxy(this.setTimeMove, this));
+    $(document).on('mousemove.videoplayer-time touchmove.videoplayer-time', this.setTimeMove.bind(this));
     this.view.toggleTimeLineActiveState();
     this.vibrate();
 };
@@ -710,7 +723,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
     video.src = src;
     video.play();
 
-    $(video).one('playing', $.proxy(function () {
+    $(video).one('playing', function () {
         this.view.toggleThrobber();
         if (this.data.isVideo) {
             this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
@@ -723,7 +736,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
                 me.view.updateProgress(me.data.isVideo ? me.data.startTime : undefined);
             }, 1000);
         }
-    }, this));
+    }.bind(this));
 };
 
 /**
@@ -812,7 +825,16 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
  */
 Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 
-    var channels, getter, nextChannel, video = this.getVideo(), now, broadcast;
+    var channels, getter, nextChannel, video = this.getVideo(),
+        callback = function () {
+
+            this.view.updateRecordingEndTime(false);
+
+            this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
+            this.removeOsdObserver();
+            this.view.initOsd();
+            this.addOsdObserver();
+        }.bind(this);
 
     if (e instanceof jQuery.Event) {
         e.preventDefault();
@@ -857,20 +879,20 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
     }
 
     if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
-        now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.data.sourceModel.getCurrentBroadcast();
-        if (broadcast) {
-            this.setIsTv();
-            this.removeDownloadEvent();
-            this.view.removeDownloadButton();
-            this.view.addChannelButtons();
-            this.removeZappObserver();
-            this.addZappObserver();
-            this.data.startTime = now - broadcast.getData('start_time');
-            this.view.setData('startTime', this.data.startTime);
-        } else {
-            return;
-        }
+        this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
+            if (broadcast) {
+                this.view.setData('current_broadcast', broadcast);
+                this.setIsTv();
+                this.removeDownloadEvent();
+                this.view.removeDownloadButton();
+                this.view.addChannelButtons();
+                this.removeZappObserver();
+                this.addZappObserver();
+                this.data.startTime = parseInt(Date.now() / 1000, 10) - broadcast.getData('start_time');
+                this.view.setData('startTime', this.data.startTime);
+                callback();
+            }
+        }.bind(this));
     } else if (this.data.sourceModel instanceof VDRest.Recordings.Model.List.Recording) {
 
         this.setIsVideo();
@@ -882,17 +904,10 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
         this.addDownloadEvent();
         $(video).one(
             'playing',
-            $.proxy(this.view.updateRecordingStartEndTime, this.view)
+            this.view.updateRecordingStartEndTime.bind(this.view)
         );
-    } else {
-        return;
+        callback();
     }
-    this.view.updateRecordingEndTime(false);
-
-    this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
-    this.removeOsdObserver();
-    this.view.initOsd();
-    this.addOsdObserver();
 };
 
 /**

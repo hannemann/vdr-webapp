@@ -211,7 +211,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "showRadio"             :   "false",
     "channelLimit"          :   "100",
     "startChannel"          :   "1",
-    "useSlowServerStrategy" :   "true",
+    "useSlowServerStrategy": "false",
     "loadAllChannelsInitially": "false",
     "useHtmlPlayer"         :   "false",
     "defaultSorting"        :   "dateDesc",
@@ -383,7 +383,7 @@ VDRest.Lib.Config.prototype.fields = {
     "useSlowServerStrategy": {
         "category": "server",
         "type": "boolean",
-        "label": "Load synced",
+        "label": "Load synced (deprecated)",
         "info": "Loads data synchronized to not burn slow CPU\'s"
     },
     "osdDelay"              :   {
