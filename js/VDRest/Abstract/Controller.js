@@ -29,6 +29,19 @@ VDRest.Abstract.Controller.prototype.transitionEndEvents =
  */
 VDRest.Abstract.Controller.prototype.dispatchView = function () {
 
+    if (VDRest.config.getItem('debug') && this.view.node) {
+
+        if (VDRest.helper.isTouchDevice) {
+            this.view.node.on('touchstart', function () {
+                VDRest.helper.log(this);
+            }.bind(this));
+        } else {
+            this.view.node.on('click', function () {
+                VDRest.helper.log(this);
+            }.bind(this));
+        }
+    }
+
     this.view.render();
 };
 
