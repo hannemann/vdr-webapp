@@ -23,14 +23,14 @@ Gui.Database.Controller.List.Item.prototype.init = function () {
     this.view = this.module.getView('List.' + this.data.type, this.data);
 
     this.view.setParentView(this.data.parent.view);
+
+    this.hiddenInfo = true;
 };
 
 /**
  * dispatch view
  */
 Gui.Database.Controller.List.Item.prototype.dispatchView = function () {
-
-    //this.helper().log(this.data);
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
@@ -53,6 +53,17 @@ Gui.Database.Controller.List.Item.prototype.removeObserver = function () {
     this.view.node.off('click');
 };
 
+
+Gui.Database.Controller.List.Item.prototype.addCloneObserver = function () {
+    this.clone.find('.ctrl-button.info').on('click', this.handleInfo.bind(this));
+    this.clone.find('.ctrl-button.play').on('click', this.handlePlay.bind(this));
+};
+
+Gui.Database.Controller.List.Item.prototype.removeCloneObserver = function () {
+    this.clone.find('.ctrl-button.info').off('click');
+    this.clone.find('.ctrl-button.play').off('click');
+};
+
 /**
  * handle click event
  */
@@ -62,6 +73,43 @@ Gui.Database.Controller.List.Item.prototype.handleClick = function () {
 
     VDRest.app.saveHistoryState('hashChanged', this.removeItem.bind(this), 'DatabaseList~DisplayItem');
     this.displayItem();
+};
+
+/**
+ * handle click event
+ */
+Gui.Database.Controller.List.Item.prototype.handleInfo = function () {
+
+    this.vibrate();
+
+    this[(this.hiddenInfo ? 'show' : 'hide') + 'Info']();
+    this.hiddenInfo = !this.hiddenInfo;
+};
+
+Gui.Database.Controller.List.Item.prototype.showInfo = function () {
+
+    this.clone.one(this.transitionEndEvent, function () {
+        this.clone.toggleClass('hidden-info-area', false);
+    }.bind(this));
+
+    this.clone.toggleClass('hidden-overview', true);
+};
+
+Gui.Database.Controller.List.Item.prototype.hideInfo = function () {
+
+    this.clone.one(this.transitionEndEvent, function () {
+        this.clone.toggleClass('hidden-overview', false);
+    }.bind(this));
+
+    this.clone.toggleClass('hidden-info-area', true);
+};
+
+/**
+ * handle click event
+ */
+Gui.Database.Controller.List.Item.prototype.handlePlay = function () {
+
+    this.vibrate();
 };
 
 /**
@@ -76,7 +124,11 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
         delta = {
             "x": ((parent.currentActive - 1) - index) * parent.scroller.tiles.getTileWidth(),
             "y": 0
-        };
+        },
+        hideScroller = function () {
+            this.addScrollerHiddenEvent();
+            parent.hideScroller();
+        }.bind(this);
 
     this.clone = this.view.node.clone();
     this.clone.find('.poster').css({"transform": ""});
@@ -87,20 +139,21 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
     if (delta.x != 0) {
         $(parent.scroller.slider.elem).one(this.transitionEndEvent, function () {
             setTimeout(function () {
-                this.addScrollerHiddenEvent();
-                parent.hideScroller();
+                hideScroller();
             }.bind(this), 20);
         }.bind(this));
 
         parent.scroller.slider.translate(delta);
     } else {
-        this.addScrollerHiddenEvent();
-        parent.hideScroller();
+        hideScroller();
     }
 
     return this;
 };
 
+/**
+ * add event scroller hidden animation is ready
+ */
 Gui.Database.Controller.List.Item.prototype.addScrollerHiddenEvent = function () {
 
     this.getData('parent').window.view.body.one(this.transitionEndEvent, function () {
@@ -116,6 +169,7 @@ Gui.Database.Controller.List.Item.prototype.addClone = function () {
     this.clone.appendTo('body');
     setTimeout(function () {
         this.clone.toggleClass('hidden show');
+        this.addCloneObserver();
     }.bind(this), 20);
 };
 
@@ -125,9 +179,13 @@ Gui.Database.Controller.List.Item.prototype.addClone = function () {
  */
 Gui.Database.Controller.List.Item.prototype.removeItem = function () {
 
+    this.hiddenInfo = true;
+    this.removeCloneObserver();
     this.clone.toggleClass('hidden show');
+    this.clone.toggleClass('hidden-info-area', true);
     this.clone.one(this.transitionEndEvent, function () {
         this.clone.remove();
+        this.clone = undefined;
         this.getData('parent').showScroller();
     }.bind(this));
 

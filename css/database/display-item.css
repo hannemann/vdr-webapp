@@ -72,6 +72,10 @@
         opacity: 1;
         overflow: hidden;
     }
+
+    .database-collection.display-item.show {
+        overflow: hidden;
+    }
     .database-collection.display-item .fanart {
         display: none;
     }
@@ -94,7 +98,7 @@
     }
 
     .database-collection.display-item .overview {
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.7);
         height: 5.2em;
         overflow: auto;
         font-size: .9em;
@@ -105,6 +109,7 @@
         bottom: 1em;
         width: calc(100% - 2em - 100px);
         padding: 0;
+        text-shadow: none;
     }
 
     .database-collection.display-item .genre,
@@ -139,21 +144,51 @@
     .database-collection.display-item .item-text.overview,
     .database-collection.display-item .rating,
     .database-collection.display-item .poster,
-    .database-collection.display-item .tagline {
+    .database-collection.display-item .tagline,
+    .database-collection.display-item .ctrl-button,
+    .database-collection.display-item .info-area {
         transition: transform .3s ease-out;
     }
 
     .database-collection.display-item.hidden .rating,
-    .database-collection.display-item.hidden .item-text.overview {
+    .database-collection.display-item.hidden-overview .rating,
+    .database-collection.display-item.hidden-overview .rating,
+    .database-collection.display-item.hidden .item-text.overview,
+    .database-collection.display-item.hidden-overview .item-text.overview,
+    .database-collection.display-item.hidden .ctrl-button {
         transform: translateX(150%);
     }
 
     .database-collection.display-item.hidden .tagline,
-    .database-collection.display-item.hidden .poster {
+    .database-collection.display-item.hidden .poster,
+    .database-collection.display-item.hidden-overview .poster {
         transform: translateX(-150%) !important;
     }
 
+    .database-collection.display-item.hidden-overview .genres,
     .database-collection.display-item.hidden .genres {
         transform: scale(0, 0);
+    }
+
+    .database-collection.display-item .ctrl-button {
+        right: 1.5%;
+    }
+
+    .database-collection.display-item .ctrl-button.info {
+        top: 3.3em;
+    }
+
+    .database-collection.display-item .ctrl-button.play {
+        top: calc(3.3em + 16px + 40px);
+        top: -webkit-calc(3.3em + 16px + 40px);
+    }
+
+    .database-collection.display-item .info-area {
+        display: block;
+        height: 100%;
+    }
+
+    .database-collection.display-item.hidden-info-area .info-area {
+        transform: translateY(100%);
     }
 }

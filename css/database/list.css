@@ -1,12 +1,6 @@
 div.window.database-list .title,
 div.window.database-list .name,
-.database-collection.display-item .name,
-.database-collection.display-item .title,
-.database-collection.display-item .tagline,
-.database-collection.display-item .genre,
-.database-collection.display-item .genres,
-.database-collection.display-item .rating,
-.database-collection.display-item .recording-title {
+.database-collection.display-item .item-text {
     text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
     3px -3px 10px rgba(0, 0, 0, 0.75),
     3px 3px 10px rgba(0, 0, 0, 0.75),

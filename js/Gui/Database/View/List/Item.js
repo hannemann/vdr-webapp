@@ -12,6 +12,19 @@ Gui.Database.View.List.Item.prototype = new VDRest.Abstract.View();
 
 Gui.Database.View.List.Item.prototype.bypassCache = true;
 
+/**
+ * @type {string}
+ */
+Gui.Database.View.List.Item.prototype.symbolPlay = 'C';
+
+/**
+ * @type {string}
+ */
+Gui.Database.View.List.Item.prototype.symbolInfo = 'i';
+
+/**
+ * initialize
+ */
 Gui.Database.View.List.Item.prototype.init = function () {
 
     this.node = $('<div class="list-item clearer" data-id="' + this.data.media.id + '">');
@@ -25,6 +38,9 @@ Gui.Database.View.List.Item.prototype.init = function () {
  * render view
  */
 Gui.Database.View.List.Item.prototype.render = function () {
+
+    this.addInfoButton()
+        .addPlayButton();
 
     VDRest.Abstract.View.prototype.render.call(this);
 };
@@ -96,5 +112,30 @@ Gui.Database.View.List.Item.prototype.addInfoArea = function () {
         .addClass('info-area')
         .appendTo(this.node);
 
+    this.node.addClass('hidden-info-area');
+    return this;
+};
+
+/**
+ * add info button
+ * @returns {Gui.Database.View.List.Item}
+ */
+Gui.Database.View.List.Item.prototype.addInfoButton = function () {
+
+    this.ctrlInfo = $(
+        '<div class="vdr-web-symbol ctrl-button info">' + this.symbolInfo + '</div>'
+    ).appendTo(this.node);
+    return this;
+};
+
+/**
+ * add playback button
+ * @returns {Gui.Database.View.List.Item}
+ */
+Gui.Database.View.List.Item.prototype.addPlayButton = function () {
+
+    this.ctrlPlay = $(
+        '<div class="vdr-web-symbol ctrl-button play">' + this.symbolPlay + '</div>'
+    ).appendTo(this.node);
     return this;
 };
