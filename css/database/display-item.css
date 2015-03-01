@@ -1,5 +1,6 @@
 
-.database-collection.display-item {
+.database-collection.display-item,
+.display-item-actors-actor.fullscreen {
     position: absolute;
     z-index: 0;
     width: 100%;
@@ -13,9 +14,11 @@
     transform: scale(.5, .5);
     background-color: rgba(0, 0, 0, 0.9);
     backface-visibility: hidden;
+    margin: 0;
 }
 
-.database-collection.display-item.show {
+.database-collection.display-item.show,
+.display-item-actors-actor.fullscreen.show {
     position: absolute;
     z-index: 1;
     opacity: 1;
@@ -44,6 +47,43 @@
     clear: left;
     padding: .9em;
 }
+
+.display-item-actors {
+    overflow: auto;
+    height: 160px;
+    font-size: .7em;
+    margin: 10px 1.5%;
+}
+
+.display-item-actors-actor {
+    width: 75px;
+    height: 160px;
+    float: left;
+    position: relative;
+    background: rgba(0, 0, 0, 0.85);
+    margin: 0 0.5%;
+    overflow: hidden;
+    text-align: center;
+}
+
+.display-item-actors-actor img {
+    height: 100px;
+}
+
+.display-item-actors-actor.fullscreen img {
+    height: calc(80% - 50px);
+    margin-top: 5%;
+}
+
+.actor-role,
+.actor-name {
+    padding: 0 1px;
+}
+
+.actor-role {
+    font-style: italic;
+}
+
 @media (orientation: portrait) {
 
     .database-collection.display-item {

@@ -178,7 +178,6 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
 
     this.clone.toggleClass('database-collection display-item hidden list-item ' + typeClassName);
 
-
     if (delta.x != 0) {
         $(parent.scroller.slider.elem).one(this.transitionEndEvent, function () {
             setTimeout(function () {
@@ -211,9 +210,24 @@ Gui.Database.Controller.List.Item.prototype.addClone = function () {
 
     this.clone.appendTo('body');
     setTimeout(function () {
+        this.addActors();
         this.clone.toggleClass('hidden show');
         this.addCloneObserver();
     }.bind(this), 20);
+};
+
+Gui.Database.Controller.List.Item.prototype.addActors = function () {
+
+    this.actors = this.module.getController('List.Item.Actors', {
+        "media": this.getData('media').getData(),
+        "parent": {
+            "view": {
+                "node": this.clone.find('.info-area')
+            }
+        }
+    });
+
+    this.actors.dispatchView();
 };
 
 /**
