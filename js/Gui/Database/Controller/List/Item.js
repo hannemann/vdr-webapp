@@ -53,12 +53,17 @@ Gui.Database.Controller.List.Item.prototype.removeObserver = function () {
     this.view.node.off('click');
 };
 
-
+/**
+ * add observers to clone
+ */
 Gui.Database.Controller.List.Item.prototype.addCloneObserver = function () {
     this.clone.find('.ctrl-button.info').on('click', this.handleInfo.bind(this));
     this.clone.find('.ctrl-button.play').on('click', this.handlePlay.bind(this));
 };
 
+/**
+ * remove observers from clone
+ */
 Gui.Database.Controller.List.Item.prototype.removeCloneObserver = function () {
     this.clone.find('.ctrl-button.info').off('click');
     this.clone.find('.ctrl-button.play').off('click');
@@ -76,16 +81,23 @@ Gui.Database.Controller.List.Item.prototype.handleClick = function () {
 };
 
 /**
- * handle click event
+ * handle info event
  */
 Gui.Database.Controller.List.Item.prototype.handleInfo = function () {
 
     this.vibrate();
 
-    this[(this.hiddenInfo ? 'show' : 'hide') + 'Info']();
+    if (this.hiddenInfo) {
+        this.showInfo();
+    } else {
+        this.hideInfo();
+    }
     this.hiddenInfo = !this.hiddenInfo;
 };
 
+/**
+ * reveal info area
+ */
 Gui.Database.Controller.List.Item.prototype.showInfo = function () {
 
     this.clone.one(this.transitionEndEvent, function () {
@@ -95,6 +107,9 @@ Gui.Database.Controller.List.Item.prototype.showInfo = function () {
     this.clone.toggleClass('hidden-overview', true);
 };
 
+/**
+ * hide info area
+ */
 Gui.Database.Controller.List.Item.prototype.hideInfo = function () {
 
     this.clone.one(this.transitionEndEvent, function () {
@@ -105,11 +120,39 @@ Gui.Database.Controller.List.Item.prototype.hideInfo = function () {
 };
 
 /**
- * handle click event
+ * handle play event
  */
 Gui.Database.Controller.List.Item.prototype.handlePlay = function () {
 
+    var number = this.data.media.data.recording_number;
+
     this.vibrate();
+
+    VDRest.app.getModule('VDRest.Recordings').loadModel('List.Recording', number, function (recording) {
+
+        this.startStream(recording);
+    }.bind(this))
+};
+
+/**
+ * start streaming
+ */
+Gui.Database.Controller.List.Item.prototype.startStream = function (recording) {
+
+    if (VDRest.info.canUseHtmlPlayer() && VDRest.info.canRemuxRecordings()) {
+
+        $.event.trigger({
+            "type": "window.request",
+            "payload": {
+                "type": "VideoPlayer",
+                "data": {
+                    "sourceModel": recording
+                }
+            }
+        });
+    } else {
+        window.location.href = recording.getStreamUrl();
+    }
 };
 
 /**

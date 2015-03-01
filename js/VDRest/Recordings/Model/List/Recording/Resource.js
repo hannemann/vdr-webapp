@@ -131,6 +131,17 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.moveRecording = functi
 };
 
 /**
+ * set url needed to load single recording
+ * @param {Number} recording
+ * @returns {VDRest.Recordings.Model.List.Recording.Resource}
+ */
+VDRest.Recordings.Model.List.Recording.Resource.prototype.setIdUrl = function (recording) {
+
+    this.urls.byId = 'recordings.json?start=' + recording + '&limit=1';
+
+    return this;
+};
+/**
  * fetch cutting marks of specific recording
  * @param recording
  */
