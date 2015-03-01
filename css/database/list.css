@@ -78,17 +78,17 @@ div.window.database-list .name,
 
     div.window.database-list .title,
     div.window.database-list .name,
-    .database-collection.display-item .title,
-    .database-collection.display-item .name {
+    .database-collection.display-item .item-text.title,
+    .database-collection.display-item .item-text.name {
         font-size: 2.5em;
         z-index: 1;
     }
 
     div.window.database-list .title,
     div.window.database-list .name,
-    .database-collection.display-item .title,
-    .database-collection.display-item .name,
-    .database-collection.display-item .recording-title {
+    .database-collection.display-item .item-text.title,
+    .database-collection.display-item .item-text.name,
+    .database-collection.display-item .item-text.recording-title {
         padding: 0 1.5%;
         position: relative;
     }

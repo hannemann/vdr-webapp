@@ -88,7 +88,7 @@ Gui.Database.Controller.List.prototype.dispatchItem = function (item) {
 
     this.module.getController(
         'List.' + sing,
-        {"parent": this, "media": item, "type": sing}
+        {"parent": this, "media": item, "type": sing, "index": this.tiles.length}
     ).dispatchView();
     this.tiles.push(this.view.node[0].lastChild);
     this.view.setWidth(parseInt(this.view.node[0].style.width, 10) + this.sliderTileWidth);

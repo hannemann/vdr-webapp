@@ -59,34 +59,44 @@ Gui.Database.Controller.List.Item.prototype.removeObserver = function () {
 Gui.Database.Controller.List.Item.prototype.handleClick = function () {
 
     this.vibrate();
-    VDRest.app.addDestroyer('hashChanged', this.removeItem.bind(this));
-    VDRest.app.observe();
-    VDRest.app.setLocationHash('DatabaseList~DisplayItem');
+
+    VDRest.app.saveHistoryState('hashChanged', this.removeItem.bind(this), 'DatabaseList~DisplayItem');
     this.displayItem();
 };
 
 /**
  * toggle display of single item on
- * @returns {Gui.Database.Controller.List.Movie}
+ * @returns {Gui.Database.Controller.List.Item}
  */
 Gui.Database.Controller.List.Item.prototype.displayItem = function () {
 
-    var typeClassName = this.data.type.toLowerCase() + 's';
+    var typeClassName = this.data.type.toLowerCase() + 's',
+        parent = this.getData('parent'),
+        index = this.getData('index'),
+        delta = {
+            "x": ((parent.currentActive - 1) - index) * parent.scroller.tiles.getTileWidth(),
+            "y": 0
+        };
 
     this.clone = this.view.node.clone();
 
     this.clone.toggleClass('database-collection display-item hidden list-item ' + typeClassName);
     this.clone.appendTo('body');
-    setTimeout(function () {
-        this.clone.toggleClass('hidden show');
-    }.bind(this), 20);
+
+    $(window).one(this.transitionEndEvent + '.index' + index, function () {
+        setTimeout(function () {
+            this.clone.toggleClass('hidden show');
+        }.bind(this), 20);
+    }.bind(this));
+
+    parent.scroller.slider.translate(delta);
 
     return this;
 };
 
 /**
  * toggle display of single item off
- * @returns {Gui.Database.Controller.List.Movie}
+ * @returns {Gui.Database.Controller.List.Item}
  */
 Gui.Database.Controller.List.Item.prototype.removeItem = function () {
 

@@ -24,11 +24,28 @@ Gui.Database.View.List.Movie.prototype.render = function () {
         .addText('overview', this.data.media.getText('overview'))
     ;
 
+    this.addInfoArea();
+
+    this.addText('runtime', this.data.media.getText('runtime'), 'Runtime', 'minutes', this.info)
+        .addText('original-title', this.data.media.getText('original_title'), 'Original title', null, this.info)
+        .addText('budget', this.data.media.getText('budget'), 'Budget', null, this.info)
+        .addText('revenue', this.data.media.getText('revenue'), 'Revenue', null, this.info);
+
     if (this.data.media.getText('title') !== this.data.media.getText('recording_title')) {
-        this.addText('recording-title', VDRest.app.translate('Recording title') + ': ' + this.data.media.getText('recording_title'));
+        this.addText('recording-title', this.data.media.getText('recording_title'), 'Recording title', null, this.info);
     }
 
-    VDRest.Abstract.View.prototype.render.call(this);
+    this.addText(
+        'recording-date',
+        VDRest.helper.getDateTimeString(
+            new Date(
+                parseInt(this.data.media.getData('recording_date'), 10) * 1000
+            ),
+            true
+        ),
+        'Recording date', null, this.info);
+
+    Gui.Database.View.List.Item.prototype.render.call(this);
 };
 
 /**

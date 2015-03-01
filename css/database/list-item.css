@@ -11,7 +11,13 @@
     z-index: 0;
 }
 
-.database-collection .list-item .fanart {
+.database-collection .list-item .fanart,
+.database-collection .list-item .runtime,
+.database-collection .list-item .original-title,
+.database-collection .list-item .budget,
+.database-collection .list-item .revenue,
+.database-collection .list-item .fanart,
+.database-collection .list-item .recording-date {
     display: none;
 }
 
@@ -72,4 +78,8 @@
 .database-collection span.vote-numeric {
     font-size: 10px;
     color: white;
+}
+
+.database-collection .info-area {
+    display: none;
 }

@@ -22,17 +22,39 @@ Gui.Database.View.List.Item.prototype.init = function () {
 };
 
 /**
+ * render view
+ */
+Gui.Database.View.List.Item.prototype.render = function () {
+
+    VDRest.Abstract.View.prototype.render.call(this);
+};
+
+/**
  * add text
  * @param {String} type
  * @param {String} text
+ * @param {String} [prefix]
+ * @param {String} [suffix]
+ * @param {jQuery} [wrapper]
  * @returns {Gui.Database.View.List.Item}
  */
-Gui.Database.View.List.Item.prototype.addText = function (type, text) {
+Gui.Database.View.List.Item.prototype.addText = function (type, text, prefix, suffix, wrapper) {
+
+    wrapper = wrapper || this.node;
 
     if (text) {
+
+        if (prefix) {
+            text = VDRest.app.translate(prefix) + ': ' + text;
+        }
+
+        if (suffix) {
+            text += ' ' + VDRest.app.translate(suffix);
+        }
+
         this[type] = $('<div>').html(text);
 
-        this[type].addClass(type).appendTo(this.node);
+        this[type].addClass(type + ' item-text').appendTo(wrapper);
     }
 
     return this;
@@ -60,6 +82,19 @@ Gui.Database.View.List.Item.prototype.addRating = function (rating) {
 
         this.voteAverage.addClass('rating').appendTo(this.node);
     }
+
+    return this;
+};
+
+/**
+ * add info area
+ * @returns {Gui.Database.View.List.Item}
+ */
+Gui.Database.View.List.Item.prototype.addInfoArea = function () {
+
+    this.info = $('<div>')
+        .addClass('info-area')
+        .appendTo(this.node);
 
     return this;
 };

@@ -88,12 +88,16 @@ VDRest.Abstract.Controller.prototype.transitionEndEvent = function () {
         return 'webkittransitionend';
     }
 
+    if ('onmoztransitionend' in window) {
+        return 'moztransitionend';
+    }
+
     if ('onotransitionend' in window) {
         return 'otransitionend'
     }
 
     if ('onmstransitionend' in window) {
-        return 'otransitionend'
+        return 'mstransitionend'
     }
 
 }();

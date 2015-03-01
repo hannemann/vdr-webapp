@@ -24,7 +24,7 @@ Gui.Database.View.List.Show.prototype.render = function () {
         .addText('overview', this.data.media.getText('overview'))
     ;
 
-    VDRest.Abstract.View.prototype.render.call(this);
+    Gui.Database.View.List.Item.prototype.render.call(this);
 };
 
 /**

@@ -36,15 +36,23 @@
     margin: 0 0.6em 0;
 }
 
+.database-collection.display-item .item-text {
+    font-weight: bold;
+}
+
 .database-collection.display-item .overview {
     clear: left;
-    font-size: 14px;
     padding: .9em;
 }
 @media (orientation: portrait) {
 
     .database-collection.display-item {
         top: 50px;
+    }
+
+    .database-collection.display-item .item-text {
+        font-size: 14px;
+        padding: 0 .9em;
     }
 
     .database-collection.display-item .name,
