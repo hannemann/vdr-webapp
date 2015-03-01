@@ -79,19 +79,44 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
         };
 
     this.clone = this.view.node.clone();
+    this.clone.find('.poster').css({"transform": ""});
 
     this.clone.toggleClass('database-collection display-item hidden list-item ' + typeClassName);
-    this.clone.appendTo('body');
 
-    $(window).one(this.transitionEndEvent + '.index' + index, function () {
-        setTimeout(function () {
-            this.clone.toggleClass('hidden show');
-        }.bind(this), 20);
-    }.bind(this));
 
-    parent.scroller.slider.translate(delta);
+    if (delta.x != 0) {
+        $(parent.scroller.slider.elem).one(this.transitionEndEvent, function () {
+            setTimeout(function () {
+                this.addScrollerHiddenEvent();
+                parent.hideScroller();
+            }.bind(this), 20);
+        }.bind(this));
+
+        parent.scroller.slider.translate(delta);
+    } else {
+        this.addScrollerHiddenEvent();
+        parent.hideScroller();
+    }
 
     return this;
+};
+
+Gui.Database.Controller.List.Item.prototype.addScrollerHiddenEvent = function () {
+
+    this.getData('parent').window.view.body.one(this.transitionEndEvent, function () {
+        this.addClone();
+    }.bind(this));
+};
+
+/**
+ * add clone to body
+ */
+Gui.Database.Controller.List.Item.prototype.addClone = function () {
+
+    this.clone.appendTo('body');
+    setTimeout(function () {
+        this.clone.toggleClass('hidden show');
+    }.bind(this), 20);
 };
 
 /**
@@ -101,8 +126,9 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
 Gui.Database.Controller.List.Item.prototype.removeItem = function () {
 
     this.clone.toggleClass('hidden show');
-    this.clone.one(VDRest.Abstract.Controller.prototype.transitionEndEvents, function () {
+    this.clone.one(this.transitionEndEvent, function () {
         this.clone.remove();
+        this.getData('parent').showScroller();
     }.bind(this));
 
     return this;

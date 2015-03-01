@@ -34,6 +34,7 @@ Gui.Window.View.DatabaseList.prototype.addClasses = function () {
     var classNames = ['viewport-fullsize', 'collapsed', 'database-list'];
 
     this.node.addClass(classNames.join(' '));
+    this.body.addClass('database-list-body');
     return this;
 };
 

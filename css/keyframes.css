@@ -175,6 +175,23 @@
     to {opacity: 0; }
 }
 
+@keyframes infinite-spinning {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
+@-webkit-keyframes infinite-spinning {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
 @keyframes animateCutIndicator {
     0% {opacity: .5; }
     50% {opacity: 1; }

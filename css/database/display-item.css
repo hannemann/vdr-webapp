@@ -66,14 +66,19 @@
 }
 @media (orientation: landscape) {
 
+    .database-collection.display-item {
+        background: none;
+        transform: none;
+        opacity: 1;
+        overflow: hidden;
+    }
     .database-collection.display-item .fanart {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        height: 100%;
-        margin: 0;
+        display: none;
+    }
+
+    .database-collection.display-item .title,
+    .database-collection.display-item .name {
+        opacity: 0;
     }
 
     .database-collection.display-item .poster {
@@ -102,12 +107,6 @@
         padding: 0;
     }
 
-    .database-collection.display-item .rating,
-    .database-collection.display-item .genre,
-    .database-collection.display-item .genres {
-        position: absolute;
-    }
-
     .database-collection.display-item .genre,
     .database-collection.display-item .genres {
         bottom: 6.5em;
@@ -118,5 +117,43 @@
         right: 2em;
         bottom: 8.5em;
         padding: 0;
+    }
+
+    .database-collection.display-item .item-text {
+        padding: 0 1.5%;
+        position: relative;
+    }
+
+    .database-collection.display-item .rating,
+    .database-collection.display-item .genre,
+    .database-collection.display-item .genres,
+    .database-collection.display-item .item-text.overview {
+        position: absolute;
+    }
+
+    .database-collection.display-item .item-text.overview {
+        padding: 0;
+    }
+
+    .database-collection.display-item .genres,
+    .database-collection.display-item .item-text.overview,
+    .database-collection.display-item .rating,
+    .database-collection.display-item .poster,
+    .database-collection.display-item .tagline {
+        transition: transform .3s ease-out;
+    }
+
+    .database-collection.display-item.hidden .rating,
+    .database-collection.display-item.hidden .item-text.overview {
+        transform: translateX(150%);
+    }
+
+    .database-collection.display-item.hidden .tagline,
+    .database-collection.display-item.hidden .poster {
+        transform: translateX(-150%) !important;
+    }
+
+    .database-collection.display-item.hidden .genres {
+        transform: scale(0, 0);
     }
 }

@@ -61,6 +61,14 @@ div.window.database-list .name,
     div.window.database-list {
         overflow: hidden;
     }
+
+    div.window-body.database-list-body {
+        transition: transform .2s ease-out;
+    }
+
+    div.window-body.database-list-body.hidden {
+        transform: translateY(300px);
+    }
     div.window.database-list > .fanart {
         width: 100%;
         position: absolute;

@@ -29,7 +29,7 @@ Gui.Window.Controller.DatabaseList.prototype.init = function () {
     );
 
     this.view.node.one(VDRest.Abstract.Controller.prototype.animationEndEvents, function () {
-        this.data.dispatch(this.view);
+        this.data.dispatch(this);
     }.bind(this));
 };
 

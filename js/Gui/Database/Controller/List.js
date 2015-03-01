@@ -44,12 +44,14 @@ Gui.Database.Controller.List.prototype.init = function () {
 
 /**
  * dispatch view
- * @param {Gui.Window.View.Abstract} parentView
+ * @param {Gui.Window.Controller.DatabaseList} parent
  */
-Gui.Database.Controller.List.prototype.dispatchView = function (parentView) {
+Gui.Database.Controller.List.prototype.dispatchView = function (parent) {
+
+    this.window = parent;
 
     this.view.setParentView({
-        "node": parentView.body
+        "node": parent.view.body
     });
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
@@ -248,6 +250,22 @@ Gui.Database.Controller.List.prototype.applyScroller = function () {
     });
 
     this.scrollerReady = true;
+};
+
+/**
+ * hide scroller
+ */
+Gui.Database.Controller.List.prototype.hideScroller = function () {
+
+    this.view.node[0].parentNode.classList.add('hidden');
+};
+
+/**
+ * reveal scroller
+ */
+Gui.Database.Controller.List.prototype.showScroller = function () {
+
+    this.view.node[0].parentNode.classList.remove('hidden');
 };
 
 /**

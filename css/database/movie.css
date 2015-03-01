@@ -5,13 +5,4 @@
 }
 
 @media (orientation: landscape) {
-
-    .database-collection.movies.display-item .item-text {
-        padding: 0 1.5%;
-        position: relative;
-    }
-
-    .database-collection.movies.display-item .item-text.overview {
-        position: absolute;
-    }
 }
