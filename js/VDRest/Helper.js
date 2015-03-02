@@ -456,4 +456,19 @@ VDRest.Helper.prototype.getScrollbarWidth = function () {
     return this.scrollbarWidth;
 };
 
+VDRest.Helper.prototype.getMaxScreenResolution = function (orientation) {
+
+    if ("landscape" === orientation) {
+        return {
+            "width": Math.max(screen.availHeight, screen.availWidth),
+            "height": Math.min(screen.availHeight, screen.availWidth)
+        };
+    } else {
+        return {
+            "width": Math.min(screen.availHeight, screen.availWidth),
+            "height": Math.max(screen.availHeight, screen.availWidth)
+        };
+    }
+};
+
 VDRest.helper = new VDRest.Helper();
