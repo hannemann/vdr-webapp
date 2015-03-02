@@ -85,6 +85,9 @@
 }
 
 @media (orientation: portrait) {
+    .database-collection.display-item.hidden .ctrl-button {
+        display: none;
+    }
 
     .database-collection.display-item {
         top: 50px;
@@ -216,17 +219,15 @@
     }
 
     .database-collection.display-item .ctrl-button.info {
-        top: 3.3em;
+        top: 10px;
     }
 
     .database-collection.display-item .ctrl-button.actors {
-        top: calc(3.3em + 16px + 40px);
-        top: -webkit-calc(3.3em + 16px + 40px);
+        top: 65px;
     }
 
     .database-collection.display-item .ctrl-button.play {
-        top: calc(3.3em + 16px + 40px + 16px + 40px);
-        top: -webkit-calc(3.3em + 16px + 40px + 16px + 40px);
+        top: 120px;
     }
 
     .database-collection.display-item .item-actors,
@@ -235,6 +236,18 @@
         position: absolute;
         bottom: 1.5%;
         width: calc(100% - 4.5% - 40px);
+        width: -webkit-calc(100% - 4.5% - 40px);
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+
+    .database-collection.display-item .item-info {
+        width: calc(100% - 7.5% - 40px);
+        width: -webkit-calc(100% - 7.5% - 40px);
+        margin-left: 1.5%;
+        background-color: rgba(0, 0, 0, 0.7);
+        border: .5em solid transparent;
+        border-radius: .5em;
     }
 
     .database-collection.display-item.hidden-actors .item-actors,

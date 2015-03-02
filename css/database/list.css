@@ -84,6 +84,7 @@ div.window.database-list .name,
     .database-collection.display-item .item-text.name {
         font-size: 2.5em;
         z-index: 1;
+        width: calc(100% - 3% - 40px);
     }
 
     div.window.database-list .title,
