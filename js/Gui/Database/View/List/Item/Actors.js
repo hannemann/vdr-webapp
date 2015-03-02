@@ -20,7 +20,7 @@ Gui.Database.View.List.Item.Actors.prototype.bypassCache = true;
  */
 Gui.Database.View.List.Item.Actors.prototype.init = function () {
 
-    this.node = $('<div class="display-item-actors clearer">');
+    this.node = $('<div class="item-actors clearer">');
 
     this.baseUrl = VDRest.Api.Resource.prototype.getBaseUrl();
 };

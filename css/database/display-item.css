@@ -48,7 +48,7 @@
     padding: .9em;
 }
 
-.display-item-actors {
+.item-actors {
     overflow: auto;
     height: 160px;
     font-size: .7em;
@@ -186,7 +186,8 @@
     .database-collection.display-item .poster,
     .database-collection.display-item .tagline,
     .database-collection.display-item .ctrl-button,
-    .database-collection.display-item .info-area {
+    .database-collection.display-item .item-info,
+    .database-collection.display-item .item-actors {
         transition: transform .3s ease-out;
     }
 
@@ -218,17 +219,26 @@
         top: 3.3em;
     }
 
-    .database-collection.display-item .ctrl-button.play {
+    .database-collection.display-item .ctrl-button.actors {
         top: calc(3.3em + 16px + 40px);
         top: -webkit-calc(3.3em + 16px + 40px);
     }
 
-    .database-collection.display-item .info-area {
-        display: block;
-        height: 100%;
+    .database-collection.display-item .ctrl-button.play {
+        top: calc(3.3em + 16px + 40px + 16px + 40px);
+        top: -webkit-calc(3.3em + 16px + 40px + 16px + 40px);
     }
 
-    .database-collection.display-item.hidden-info-area .info-area {
-        transform: translateY(100%);
+    .database-collection.display-item .item-actors,
+    .database-collection.display-item .item-info {
+        display: block;
+        position: absolute;
+        bottom: 1.5%;
+        width: calc(100% - 4.5% - 40px);
+    }
+
+    .database-collection.display-item.hidden-actors .item-actors,
+    .database-collection.display-item.hidden-info .item-info {
+        transform: translateY(150%);
     }
 }

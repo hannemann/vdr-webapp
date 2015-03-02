@@ -23,6 +23,11 @@ Gui.Database.View.List.Item.prototype.symbolPlay = 'C';
 Gui.Database.View.List.Item.prototype.symbolInfo = 'i';
 
 /**
+ * @type {string}
+ */
+Gui.Database.View.List.Item.prototype.symbolActors = 'h';
+
+/**
  * initialize
  */
 Gui.Database.View.List.Item.prototype.init = function () {
@@ -40,6 +45,7 @@ Gui.Database.View.List.Item.prototype.init = function () {
 Gui.Database.View.List.Item.prototype.render = function () {
 
     this.addInfoButton()
+        .addActorsButton()
         .addPlayButton();
 
     VDRest.Abstract.View.prototype.render.call(this);
@@ -109,10 +115,11 @@ Gui.Database.View.List.Item.prototype.addRating = function (rating) {
 Gui.Database.View.List.Item.prototype.addInfoArea = function () {
 
     this.info = $('<div>')
-        .addClass('info-area')
+        .addClass('item-info')
         .appendTo(this.node);
 
-    this.node.addClass('hidden-info-area');
+    this.data.areas.push('info');
+    this.node.addClass('hidden-info');
     return this;
 };
 
@@ -124,6 +131,18 @@ Gui.Database.View.List.Item.prototype.addInfoButton = function () {
 
     this.ctrlInfo = $(
         '<div class="vdr-web-symbol ctrl-button info">' + this.symbolInfo + '</div>'
+    ).appendTo(this.node);
+    return this;
+};
+
+/**
+ * add actors button
+ * @returns {Gui.Database.View.List.Item}
+ */
+Gui.Database.View.List.Item.prototype.addActorsButton = function () {
+
+    this.ctrlActors = $(
+        '<div class="vdr-web-symbol ctrl-button actors">' + this.symbolActors + '</div>'
     ).appendTo(this.node);
     return this;
 };
