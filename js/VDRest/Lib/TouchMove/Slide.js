@@ -66,7 +66,7 @@ TouchMove.Slide.prototype.hasEnded = function () {
  */
 TouchMove.Slide.prototype.start = function (e) {
 
-	this.setDimSlide();
+    this.setAxis().setDimSlide();
 	TouchMove.prototype.start.call(this, e);
 };
 
