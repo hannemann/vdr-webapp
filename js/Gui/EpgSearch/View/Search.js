@@ -85,9 +85,17 @@ Gui.EpgSearch.View.Search.prototype.requestForm = function () {
                             "label" : VDRest.app.translate("OR"),
                             "value" : "2"
                         },
+                        "exact" : {
+                            "label" : VDRest.app.translate("Exact"),
+                            "value" : "3"
+                        },
                         "regex" : {
                             "label" : VDRest.app.translate("RegEx"),
-                            "value" : "3"
+                            "value" : "4"
+                        },
+                        "fuzzy" : {
+                            "label" : VDRest.app.translate("Fuzzy"),
+                            "value" : "5"
                         }
                     }
                 },

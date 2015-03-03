@@ -167,7 +167,7 @@ Gui.Window.Controller.Input.prototype.setEnum = function () {
 
             this.data.values[i].selected = false;
 
-            this.data.values[i].selected = (this.data.values[i].label === value);
+            this.data.values[i].selected = (this.data.values[i].label === value.val());
         }
     }
 

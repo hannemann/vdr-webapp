@@ -44,6 +44,8 @@ VDRest.app.de_DE = {
     "Mode" : "Modus",
     "AND" : "UND",
     "OR" : "ODER",
+    "Exact" : "Exakt",
+    "Fuzzy" : "Unscharf",
     "Show radio channels" : "Zeige Radio Kanäle",
     "Channel" : "Kanal",
     "Sunday" : "Sonntag",

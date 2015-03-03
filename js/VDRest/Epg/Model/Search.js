@@ -54,11 +54,11 @@ VDRest.Epg.Model.Search.prototype.send = function (options) {
             "query" : options.query,
             "mode" : options.mode || 0,
             "channelid" : options.channelid || null,
-            "use_title" : options.use_title || true,
-            "use_subtitle" : options.use_subtitle || false,
-            "use_description" : options.use_description || false
+            "use_title" : options.use_title !== false,
+            "use_subtitle" : options.use_subtitle === true,
+            "use_description" : options.use_description === true
         },
-        "callback" : $.proxy(this.processCollection, this)
+        "callback" : this.processCollection.bind(this)
     });
 };
 
