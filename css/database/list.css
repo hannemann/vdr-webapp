@@ -19,20 +19,8 @@ div.window.database-list .name,
     font-weight: bold;
 }
 
-.database-collection.display-item .rating {
-    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75),
-    3px -3px 10px rgba(0, 0, 0, 0.75),
-    3px 3px 10px rgba(0, 0, 0, 0.75),
-    0 3px 10px rgba(0, 0, 0, 0.75);
-    padding-right: .5em;
-}
-
-.database-collection.display-item .rating span {
-    font-size: 12px;
-}
-
-.database-collection.display-item .rating span.vote-numeric {
-    font-size: 14px;
+.database-collection .list-item .ctrl-button {
+    display: none;
 }
 
 
