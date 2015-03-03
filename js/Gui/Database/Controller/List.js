@@ -70,6 +70,8 @@ Gui.Database.Controller.List.prototype.dispatchView = function (parent) {
 Gui.Database.Controller.List.prototype.addObserver = function () {
 
     document.addEventListener(this.transitionEndEvent, this.handleTransitionEnd.bind(this));
+    this.view.ctrlSearch.on('click', this.handleSearch.bind(this));
+    this.view.ctrlSort.on('click', this.handleSort.bind(this));
 };
 
 /**
@@ -78,6 +80,8 @@ Gui.Database.Controller.List.prototype.addObserver = function () {
 Gui.Database.Controller.List.prototype.removeObserver = function () {
 
     document.removeEventListener(this.transitionEndEvent, this.handleTransitionEnd.bind(this));
+    this.view.ctrlSearch.off('click');
+    this.view.ctrlSort.off('click');
 };
 
 /**
@@ -98,6 +102,81 @@ Gui.Database.Controller.List.prototype.dispatchItem = function (item) {
     if (!this.scrollerReady && this.tiles.length * this.sliderTileWidth > window.innerWidth) {
         this.applyScroller();
     }
+};
+
+/**
+ * handle search request
+ */
+Gui.Database.Controller.List.prototype.handleSearch = function () {
+
+    this.search();
+};
+
+/**
+ * handle sort request
+ */
+Gui.Database.Controller.List.prototype.handleSort = function () {
+
+    var data = {
+        "type": "enum",
+        "dataType": "string",
+        "values": {
+            "sortRecordingDateAsc": {
+                "label": "Recording Date ↑",
+                "method": "sortRecordingDate",
+                "reverse": false
+            },
+            "sortRecordingDateDesc": {
+                "label": "Recording Date ↓",
+                "method": "sortRecordingDate",
+                "reverse": true
+            },
+            "sortReleaseDateAsc": {
+                "label": "Release Date ↑",
+                "method": "sortReleaseDate",
+                "reverse": false
+            },
+            "sortReleaseDateDesc": {
+                "label": "Release Date ↓",
+                "method": "sortReleaseDate",
+                "reverse": true
+            }
+        },
+        "dom": $('<label class="clearer text">'),
+        "showInfo": true
+    };
+
+    $('<span>').text(VDRest.app.translate('Search')).appendTo(data.dom);
+
+    data.gui = $('<input type="text" name="sort">')
+        .appendTo(data.dom);
+
+    data.gui.on('change', function (e) {
+
+        var selection = VDRest.app.translate(e.target.value),
+            method = false, reverse;
+
+        for (var i in data.values) {
+            if (data.values.hasOwnProperty(i)) {
+                if (selection === data.values[i].label) {
+                    method = data.values[i].method;
+                    reverse = data.values[i].reverse;
+                    break;
+                }
+            }
+        }
+        if (method) {
+            this.sort(method, reverse);
+        }
+    }.bind(this));
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "Select",
+            "data": data
+        }
+    });
 };
 
 /**
@@ -122,8 +201,10 @@ Gui.Database.Controller.List.prototype.sort = function (method, reverse) {
         this.tiles = [];
         this.allTiles = undefined;
         this.view.node.empty();
-        this.collection.each(this.dispatchItem.bind(this));
-        this.highlightActive(this.scroller.slider.getState());
+        this.collection.each(this.dispatchItem.bind(this), function () {
+            this.scroller.tiles.tiles = this.view.node.get(0).querySelectorAll('div.list-item');
+            this.scroller.slider.translate({"x": this.scroller.slider.getState().x * -1, "y": 0});
+        }.bind(this));
     }.bind(this));
 };
 
@@ -255,17 +336,17 @@ Gui.Database.Controller.List.prototype.applyScroller = function () {
 /**
  * hide scroller
  */
-Gui.Database.Controller.List.prototype.hideScroller = function () {
+Gui.Database.Controller.List.prototype.hideListView = function () {
 
-    this.view.node[0].parentNode.classList.add('hidden');
+    this.view.window.classList.add('hidden');
 };
 
 /**
  * reveal scroller
  */
-Gui.Database.Controller.List.prototype.showScroller = function () {
+Gui.Database.Controller.List.prototype.showListView = function () {
 
-    this.view.node[0].parentNode.classList.remove('hidden');
+    this.view.window.classList.remove('hidden');
 };
 
 /**

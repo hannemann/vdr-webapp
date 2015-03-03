@@ -93,9 +93,9 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
             "x": ((parent.currentActive - 1) - index) * parent.scroller.tiles.getTileWidth(),
             "y": 0
         },
-        hideScroller = function () {
+        hideListView = function () {
             this.addScrollerHiddenEvent();
-            parent.hideScroller();
+            parent.hideListView();
         }.bind(this);
 
     this.clone = this.view.node.clone();
@@ -106,13 +106,13 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
     if (delta.x != 0) {
         $(parent.scroller.slider.elem).one(this.transitionEndEvent, function () {
             setTimeout(function () {
-                hideScroller();
+                hideListView();
             }.bind(this), 20);
         }.bind(this));
 
         parent.scroller.slider.translate(delta);
     } else {
-        hideScroller();
+        hideListView();
     }
 
     return this;
@@ -268,7 +268,7 @@ Gui.Database.Controller.List.Item.prototype.removeItem = function () {
         this.clone.remove();
         this.clone = undefined;
         this.actors = undefined;
-        this.getData('parent').showScroller();
+        this.getData('parent').showListView();
     }.bind(this));
 
     return this;

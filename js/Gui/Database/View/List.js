@@ -16,6 +16,16 @@ Gui.Database.View.List.prototype = new VDRest.Abstract.View();
 Gui.Database.View.List.prototype.bypassCache = true;
 
 /**
+ * @type {string}
+ */
+Gui.Database.View.List.prototype.symbolSearch = 'j';
+
+/**
+ * @type {string}
+ */
+Gui.Database.View.List.prototype.symbolSort = 'k';
+
+/**
  * initialize node
  */
 Gui.Database.View.List.prototype.init = function () {
@@ -32,6 +42,9 @@ Gui.Database.View.List.prototype.render = function () {
 
     this.setWidth(0);
     this.window = document.querySelector('#viewport .database-list');
+
+    this.addSearchButton()
+        .addSortButton();
 };
 
 /**
@@ -140,5 +153,29 @@ Gui.Database.View.List.prototype.addFanart = function (tile) {
         this.window.insertBefore(this.currentFanart, this.window.firstChild);
     }
 
+    return this;
+};
+
+/**
+ * adds search button
+ * @returns {Gui.Database.View.List}
+ */
+Gui.Database.View.List.prototype.addSearchButton = function () {
+
+    this.ctrlSearch = $(
+        '<div class="vdr-web-symbol ctrl-button searcg">' + this.symbolSearch + '</div>'
+    ).appendTo(this.window);
+    return this;
+};
+
+/**
+ * adds sort button
+ * @returns {Gui.Database.View.List}
+ */
+Gui.Database.View.List.prototype.addSortButton = function () {
+
+    this.ctrlSort = $(
+        '<div class="vdr-web-symbol ctrl-button sort">' + this.symbolSort + '</div>'
+    ).appendTo(this.window);
     return this;
 };

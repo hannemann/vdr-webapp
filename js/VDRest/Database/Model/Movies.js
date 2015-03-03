@@ -108,7 +108,7 @@ VDRest.Database.Model.Movies.prototype.search = function (token, callback, attri
     this.each(function (item) {
 
         attributes.forEach(function (attribute) {
-            if (item.data[attribute].toLowerCase().indexOf(token) > -1) {
+            if (item.data[attribute].toLowerCase().indexOf(token.toLowerCase()) > -1) {
                 this.searchResult.push(item.id);
             }
         }.bind(this));
