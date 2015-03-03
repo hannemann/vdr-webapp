@@ -101,7 +101,7 @@ VDRest.Database.Model.Movies.prototype.sortRating = function (a, b) {
  */
 VDRest.Database.Model.Movies.prototype.search = function (token, callback, attributes) {
 
-    this.searchResult = [];
+    this.searchResult = this.module.getModel('Movies');
 
     attributes = attributes || ['title'];
 
@@ -109,8 +109,34 @@ VDRest.Database.Model.Movies.prototype.search = function (token, callback, attri
 
         attributes.forEach(function (attribute) {
             if (item.data[attribute].toLowerCase().indexOf(token.toLowerCase()) > -1) {
-                this.searchResult.push(item.id);
+                this.searchResult.addItem(item.getData());
             }
         }.bind(this));
     }.bind(this), callback);
+};
+
+/**
+ * retrieve genres from movies
+ * @returns {Array}
+ */
+VDRest.Database.Model.Movies.prototype.getGenres = function () {
+
+    var reg;
+
+    if (!this.genres) {
+        reg = new RegExp('(^\\s*|\\s*$)', 'g');
+        this.genres = [];
+
+        this.each(function (item) {
+            item.getData('genres').split(',').map(function (genre) {
+                genre = genre.replace(reg, '');
+                if ('' !== genre && this.genres.indexOf(genre) < 0) {
+                    this.genres.push(genre);
+                }
+                return genre;
+            }.bind(this));
+        }.bind(this));
+        this.genres.sort();
+    }
+    return this.genres;
 };

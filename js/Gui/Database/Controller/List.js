@@ -39,7 +39,10 @@ Gui.Database.Controller.List.prototype.init = function () {
 
     this.module.currentList = this;
 
-    this.currentSorting = VDRest.config.getItem('databaseDefaultSorting');
+    this.defaultSorting = VDRest.config.getItem('databaseDefaultSorting');
+    this.currentSorting =
+        VDRest.config.getItem('currentDatabaseSorting') ||
+        this.defaultSorting;
 };
 
 /**
@@ -70,8 +73,40 @@ Gui.Database.Controller.List.prototype.dispatchView = function (parent) {
 Gui.Database.Controller.List.prototype.addObserver = function () {
 
     document.addEventListener(this.transitionEndEvent, this.handleTransitionEnd.bind(this));
-    this.view.ctrlSearch.on('click', this.handleSearch.bind(this));
-    this.view.ctrlSort.on('click', this.handleSort.bind(this));
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.ctrlSearch
+            .on('touchend', this.handleUp.bind(this, this.search.bind(this)))
+            .on('touchstart', this.handleDown.bind(this, this.resetSearch.bind(this)))
+        ;
+        this.view.ctrlSort
+            .on('touchend', this.handleUp.bind(this, this.handleSort.bind(this)))
+            .on('touchstart', this.handleDown.bind(
+                this,
+                this.sort.bind(
+                    this,
+                    this.currentSorting.replace(/(Asc|Desc)$/, ''),
+                    this.currentSorting.indexOf('Desc') > -1
+                )
+            ))
+        ;
+    } else {
+        this.view.ctrlSearch
+            .on('mouseup', this.handleUp.bind(this, this.search.bind(this)))
+            .on('mousedown', this.handleDown.bind(this, this.resetSearch.bind(this)))
+        ;
+        this.view.ctrlSort
+            .on('mouseup', this.handleUp.bind(this, this.handleSort.bind(this)))
+            .on('mousedown', this.handleDown.bind(
+                this,
+                this.sort.bind(
+                    this,
+                    this.currentSorting.replace(/(Asc|Desc)$/, ''),
+                    this.currentSorting.indexOf('Desc') > -1
+                )
+            ))
+        ;
+    }
 };
 
 /**
@@ -80,8 +115,8 @@ Gui.Database.Controller.List.prototype.addObserver = function () {
 Gui.Database.Controller.List.prototype.removeObserver = function () {
 
     document.removeEventListener(this.transitionEndEvent, this.handleTransitionEnd.bind(this));
-    this.view.ctrlSearch.off('click');
-    this.view.ctrlSort.off('click');
+    this.view.ctrlSearch.off('touchend touchstart mouseup mousedown mousemove touchmove');
+    this.view.ctrlSort.off('touchend touchstart mouseup mousedown mousemove touchmove');
 };
 
 /**
@@ -105,11 +140,51 @@ Gui.Database.Controller.List.prototype.dispatchItem = function (item) {
 };
 
 /**
- * handle search request
+ * handle mouseup
  */
-Gui.Database.Controller.List.prototype.handleSearch = function () {
+Gui.Database.Controller.List.prototype.handleUp = function (callback, e) {
 
-    this.search();
+    e.preventDefault();
+
+    if (!this.isMuted) {
+
+        if ("undefined" === typeof this.preventClick) {
+
+            this.vibrate();
+
+            if ("undefined" !== typeof this.clickTimeout) {
+                window.clearTimeout(this.clickTimeout);
+            }
+
+            callback()
+        }
+    }
+    document.onselectstart = function () {
+        return true
+    };
+};
+
+/**
+ * handle mousedown
+ */
+Gui.Database.Controller.List.prototype.handleDown = function (callback) {
+
+    document.onselectstart = function () {
+        return false
+    };
+
+    this.preventClick = undefined;
+    if (VDRest.info.getStreamer()) {
+
+        this.clickTimeout = window.setTimeout(function () {
+
+            this.vibrate(100);
+
+            this.preventClick = true;
+
+            callback();
+        }.bind(this), 500);
+    }
 };
 
 /**
@@ -186,22 +261,23 @@ Gui.Database.Controller.List.prototype.handleSort = function () {
  */
 Gui.Database.Controller.List.prototype.sort = function (method, reverse) {
 
+    var collection = this.currentCollection ? this.currentCollection : this.collection;
+
     reverse = !!reverse;
 
-    this.collection.sort(this.collection[method], reverse, function () {
+    collection.sort(this.collection[method], reverse, function () {
         this.resetContextMenuSortStates();
         VDRest.app.getCurrent(true).contextMenu[method].state = reverse ? 'on' : 'off';
         this.currentSorting = method + (reverse ? 'Desc' : 'Asc');
-        VDRest.config.setItem('databaseDefaultSorting', this.currentSorting);
+        VDRest.config.setItem('currentDatabaseSorting', this.currentSorting);
         if (this.tiles.length > 0) {
             this.currentActive = 0;
             this.currentPrevious = 1;
             this.resetHighlightImages();
         }
         this.tiles = [];
-        this.allTiles = undefined;
         this.view.node.empty();
-        this.collection.each(this.dispatchItem.bind(this), function () {
+        collection.each(this.dispatchItem.bind(this), function () {
             this.scroller.tiles.tiles = this.view.node.get(0).querySelectorAll('div.list-item');
             this.scroller.slider.translate({"x": this.scroller.slider.getState().x * -1, "y": 0});
         }.bind(this));
@@ -239,6 +315,8 @@ Gui.Database.Controller.List.prototype.search = function () {
         "showInfo": true
     };
 
+    this.currentCollection = undefined;
+
     $('<span>').text(VDRest.app.translate('Search')).appendTo(data.dom);
 
     data.gui = $('<input type="text" name="search">')
@@ -246,9 +324,14 @@ Gui.Database.Controller.List.prototype.search = function () {
 
     data.gui.on('change', function (e) {
         var value = e.target.value;
-        this.collection.search(value, function () {
-            this.filterItems(this.collection.searchResult);
-        }.bind(this));
+        if (value == '') {
+            this.resetItems();
+        } else {
+            this.collection.search(value, function () {
+                this.currentCollection = this.collection.searchResult;
+                this.filterItems(this.collection.searchResult);
+            }.bind(this));
+        }
     }.bind(this));
 
     $.event.trigger({
@@ -263,44 +346,39 @@ Gui.Database.Controller.List.prototype.search = function () {
 /**
  * reset items list
  */
-Gui.Database.Controller.List.prototype.resetItems = function () {
+Gui.Database.Controller.List.prototype.resetSearch = function () {
 
-    this.filterItems('');
-    this.view.setWidth(this.allTiles.length * this.sliderTileWidth);
+    this.currentCollection = undefined;
+    this.filterItems();
+};
+
+/**
+ * reset items list
+ */
+Gui.Database.Controller.List.prototype.getGenres = function () {
+
+    return this.collection.getGenres();
 };
 
 /**
  * filter items list
- * items not in ids array will be hidden
- * if empty string is given, all items reappear
- *
- * @param {Array|String} ids       array of ids of items that are not filtered
  */
-Gui.Database.Controller.List.prototype.filterItems = function (ids) {
+Gui.Database.Controller.List.prototype.filterItems = function () {
 
-    if (!this.allTiles) {
-        this.allTiles = this.tiles;
+    var collection = this.currentCollection ? this.currentCollection : this.collection;
+
+    if (this.tiles.length > 0) {
+        this.currentActive = 0;
+        this.currentPrevious = 1;
+        this.resetHighlightImages();
     }
-
-    this.resetHighlightImages();
-    this.currentActive = 0;
-    this.currentPrevious = 1;
-
     this.tiles = [];
-
-    this.allTiles.forEach(function (tile) {
-        var id = parseInt(tile.dataset.id, 10);
-        if (ids != '' && ids.indexOf(id) < 0) {
-            tile.style.display = 'none';
-        } else {
-            tile.style.display = '';
-            this.tiles.push(tile);
-        }
+    this.view.node.empty();
+    this.view.setWidth(0);
+    collection.each(this.dispatchItem.bind(this), function () {
+        this.scroller.tiles.tiles = this.view.node.get(0).querySelectorAll('div.list-item');
+        this.scroller.slider.translate({"x": this.scroller.slider.getState().x * -1, "y": 0});
     }.bind(this));
-
-    this.view.setWidth(ids.length * this.sliderTileWidth);
-
-    this.highlightActive(this.scroller.slider.getState());
 };
 
 /**
