@@ -38,6 +38,44 @@
 
 /* Modal overlay */
 
+@keyframes showModalDatabase {
+    from {
+        background: rgba(0, 0, 0, 0);
+    }
+    to {
+        background: rgba(100, 100, 100, 0.5);
+    }
+}
+
+@keyframes hideModalDatabase {
+    from {
+        background: rgba(100, 100, 100, 0.5);
+    }
+    to {
+        background: rgba(0, 0, 0, 0);
+    }
+}
+
+@-webkit-keyframes showModalDatabase {
+    from {
+        background: rgba(0, 0, 0, 0);
+    }
+    to {
+        background: rgba(100, 100, 100, 0.5);
+    }
+}
+
+@-webkit-keyframes hideModalDatabase {
+    from {
+        background: rgba(100, 100, 100, 0.5);
+    }
+    to {
+        background: rgba(0, 0, 0, 0);
+    }
+}
+
+/* Modal overlay */
+
 @keyframes showModalOpaque {
     from { background: rgba(0,0,0,0); }
     to { background: rgba(0,0,0,1); }

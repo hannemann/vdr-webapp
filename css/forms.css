@@ -113,6 +113,11 @@ form label.constrained.disabled {
     padding: 0 20px;
     width: 100%;
 }
+
+.form-window label span {
+    margin-left: 0;
+    padding: 0;
+}
 .window-input label .info,
 form label .info{
     display: block;
@@ -129,6 +134,13 @@ form label select {
     background-color: #696969;
     margin: 5px 0;
     font-size: 1em;
+}
+
+.database .window-input label input,
+.database .window-input label select,
+.database form label input,
+.database form label select {
+    background-color: black;
 }
 
 .window-input input[type="text"],
@@ -213,12 +225,14 @@ input[type="radio"]:checked ~ span.fancy-radio span {
     right: 1px;
 }
 
+.form-window,
 .window-input.channel-chooser,
 .window-input.select {
     height: calc(100% - 80px);
     overflow-y: hidden;
 }
 
+.form-window .window-body,
 .window-form .window-body,
 .window-input.select .window-body {
     height: calc(100% - 61px);
@@ -226,11 +240,13 @@ input[type="radio"]:checked ~ span.fancy-radio span {
     padding: 0;
 }
 
+.form-window .header,
 .window-input.select .header {
     border-bottom: 1px solid rgb(150, 150, 150);
     padding: 0 20px;
 }
 
+.form-window .window-body form,
 .window-input.select .wrapper {
     height: calc(100% - 21px);
     overflow-y: auto;

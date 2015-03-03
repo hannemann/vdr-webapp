@@ -136,9 +136,9 @@ Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
         this.getDateTime(id, field);
     }
 
-    if ("info" === field.type) {
+    if ("window" === field.type || "info" === field.type) {
 
-        this.getInfo(id, field);
+        this.getWindow(id, field);
     }
 
     if ("combobox" === field.type) {
@@ -260,7 +260,7 @@ Gui.Form.View.Abstract.prototype.getComboBox = function (id, field) {
 /**
  * set type text
  * @param {string} id
- * @param {{values: {}}} field
+ * @param {{}} field
  */
 Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
 
@@ -332,7 +332,7 @@ Gui.Form.View.Abstract.prototype.getDateTime = function (id, field) {
  * @param {string} id
  * @param {{}} field
  */
-Gui.Form.View.Abstract.prototype.getInfo = function (id, field) {
+Gui.Form.View.Abstract.prototype.getWindow = function (id, field) {
 
     this.decorateField(id, field);
 
@@ -354,7 +354,7 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
         .val((field.value ? field.value : ''));
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
-
+    
     if ("boolean" === field.type) {
         wrapper = $('<span class="wrapper clearer">');
         field.dom.append(wrapper);

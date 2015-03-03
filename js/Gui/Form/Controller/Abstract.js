@@ -408,6 +408,7 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
             }
         }
     }
+    $.event.trigger('form.size-changed');
 
     return false;
 };

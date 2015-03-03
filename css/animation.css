@@ -42,6 +42,17 @@
     -webkit-animation-name: hideModal;
     background: rgba(0,0,0,0);
 }
+
+.database.show-modal .modal-overlay.dark {
+    animation-name: showModalDatabase;
+    -webkit-animation-name: showModalDatabase;
+    background: rgba(100, 100, 100, 0.5);
+}
+
+.database.hide-modal .modal-overlay.dark {
+    animation-name: hideModalDatabase;
+    -webkit-animation-name: hideModalDatabase;
+}
 /* dark modal overlay */
 .modal-overlay.show-modal.dark.opaque {
     animation-duration: .2s;
