@@ -274,7 +274,7 @@ Gui.Database.Controller.List.Item.prototype.startStream = function (recording) {
 Gui.Database.Controller.List.Item.prototype.removeItem = function () {
 
     this.removeCloneObserver();
-    this.clone.toggleClass('hidden show');
+    this.actors.destructView();
     this.clone.one(this.transitionEndEvent, function () {
         this.clone.remove();
         this.clone = undefined;
@@ -282,6 +282,7 @@ Gui.Database.Controller.List.Item.prototype.removeItem = function () {
         delete this.data.parent.activeItem;
         this.getData('parent').showListView();
     }.bind(this));
+    this.clone.toggleClass('hidden show');
 
     return this;
 };

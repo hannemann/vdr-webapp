@@ -25,21 +25,20 @@
     left: 0;
     transition: transform .2s, opacity .2s;
     opacity: 0;
-    transform: scale(.5, .5);
+    transform: translateZ(-1000px);
     background-color: rgba(0, 0, 0, 0.9);
     backface-visibility: hidden;
+    perspective: 1000px;
+    perspective-origin: 50% 75%;
     margin: 0;
+    overflow: auto;
 }
 
 .database-collection.display-item.show,
 .display-item-actors-actor.fullscreen.show {
-    position: absolute;
     z-index: 1;
     opacity: 1;
-    transform: scale(1, 1) translateY(0);
-    perspective: 1000px;
-    perspective-origin: 50% 75%;
-    overflow: auto;
+    transform: translateZ(0);
 }
 
 .database-collection.display-item .fanart {
