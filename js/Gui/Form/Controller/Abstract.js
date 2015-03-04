@@ -217,20 +217,28 @@ Gui.Form.Controller.Abstract.prototype.addChangeHandler = function (field, field
  */
 Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
 
-    switch (field.type) {
-        case 'enum':
-        case 'channel':
-            field.getValue = this.getEnumValue;
-            break;
-        case 'datetime':
-            field.getValue = this.getDateTimeValue;
-            break;
-        case 'string':
-        case 'number':
-        case 'directory':
-            field.getValue = function () {
-                if ('number' === field.type) {
-                    return parseFloat(this.gui.val());
+    if (field.type === 'enum' || field.type === 'channel') {
+
+        field.getValue = function () {
+
+            var i, values = this.values, retVal = [];
+
+            if ("function" === typeof this.values) {
+
+                values = this.values();
+            }
+
+            for (i in values) {
+
+                if (values.hasOwnProperty(i)) {
+
+                    if (values[i].selected) {
+                        if (field.multiselect) {
+                            retVal.push(values[i]);
+                        } else {
+                            return values[i];
+                        }
+                    }
                 }
                 return this.gui.val();
             };
@@ -301,6 +309,16 @@ Gui.Form.Controller.Abstract.prototype.getEnumValue = function () {
 
         if (values.hasOwnProperty(i)) {
 
+            /**
+             * stolen from merge conflict
+             */
+            //if (
+            //    values[i].selected ||
+            //    ( values[i].gui && values[i].gui.prop('checked') ) ||
+            //    ( this.gui && this.gui.val().split(', ').indexOf(values[i].label) > -1 )
+            //)
+            
+            
             if (values[i].selected) {
                 if (this.multiselect) {
                     retVal.push(values[i]);

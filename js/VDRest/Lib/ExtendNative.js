@@ -29,6 +29,36 @@ Array.prototype.shuffle = function () {
 };
 
 /**
+ * retrieve array intersection
+ * @param b
+ * @returns {Array}
+ */
+Array.prototype.pfIntersect = function (b) {
+
+    var ai = 0, bi = 0, result = [],
+        a = Array.prototype.slice.call(this),
+        c = Array.prototype.slice.call(b);
+
+    a.sort();
+    c.sort();
+
+    while (ai < a.length && bi < c.length) {
+        if (a[ai] < c[bi]) {
+            ai++;
+        }
+        else if (a[ai] > c[bi]) {
+            bi++;
+        }
+        else {
+            result.push(a[ai]);
+            ai++;
+            bi++;
+        }
+    }
+    return result;
+};
+
+/**
  * transform string to numeric value
  * @returns {number}
  */

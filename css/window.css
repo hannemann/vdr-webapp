@@ -483,6 +483,10 @@ div.window.confirm li:first-child {
     color: #545454;
 }
 
+.context-menu div.menu-button.hidden {
+    display: none;
+}
+
 div.window.viewport-fullsize,
 form.window.viewport-fullsize {
     box-shadow: none;

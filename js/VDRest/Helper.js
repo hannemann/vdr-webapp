@@ -471,4 +471,13 @@ VDRest.Helper.prototype.getMaxScreenResolution = function (orientation) {
     }
 };
 
+/**
+ * retrieve current device orientation
+ * @returns {string}
+ */
+VDRest.Helper.prototype.getOrientation = function () {
+
+    return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+};
+
 VDRest.helper = new VDRest.Helper();

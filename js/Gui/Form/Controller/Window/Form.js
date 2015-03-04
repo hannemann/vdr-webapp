@@ -32,120 +32,11 @@ Gui.Form.Controller.Window.Form.prototype.bypassCache = true;
  */
 Gui.Form.Controller.Window.Form.prototype.init = function () {
 
-    this.data = {
-        "cacheKey": 'blafiggi',
-        "blafiggi": 'Blasi',
-        "catConfig": {
-            "search": {
-                "label": VDRest.app.translate("Search")
-            }
-        },
-        "fields": {
-            "query": {
-                "type": "string",
-                "category": "search",
-                "label": VDRest.app.translate("Query")
-            },
-            "query1": {
-                "type": "string",
-                "category": "search",
-                "label": VDRest.app.translate("Query")
-            },
-            "query2": {
-                "type": "string",
-                "category": "search",
-                "label": VDRest.app.translate("Query")
-            },
-            "query3": {
-                "type": "string",
-                "category": "search",
-                "label": VDRest.app.translate("Query")
-            },
-            "query4": {
-                "type": "string",
-                "category": "search",
-                "label": VDRest.app.translate("Query")
-            },
-            "advanced": {
-                "type": "boolean",
-                "category": "search",
-                "label": VDRest.app.translate("Advanced"),
-                "checked": false
-            },
-            "channel": {
-                "type": "channel",
-                "category": "search",
-                "depends": "advanced",
-                "label": "Channel"
-            },
-            "mode": {
-                "type": "enum",
-                "name": "mode",
-                "label": VDRest.app.translate("Mode"),
-                "depends": "advanced",
-                "category": "search",
-                "values": {
-                    "phrase": {
-                        "label": VDRest.app.translate("Phrase"),
-                        "value": "0",
-                        "selected": true
-                    },
-                    "and": {
-                        "label": VDRest.app.translate("AND"),
-                        "value": "1"
-                    },
-                    "or": {
-                        "label": VDRest.app.translate("OR"),
-                        "value": "2"
-                    },
-                    "exact": {
-                        "label": VDRest.app.translate("Exact"),
-                        "value": "3"
-                    },
-                    "regex": {
-                        "label": VDRest.app.translate("RegEx"),
-                        "value": "4"
-                    },
-                    "fuzzy": {
-                        "label": VDRest.app.translate("Fuzzy"),
-                        "value": "5"
-                    }
-                }
-            },
-            "use_title": {
-                "type": "boolean",
-                "label": VDRest.app.translate("Search Title"),
-                "depends": "advanced",
-                "category": "search",
-                "checked": true
-            },
-            "use_subtitle": {
-                "type": "boolean",
-                "label": VDRest.app.translate("Search Subtitle"),
-                "depends": "advanced",
-                "category": "search",
-                "checked": false
-            },
-            "use_description": {
-                "type": "boolean",
-                "label": VDRest.app.translate("Search Description"),
-                "depends": "advanced",
-                "category": "search",
-                "checked": false
-            }
-        }
-    };
-
-
-    var formData = this.data;
-
-    this.formKey = this.data[this.data.cacheKey];
-
-
+    this.formKey = this.data.form[this.data.form.cacheKey];
     this.eventPrefix = 'window.form';
     this.view = this.module.getView('Window.Form', this.data);
-    formData.parentView = {"node": this.view.body};
-    this.module.dispatch(formData);
+    this.data.form.parentView = {"node": this.view.body};
+    this.module.dispatch(this.data.form);
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
 
@@ -188,6 +79,9 @@ Gui.Form.Controller.Window.Form.prototype.okAction = function (e) {
 
     this.vibrate();
     e.preventDefault();
+    if ("function" === typeof this.data.form.submit) {
+        this.data.form.submit(this.data.form.fields);
+    }
     history.back();
 };
 

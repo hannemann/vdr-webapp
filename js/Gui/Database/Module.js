@@ -45,6 +45,24 @@ Gui.Database.prototype.headline = 'Your Media';
  */
 Gui.Database.prototype.contextMenu = {
 
+    "search": {
+        "labels": {
+            "on": "Search",
+            "off": "Search"
+        },
+        "state": "on",
+        "scope": "Gui.Database",
+        "fn": function () {
+
+            var controller = this.currentList;
+            if (controller) {
+                controller.search();
+            }
+        },
+        "highlight": function (bObj) {
+            bObj.button.toggleClass('hidden', !this.currentList || !!this.currentList.activeItem);
+        }
+    },
     "sortRecordingDate": {
         "labels": {
             "on": 'Recording Date &#8595;',
@@ -54,31 +72,22 @@ Gui.Database.prototype.contextMenu = {
         "scope": 'Gui.Database',
         "fn": function () {
 
-            var controller = this.currentList;
-            if (controller) {
-                if ("on" === this.contextMenu.sortRecordingDate.state) {
-
-                    this.contextMenu.sortRecordingDate.state = "off";
-                    controller.sort('sortRecordingDate', false);
-
-                } else {
-
-                    this.contextMenu.sortRecordingDate.state = "on";
-                    controller.sort('sortRecordingDate', true);
-                }
+            if (this.currentList) {
+                this.contextMenu.sortRecordingDate.state =
+                    "on" === this.contextMenu.sortRecordingDate.state ?
+                        "off" : "on";
+                this.currentList.sort(
+                    'sortRecordingDate',
+                    "on" === this.contextMenu.sortRecordingDate.state
+                );
             }
         },
         "highlight": function (bObj) {
-            if (this.currentList) {
-                bObj.button.removeClass('disabled');
-                if (0 === this.currentList.currentSorting.indexOf('sortRecordingDate')) {
-                    bObj.button.addClass('active');
-                } else {
-                    bObj.button.removeClass('active');
-                }
-            } else {
-                bObj.button.addClass('disabled');
-            }
+            bObj.button.toggleClass('hidden', !this.currentList || !!this.currentList.activeItem);
+            bObj.button.toggleClass(
+                'active',
+                !!this.currentList && 0 === this.currentList.currentSorting.indexOf('sortRecordingDate')
+            );
         }
     },
     "sortReleaseDate": {
@@ -90,31 +99,22 @@ Gui.Database.prototype.contextMenu = {
         "scope": 'Gui.Database',
         "fn": function () {
 
-            var controller = this.currentList;
-            if (controller) {
-                if ("on" === this.contextMenu.sortReleaseDate.state) {
-
-                    this.contextMenu.sortReleaseDate.state = "off";
-                    controller.sort('sortReleaseDate', false);
-
-                } else {
-
-                    this.contextMenu.sortReleaseDate.state = "on";
-                    controller.sort('sortReleaseDate', true);
-                }
+            if (this.currentList) {
+                this.contextMenu.sortReleaseDate.state =
+                    "on" === this.contextMenu.sortReleaseDate.state ?
+                        "off" : "on";
+                this.currentList.sort(
+                    'sortReleaseDate',
+                    "on" === this.contextMenu.sortReleaseDate.state
+                );
             }
         },
         "highlight": function (bObj) {
-            if (this.currentList) {
-                bObj.button.removeClass('disabled');
-                if (0 === this.currentList.currentSorting.indexOf('sortReleaseDate')) {
-                    bObj.button.addClass('active');
-                } else {
-                    bObj.button.removeClass('active');
-                }
-            } else {
-                bObj.button.addClass('disabled');
-            }
+            bObj.button.toggleClass('hidden', !this.currentList || !!this.currentList.activeItem);
+            bObj.button.toggleClass(
+                'active',
+                !!this.currentList && 0 === this.currentList.currentSorting.indexOf('sortReleaseDate')
+            );
         }
     },
     "sortAlpha": {
@@ -126,31 +126,22 @@ Gui.Database.prototype.contextMenu = {
         "scope": 'Gui.Database',
         "fn": function () {
 
-            var controller = this.currentList;
-            if (controller) {
-                if ("on" === this.contextMenu.sortAlpha.state) {
-
-                    this.contextMenu.sortAlpha.state = "off";
-                    controller.sort('sortAlpha', false);
-
-                } else {
-
-                    this.contextMenu.sortAlpha.state = "on";
-                    controller.sort('sortAlpha', true);
-                }
+            if (this.currentList) {
+                this.contextMenu.sortAlpha.state =
+                    "on" === this.contextMenu.sortAlpha.state ?
+                        "off" : "on";
+                this.currentList.sort(
+                    'sortAlpha',
+                    "on" === this.contextMenu.sortAlpha.state
+                );
             }
         },
         "highlight": function (bObj) {
-            if (this.currentList) {
-                bObj.button.removeClass('disabled');
-                if (0 === this.currentList.currentSorting.indexOf('sortAlpha')) {
-                    bObj.button.addClass('active');
-                } else {
-                    bObj.button.removeClass('active');
-                }
-            } else {
-                bObj.button.addClass('disabled');
-            }
+            bObj.button.toggleClass('hidden', !this.currentList || !!this.currentList.activeItem);
+            bObj.button.toggleClass(
+                'active',
+                !!this.currentList && 0 === this.currentList.currentSorting.indexOf('sortAlpha')
+            );
         }
     },
     "sortRating": {
@@ -162,31 +153,22 @@ Gui.Database.prototype.contextMenu = {
         "scope": 'Gui.Database',
         "fn": function () {
 
-            var controller = this.currentList;
-            if (controller) {
-                if ("on" === this.contextMenu.sortRating.state) {
-
-                    this.contextMenu.sortRating.state = "off";
-                    controller.sort('sortRating', false);
-
-                } else {
-
-                    this.contextMenu.sortRating.state = "on";
-                    controller.sort('sortRating', true);
-                }
+            if (this.currentList) {
+                this.contextMenu.sortRating.state =
+                    "on" === this.contextMenu.sortRating.state ?
+                        "off" : "on";
+                this.sortRating.sort(
+                    'sortAlpha',
+                    "on" === this.contextMenu.sortRating.state
+                );
             }
         },
         "highlight": function (bObj) {
-            if (this.currentList) {
-                bObj.button.removeClass('disabled');
-                if (0 === this.currentList.currentSorting.indexOf('sortRating')) {
-                    bObj.button.addClass('active');
-                } else {
-                    bObj.button.removeClass('active');
-                }
-            } else {
-                bObj.button.addClass('disabled');
-            }
+            bObj.button.toggleClass('hidden', !this.currentList || !!this.currentList.activeItem);
+            bObj.button.toggleClass(
+                'active',
+                !!this.currentList && 0 === this.currentList.currentSorting.indexOf('sortRating')
+            );
         }
     },
     "sync": {
@@ -198,6 +180,9 @@ Gui.Database.prototype.contextMenu = {
         "scope": 'Gui.Database',
         "fn": function () {
             VDRest.app.getModule('VDRest.Database').getController('Sync').synchronize();
+        },
+        "highlight": function (bObj) {
+            bObj.button.toggleClass('hidden', !!this.currentList);
         }
     },
     "generate_movie_fanart": {
@@ -209,6 +194,9 @@ Gui.Database.prototype.contextMenu = {
         "scope": 'Gui.Database',
         "fn": function () {
             this.getController('Fanart', 'movies').generate();
+        },
+        "highlight": function (bObj) {
+            bObj.button.toggleClass('hidden', !!this.currentList);
         }
     },
     "generate_shows_fanart": {
@@ -220,6 +208,9 @@ Gui.Database.prototype.contextMenu = {
         "scope": 'Gui.Database',
         "fn": function () {
             this.getController('Fanart', 'shows').generate();
+        },
+        "highlight": function (bObj) {
+            bObj.button.toggleClass('hidden', !!this.currentList);
         }
     }
 };

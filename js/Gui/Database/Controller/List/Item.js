@@ -103,17 +103,28 @@ Gui.Database.Controller.List.Item.prototype.displayItem = function () {
 
     this.clone.toggleClass('database-collection display-item hidden list-item ' + typeClassName);
 
-    if (delta.x != 0) {
-        $(parent.scroller.slider.elem).one(this.transitionEndEvent, function () {
-            setTimeout(function () {
-                hideListView();
-            }.bind(this), 20);
-        }.bind(this));
-
-        parent.scroller.slider.translate(delta);
+    if ('portrait' === VDRest.helper.getOrientation()) {
+        this.addClone();
+        this.addActors();
+        if (delta.x != 0) {
+            if (!parent.tmpDelta) parent.tmpDelta = 0;
+            parent.tmpDelta += delta.x;
+        }
     } else {
-        hideListView();
+
+        if (delta.x != 0) {
+            $(parent.scroller.slider.elem).one(this.transitionEndEvent, function () {
+                setTimeout(function () {
+                    hideListView();
+                }.bind(this), 20);
+            }.bind(this));
+
+            parent.scroller.slider.translate(delta);
+        } else {
+            hideListView();
+        }
     }
+    this.data.parent.activeItem = this;
 
     return this;
 };
@@ -268,6 +279,7 @@ Gui.Database.Controller.List.Item.prototype.removeItem = function () {
         this.clone.remove();
         this.clone = undefined;
         this.actors = undefined;
+        delete this.data.parent.activeItem;
         this.getData('parent').showListView();
     }.bind(this));
 

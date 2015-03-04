@@ -37,6 +37,10 @@ div.window.database-list .name,
     div.window .database-collection .list-item .poster {
         transform: none !important;
     }
+
+    div.window.database-list .ctrl-button {
+        display: none;
+    }
 }
 
 @media (orientation: landscape) {

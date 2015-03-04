@@ -192,64 +192,23 @@ Gui.Database.Controller.List.prototype.handleDown = function (callback) {
  */
 Gui.Database.Controller.List.prototype.handleSort = function () {
 
-    var data = {
-        "type": "enum",
-        "dataType": "string",
-        "values": {
-            "sortRecordingDateAsc": {
-                "label": "Recording Date ↑",
-                "method": "sortRecordingDate",
-                "reverse": false
-            },
-            "sortRecordingDateDesc": {
-                "label": "Recording Date ↓",
-                "method": "sortRecordingDate",
-                "reverse": true
-            },
-            "sortReleaseDateAsc": {
-                "label": "Release Date ↑",
-                "method": "sortReleaseDate",
-                "reverse": false
-            },
-            "sortReleaseDateDesc": {
-                "label": "Release Date ↓",
-                "method": "sortReleaseDate",
-                "reverse": true
-            }
-        },
-        "dom": $('<label class="clearer text">'),
-        "showInfo": true
-    };
+    this.sortForm.submit = function (fields) {
 
-    $('<span>').text(VDRest.app.translate('Search')).appendTo(data.dom);
-
-    data.gui = $('<input type="text" name="sort">')
-        .appendTo(data.dom);
-
-    data.gui.on('change', function (e) {
-
-        var selection = VDRest.app.translate(e.target.value),
-            method = false, reverse;
-
-        for (var i in data.values) {
-            if (data.values.hasOwnProperty(i)) {
-                if (selection === data.values[i].label) {
-                    method = data.values[i].method;
-                    reverse = data.values[i].reverse;
-                    break;
-                }
-            }
-        }
+        var method = fields.method.getValue().method,
+            reverse = fields.reverse.getValue();
         if (method) {
             this.sort(method, reverse);
         }
-    }.bind(this));
+    }.bind(this);
 
     $.event.trigger({
         "type": "window.request",
         "payload": {
-            "type": "Select",
-            "data": data
+            "type": "Window.Form",
+            "module": VDRest.app.getModule('Gui.Form'),
+            "data": {
+                "form": this.sortForm
+            }
         }
     });
 };
@@ -277,6 +236,7 @@ Gui.Database.Controller.List.prototype.sort = function (method, reverse) {
         }
         this.tiles = [];
         this.view.node.empty();
+        this.view.setWidth(0);
         collection.each(this.dispatchItem.bind(this), function () {
             this.scroller.tiles.tiles = this.view.node.get(0).querySelectorAll('div.list-item');
             this.scroller.slider.translate({"x": this.scroller.slider.getState().x * -1, "y": 0});
@@ -309,38 +269,75 @@ Gui.Database.Controller.List.prototype.resetContextMenuSortStates = function () 
  */
 Gui.Database.Controller.List.prototype.search = function () {
 
-    var data = {
-        "type": "string",
-        "dom": $('<label class="clearer text">'),
-        "showInfo": true
-    };
+    this.searchForm.submit = function (fields) {
 
-    this.currentCollection = undefined;
+        this.collection.search(this.parseSearchRequest(fields), function () {
+            this.currentCollection = this.collection.searchResult;
+            this.filterItems();
+        }.bind(this));
+    }.bind(this);
 
-    $('<span>').text(VDRest.app.translate('Search')).appendTo(data.dom);
-
-    data.gui = $('<input type="text" name="search">')
-        .appendTo(data.dom);
-
-    data.gui.on('change', function (e) {
-        var value = e.target.value;
-        if (value == '') {
-            this.resetItems();
-        } else {
-            this.collection.search(value, function () {
-                this.currentCollection = this.collection.searchResult;
-                this.filterItems(this.collection.searchResult);
-            }.bind(this));
-        }
-    }.bind(this));
+    this.searchForm.fields.genre.values = this.getGenres.bind(this);
 
     $.event.trigger({
         "type": "window.request",
         "payload": {
-            "type": "Input",
-            "data": data
+            "type": "Window.Form",
+            "module": VDRest.app.getModule('Gui.Form'),
+            "data": {
+                "form": this.searchForm
+            }
         }
     });
+};
+
+/**
+ * parse form fields
+ * @param {{}} fields
+ * @returns {{}}
+ */
+Gui.Database.Controller.List.prototype.parseSearchRequest = function (fields) {
+
+    var request = {
+        "genre": [],
+        "attributes": [],
+        "query": fields.query.getValue()
+    }, genre;
+
+    if (!fields.attributes.disabled) {
+        request.attributes = fields.attributes.getValue().map(function (attribute) {
+            return attribute.value;
+        });
+    }
+
+    genre = fields.genre.getValue();
+
+    if (genre instanceof Array) {
+
+        genre = genre.map(function (genre) {
+            return genre.value;
+        });
+        request.genre = genre;
+    }
+
+    return request;
+};
+
+/**
+ * retrieve genres as values for multi select
+ */
+Gui.Database.Controller.List.prototype.getGenres = function () {
+
+    var values = {}, gNormReg = new RegExp('[^a-z]', 'g');
+    this.collection.getGenres().forEach(function (genre) {
+        var gNorm = genre.toLowerCase().replace(gNormReg, '-');
+        values[gNorm] = {
+            "label": genre,
+            "value": genre
+        };
+    }.bind(this));
+
+    return values;
 };
 
 /**
@@ -350,14 +347,6 @@ Gui.Database.Controller.List.prototype.resetSearch = function () {
 
     this.currentCollection = undefined;
     this.filterItems();
-};
-
-/**
- * reset items list
- */
-Gui.Database.Controller.List.prototype.getGenres = function () {
-
-    return this.collection.getGenres();
 };
 
 /**
@@ -375,10 +364,12 @@ Gui.Database.Controller.List.prototype.filterItems = function () {
     this.tiles = [];
     this.view.node.empty();
     this.view.setWidth(0);
-    collection.each(this.dispatchItem.bind(this), function () {
-        this.scroller.tiles.tiles = this.view.node.get(0).querySelectorAll('div.list-item');
-        this.scroller.slider.translate({"x": this.scroller.slider.getState().x * -1, "y": 0});
-    }.bind(this));
+    if (collection.getCollection().length > 0) {
+        collection.each(this.dispatchItem.bind(this), function () {
+            this.scroller.tiles.tiles = this.view.node.get(0).querySelectorAll('div.list-item');
+            this.scroller.slider.translate({"x": this.scroller.slider.getState().x * -1, "y": 0});
+        }.bind(this));
+    }
 };
 
 /**

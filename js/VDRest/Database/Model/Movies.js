@@ -95,24 +95,48 @@ VDRest.Database.Model.Movies.prototype.sortRating = function (a, b) {
 
 /**
  * search list
- * @param {String} token        search string
+ * @param {{}} request          search string
  * @param {Function} callback   callback function
- * @param {Array} attributes    attributes to search in
  */
-VDRest.Database.Model.Movies.prototype.search = function (token, callback, attributes) {
+VDRest.Database.Model.Movies.prototype.search = function (request, callback) {
+
+    var attributes = request.attributes.length > 0 ? request.attributes : ['title'],
+        genre = request.genre.length > 0 ? request.genre : false, skipItem = false;
 
     this.searchResult = this.module.getModel('Movies');
 
-    attributes = attributes || ['title'];
-
     this.each(function (item) {
 
+        if (skipItem) {
+            skipItem = false;
+        }
+
+        if (genre) {
+            if (genre.pfIntersect(this.genresToArray(item)).length <= 0) {
+                skipItem = true;
+            }
+        }
+
         attributes.forEach(function (attribute) {
-            if (item.data[attribute].toLowerCase().indexOf(token.toLowerCase()) > -1) {
+            if (!skipItem && item.data[attribute].toLowerCase().indexOf(request.query.toLowerCase()) > -1) {
                 this.searchResult.addItem(item.getData());
+                skipItem = true;
             }
         }.bind(this));
+
     }.bind(this), callback);
+};
+
+/**
+ * convert genres string to array
+ * @param {VDRest.Database.Model.Movies} item
+ * @returns {String[]}
+ */
+VDRest.Database.Model.Movies.prototype.genresToArray = function (item) {
+
+    return item.getData('genres').split(',').map(function (genre) {
+        return genre.replace(/(^\s*|\s*$)/g, '');
+    }.bind(this)).join('|').replace(/\|{2,}/g, '|').replace(/(^\||\|$)/g, '').split('|');
 };
 
 /**

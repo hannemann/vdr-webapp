@@ -354,7 +354,7 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
         .val((field.value ? field.value : ''));
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
-    
+
     if ("boolean" === field.type) {
         wrapper = $('<span class="wrapper clearer">');
         field.dom.append(wrapper);
