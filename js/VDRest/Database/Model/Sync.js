@@ -31,6 +31,7 @@ VDRest.Database.Model.Sync.prototype.init = function () {
 VDRest.Database.Model.Sync.prototype.synchronize = function () {
 
     this.current = 0;
+    this.shows = {};
     this.getRecordings();
     this.unlink();
     this.addRecording();
@@ -47,6 +48,7 @@ VDRest.Database.Model.Sync.prototype.addRecording = function () {
         if ("function" === typeof this.callback) {
             this.callback();
         }
+        this.shows = undefined;
         return;
     }
 
@@ -91,10 +93,17 @@ VDRest.Database.Model.Sync.prototype.addSeries = function (media) {
 
     var show;
 
-    delete media.recording_number;
+    if (!this.shows[media.series_id]) {
+        show = this.module.getModel(
+            'Shows.Show',
+            VDRest.Database.Model.Shows.Show.prototype.initMedia(media)
+        );
+        this.shows[media.series_id] = show;
+    } else {
+        show = this.shows[media.series_id];
+    }
 
-    media = VDRest.Database.Model.Shows.Show.prototype.initMedia(media);
-    show = this.module.getModel('Shows.Show', media);
+    delete media.recording_number;
     show.addEpisode(media);
     this.current++;
 
