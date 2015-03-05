@@ -59,7 +59,6 @@ Gui.Database.Controller.List.Item.prototype.removeObserver = function () {
 Gui.Database.Controller.List.Item.prototype.addCloneObserver = function () {
     this.clone.find('.ctrl-button.info').on('click', this.handleArea.bind(this, 'info'));
     this.clone.find('.ctrl-button.actors').on('click', this.handleArea.bind(this, 'actors'));
-    this.clone.find('.ctrl-button.play').on('click', this.handlePlay.bind(this));
 };
 
 /**
@@ -153,8 +152,12 @@ Gui.Database.Controller.List.Item.prototype.addClone = function () {
 
 /**
  * handle info event
+ * @param {String} area
+ * @param {jQuery.Event} e
  */
-Gui.Database.Controller.List.Item.prototype.handleArea = function (area) {
+Gui.Database.Controller.List.Item.prototype.handleArea = function (area, e) {
+
+    if ($(e.target).hasClass('disabled')) return;
 
     this.vibrate();
 
@@ -232,49 +235,13 @@ Gui.Database.Controller.List.Item.prototype.addActors = function () {
 };
 
 /**
- * handle play event
- */
-Gui.Database.Controller.List.Item.prototype.handlePlay = function () {
-
-    var number = this.data.media.data.recording_number;
-
-    this.vibrate();
-
-    VDRest.app.getModule('VDRest.Recordings').loadModel('List.Recording', number, function (recording) {
-
-        this.startStream(recording);
-    }.bind(this))
-};
-
-/**
- * start streaming
- */
-Gui.Database.Controller.List.Item.prototype.startStream = function (recording) {
-
-    if (VDRest.info.canUseHtmlPlayer() && VDRest.info.canRemuxRecordings()) {
-
-        $.event.trigger({
-            "type": "window.request",
-            "payload": {
-                "type": "VideoPlayer",
-                "data": {
-                    "sourceModel": recording
-                }
-            }
-        });
-    } else {
-        window.location.href = recording.getStreamUrl();
-    }
-};
-
-/**
  * toggle display of single item off
  * @returns {Gui.Database.Controller.List.Item}
  */
 Gui.Database.Controller.List.Item.prototype.removeItem = function () {
 
     this.removeCloneObserver();
-    this.actors.destructView();
+    this.actors && this.actors.destructView();
     this.clone.one(this.transitionEndEvent, function () {
         this.clone.remove();
         this.clone = undefined;

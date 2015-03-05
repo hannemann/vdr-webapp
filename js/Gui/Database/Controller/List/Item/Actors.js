@@ -8,32 +8,16 @@ Gui.Database.Controller.List.Item.Actors = function () {
 /**
  * @type {VDRest.Abstract.Controller}
  */
-Gui.Database.Controller.List.Item.Actors.prototype = new VDRest.Abstract.Controller();
+Gui.Database.Controller.List.Item.Actors.prototype = new Gui.Database.Controller.List.Item.Abstract();
 
 /**
  * @type {boolean}
  */
-Gui.Database.Controller.List.Item.Actors.prototype.bypassCache = true;
+Gui.Database.Controller.List.Item.Actors.prototype.type = 'Actors';
 
 /**
- * initialize
+ * add actors
  */
-Gui.Database.Controller.List.Item.Actors.prototype.init = function () {
-
-    this.view = this.module.getView('List.Item.Actors', this.data);
-
-    this.view.setParentView(this.data.parent.view);
-
-    this.actors = [];
-};
-
-Gui.Database.Controller.List.Item.Actors.prototype.dispatchView = function () {
-
-    this.addActors();
-
-    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-};
-
 Gui.Database.Controller.List.Item.Actors.prototype.addActors = function () {
 
     var actors = this.getData('media').actors;

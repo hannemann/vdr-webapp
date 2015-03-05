@@ -33,19 +33,8 @@ Gui.Database.View.List.Movie.prototype.render = function () {
         .addText('budget', this.data.media.getText('budget'), 'Budget', null, this.info)
         .addText('revenue', this.data.media.getText('revenue'), 'Revenue', null, this.info);
 
-    if (this.data.media.getText('title') !== this.data.media.getText('recording_title')) {
-        this.addText('recording-title', this.data.media.getText('recording_title'), 'Recording title', null, this.info);
-    }
-
-    this.addText(
-        'recording-date',
-        VDRest.helper.getDateTimeString(
-            new Date(
-                parseInt(this.data.media.getData('recording_date'), 10) * 1000
-            ),
-            true
-        ),
-        'Recording date', null, this.info);
+    this.addRecordingData()
+        .addPlayButton();
 
     Gui.Database.View.List.Item.prototype.render.call(this);
 };

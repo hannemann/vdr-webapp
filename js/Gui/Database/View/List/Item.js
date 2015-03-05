@@ -45,8 +45,7 @@ Gui.Database.View.List.Item.prototype.init = function () {
 Gui.Database.View.List.Item.prototype.render = function () {
 
     this.addInfoButton()
-        .addActorsButton()
-        .addPlayButton();
+        .addActorsButton();
 
     VDRest.Abstract.View.prototype.render.call(this);
 };
@@ -124,6 +123,29 @@ Gui.Database.View.List.Item.prototype.addInfoArea = function () {
 };
 
 /**
+ * add recording data
+ */
+Gui.Database.View.List.Item.prototype.addRecordingData = function () {
+
+    if (this.data.media.getText('title') !== this.data.media.getText('recording_title')) {
+        this.addText('recording-title', this.data.media.getText('recording_title'), 'Recording title', null, this.info);
+    }
+
+    this.addText(
+        'recording-date',
+        VDRest.helper.getDateTimeString(
+            new Date(
+                parseInt(this.data.media.getData('recording_date'), 10) * 1000
+            ),
+            true
+        ),
+        'Recording date', null, this.info
+    );
+
+    return this;
+};
+
+/**
  * add info button
  * @returns {Gui.Database.View.List.Item}
  */
@@ -141,9 +163,16 @@ Gui.Database.View.List.Item.prototype.addInfoButton = function () {
  */
 Gui.Database.View.List.Item.prototype.addActorsButton = function () {
 
+    var actors = this.getData('media').getData('actors');
+
     this.ctrlActors = $(
         '<div class="vdr-web-symbol ctrl-button actors">' + this.symbolActors + '</div>'
-    ).appendTo(this.node);
+    );
+
+    if (!actors || actors.length < 1) {
+        this.ctrlActors.addClass('disabled');
+    }
+    this.ctrlActors.appendTo(this.node);
     return this;
 };
 

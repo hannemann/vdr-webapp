@@ -97,6 +97,10 @@
     font-style: italic;
 }
 
+.database-collection.display-item .ctrl-button.disabled {
+    color: rgba(255, 255, 255, 0.2);
+}
+
 @media (orientation: portrait) {
     .database-collection.display-item.hidden .ctrl-button {
         display: none;
@@ -107,7 +111,8 @@
         display: none;
     }
 
-    .database-collection.display-item .ctrl-button.play {
+    .database-collection.display-item .ctrl-button.play,
+    .database-collection.display-item .ctrl-button.seasons {
         top: 23.5%;
         right: 1.5%;
     }
@@ -265,7 +270,8 @@
         top: 65px;
     }
 
-    .database-collection.display-item .ctrl-button.play {
+    .database-collection.display-item .ctrl-button.play,
+    .database-collection.display-item .ctrl-button.seasons {
         top: 120px;
     }
 
