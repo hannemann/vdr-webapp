@@ -174,17 +174,15 @@ Gui.Database.Controller.List.prototype.handleDown = function (callback) {
     };
 
     this.preventClick = undefined;
-    if (VDRest.info.getStreamer()) {
 
-        this.clickTimeout = window.setTimeout(function () {
+    this.clickTimeout = window.setTimeout(function () {
 
-            this.vibrate(100);
+        this.vibrate(100);
 
-            this.preventClick = true;
+        this.preventClick = true;
 
-            callback();
-        }.bind(this), 500);
-    }
+        callback();
+    }.bind(this), 500);
 };
 
 /**
@@ -466,10 +464,12 @@ Gui.Database.Controller.List.prototype.highlightActive = function (pos) {
  */
 Gui.Database.Controller.List.prototype.resetHighlightImages = function () {
 
-    this.view
-        .removeHighlight(this.tiles[this.currentActive])
-        .removeHighlight(this.tiles[this.currentPrevious]);
-
+    if (this.tiles[this.currentActive]) {
+        this.view.removeHighlight(this.tiles[this.currentActive]);
+    }
+    if (this.tiles[this.currentPrevious]) {
+        this.view.removeHighlight(this.tiles[this.currentPrevious]);
+    }
     return this;
 };
 
