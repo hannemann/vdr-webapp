@@ -227,6 +227,7 @@
         padding: 0;
     }
 
+    /* transition for all items */
     .database-collection.display-item .genres,
     .database-collection.display-item .item-text.overview,
     .database-collection.display-item .rating,
@@ -234,10 +235,12 @@
     .database-collection.display-item .tagline,
     .database-collection.display-item .ctrl-button,
     .database-collection.display-item .item-info,
-    .database-collection.display-item .item-actors {
+    .database-collection.display-item .item-actors,
+    .database-collection.display-item .item-seasons {
         transition: transform .3s ease-out;
     }
 
+    /* push item to the right */
     .database-collection.display-item.hidden .rating,
     .database-collection.display-item.hidden-overview .rating,
     .database-collection.display-item.hidden-overview .rating,
@@ -247,12 +250,14 @@
         transform: translateX(150%);
     }
 
+    /* push item to the left */
     .database-collection.display-item.hidden .tagline,
     .database-collection.display-item.hidden .poster,
     .database-collection.display-item.hidden-overview .poster {
         transform: translateX(-150%) !important;
     }
 
+    /* scale item to nothing */
     .database-collection.display-item.hidden-overview .genres,
     .database-collection.display-item.hidden .genres {
         transform: scale(0, 0);
@@ -276,7 +281,8 @@
     }
 
     .database-collection.display-item .item-actors,
-    .database-collection.display-item .item-info {
+    .database-collection.display-item .item-info,
+    .database-collection.display-item .item-seasons {
         display: block;
         position: absolute;
         bottom: 1.5%;
@@ -295,8 +301,25 @@
         border-radius: .5em;
     }
 
+    .database-collection.display-item .item-seasons {
+        padding: 1.5%;
+    }
+
+    .database-collection.display-item .item-seasons .ctrl-button {
+        position: static;
+        display: inline-block;
+        margin-right: 1.5%
+    }
+
     .database-collection.display-item.hidden-actors .item-actors,
-    .database-collection.display-item.hidden-info .item-info {
+    .database-collection.display-item.hidden-info .item-info,
+    .database-collection.display-item.hidden-seasons .item-seasons {
         transform: translateY(150%);
     }
+
+    /*********
+
+    TODO: bau den portrait view für die fagging seasons
+
+    *********/
 }

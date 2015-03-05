@@ -13,19 +13,54 @@ Gui.Database.Controller.List.Item.Seasons.prototype = new Gui.Database.Controlle
 /**
  * @type {boolean}
  */
-Gui.Database.Controller.List.Item.Seasons.prototype.type = 'Actors';
+Gui.Database.Controller.List.Item.Seasons.prototype.type = 'Seasons';
 
 /**
  * add actors
  */
+Gui.Database.Controller.List.Item.Seasons.prototype.dispatchView = function () {
+
+    this.seasons = [];
+
+    Gui.Database.Controller.List.Item.Abstract.prototype.dispatchView.call(this);
+
+    this.addObserver();
+};
+
+Gui.Database.Controller.List.Item.Seasons.prototype.addObserver = function () {
+
+    this.seasons.forEach(function (season) {
+        season.on('click', function () {
+
+            console.log(this);
+        }.bind(this));
+    }.bind(this));
+};
+/**
+ * add actors
+ */
 Gui.Database.Controller.List.Item.Seasons.prototype.addSeasons = function () {
-    //
-    //var actors = this.getData('media').actors;
-    //
-    //actors.forEach(function (actor) {
-    //    actor.parent = this;
-    //    actor = this.module.getController('List.Item.Actors.Actor', actor);
-    //    this.actors.push(actor);
-    //    actor.dispatchView();
-    //}.bind(this));
+
+    this.getSeasonIds().forEach(function (season) {
+
+        this.seasons.push(this.view.addSeason(season));
+    }.bind(this));
+};
+
+/**
+ * retrieve season numbers
+ * @returns {Number[]}
+ */
+Gui.Database.Controller.List.Item.Seasons.prototype.getSeasonIds = function () {
+
+    var seasons = this.getData('media').getData('episodes').seasons,
+        seasonIds = [], i;
+
+    for (i in seasons) {
+        if (seasons.hasOwnProperty(i)) {
+            seasonIds.push(i);
+        }
+    }
+
+    return seasonIds.sort();
 };
