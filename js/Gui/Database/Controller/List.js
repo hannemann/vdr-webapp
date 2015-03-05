@@ -224,7 +224,7 @@ Gui.Database.Controller.List.prototype.sort = function (method, reverse) {
 
     reverse = !!reverse;
 
-    collection.sort(this.collection[method], reverse, function () {
+    collection.sort(collection[method].bind(collection), reverse, function () {
         this.resetContextMenuSortStates();
         VDRest.app.getCurrent(true).contextMenu[method].state = reverse ? 'on' : 'off';
         this.currentSorting = method + (reverse ? 'Desc' : 'Asc');
@@ -276,6 +276,8 @@ Gui.Database.Controller.List.prototype.search = function () {
             this.filterItems();
         }.bind(this));
     }.bind(this);
+
+    this.searchForm.fields.attributes.values.title.value = this.collection.nameAttribute;
 
     this.searchForm.fields.genre.values = this.getGenres.bind(this);
 
