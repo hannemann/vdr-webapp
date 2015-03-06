@@ -373,7 +373,8 @@ VDRest.App.prototype.translate = function () {
 
     if (this[this.language] && this[this.language][key]) {
 
-        return sprintf(this[this.language][key], args);
+        args.unshift(this[this.language][key]);
+        return sprintf.apply(window, args);
     }
 
     return key;
