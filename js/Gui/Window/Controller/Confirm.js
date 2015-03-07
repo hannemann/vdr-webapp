@@ -33,7 +33,7 @@ Gui.Window.Controller.Confirm.prototype.addObserver = function () {
 
     this.view.ok.one('click', this.okAction.bind(this));
 
-    this.view.cancel.one('click', this.cancel.bind(this));
+    this.view.cancel.one('click', this.cancelAction.bind(this));
 
     $window.on("resize.confirm-window", this.setPosition.bind(this));
 };
@@ -59,25 +59,21 @@ Gui.Window.Controller.Confirm.prototype.okAction = function () {
 
     this.vibrate();
 
-    history.back();
+    this.confirmed = true;
 
-    this.view.node.one(this.animationEndEvents, function () {
-        $.event.trigger({
-            "type" : "window.confirm.confirm"
-        });
-    });
+    history.back();
 };
 
 /**
  * handle cancel click
  */
-Gui.Window.Controller.Confirm.prototype.cancel = function () {
+Gui.Window.Controller.Confirm.prototype.cancelAction = function () {
 
     this.vibrate();
 
-    history.back();
+    this.confirmed = false;
 
-    $document.off('window.confirm.confirm');
+    history.back();
 };
 
 /**
@@ -85,12 +81,17 @@ Gui.Window.Controller.Confirm.prototype.cancel = function () {
  */
 Gui.Window.Controller.Confirm.prototype.destructView = function () {
 
-    var me = this;
     // apply animation
     this.view.node.toggleClass('collapse expand');
     // remove on animation end
     this.view.node.one(this.animationEndEvents, function () {
 
-        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
-    });
+        $(document).off('window.confirm.' + (this.confirmed ? 'cancel' : 'confirm'));
+
+        $.event.trigger({
+            "type": "window.confirm." + (this.confirmed ? 'confirm' : 'cancel')
+        });
+
+        Gui.Window.Controller.Abstract.prototype.destructView.call(this);
+    }.bind(this));
 };

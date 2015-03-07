@@ -293,5 +293,17 @@ VDRest.app.de_DE = {
     "Search in": "Suchen in",
     "Subtitle": "Untertitel",
     "Description": "Beschreibung",
+    "Fetching recordings...": "Hole Aufnahmen...",
+    "Found %s recordings to synchronize.": "%s Aufnahmen zu synchronisieren.",
+    "Complete": "Abgeschlossen",
+    "Analyze recordings.": "Analysiere Aufnahmen.",
+    "Starting process...": "Starte Prozess...",
+    "Syncing movies:": "Synchronisiere Filme:",
+    "Syncing episodes:": "Synchronisiere Episoden:",
+    "Syncing TV shows:": "Synchronisiere Serien:",
+    "Found %d movies, %d episodes and %d shows.": "%d Filme, %d Episoden und %d Serien gefunden.",
+    "This can take a long time. Proceed?": "Dies kann recht lange dauern. Weiter?",
+    "Database sync": "Datenbank Synchronisation",
+    "Deleting outdated items:": "Lösche veraltete Einträge",
     "Window 16/9": "Fenster 16/9"
 };

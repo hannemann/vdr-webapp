@@ -32,6 +32,19 @@ VDRest.Database.Model.Shows.Show.prototype.oStore = 'shows';
 VDRest.Database.Model.Shows.Show.prototype.collectionModel = 'Shows';
 
 /**
+ * collection model name
+ * @type {string}
+ */
+VDRest.Database.Model.Shows.Show.prototype.init = function () {
+
+    if (!this.data.episodes) {
+        this.data.episodes = {
+            "seasons": {}
+        };
+    }
+};
+
+/**
  * add episode to show
  * @param {Object} media
  */

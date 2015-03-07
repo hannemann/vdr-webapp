@@ -179,10 +179,11 @@ Gui.Database.prototype.contextMenu = {
         "state": "on",
         "scope": 'Gui.Database',
         "fn": function () {
-            VDRest.app.getModule('VDRest.Database').getController('Sync').synchronize();
+
+            this.getController('Sync').dispatchView();
         },
         "highlight": function (bObj) {
-            bObj.button.toggleClass('hidden', !!this.currentList);
+            bObj.button.toggleClass('hidden', !!this.currentList || !!this.syncing);
         }
     },
     "generate_movie_fanart": {
@@ -196,7 +197,7 @@ Gui.Database.prototype.contextMenu = {
             this.getController('Fanart', 'movies').generate();
         },
         "highlight": function (bObj) {
-            bObj.button.toggleClass('hidden', !!this.currentList);
+            bObj.button.toggleClass('hidden', !!this.currentList || !!this.syncing);
         }
     },
     "generate_shows_fanart": {
@@ -210,7 +211,7 @@ Gui.Database.prototype.contextMenu = {
             this.getController('Fanart', 'shows').generate();
         },
         "highlight": function (bObj) {
-            bObj.button.toggleClass('hidden', !!this.currentList);
+            bObj.button.toggleClass('hidden', !!this.currentList || !!this.syncing);
         }
     }
 };

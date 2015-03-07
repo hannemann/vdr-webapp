@@ -244,6 +244,20 @@ img.hidden-for-processing {
     top: 0;
 }
 
+.progress-bar {
+    width: calc(100% - 4px);
+    height: 12px;
+    border: 1px solid rgb(79, 79, 79);
+    padding: 1px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.progress-bar div {
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(30, 87, 153, 1) 0%, rgba(30, 87, 153, 1) 19%, rgba(30, 87, 153, 1) 20%, rgba(41, 137, 216, 1) 50%, rgba(30, 87, 153, 1) 80%, rgba(30, 87, 153, 1) 87%, rgba(30, 87, 153, 1) 100%);
+    border-radius: 3px;
+}
 
 @media (min-width: 800px), (min-height: 800px) {
     body {

@@ -88,7 +88,7 @@ VDRest.Abstract.IndexedDB.prototype.readyStateChange = function (state) {
 
 /**
  * retrieve transaction
- * @param {String} [store]
+ * @param {String[]} [store]
  * @param {String} [type]
  * @returns {IDBTransaction}
  */

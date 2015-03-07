@@ -9,26 +9,15 @@ VDRest.Database.Controller.Sync = function () {};
  */
 VDRest.Database.Controller.Sync.prototype = new VDRest.Abstract.Controller();
 
+VDRest.Database.Controller.Sync.prototype.bypassCache = true;
+
 /**
  * synchronize recordings
  */
 VDRest.Database.Controller.Sync.prototype.synchronize = function (callback) {
 
-    var recordings = VDRest.app.getModule('VDRest.Recordings').getModel('List');
-
     this.syncModel = this.module.getModel('Sync');
     this.syncModel.callback = callback;
-
-    this.addObserver();
-
-    VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
-    recordings.initList();
-};
-
-/**
- * add event listeners
- */
-VDRest.Database.Controller.Sync.prototype.addObserver = function () {
-
-    $(document).one('recordingsloaded', $.proxy(this.syncModel.synchronize, this.syncModel));
+    //VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+    this.syncModel.synchronize();
 };

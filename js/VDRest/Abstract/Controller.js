@@ -44,6 +44,34 @@ VDRest.Abstract.Controller.prototype.animationEndEvents = function () {
 
 /**
  * transitionEnd event names
+ * @returns {string}
+ */
+VDRest.Abstract.Controller.prototype.animationEndEvent = function () {
+
+    if ('onanimationend' in window) {
+        return 'animationend';
+    }
+
+    if ('onwebkitanimationend' in window) {
+        return 'webkitAnimationEnd';
+    }
+
+    if ('onmozanimationend' in window) {
+        return 'mozanimationend';
+    }
+
+    if ('onotransitionend' in window) {
+        return 'otransitionend'
+    }
+
+    if ('onmsnimationend' in window) {
+        return 'MSAnimationEnd'
+    }
+
+}();
+
+/**
+ * transitionEnd event names
  * @type {string}
  */
 VDRest.Abstract.Controller.prototype.transitionEndEvents = function () {

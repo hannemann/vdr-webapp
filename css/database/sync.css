@@ -1,0 +1,32 @@
+#sync-info {
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+#sync-info .window-body {
+    padding: 3%;
+}
+
+#sync-info .header {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 3%;
+    font-size: 1.5em;
+}
+
+.sync-step {
+    padding: 3px 0;
+}
+
+.sync-step-header {
+    border-bottom: 1px solid rgb(44, 44, 44);
+    padding: 0 1%;
+}
+
+.sync-step-message {
+    font-size: .9em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-style: italic;
+    padding: 0 1%;
+}

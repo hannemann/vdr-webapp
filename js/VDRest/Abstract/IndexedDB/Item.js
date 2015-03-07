@@ -60,7 +60,7 @@ VDRest.Abstract.IndexedDB.Item.prototype.load = function (id, callback) {
  */
 VDRest.Abstract.IndexedDB.Item.prototype.save = function (callback) {
 
-    var transaction, store, persist = function () {
+    var transaction, store, request, persist = function () {
 
         transaction = this.getTransaction([this.oStore]);
         store = transaction.objectStore(this.oStore);
@@ -72,12 +72,18 @@ VDRest.Abstract.IndexedDB.Item.prototype.save = function (callback) {
         }
 
         store.delete(this.getData(this.primaryKey));
-        store.add(this.getData());
-        "function" === typeof this.onsave && this.onsave(this);
+        request = store.add(this.getData());
+
+        if ("function" === typeof this.onsave) {
+
+            request.onsuccess = function () {
+                this.onsave(this);
+            }.bind(this);
+        }
 
     }.bind(this);
 
-    if (this.readystate < 4) {
+    if (this.readystate < 4 && !this.onreadystatechange) {
         this.onreadystatechange = function (state) {
 
             if (4 == state) persist();
@@ -92,7 +98,7 @@ VDRest.Abstract.IndexedDB.Item.prototype.save = function (callback) {
  */
 VDRest.Abstract.IndexedDB.Item.prototype.unlink = function (callback) {
 
-    var transaction, store, unlink = function () {
+    var transaction, store, request, unlink = function () {
 
         transaction = this.getTransaction([this.oStore]);
         store = transaction.objectStore(this.oStore);
@@ -103,8 +109,14 @@ VDRest.Abstract.IndexedDB.Item.prototype.unlink = function (callback) {
             transaction.oncomplete = callback;
         }
 
-        store.delete(this.getData(this.primaryKey));
-        "function" === typeof this.onunlink && this.onunlink(this);
+        request = store.delete(this.getData(this.primaryKey));
+
+        if ("function" === typeof this.onunlink) {
+
+            request.onsuccess = function () {
+                this.onunlink(this);
+            }.bind(this);
+        }
 
     }.bind(this);
 
