@@ -141,6 +141,7 @@ Gui.Database.View.List.Item.prototype.addRecordingData = function () {
         ),
         'Recording date', null, this.info
     );
+    this.addText('recording-path', this.data.media.getText('recording_relative_file_name'), 'Recording file', null, this.info);
 
     return this;
 };

@@ -305,5 +305,6 @@ VDRest.app.de_DE = {
     "This can take a long time. Proceed?": "Dies kann recht lange dauern. Weiter?",
     "Database sync": "Datenbank Synchronisation",
     "Deleting outdated items:": "Lösche veraltete Einträge",
+    "Recording file": "Aufnahme Datei",
     "Window 16/9": "Fenster 16/9"
 };
