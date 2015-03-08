@@ -20,7 +20,9 @@ Gui.Database.View.List.Show.prototype.symbolSeason = 'l';
  */
 Gui.Database.View.List.Show.prototype.render = function () {
 
-    this.addImage('fanart', this.data.media.getImage('fanarts', 0))
+    var maxScreen = VDRest.helper.getMaxScreenResolution("landscape");
+
+    this.addImage('fanart', this.data.media.getImage('fanarts', 0), maxScreen.width)
         .addImage('poster', this.data.media.getImage('posters', 0))
         .addText('name', this.data.media.getText('name'))
         .addText('genres', this.data.media.getText('genre'))
@@ -44,12 +46,28 @@ Gui.Database.View.List.Show.prototype.render = function () {
  * add an image
  * @param {String} type fanart, poster...
  * @param {{String path, Number height, Number width}} image
+ * @param {Number} [width]
+ * @param {Number} [height]
  * @returns {Gui.Database.View.List.Movie}
  */
-Gui.Database.View.List.Show.prototype.addImage = function (type, image) {
+Gui.Database.View.List.Show.prototype.addImage = function (type, image, width, height) {
+
+    var resize = "";
+
+    if (width && !height) {
+        resize = "width/" + width + "/";
+    }
+
+    if (!width && height) {
+        resize = "height/" + height + "/";
+    }
+
+    if (width && height) {
+        resize = "size/" + width + "/" + height + "/";
+    }
 
     if (image && image.path && image.image != '') {
-        this[type] = $('<img>').attr('src', this.baseImageUrl + image.path);
+        this[type] = $('<img>').attr('src', this.baseImageUrl + resize + image.path);
 
         this[type].addClass(type).appendTo(this.node);
     }
