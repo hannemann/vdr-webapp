@@ -95,6 +95,9 @@ Gui.Database.Controller.Sync.prototype.destructView = function () {
         Gui.Window.Controller.Abstract.prototype.destructView.call(this);
         delete this.module.syncing;
     }.bind(this));
+
+    delete this.module.syncing;
+    
     // apply animation
     this.view.node.toggleClass('collapse expand');
 };
