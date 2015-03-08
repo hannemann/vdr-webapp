@@ -145,10 +145,10 @@ Gui.Database.Controller.Default.prototype.askSync = function () {
         }
     });
 
-    $(document).one('window.confirm.confirm', $.proxy(function () {
-        VDRest.app.getModule('VDRest.Database').getController('Sync').synchronize(function () {
+    $(document).one('window.confirm.confirm', function () {
+        this.module.getController('Sync').synchronize(function () {
             this.shows.load(undefined, this.oninitbackends.bind(this));
             this.movies.load(undefined, this.oninitbackends.bind(this));
         }.bind(this));
-    }, this));
+    }.bind(this));
 };

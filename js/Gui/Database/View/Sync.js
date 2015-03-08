@@ -46,6 +46,11 @@ Gui.Database.View.Sync.prototype.addHeader = function () {
     $('<div class="header">').text(VDRest.app.translate('Database sync')).appendTo(this.body);
 };
 
+/**
+ * create gui
+ * @param data
+ * @returns {{}}
+ */
 Gui.Database.View.Sync.prototype.addStep = function (data) {
 
     var step = {};
@@ -55,7 +60,7 @@ Gui.Database.View.Sync.prototype.addStep = function (data) {
     if (data.message) {
         step.message.html(data.message);
     }
-    if (data.addProgress) {
+    if (data.progressBar) {
         step.progressWrapper = $('<div>').addClass('progress-bar').appendTo(step.node);
         step.progressBar = $('<div>').css({"width": "0"}).appendTo(step.progressWrapper);
     }
@@ -63,4 +68,23 @@ Gui.Database.View.Sync.prototype.addStep = function (data) {
     step.node.appendTo(this.body);
 
     return step;
+};
+
+/**
+ * update gui
+ * @param data
+ */
+Gui.Database.View.Sync.prototype.updateStep = function (data) {
+
+    if ('addStep' === data.action) {
+        this.currentStep = this.addStep(data);
+    }
+    if ('addMessage' === data.action) {
+        if (data.message) {
+            this.currentStep.message.html(data.message);
+        }
+        if (data.progress) {
+            this.currentStep.progressBar.css({"width": data.progress + '%'});
+        }
+    }
 };

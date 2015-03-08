@@ -25,7 +25,6 @@ VDRest.Database.Model.Sync.Abstract.prototype.init = function () {
     this.deleteCollection = this.module.getModel(collectionName);
     this.items = {};
     this.updateItems = {};
-    this.deleteItems = [];
     this.triggeredCallbacks = {};
     this.primaryKey = this.collection.primaryKey;
 };
@@ -141,7 +140,7 @@ VDRest.Database.Model.Sync.Abstract.prototype.countUpdates = function () {
  * count updates collection
  * @returns {Number}
  */
-VDRest.Database.Model.Sync.Abstract.prototype.countdelete = function () {
+VDRest.Database.Model.Sync.Abstract.prototype.countDelete = function () {
 
     return this.deleteCollection.count();
 };

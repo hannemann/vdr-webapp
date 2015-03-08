@@ -13,11 +13,13 @@ VDRest.Database.Controller.Sync.prototype.bypassCache = true;
 
 /**
  * synchronize recordings
+ * @param {Function} updategui
+ * @param {Function} oncomplete
  */
-VDRest.Database.Controller.Sync.prototype.synchronize = function (callback) {
+VDRest.Database.Controller.Sync.prototype.synchronize = function (updategui, oncomplete) {
 
     this.syncModel = this.module.getModel('Sync');
-    this.syncModel.callback = callback;
-    //VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+    this.syncModel.updategui = updategui;
+    this.syncModel.oncomplete = oncomplete;
     this.syncModel.synchronize();
 };

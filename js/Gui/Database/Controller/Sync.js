@@ -36,12 +36,11 @@ Gui.Database.Controller.Sync.prototype.init = function () {
  */
 Gui.Database.Controller.Sync.prototype.dispatchView = function () {
 
-
     $(document)
-        .one('window.confirm.confirm', this.doDispatch.bind(this))
+        .one('window.confirm.confirm', this.synchronize.bind(this))
         .one('window.confirm.cancel', this.goBack.bind(this));
 
-
+// TODO: confirm callbacks übergeben statt sich hier selbst darum zu kümmern...
     $.event.trigger({
         "type": "window.request",
         "payload": {
@@ -54,29 +53,27 @@ Gui.Database.Controller.Sync.prototype.dispatchView = function () {
     });
 };
 
-Gui.Database.Controller.Sync.prototype.doDispatch = function () {
+/**
+ * dispatch view, get synchronizer, start process
+ * @param {Function} complete
+ */
+Gui.Database.Controller.Sync.prototype.synchronize = function (complete) {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.view.node.one(this.animationEndEvent, function () {
-        VDRest.app.getModule('VDRest.Database').getController('Sync').synchronize(this.update.bind(this));
+        VDRest.app.getModule('VDRest.Database').getController('Sync').synchronize(this.update.bind(this), complete);
     }.bind(this));
 };
 
+/**
+ * update gui
+ * @param data
+ */
 Gui.Database.Controller.Sync.prototype.update = function (data) {
 
     if (data) {
 
-        if ('addStep' === data.action) {
-            this.currentStep = this.view.addStep(data);
-        }
-        if ('addMessage' === data.action) {
-            if (data.message) {
-                this.currentStep.message.html(data.message);
-            }
-            if (data.percentage) {
-                this.currentStep.progressBar.css({"width": data.percentage + '%'});
-            }
-        }
+        this.view.updateStep(data);
     }
 };
 
