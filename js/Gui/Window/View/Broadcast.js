@@ -39,10 +39,7 @@ Gui.Window.View.Broadcast.prototype.render = function () {
 
     this.addTitle();
 
-    if (this.hasImages()) {
-
-        this.addMainImage()
-    }
+    this.addMainImage();
 
     this.addDetails();
 
@@ -247,8 +244,12 @@ Gui.Window.View.Broadcast.prototype.addTitle = function () {
  */
 Gui.Window.View.Broadcast.prototype.addMainImage = function () {
 
-    this.image = $('<img class="window-header-image right" src="' + this.getImages()[0] + '">')
-        .appendTo(this.header);
+    var src = this.getEpisodeImage(320) || this.getEpgImage() || this.getFanart(320);
+
+    if (src) {
+        this.image = $('<img class="window-header-image right" src="' + src + '">')
+            .appendTo(this.header);
+    }
 
     return this;
 };

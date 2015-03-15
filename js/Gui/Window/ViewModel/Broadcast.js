@@ -36,6 +36,8 @@ Gui.Window.ViewModel.Broadcast.prototype.init = function () {
     this.resource = this.data.resource.data;
     this.view = this.data.view;
 
+    this.baseUrl = VDRest.Api.Resource.prototype.getBaseUrl();
+
     this.initViewMethods();
 
     this.view.getStartTime = function () {
@@ -57,6 +59,12 @@ Gui.Window.ViewModel.Broadcast.prototype.init = function () {
 
         return me.getComponents();
     };
+
+    this.view.getEpgImage = this.getEpgImage.bind(this);
+
+    this.view.getEpisodeImage = this.getEpisodeImage.bind(this);
+
+    this.view.getFanart = this.getFanart.bind(this);
 };
 
 /**
@@ -82,4 +90,82 @@ Gui.Window.ViewModel.Broadcast.prototype.getComponents = function () {
     }
 
     return components.unique();
+};
+
+/**
+ * retrieve epg image
+ * @returns {String|Boolean}
+ */
+Gui.Window.ViewModel.Broadcast.prototype.getEpgImage = function () {
+
+    var images = this.data.resource.getData('images');
+
+    if (images && images.length > 0) {
+        return images[0];
+    }
+
+    return false;
+};
+
+/**
+ * retrieve fanart
+ * @param {Number} width
+ * @returns {String|Boolean}
+ */
+Gui.Window.ViewModel.Broadcast.prototype.getFanart = function (width) {
+
+    /**
+     * @type {additionalMediaEpisode|additionalMediaMovie}
+     */
+    var media = this.data.resource.getData('additional_media'),
+        resize = '';
+
+    if (media) {
+
+        if (width) {
+            resize = 'width/' + width + '/';
+        }
+
+        if ('series' === media.type) {
+
+            if (media.fanarts.length > 0) {
+                return this.baseUrl + 'scraper/image/' + resize + media.fanarts[0].path;
+            }
+        } else if ('movie' === media.type) {
+
+            if (media.fanart) {
+                return this.baseUrl + 'scraper/image/' + resize + media.fanart;
+            }
+        }
+    }
+    return false;
+};
+
+/**
+ * retrieve episode image
+ * @param {Number} width
+ * @returns {String|Boolean}
+ */
+Gui.Window.ViewModel.Broadcast.prototype.getEpisodeImage = function (width) {
+
+    /**
+     * @type {additionalMediaEpisode|additionalMediaMovie}
+     */
+    var media = this.data.resource.getData('additional_media'),
+        resize = '';
+
+    if (media) {
+
+        if (width) {
+            resize = 'width/' + width + '/';
+        }
+
+        if ('series' === media.type) {
+
+            if (media.episode_image) {
+                return this.baseUrl + 'scraper/image/' + resize + media.episode_image;
+            }
+        }
+    }
+    return false;
 };

@@ -1,3 +1,115 @@
+/**
+ * @typedef {{}} broadcastData
+ * @property {string} channel           channel_name
+ * @property {VDRest.Epg.Model.Channels.Channel} channelObj           channel_name
+ * @property {string} channel_name      channel_name
+ * @property {Array.<component>} components         stream descriptions
+ * @property {Array} contents
+ * @property {string} description
+ * @property {Array} details
+ * @property {Number} duration
+ * @property {Number} id
+ * @property {Number} images            number of epg images
+ * @property {Number} parental_rating
+ * @property {Array} raw_contents       ???
+ * @property {string} short_text        short description, subtitle
+ * @property {Number} table_id          ???
+ * @property {boolean} timer_active
+ * @property {boolean} timer_exists
+ * @property {Number} timer_id
+ * @property {string} title
+ * @property {Number} version
+ * @property {Number} vps               timestamp
+ * @property {Number} start_time        timestamp
+ * @property {Number} end_time          timestamp
+ * @property {Date} start_date
+ * @property {Date} end_date
+ */
+
+/**
+ * @typedef {{}} component
+ * @property {String} description
+ * @property {String} language
+ * @property {Number} stream
+ * @property {Number} type
+ */
+
+/**
+ * @typedef {{}} actor
+ * @property {String} name
+ * @property {String} role
+ * @property {String} thumb
+ */
+
+/**
+ * @typedef {{}} banners
+ * @property {Number} width
+ * @property {Number} height
+ * @property {String} path
+ */
+/**
+ * @typedef {{}} fanarts
+ * @property {Number} width
+ * @property {Number} height
+ * @property {String} path
+ */
+/**
+ * @typedef {{}} posters
+ * @property {Number} width
+ * @property {Number} height
+ * @property {String} path
+ */
+
+/**
+ * @typedef {{}} additionalMediaMovie
+ *
+ * @property {Array.<actor>} actors
+ * @property {Boolean} adult
+ * @property {String} collection_fanart
+ * @property {String} collection_name
+ * @property {String} collection_poster
+ * @property {String} fanart
+ * @property {String} genres
+ * @property {String} homepage
+ * @property {Number} movie_id
+ * @property {String} original_title
+ * @property {String} overview
+ * @property {Number} popularity
+ * @property {String} poster
+ * @property {String} release_date
+ * @property {Number} revenue
+ * @property {Number} runtime
+ * @property {String} tagline
+ * @property {String} title
+ * @property {String} type
+ * @property {Number} vote_average
+ */
+
+/**
+ * @typedef {{}} additionalMediaEpisode
+ * @property {Array.<banners>} banners
+ * @property {String} episode_first_aired
+ * @property {String} episode_guest_stars
+ * @property {Number} episode_id
+ * @property {String} episode_image
+ * @property {String} episode_name
+ * @property {Number} episode_number
+ * @property {String} episode_overview
+ * @property {Number} episode_rating
+ * @property {Number} episode_season
+ * @property {Array.<fanarts>} fanarts
+ * @property {String} first_aired
+ * @property {String} genre
+ * @property {String} name
+ * @property {String} network
+ * @property {String} overview
+ * @property {Array.<posters>} posters
+ * @property {Number} rating
+ * @property {Number} series_id
+ * @property {String} status
+ * @property {String} type
+ *
+ */
 
 /**
  * Broadcast data model
@@ -11,21 +123,21 @@
  * @property {Array} contents
  * @property {string} description
  * @property {Array} details
- * @property {number} duration
- * @property {number} id
- * @property {number} images            number of epg images
- * @property {number} parental_rating
+ * @property {Number} duration
+ * @property {Number} id
+ * @property {Number} images            number of epg images
+ * @property {Number} parental_rating
  * @property {Array} raw_contents       ???
  * @property {string} short_text        short description, subtitle
- * @property {number} table_id          ???
+ * @property {Number} table_id          ???
  * @property {boolean} timer_active
  * @property {boolean} timer_exists
- * @property {number} timer_id
+ * @property {Number} timer_id
  * @property {string} title
- * @property {number} version
- * @property {number} vps               timestamp
- * @property {number} start_time        timestamp
- * @property {number} end_time          timestamp
+ * @property {Number} version
+ * @property {Number} vps               timestamp
+ * @property {Number} start_time        timestamp
+ * @property {Number} end_time          timestamp
  * @property {Date} start_date
  * @property {Date} end_date
  */

@@ -27,6 +27,8 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.resource = this.data.resource.data;
 
+    this.baseUrl = VDRest.Api.Resource.prototype.getBaseUrl();
+
     this.calculateMetrics();
 
     VDRest.Helper.prototype.parseDescription.call(this, this.resource.description);
@@ -65,6 +67,12 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.initViewMethods = function
 
         return  false;
     };
+
+    this.data.view.getFanart = this.getFanart.bind(this);
+
+    this.data.view.getEpgImage = this.getEpgImage.bind(this);
+
+    this.data.view.getEpisodeImage = this.getEpisodeImage.bind(this);
 };
 
 /**
@@ -126,4 +134,80 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.calculateMetrics = functio
     return this;
 };
 
+/**
+ * retrieve epg image
+ * @returns {String|Boolean}
+ */
+Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.getEpgImage = function () {
 
+    var images = this.data.resource.getData('images');
+
+    if (images && images.length > 0) {
+        return images[0];
+    }
+
+    return false;
+};
+
+/**
+ * retrieve fanart
+ * @param {Number} width
+ * @returns {String|Boolean}
+ */
+Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.getFanart = function (width) {
+
+    /**
+     * @type {additionalMediaEpisode|additionalMediaMovie}
+     */
+    var media = this.data.resource.getData('additional_media'),
+        resize = '';
+
+    if (media) {
+
+        if (width) {
+            resize = 'width/' + width + '/';
+        }
+
+        if ('series' === media.type) {
+
+            if (media.fanarts.length > 0) {
+                return this.baseUrl + 'scraper/image/' + resize + media.fanarts[0].path;
+            }
+        } else if ('movie' === media.type) {
+
+            if (media.fanart) {
+                return this.baseUrl + 'scraper/image/' + resize + media.fanart;
+            }
+        }
+    }
+    return false;
+};
+
+/**
+ * retrieve episode image
+ * @param {Number} width
+ * @returns {String|Boolean}
+ */
+Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.getEpisodeImage = function (width) {
+
+    /**
+     * @type {additionalMediaEpisode|additionalMediaMovie}
+     */
+    var media = this.data.resource.getData('additional_media'),
+        resize = '';
+
+    if (media) {
+
+        if (width) {
+            resize = 'width/' + width + '/';
+        }
+
+        if ('series' === media.type) {
+
+            if (media.episode_image) {
+                return this.baseUrl + 'scraper/image/' + resize + media.episode_image;
+            }
+        }
+    }
+    return false;
+};

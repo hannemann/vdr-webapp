@@ -1,6 +1,21 @@
 /**
  * @class
  * @constructor
+ *
+ * @property {function(): Array.<String>} hasImages
+ * @property {function(): Boolean} getTimerExists
+ * @property {function(): Boolean} getTimerActive
+ * @property {function(): String} getTitle
+ * @property {function(): (additionalMediaMovie|additionalMediaEpisode)} getAdditionalMedia
+ * @property {function(): Array.<String>} getImages
+ * @property {function(): Boolean} hasShortText
+ * @property {function(): String} getShortText
+ * @property {function(): String} getDescription
+ * @property {function(): (String|Boolean)} getEpgImage
+ * @property {function(Number): (String|Boolean)} getEpisodeImage
+ * @property {function(Number): (String|Boolean)} getFanart
+ * @property {function(): number} getDuration
+ * @property {function(): boolean} getIsRecording
  */
 Gui.Epg.View.Broadcasts.List.Broadcast = function () {};
 
@@ -147,14 +162,15 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTitle = function () {
 
 /**
  * add Title
+ * @type {additionalMediaMovie} media
  * @returns {Gui.Epg.View.Broadcasts.List.Broadcast}
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
 
-    var img, src;
+    var img,
+        src = this.getEpisodeImage(100) || this.getEpgImage() || this.getFanart(100);
 
-    if (this.hasImages()) {
-        src = this.getImages()[0];
+    if (src) {
 
         if (this.imageInEpgView && this.getWidth() >= 45 * 60 * VDRest.config.getItem('pixelPerSecond')) {
             img = new Image();

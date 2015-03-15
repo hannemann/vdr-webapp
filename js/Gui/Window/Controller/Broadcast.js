@@ -57,14 +57,14 @@ Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
 
-    if (this.view.hasImages()) {
+    if (this.view.image) {
 
         this.view.image.on('click', $.proxy(this.animateImageAction, this));
     }
 
-    $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
-    $(document).on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimerAction, this));
+    $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
+    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
+    $(document).on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
     this.view.recordButton.on('click', $.proxy(this.toggleTimerAction, this));
     this.view.editButton.on('click', $.proxy(this.editTimerAction, this));
 
@@ -75,7 +75,7 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
  */
 Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
 
-    if (this.view.hasImages()) {
+    if (this.view.image) {
 
         this.view.image.off('click');
     }
