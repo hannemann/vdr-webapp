@@ -158,7 +158,7 @@ Gui.Window.Controller.Input.prototype.setEnum = function () {
 
     } else {
 
-        this.data.gui.val(VDRest.app.translate(value).val());
+        this.data.gui.val(VDRest.app.translate(value.val()));
     }
 
     for (i in this.data.values) {
