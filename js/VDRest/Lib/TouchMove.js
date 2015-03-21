@@ -138,7 +138,7 @@ TouchMove.prototype.start = function (e) {
  */
 TouchMove.prototype.move = function (e) {
 
-    //e.preventDefault();
+    e.preventDefault();
     this.preventEndEvent = true;
 
     var ePos = this.getEventPosition(e);
