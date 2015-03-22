@@ -25,6 +25,10 @@ Gui.Window.View.Abstract.prototype.init = function () {
 
     this.node = this.getNode();
 
+    if (this.hasDesktopCloseButton && "undefined" !== typeof navigator.maxTouchPoints && navigator.maxTouchPoints == 0) {
+        this.hasCloseButton = true;
+    }
+
     if (this.hasCloseButton && !this.closeButton) {
         this.addCloseButton();
     }

@@ -30,6 +30,11 @@ Gui.Window.View.Broadcast.prototype.isModal = true;
 /**
  * @type {boolean}
  */
+Gui.Window.View.Broadcast.prototype.hasDesktopCloseButton = true;
+
+/**
+ * @type {boolean}
+ */
 Gui.Window.View.Broadcast.prototype.isModalTransparent = true;
 
 /**

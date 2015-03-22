@@ -36,6 +36,11 @@ Gui.Window.View.Recording.prototype.isModalTransparent = true;
 Gui.Window.View.Recording.prototype.hasHeader = true;
 
 /**
+ * @type {boolean}
+ */
+Gui.Window.View.Recording.prototype.hasDesktopCloseButton = true;
+
+/**
  * render
  */
 Gui.Window.View.Recording.prototype.render = function () {
