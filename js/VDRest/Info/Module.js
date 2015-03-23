@@ -30,10 +30,34 @@ VDRest.Info.prototype.init = function () {
         me.getModel('Info').load();
     });
 
-    setInterval(function () {
+    if ('visible' === document.visibilityState) {
+        this.startInfoInterval();
+    }
 
+    $(document).on('visibilitychange', this.toggleInfoUpdate.bind(this));
+};
+
+VDRest.Info.prototype.toggleInfoUpdate = function () {
+
+    if ('visible' === document.visibilityState) {
+        this.stopInfoInterval()
+            .startInfoInterval();
+    } else {
+        this.stopInfoInterval();
+    }
+};
+
+VDRest.Info.prototype.startInfoInterval = function () {
+
+    this.updateInfoInterval = setInterval(function () {
         $.event.trigger('updateinfo');
     }, 60000);
+};
+
+VDRest.Info.prototype.stopInfoInterval = function () {
+
+    clearInterval(this.updateInfoInterval);
+    return this;
 };
 
 /**
