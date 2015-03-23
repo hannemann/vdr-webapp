@@ -2,8 +2,16 @@ VDRest.Helper = function () {
 
     this.isTouchDevice = "ontouchstart" in document;
 
+    this.isFirefox = "object" == typeof navigator.mozApps;
+
+    this.touchMoveCapable = this.isTouchDevice && !this.isFirefox;
+
     if (this.isTouchDevice) {
         document.body.classList.add('is-touch');
+    }
+
+    if (this.isFirefox) {
+        document.body.classList.add('is-firefox');
     }
 };
 

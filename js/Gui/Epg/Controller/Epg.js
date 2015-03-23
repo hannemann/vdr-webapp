@@ -139,7 +139,7 @@ Gui.Epg.Controller.Epg.prototype.getMetrics = function () {
  */
 Gui.Epg.Controller.Epg.prototype.getScrollLeft = function () {
 
-    if (!VDRest.helper.isTouchDevice) {
+    if (!VDRest.helper.touchMoveCapable) {
         return this.broadcasts.view.wrapper.scrollLeft();
     } else {
         return this.broadcasts.touchScroll.slider.getState().x;

@@ -23,7 +23,7 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.timeLineController = this.module.getController('TimeLine');
     this.handleScrollBroadcasts = this.fnHandleScrollBroadcasts.bind(this);
 
-    if (VDRest.helper.isTouchDevice) {
+    if (VDRest.helper.touchMoveCapable) {
         this.touchScroll = new TouchMove.Scroll({
             "wrapper" : this.view.wrapper[0],
             "onmove" : this.handleScroll.bind(this)
@@ -64,7 +64,7 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
 
-    if (!VDRest.helper.isTouchDevice) {
+    if (!VDRest.helper.touchMoveCapable) {
         this.view.wrapper.get(0).onscroll = $.proxy(this.handleScroll, this);
     }
 };
@@ -74,7 +74,7 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
 
-    if (!VDRest.helper.isTouchDevice) {
+    if (!VDRest.helper.touchMoveCapable) {
         $(this.view.wrapper).off('scroll', this.handleScroll);
     }
 };
@@ -163,7 +163,7 @@ Gui.Epg.Controller.Broadcasts.prototype.scrollTop = function () {
 
     var state;
 
-    if (VDRest.helper.isTouchDevice) {
+    if (VDRest.helper.touchMoveCapable) {
 
         state = this.touchScroll.slider.getState();
         this.touchScroll.slider.translate({
@@ -183,7 +183,7 @@ Gui.Epg.Controller.Broadcasts.prototype.saveState = function () {
 
     if (this.hasData('state')) return;
 
-    if (VDRest.helper.isTouchDevice) {
+    if (VDRest.helper.touchMoveCapable) {
         this.setData('state', this.touchScroll.slider.getState());
     } else {
         this.setData('state', {
@@ -198,7 +198,7 @@ Gui.Epg.Controller.Broadcasts.prototype.saveState = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.recoverState = function () {
 
-    if (VDRest.helper.isTouchDevice) {
+    if (VDRest.helper.touchMoveCapable) {
         this.scrollTop();
         this.touchScroll.slider.translate({
             "x": this.getData('state').x,

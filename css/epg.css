@@ -47,6 +47,10 @@
 .is-touch #broadcasts-wrapper {
     overflow: hidden;
 }
+
+.is-firefox #broadcasts-wrapper {
+    overflow: auto;
+}
 #broadcasts {
     width: 4000px;
     overflow: auto;
