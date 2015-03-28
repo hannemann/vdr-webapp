@@ -32,19 +32,6 @@ VDRest.Database.Model.Shows.Show.prototype.oStore = 'shows';
 VDRest.Database.Model.Shows.Show.prototype.collectionModel = 'Shows';
 
 /**
- * collection model name
- * @type {string}
- */
-VDRest.Database.Model.Shows.Show.prototype.init = function () {
-
-    if (!this.data.episodes) {
-        this.data.episodes = {
-            "seasons": {}
-        };
-    }
-};
-
-/**
  * add episode to show
  * @param {Object} media
  */
@@ -70,7 +57,8 @@ VDRest.Database.Model.Shows.Show.prototype.initMedia = function (media) {
 
     for (i in media) {
         if (media.hasOwnProperty(i)) {
-            if (i.indexOf('episode') > -1) continue;
+            if (i !== 'episodes' && i.indexOf('episode') > -1) continue;
+            if (i.indexOf('recording') > -1) continue;
             series_data[i] = media[i];
         }
     }

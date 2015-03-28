@@ -51,17 +51,15 @@ VDRest.Database.Model.Sync.Abstract.prototype.load = function (callback) {
  */
 VDRest.Database.Model.Sync.Abstract.prototype.addItem = function (media) {
 
-    var item;
-    //var item, tester;
+    var item, testNew, testOld, numberReg = new RegExp(',"recording_number":[0-9]+');
 
-    //if (this.items[media[this.primaryKey]]) {
-    //    tester = this.module.getModel(this.collection.collectionItemModel, media);
-    //    if (JSON.stringify(tester.getData()) == JSON.stringify(this.items[media[this.primaryKey]].getData())) {
-    //        return this.items[media[this.primaryKey]];
-    //    } else {
-    //        var lala;
-    //    }
-    //}
+    if (media[this.primaryKey] !== 0 && this.items[media[this.primaryKey]]) {
+        testNew = JSON.stringify(this.module.getModel(this.collection.collectionItemModel, media).getData()).replace(numberReg, '');
+        testOld = JSON.stringify(this.items[media[this.primaryKey]].getData()).replace(numberReg, '');
+        if (testNew == testOld) {
+            return this.items[media[this.primaryKey]];
+        }
+    }
 
     item = this.updatesCollection.addItem(media);
     this.updateItems[media[this.primaryKey]] = item;
@@ -87,11 +85,20 @@ VDRest.Database.Model.Sync.Abstract.prototype.getItem = function (id) {
  */
 VDRest.Database.Model.Sync.Abstract.prototype.toDelete = function (callback) {
 
-    var i;
+    var i, hit = false;
 
     for (i in this.items) {
-        if (this.items.hasOwnProperty(i) && !this.updateItems[i]) {
-            this.deleteCollection.addItem(this.items[i].getData());
+        if (this.items.hasOwnProperty(i)) {
+            this.collection.each(function (item) {
+                if (item.id == i) {
+                    hit = true;
+                }
+            }, function () {
+                if (!hit) {
+                    this.deleteCollection.addItem(this.items[i].getData());
+                }
+                hit = false;
+            }.bind(this));
         }
     }
     this.triggeredCallbacks.toDelete = true;

@@ -97,8 +97,35 @@ VDRest.Database.Model.Sync.prototype.collectionsLoaded = function () {
     });
 
     this.parseRecordings();
+};
 
-    this.callMethod('toDelete', this.toDelete.bind(this));
+/**
+ * parse recordings
+ */
+VDRest.Database.Model.Sync.prototype.parseRecordings = function () {
+
+    this.recordings.forEach(this.parseRecording.bind(this));
+
+    this.showsModel.tempCollection.each(function (item) {
+        this.showsModel.addItem(item.getData());
+    }.bind(this), function () {
+
+        this.analytics.import = VDRest.app.translate(
+            "Found %d movies, %d episodes and %d shows to import.",
+            this.moviesModel.countUpdates(),
+            this.episodesModel.countUpdates(),
+            this.showsModel.countUpdates()
+        );
+
+        this.updategui({
+            "action": "addStep",
+            "header": this.analytics.import,
+            "message": VDRest.app.translate("Complete")
+        });
+
+        this.callMethod('toDelete', this.toDelete.bind(this));
+
+    }.bind(this));
 };
 
 /**
@@ -332,32 +359,12 @@ VDRest.Database.Model.Sync.prototype.complete = function () {
 };
 
 /**
- * parse recordings
- */
-VDRest.Database.Model.Sync.prototype.parseRecordings = function () {
-
-    this.recordings.forEach(this.parseRecording.bind(this));
-
-    this.analytics.import = VDRest.app.translate(
-        "Found %d movies, %d episodes and %d shows to import.",
-        this.moviesModel.countUpdates(),
-        this.episodesModel.countUpdates(),
-        this.showsModel.countUpdates()
-    );
-
-    this.updategui({
-        "action": "addStep",
-        "header": this.analytics.import,
-        "message": VDRest.app.translate("Complete")
-    });
-};
-
-/**
  * parse single recording
  * @param {VDRest.Recordings.Model.List.Recording} recording
  */
 VDRest.Database.Model.Sync.prototype.parseRecording = function (recording) {
 
+    /** @type {additionalMediaEpisode|additionalMediaMovie} */
     var media = recording.getData('additional_media');
 
     if (media) {
@@ -420,14 +427,13 @@ VDRest.Database.Model.Sync.prototype.addRecordingDataToMedia = function (media, 
 VDRest.Database.Model.Sync.prototype.addSeries = function (media) {
 
     var showsModel = this.registry['shows'],
-        show = showsModel.getItem(media.series_id);
+        show = showsModel.getTempItem(media.series_id);
 
     if (!show) {
 
-        show = showsModel.addItem(media);
+        show = showsModel.addTempItem(media);
     }
 
-    delete media.recording_number;
     show.addEpisode(media);
 };
 
