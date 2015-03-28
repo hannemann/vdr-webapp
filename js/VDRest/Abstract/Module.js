@@ -298,14 +298,20 @@ VDRest.Abstract.Module.prototype.getInitData = function (id, cacheKey) {
         ids = id.split(this.cache.cacheKeySeparator),
         i = 0, l = keys.length;
 
-    if (l != ids.length) {
+    if (l > 1 && l != ids.length) {
 
         throw new Error('ID and cacheKey mismatch');
     }
 
-    for (i;i<l;i++) {
+    if (l == 1) {
 
-        data[keys[i]] = ids[i];
+        data[keys[0]] = id;
+    } else {
+
+        for (i; i < l; i++) {
+
+            data[keys[i]] = ids[i];
+        }
     }
 
     return data;

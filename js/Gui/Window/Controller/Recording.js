@@ -139,10 +139,10 @@ Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
 
     var model = VDRest.app.getModule('VDRest.Recordings').getModel(
             'List.Recording',
-            this.keyInCache
+            this.data.recording.keyInCache
         ),
         view = VDRest.app.getModule('Gui.Recordings')
-            .getView('List.Recording', this.keyInCache),
+            .getView('List.Recording', this.data.recording.keyInCache),
         recording = this.getData('recording'),
         parent = recording.getData('parent'),
         oldFilesList = parent.getData('files'), newFilesList = [], i = 0, l = oldFilesList.length;
