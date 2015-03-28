@@ -18,7 +18,7 @@ VDRest.Database.Model.Database.Resource.prototype.dbName = "recordings";
  * default db version -> override!
  * @type {number}
  */
-VDRest.Database.Model.Database.Resource.prototype.dbVersion = 2;
+VDRest.Database.Model.Database.Resource.prototype.dbVersion = 3;
 
 /**
  * db structure
@@ -27,10 +27,10 @@ VDRest.Database.Model.Database.Resource.prototype.dbVersion = 2;
 VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
     "recordings": {
         "keys": {
-            "keyPath": "number"
+            "keyPath": "file_name"
         },
         "indexes": {
-            "number": ["number", "number", {"unique": true}]
+            "number": ["file_name", "file_name", {"unique": true}]
         }
     },
     "movies" : {

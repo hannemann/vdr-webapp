@@ -4,6 +4,7 @@
  * @property {VDRest.Database.Model.Sync.Movies} moviesModel
  * @property {VDRest.Database.Model.Sync.Episodes} episodesModel
  * @property {VDRest.Database.Model.Sync.Shows} showsModel
+ * @property {VDRest.Database.Model.Sync.Recordings} recordingsModel
  */
 VDRest.Database.Model.Sync = function () {};
 
@@ -26,8 +27,7 @@ VDRest.Database.Model.Sync.prototype.dbName = VDRest.Database.Model.Database.Res
 VDRest.Database.Model.Sync.prototype.dbVersion = VDRest.Database.Model.Database.Resource.prototype.dbVersion;
 
 /**
- * default db version -> override!
- * @type {number}
+ * initialize
  */
 VDRest.Database.Model.Sync.prototype.init = function () {
 
@@ -44,6 +44,7 @@ VDRest.Database.Model.Sync.prototype.init = function () {
     this.registerCollection('movies')
         .registerCollection('shows')
         .registerCollection('episodes')
+        .registerCollection('recordings')
     ;
 };
 
@@ -111,10 +112,11 @@ VDRest.Database.Model.Sync.prototype.parseRecordings = function () {
     }.bind(this), function () {
 
         this.analytics.import = VDRest.app.translate(
-            "Found %d movies, %d episodes and %d shows to import.",
+            "Found %d movies, %d episodes and %d shows to import. Importing %d recordings.",
             this.moviesModel.countUpdates(),
             this.episodesModel.countUpdates(),
-            this.showsModel.countUpdates()
+            this.showsModel.countUpdates(),
+            this.recordingsModel.countUpdates()
         );
 
         this.updategui({
@@ -139,10 +141,11 @@ VDRest.Database.Model.Sync.prototype.toDelete = function () {
     });
 
     this.analytics.delete = VDRest.app.translate(
-        "Found %d movies, %d episodes and %d shows to delete.",
+        "Found %d movies, %d episodes and %d shows to delete. Deleting %d recordings",
         this.moviesModel.countDelete(),
         this.episodesModel.countDelete(),
-        this.showsModel.countDelete()
+        this.showsModel.countDelete(),
+        this.recordingsModel.countDelete()
     );
 
     this.updategui({
@@ -203,6 +206,7 @@ VDRest.Database.Model.Sync.prototype.doDelete = function () {
         "movies": this.moviesModel.countDelete(),
         "episodes": this.episodesModel.countDelete(),
         "shows": this.showsModel.countDelete(),
+        "recordings": this.recordingsModel.countDelete(),
         "all": this.moviesModel.countDelete() + this.episodesModel.countDelete() + this.showsModel.countDelete()
     };
 
@@ -267,7 +271,26 @@ VDRest.Database.Model.Sync.prototype.deleteShows = function () {
 
     if (this.deleteCount.shows > 0) {
 
-        this.showsModel.doDelete(this.updateProgress.bind(this, count), this.saveMovies.bind(this));
+        this.showsModel.doDelete(this.updateProgress.bind(this, count), this.deleteRecordings.bind(this));
+    } else {
+        this.deleteRecordings();
+    }
+};
+
+/**
+ * delete shows
+ */
+VDRest.Database.Model.Sync.prototype.deleteRecordings = function () {
+
+    var count = this.deleteCount.all;
+
+    if (this.deleteCount.recordings > 0) {
+        this.previousProgress += this.deleteCount.recordings;
+    }
+
+    if (this.deleteCount.recordings > 0) {
+
+        this.recordingsModel.doDelete(this.updateProgress.bind(this, count), this.saveMovies.bind(this));
     } else {
         this.saveMovies();
     }
@@ -333,7 +356,29 @@ VDRest.Database.Model.Sync.prototype.saveShows = function () {
             "progressBar": true
         });
 
-        this.showsModel.save(this.updateProgress.bind(this, count), this.complete.bind(this));
+        this.showsModel.save(this.updateProgress.bind(this, count), this.saveRecordings.bind(this));
+    } else {
+        this.saveRecordings();
+    }
+};
+
+/**
+ * persist recordings in database
+ */
+VDRest.Database.Model.Sync.prototype.saveRecordings = function () {
+
+    var count = this.recordingsModel.countUpdates();
+
+    this.previousProgress = 0;
+
+    if (count > 0) {
+        this.updategui({
+            "action": "addStep",
+            "header": VDRest.app.translate('Syncing recordings:'),
+            "progressBar": true
+        });
+
+        this.recordingsModel.save(this.updateProgress.bind(this, count), this.complete.bind(this));
     } else {
         this.complete();
     }
@@ -365,7 +410,9 @@ VDRest.Database.Model.Sync.prototype.complete = function () {
 VDRest.Database.Model.Sync.prototype.parseRecording = function (recording) {
 
     /** @type {additionalMediaEpisode|additionalMediaMovie} */
-    var media = recording.getData('additional_media');
+    var media = JSON.parse(JSON.stringify(recording.getData('additional_media')));
+
+    this.recordingsModel.addItem(recording);
 
     if (media) {
 
@@ -393,7 +440,8 @@ VDRest.Database.Model.Sync.prototype.updateProgress = function (count, recording
 
     var i = (index + 1 + this.previousProgress),
         progress = count == i ? 100 : (100 / count * i).toPrecision(4),
-        message = progress == 100 ? VDRest.app.translate("Complete") : recording.getData('recording_name');
+        name = recording.hasData('recording_name') ? recording.getData('recording_name') : recording.getData('name'),
+        message = progress == 100 ? VDRest.app.translate("Complete") : name;
 
     this.updategui({
         "action": "addMessage",

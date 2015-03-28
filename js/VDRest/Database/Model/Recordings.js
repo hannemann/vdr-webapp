@@ -13,7 +13,7 @@ VDRest.Database.Model.Recordings.prototype = new VDRest.Database.Model.Database.
 /**
  * @type {String}
  */
-VDRest.Database.Model.Recordings.prototype.primaryKey = "number";
+VDRest.Database.Model.Recordings.prototype.primaryKey = "file_name";
 
 /**
  * object store name

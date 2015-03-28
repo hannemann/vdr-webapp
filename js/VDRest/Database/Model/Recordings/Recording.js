@@ -13,12 +13,12 @@ VDRest.Database.Model.Recordings.Recording.prototype = new VDRest.Database.Model
 /**
  * @type {String}
  */
-VDRest.Database.Model.Recordings.Recording.prototype.cacheKey = "number";
+VDRest.Database.Model.Recordings.Recording.prototype.cacheKey = "file_name";
 
 /**
  * @type {String}
  */
-VDRest.Database.Model.Recordings.Recording.prototype.primaryKey = "number";
+VDRest.Database.Model.Recordings.Recording.prototype.primaryKey = "file_name";
 
 /**
  * object store name
