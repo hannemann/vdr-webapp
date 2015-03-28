@@ -10,6 +10,11 @@ Gui.Window.ViewModel.Recording = function () {};
 Gui.Window.ViewModel.Recording.prototype = new Gui.Recordings.ViewModel.List.Recording();
 
 /**
+ * @type {string}
+ */
+Gui.Window.ViewModel.Recording.prototype.cacheKey = 'id';
+
+/**
  * initialize view
  */
 Gui.Window.ViewModel.Recording.prototype.init = function () {

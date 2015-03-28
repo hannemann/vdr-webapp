@@ -72,17 +72,17 @@ Gui.Recordings.Controller.List.prototype.reRender = function () {
  */
 Gui.Recordings.Controller.List.prototype.iterateRecordings = function () {
 
-    this.dataModel.collectionIterator($.proxy(function (recordingsModel) {
+    this.dataModel.collectionIterator(function (recordingsModel) {
 
         this.recordingsList.setData(
-            recordingsModel.data.number,
+            recordingsModel.data.file_name,
             {
                 "name": recordingsModel.data.name,
                 "start_time": recordingsModel.data.event_start_time
             }
         );
 
-    }, this));
+    }.bind(this));
 
     this.dispatchList();
 };

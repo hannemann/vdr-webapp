@@ -12,7 +12,7 @@ Gui.Recordings.ViewModel.List.Recording.prototype = new VDRest.Abstract.ViewMode
 /**
  * @type {string}
  */
-Gui.Recordings.ViewModel.List.Recording.prototype.cacheKey = 'number';
+Gui.Recordings.ViewModel.List.Recording.prototype.cacheKey = 'file_name';
 
 /**
  * date regex

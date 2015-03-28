@@ -19,14 +19,14 @@ VDRest.Recordings.Model.List.Recording.prototype._class = 'VDRest.Recordings.Mod
 /**
  * @type {string}
  */
-VDRest.Recordings.Model.List.Recording.prototype.cacheKey = 'number';
+VDRest.Recordings.Model.List.Recording.prototype.cacheKey = 'file_name';
 
 /**
  * initialize update event
  */
 VDRest.Recordings.Model.List.Recording.prototype.init = function () {
 
-    $(document).on('vdrest-api-actions.recording-updated.' + this.data.number, $.proxy(this.update, this));
+    $(document).on('vdrest-api-actions.recording-updated.' + this.data.file_name.toCacheKey(), this.update.bind(this));
 };
 
 /**

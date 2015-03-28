@@ -86,7 +86,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.moveRecording = functi
     this.fetchAsync(request, function (response) {
 
         $.event.trigger({
-            "type" : "vdrest-api-actions.recording-updated." + obj.number,
+            "type": "vdrest-api-actions.recording-updated." + obj.eventSuffix,
             "payload" : {
                 data : response
             }

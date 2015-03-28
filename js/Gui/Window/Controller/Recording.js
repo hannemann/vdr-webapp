@@ -12,7 +12,7 @@ Gui.Window.Controller.Recording.prototype = new Gui.Window.Controller.Abstract()
 /**
  * @type {string}
  */
-Gui.Window.Controller.Recording.prototype.cacheKey = 'number';
+Gui.Window.Controller.Recording.prototype.cacheKey = 'id';
 
 /**
  * initialize view and viewModel
@@ -21,14 +21,14 @@ Gui.Window.Controller.Recording.prototype.init = function () {
 
     var recording = this.getData('recording').dataModel;
 
-    this.eventPrefix = 'window.recording' + recording.getData('number');
+    this.eventPrefix = 'window.recording' + this.keyInCache;
 
     this.view = this.module.getView('Recording', {
-        "number" : recording.getData('number')
+        "id": this.keyInCache
     });
 
     this.module.getViewModel('Recording', {
-        "number" : recording.getData('number'),
+        "id": this.keyInCache,
         "view" : this.view,
         "resource" : recording.getData()
     });
@@ -51,15 +51,15 @@ Gui.Window.Controller.Recording.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.Recording.prototype.addObserver = function () {
 
-    this.view.subToFilenameButton.on('click', $.proxy(this.view.subToFilename, this.view));
+    this.view.subToFilenameButton.on('click', this.view.subToFilename.bind(this.view));
 
-    this.view.deleteButton.on('click', $.proxy(this.deleteRecordingAction, this));
+    this.view.deleteButton.on('click', this.deleteRecordingAction.bind(this));
 
     if (VDRest.info.getStreamer()) {
-        this.view.watchButton.on('click', $.proxy(this.watchRecordingAction, this));
+        this.view.watchButton.on('click', this.watchRecordingAction.bind(this));
     }
 
-    $(document).on('persistrecordingschange-' + this.keyInCache, $.proxy(this.updateRecordingAction, this));
+    $(document).on('persistrecordingschange-' + this.keyInCache, this.updateRecordingAction.bind(this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -106,7 +106,7 @@ Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
         .moveRecording({
             "source" : this.view.getFileName(),
             "target" : target,
-            "number" : recording.getData('number')
+            "eventSuffix": this.keyInCache
         });
 };
 
@@ -129,7 +129,7 @@ Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
     this.vibrate();
 
-    VDRest.app.getModule('Gui.Recordings').getController('List.Recording', {number: this.keyInCache}).startStream();
+    VDRest.app.getModule('Gui.Recordings').getController('List.Recording', {"file_name": this.keyInCache}).startStream();
 };
 
 /**

@@ -12,7 +12,7 @@ Gui.Recordings.Controller.List.Recording.prototype = new VDRest.Abstract.Control
 /**
  * @type {string}
  */
-Gui.Recordings.Controller.List.Recording.prototype.cacheKey = 'number';
+Gui.Recordings.Controller.List.Recording.prototype.cacheKey = 'file_name';
 
 /**
  * info about streamdev server
@@ -32,7 +32,7 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
     }
 
     this.view = this.module.getView('List.Recording', {
-        "number" : this.data.number
+        "file_name": this.data.file_name
     });
 
     this.view.setParentView(
@@ -40,16 +40,16 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
     );
 
     this.dataModel = VDRest.app.getModule('VDRest.Recordings').getModel('List.Recording', {
-        "number" : this.data.number
+        "file_name": this.data.file_name
     });
 
     this.module.getViewModel('List.Recording', {
-        "number" : this.data.number,
+        "file_name": this.data.file_name,
         "view" : this.view,
         "resource" : this.dataModel.data
     });
 
-    $(document).on("vdrest-api-actions.recording-updated." + this.keyInCache, $.proxy(this.updateAction, this));
+    $(document).on("vdrest-api-actions.recording-updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
 };
 
 /**
@@ -189,19 +189,19 @@ Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = functio
     this.vibrate();
     e.preventDefault();
     e.stopPropagation();
-    $(document).one(this.animationEndEvents, $.proxy(function () {
+    $(document).one(this.animationEndEvents, function () {
         this.addObserver();
-    }, this));
+    }.bind(this));
     this.removeObserver();
 
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "hashSuffix" : '~' + this.data.number,
+            "hashSuffix": '~' + this.keyInCache.toCacheKey(),
             "type" : "Recording",
             "data" : {
                 "node" : this.view,
-                "number" : this.data.number,
+                "id": this.keyInCache.toCacheKey(),
                 "recording" : this
             }
         }
@@ -299,7 +299,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addToParentDir = function () 
     if ("undefined" === typeof this.module.cache.store.Controller['List.Directory'][path]) {
 
         this.module.getController('List').createFolderFromFile({
-            "number" : this.keyInCache,
+            "file_name": this.keyInCache,
             "name" : this.view.getName()
         });
         add = false;
@@ -326,13 +326,21 @@ Gui.Recordings.Controller.List.Recording.prototype.addToParentDir = function () 
 
 /**
  * retrieve position in sorted files array
- * @returns {int|bool}
+ * @returns {int|undefined}
  */
 Gui.Recordings.Controller.List.Recording.prototype.getPosition = function () {
 
-    var files = this.data.parent.data.files, i= 0, l = files.length - 1;
+    var files = this.data.parent.data.files,
+        i = 0, l = files.length - 1,
+        listView = this.module.getView('List'),
+        sortCallback = listView.sortCallback,
+        sortReverse = listView.reverse;
 
-    this.data.parent.data.files.sort(this.helper().sortAlpha);
+    this.data.parent.data.files.sort(sortCallback);
+
+    if (sortReverse) {
+        this.data.parent.data.files.reverse();
+    }
 
     for (i; i<l; i++) {
 

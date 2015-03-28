@@ -44,17 +44,17 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
             "name" : "root"
         });
 
-        this.resource.each($.proxy(function (number, data) {
+        this.resource.each(function (file_name, data) {
 
             this.current = {
-                "number" : number,
+                "file_name": file_name,
                 "name" : data.name,
                 "start_time" : data.start_time
             };
 
             this.addToTree(this.current.name, this.tree);
 
-        }, this));
+        }.bind(this));
     }
 };
 
@@ -144,7 +144,7 @@ Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) 
 
 
     return this.module.getController('List.Recording', {
-        "number" : this.current.number,
+        "file_name": this.current.file_name,
         "parent" : parent,
         "name" : name,
         "start_time" : this.current.start_time

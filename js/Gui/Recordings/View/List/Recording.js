@@ -12,7 +12,7 @@ Gui.Recordings.View.List.Recording.prototype = new VDRest.Abstract.View();
 /**
  * @type {string}
  */
-Gui.Recordings.View.List.Recording.prototype.cacheKey = 'number';
+Gui.Recordings.View.List.Recording.prototype.cacheKey = 'file_name';
 
 /**
  * initialize node

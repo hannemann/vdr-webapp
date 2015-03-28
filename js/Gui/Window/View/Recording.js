@@ -12,7 +12,7 @@ Gui.Window.View.Recording.prototype = new Gui.Window.View.Abstract();
 /**
  * @type {string}
  */
-Gui.Window.View.Recording.prototype.cacheKey = 'number';
+Gui.Window.View.Recording.prototype.cacheKey = 'id';
 
 /**
  * @type {string}
@@ -219,7 +219,7 @@ Gui.Window.View.Recording.prototype.renderEditTab = function () {
             "reference" : "editForm",
             "cacheKey" : this.cacheKey,
             "keyInCache" : this.keyInCache,
-            "number" : this.keyInCache,
+            "id": this.keyInCache,
             "catConfig" : config.editForm.categories,
             "fields" : config.editForm.fields,
             "hasSubmit" : true,
