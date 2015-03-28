@@ -24,14 +24,15 @@ Gui.Database.Controller.List.Movie.prototype.addCloneObserver = function () {
  */
 Gui.Database.Controller.List.Movie.prototype.handlePlay = function () {
 
-    var number = this.data.media.data.recording_number;
+    var fileName = this.data.media.data.recording_file_name,
+        recording = VDRest.app.getModule('VDRest.Recordings').getModel('List').getByFileName(fileName);
 
     this.vibrate();
 
-    VDRest.app.getModule('VDRest.Recordings').loadModel('List.Recording', number, function (recording) {
+    if (recording) {
 
         this.startStream(recording);
-    }.bind(this))
+    }
 };
 
 /**

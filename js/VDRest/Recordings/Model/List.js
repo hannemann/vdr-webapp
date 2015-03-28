@@ -199,6 +199,25 @@ VDRest.Recordings.Model.List.prototype.updateRecording = function (model, record
 };
 
 /**
+ * fetch recording by file name
+ * @param {String} fileName
+ * @returns {boolean|VDRest.Recordings.Model.List.Recording}
+ */
+VDRest.Recordings.Model.List.prototype.getByFileName = function (fileName) {
+
+    var recording = false;
+
+    this.collection.forEach(function (item) {
+        if (fileName === item.getData('file_name')) {
+            recording = item;
+        }
+    });
+
+    return recording;
+};
+};
+
+/**
  * flush collection
  */
 VDRest.Recordings.Model.List.prototype.flushCollection = function () {
