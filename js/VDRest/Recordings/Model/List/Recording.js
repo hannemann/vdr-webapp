@@ -54,7 +54,15 @@ VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
  */
 VDRest.Recordings.Model.List.Recording.prototype.getStreamUrl = function (streamdevParams) {
 
+    var recordingId;
+
+    if (this.hasData('inode')) {
+        recordingId = this.getData('inode');
+    } else {
+        recordingId = parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString();
+    }
+
     return this.helper().getBaseStreamUrl(streamdevParams)
-        + parseInt(parseInt(this.getData('number'), 10) + 1, 10).toString()
+        + recordingId
         + '.rec.ts';
 };
