@@ -129,7 +129,11 @@ Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 
     this.vibrate();
 
-    VDRest.app.getModule('Gui.Recordings').getController('List.Recording', {"file_name": this.keyInCache}).startStream();
+    VDRest.app.getModule('Gui.Recordings')
+        .getController(
+        'List.Recording',
+        {"file_name": this.data.recording.keyInCache}
+    ).startStream();
 };
 
 /**
