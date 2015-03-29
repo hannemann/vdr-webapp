@@ -73,18 +73,22 @@ VDRest.Database.Model.Sync.prototype.synchronize = function () {
 
     this.getRecordings();
 
-    this.updategui({
-        "action": "addMessage",
-        "message": VDRest.app.translate('Found %s recordings to synchronize.', this.recordings.length)
-    });
+    $(document).one('startsync', function () {
 
-    this.updategui({
-        "action": "addStep",
-        "header": VDRest.app.translate('Analyze recordings.'),
-        "message": VDRest.app.translate("Starting process...")
-    });
+        this.updategui({
+            "action": "addMessage",
+            "message": VDRest.app.translate('Found %s recordings to synchronize.', this.recordings.length)
+        });
 
-    this.callMethod('load', this.collectionsLoaded.bind(this));
+        this.updategui({
+            "action": "addStep",
+            "header": VDRest.app.translate('Analyze recordings.'),
+            "message": VDRest.app.translate("Starting process...")
+        });
+
+        this.callMethod('load', this.collectionsLoaded.bind(this));
+
+    }.bind(this));
 };
 
 /**
@@ -490,14 +494,30 @@ VDRest.Database.Model.Sync.prototype.addSeries = function (media) {
  */
 VDRest.Database.Model.Sync.prototype.getRecordings = function () {
 
-    var recordings = VDRest.app.getModule('VDRest.Recordings').cache.store.Model['List.Recording'],
+    var module = VDRest.app.getModule('VDRest.Recordings'),
+        guiModule = VDRest.app.getModule('Gui.Recordings'),
+        list = module.getModel('List'),
+        recordings,
         i;
 
-    for (i in recordings) {
-        if (recordings.hasOwnProperty(i)) {
-            this.recordings.push(recordings[i]);
+    module.cache.flush();
+    guiModule.cache.flush();
+    list.reset().load();
+
+    $(document).one('recordingsloaded', function () {
+
+        recordings = module.cache.store.Model['List.Recording'];
+        
+        for (i in recordings) {
+            if (recordings.hasOwnProperty(i)) {
+                this.recordings.push(recordings[i]);
+            }
         }
-    }
+
+        $.event.trigger({
+            "type": "startsync"
+        });
+    }.bind(this));
 };
 
 /**

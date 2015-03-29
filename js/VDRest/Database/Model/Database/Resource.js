@@ -18,7 +18,7 @@ VDRest.Database.Model.Database.Resource.prototype.dbName = "recordings";
  * default db version -> override!
  * @type {number}
  */
-VDRest.Database.Model.Database.Resource.prototype.dbVersion = 3;
+VDRest.Database.Model.Database.Resource.prototype.dbVersion = 4;
 
 /**
  * db structure
@@ -69,6 +69,11 @@ VDRest.Database.Model.Database.Resource.prototype.obStoresStruct = {
     "images" : {
         "keys" : {
             "keyPath" : "name"
+        }
+    },
+    "epg": {
+        "keys": {
+            "keyPath": "channel_id"
         }
     }
 };

@@ -92,8 +92,39 @@ VDRest.Recordings.Model.List.prototype.initList = function () {
         this.hasCollection = true;
     }.bind(this));
 
+    this.load();
+};
+
+/**
+ * load collection from db
+ */
+VDRest.Recordings.Model.List.prototype.fetchFromDb = function () {
+
+    var db = this.module.getModel('List.Recording.DBCollection');
+
+
+    db.load(null, function () {
+
+        var collection = db.getCollection(),
+            l = collection.length;
+
+        if (l == 0) {
+            this.load();
+        }
+
+        this.collection = db.getCollection();
+        this.triggerCollectionLoaded();
+    }.bind(this));
+
+};
+
+/**
+ * load collection from vdr
+ */
+VDRest.Recordings.Model.List.prototype.load = function () {
+
     this.module.getResource(this.collectionItemModel).load({
-        "url" : 'recordingList',
+        "url": 'recordingList',
         "callback": this.processCollection.bind(this)
     });
 };
@@ -199,6 +230,16 @@ VDRest.Recordings.Model.List.prototype.updateRecording = function (model, record
 };
 
 /**
+ * truncate collection
+ * @returns {VDRest.Recordings.Model.List}
+ */
+VDRest.Recordings.Model.List.prototype.reset = function () {
+
+    this.collection = [];
+    return this;
+};
+
+/**
  * fetch recording by file name
  * @param {String} fileName
  * @returns {boolean|VDRest.Recordings.Model.List.Recording}
@@ -214,7 +255,6 @@ VDRest.Recordings.Model.List.prototype.getByFileName = function (fileName) {
     });
 
     return recording;
-};
 };
 
 /**

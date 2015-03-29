@@ -67,6 +67,8 @@ Gui.Database.View.Sync.prototype.addStep = function (data) {
 
     step.node.appendTo(this.body);
 
+    step.node.get(0).scrollIntoView();
+
     return step;
 };
 
