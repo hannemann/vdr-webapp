@@ -1,6 +1,34 @@
 /**
+ * @typedef {{}} recordingsTreeDirectory
+ * @property {String} path
+ * @property {Gui.Recordings.Controller.List|recordingsTreeDirectory} parent
+ * @property {String} name
+ * @property {Number} oldest
+ * @property {Number} newest
+ * @property {[]} files
+ * @property {[]} directories
+ */
+
+/**
+ * @typedef {{}} recordingsTreeFile
+ * @property {String} file_name
+ * @property {recordingsTreeDirectory} parent
+ * @property {String} name
+ * @property {Number} start_time timestamp
+ */
+/**
+ * @typedef {{}} recordingsTreeCurrent
+ * @property {String} file_name
+ * @property {String} name
+ * @property {Number} start_time timestamp
+ */
+
+/**
  * @class
  * @constructor
+ * @property {Object.<string,recordingsTreeDirectory>} directories
+ * @property {Gui.Recordings.Controller.List.Directory} tree
+ * @property {recordingsTreeCurrent} current
  */
 Gui.Recordings.ViewModel.List = function () {};
 
@@ -18,8 +46,23 @@ Gui.Recordings.ViewModel.List.prototype.init = function () {
 
     this.tree = null;
 
+    this.directories = {
+        "root": {
+            "path": "root",
+            "parent": this.module.getController('List'),
+            "name": "root",
+            "files": [],
+            "directories": [],
+            "oldest": 0,
+            "newest": 0
+        }
+    };
+
     this.resource = this.data.resource;
 
+    /**
+     * @returns {Gui.Recordings.Controller.List}
+     */
     this.data.view.getTree = function () {
 
         if (!me.tree) {
@@ -38,12 +81,6 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
 
     if (!this.tree) {
 
-        this.tree = this.module.getController('List.Directory', {
-            "path" : "root",
-            "parent" : this.module.getController('List'),
-            "name" : "root"
-        });
-
         this.resource.each(function (file_name, data) {
 
             this.current = {
@@ -52,16 +89,20 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
                 "start_time" : data.start_time
             };
 
-            this.addToTree(this.current.name, this.tree);
+            this.addToTree(this.current.name, this.directories.root);
 
         }.bind(this));
+
+        this.tree = this.module.getController('List.Directory', this.directories.root);
+
+        delete this.directories;
     }
 };
 
 /**
  * add file to tree recursively
- * @param filename
- * @param parentDir
+ * @param {String} filename
+ * @param {recordingsTreeDirectory} parentDir
  */
 Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDir) {
 
@@ -75,22 +116,22 @@ Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDi
         filename = paths.join('~');
 
         childNode = this.getDirectory(
-            parentDir.data.path + '~' + name,
+            parentDir.path + '~' + name,
             parentDir,
             name
         );
 
         // directory not set yet
-        if (!this.hasChild(name, parentDir.data.directories)) {
+        if (!this.hasChild(name, parentDir.directories)) {
 
-            parentDir.data.directories.push(childNode);
+            parentDir.directories.push(childNode);
         }
 
         this.addToTree(filename, childNode);
 
     } else {
 
-        parentDir.data.files.push(this.getFile(this.current.name, parentDir, name));
+        parentDir.files.push(this.getFile(this.current.name, parentDir, name));
     }
 };
 
@@ -99,17 +140,24 @@ Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDi
  * @param path
  * @param parent
  * @param name
- * @returns {*}
+ * @returns {recordingsTreeDirectory}
  */
 Gui.Recordings.ViewModel.List.prototype.getDirectory = function (path, parent, name) {
 
-    return this.module.getController('List.Directory', {
-        "path" : path,
-        "parent" : parent,
-        "name" : name,
-        "oldest" : 0,
-        "newest" : 0
-    });
+    if (!this.directories[path]) {
+
+        this.directories[path] = {
+            "path": path,
+            "parent": parent,
+            "name": name,
+            "oldest": 0,
+            "newest": 0,
+            "files": [],
+            "directories": []
+        };
+    }
+
+    return this.directories[path];
 };
 
 /**
@@ -117,7 +165,7 @@ Gui.Recordings.ViewModel.List.prototype.getDirectory = function (path, parent, n
  * @param path
  * @param parent
  * @param name
- * @returns {*}
+ * @returns {recordingsTreeFile}
  */
 Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) {
 
@@ -125,36 +173,34 @@ Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) 
 
     do {
 
-        if (0 === current.getData('newest') || current.getData('newest') < this.current.start_time) {
-            current.setData('newest', this.current.start_time)
+        if (0 === current['newest'] || current['newest'] < this.current.start_time) {
+            current['newest'] = this.current.start_time;
         }
 
-        if (0 === current.getData('oldest') || current.getData('oldest') > this.current.start_time) {
-            current.setData('oldest', this.current.start_time)
+        if (0 === current['oldest'] || current['oldest'] > this.current.start_time) {
+            current['oldest'] = this.current.start_time;
         }
 
-        if (current.hasData('parent')) {
-            current = current.getData('parent');
+        if (current['parent']) {
+            current = current['parent'];
         } else {
             current = null;
         }
 
     } while (current);
 
-
-
-    return this.module.getController('List.Recording', {
+    return {
         "file_name": this.current.file_name,
         "parent" : parent,
         "name" : name,
         "start_time" : this.current.start_time
-    });
+    };
 };
 
 /**
  * search child
- * @param n
- * @param h
+ * @param {String} n needle
+ * @param {recordingsTreeDirectory} h haystack
  * @returns {boolean}
  */
 Gui.Recordings.ViewModel.List.prototype.hasChild = function (n, h) {
@@ -162,9 +208,126 @@ Gui.Recordings.ViewModel.List.prototype.hasChild = function (n, h) {
     var i= 0, l = h.length;
 
     for (i;i<l;i++) {
-        if (n === h[i].data.name) {
+        if (n === h[i].name) {
             return true;
         }
     }
     return false;
 };
+
+
+/**
+ * @name Gui.Recordings.View.List.Directory#getDirectories
+ * @function
+ * @returns {Object.<recordingsTreeDirectory>}
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#getFiles
+ * @function
+ * @returns {Object.<recordingsTreeFile>}
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#getName
+ * @function
+ * @returns String
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#getNewest
+ * @function
+ * @returns Number
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#getOldest
+ * @function
+ * @returns Number
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#getParent
+ * @function
+ * @returns Gui.Recordings.Controller.List.Directory
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#getPath
+ * @function
+ * @returns String
+ */
+
+/**
+ * @name Gui.Recordings.View.List.Directory#setDirectories
+ * @function
+ * @param {Object.<recordingsTreeDirectory>}
+ * @returns Gui.Recordings.View.List.Directory
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#setFiles
+ * @function
+ * @param {Object.<recordingsTreeFile>}
+ * @returns Gui.Recordings.View.List.Directory
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#setName
+ * @function
+ * @param String
+ * @returns Gui.Recordings.View.List.Directory
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#setNewest
+ * @function
+ * @param Number
+ * @returns Gui.Recordings.View.List.Directory
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#setOldest
+ * @function
+ * @param Number
+ * @returns Gui.Recordings.View.List.Directory
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#setParent
+ * @function
+ * @param Gui.Recordings.Controller.List.Directory
+ * @returns Gui.Recordings.View.List.Directory
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#setPath
+ * @function
+ * @param String
+ * @returns Gui.Recordings.View.List.Directory
+ */
+
+/**
+ * @name Gui.Recordings.View.List.Directory#hasDirectories
+ * @function
+ * @returns Boolean
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#hasFiles
+ * @function
+ * @returns Boolean
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#hasName
+ * @function
+ * @returns Boolean
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#hasNewest
+ * @function
+ * @returns Boolean
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#hasOldest
+ * @function
+ * @returns Boolean
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#hasParent
+ * @function
+ * @returns Boolean
+ */
+/**
+ * @name Gui.Recordings.View.List.Directory#hasPath
+ * @function
+ * @returns Boolean
+ */
+

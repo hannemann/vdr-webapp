@@ -52,7 +52,7 @@ Gui.Recordings.View.List.prototype.setSorting = function (type) {
     if (type.indexOf('date') > -1) {
         this.sortCallback = this.sortEvent;
     } else if (type.indexOf('name') > -1) {
-        this.sortCallback = this.helper().sortAlpha;
+        this.sortCallback = this.sortAlpha;
     }
 };
 
@@ -72,14 +72,14 @@ Gui.Recordings.View.List.prototype.renderDirectories = function () {
 
     var i= 0, l = this.tree.data.directories.length;
 
-    this.tree.data.directories.sort($.proxy(this.sortCallback, this));
+    this.tree.data.directories.sort(this.sortCallback.bind(this));
 
     if (this.reverse) {
         this.tree.data.directories.reverse();
     }
 
     for (i; i<l; i++) {
-        this.tree.data.directories[i].dispatchView();
+        this.module.getController('List.Directory', this.tree.data.directories[i]).dispatchView();
     }
     return this;
 };
@@ -95,27 +95,43 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
     }
 
     for (i; i<l; i++) {
-        this.tree.data.files[i].dispatchView();
+        this.module.getController('List.Recording', this.tree.data.files[i]).dispatchView();
     }
     return this;
 };
 
 Gui.Recordings.View.List.prototype.sortEvent = function (a, b) {
 
-    if (a instanceof Gui.Recordings.Controller.List.Directory) {
+    if (!a.start_time) {
 
         if (this.reverse) {
-            a = a.data.newest;
-            b = b.data.newest;
+            a = a.newest;
+            b = b.newest;
         } else {
-            a = a.data.oldest;
-            b = b.data.oldest;
+            a = a.oldest;
+            b = b.oldest;
         }
 
     } else {
-        a = a.data.start_time;
-        b = b.data.start_time;
+        a = a.start_time;
+        b = b.start_time;
     }
+
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+};
+
+/**
+ * sort by name property
+ * @param a
+ * @param b
+ * @returns {number}
+ */
+Gui.Recordings.View.List.prototype.sortAlpha = function (a, b) {
+
+    a = a.name.toLowerCase().replace(/^[^a-z]/, '');
+    b = b.name.toLowerCase().replace(/^[^a-z]/, '');
 
     if (a < b) return -1;
     if (a > b) return 1;

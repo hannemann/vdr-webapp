@@ -35,6 +35,11 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
         "file_name": this.data.file_name
     });
 
+    if (!(this.data.parent instanceof Gui.Recordings.Controller.List.Directory)) {
+
+        this.data.parent = this.module.getController('List.Directory', this.data.parent.path)
+    }
+
     this.view.setParentView(
         this.data.parent.view
     );

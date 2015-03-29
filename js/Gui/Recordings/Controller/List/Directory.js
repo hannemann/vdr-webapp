@@ -1,6 +1,19 @@
 /**
+ * @typedef {{}} controllerListDirectoryData
+ * @property {recordingsTreeDirectory[]} directories
+ * @property {recordingsTreeFile[]} files
+ * @property {String} name
+ * @property {String} path
+ * @property {Number} newest
+ * @property {Number} oldest
+ * @property {Gui.Recordings.Controller.List|Gui.Recordings.Controller.List.Directory} parent
+ */
+
+/**
  * @class
  * @constructor
+ * @property {controllerListDirectoryData} data
+ * @property {Gui.Recordings.View.List.Directory} view
  */
 Gui.Recordings.Controller.List.Directory = function () {};
 
@@ -19,10 +32,14 @@ Gui.Recordings.Controller.List.Directory.prototype.cacheKey = 'path';
  */
 Gui.Recordings.Controller.List.Directory.prototype.init = function () {
 
-    this.data.directories = [];
-    this.data.files = [];
-
     this.view = this.module.getView('List.Directory', this.data);
+
+    if (!(
+        this.data.parent instanceof Gui.Recordings.Controller.List.Directory ||
+        this.data.parent instanceof Gui.Recordings.Controller.List)
+    ) {
+        this.data.parent = this.module.getController('List.Directory', this.data.parent.path);
+    }
 
     this.view.setParentView(
         this.data.parent.view
@@ -55,7 +72,7 @@ Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function (posi
  */
 Gui.Recordings.Controller.List.Directory.prototype.addObserver = function () {
 
-    this.view.node.on('click', $.proxy(this.requestWindow, this));
+    this.view.node.on('click', this.requestWindow.bind(this));
 };
 
 /**
@@ -75,9 +92,9 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
     e.preventDefault();
     e.stopPropagation();
     this.removeObserver();
-    $(document).one(this.animationEndEvents, $.proxy(function () {
+    $(document).one(this.animationEndEvents, function () {
         this.addObserver();
-    }, this));
+    }.bind(this));
 
     $.event.trigger({
         "type" : "window.request",
@@ -86,7 +103,7 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
             "type" : "Directory",
             "data" : {
                 "listItem" : this.view,
-                "dispatch" : $.proxy(this.view.renderItems, this.view),
+                "dispatch": this.view.renderItems.bind(this.view),
                 "path" : this.data.path,
                 "id" : this.data.path.toCacheKey()
             }

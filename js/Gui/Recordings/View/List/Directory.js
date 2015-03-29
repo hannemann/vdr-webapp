@@ -91,6 +91,9 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView,
 
     for (i; i<l; i++) {
 
+        if (!(directories[i] instanceof Gui.Recordings.Controller.List.Directory)) {
+            directories[i] = this.module.getController('List.Directory', directories[i]);
+        }
         directories[i].view.setParentView({"node" : parentView.body});
         directories[i].dispatchView(undefined, omitObserver);
     }
@@ -104,6 +107,10 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView,
     }
 
     for (i; i<l; i++) {
+
+        if (!(files[i] instanceof Gui.Recordings.Controller.List.Recording)) {
+            files[i] = this.module.getController('List.Recording', files[i]);
+        }
 
         files[i].view.setParentView({"node" : parentView.body});
         files[i].dispatchView(undefined, omitObserver);

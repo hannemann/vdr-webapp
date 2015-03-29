@@ -1,6 +1,8 @@
 /**
  * @class
  * @constructor
+ * @property {VDRest.Recordings.Model.List}
+ * @property {Gui.Recordings.View.List} view
  */
 Gui.Recordings.Controller.List = function () {};
 
