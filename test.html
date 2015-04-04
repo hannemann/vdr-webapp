@@ -206,6 +206,7 @@
 
     <script type="text/javascript" src="js/VDRest/Lib/jquery-2.1.0.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Helper.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Scroll.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Slider.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Tiles.js"></script>
@@ -214,16 +215,6 @@
         $(function () {
             var timeline = $('#timeline'),
                 channels = $('#channels');
-            $('#events-wrapper').on('scroll', function () {
-
-                var scroll = {
-                    left:this.scrollLeft * -1,
-                    top:this.scrollTop * -1 + 21
-                };
-
-                timeline.css({"left": scroll.left + 'px'});
-                channels.css({"top": scroll.top + 'px'});
-            });
 
             var channels = $('#channels');
             var events = $('#events');
@@ -267,7 +258,6 @@
                     channels[0].style.transform = 'translateY(' + e.y + 'px)';
 
                 }
-//                ,grid : {"x" : 100, "y" : 40, "easing" : ".1s cubic-bezier(.45,.42,.77,1.25"}
             });
         });
 
@@ -287,17 +277,9 @@
         <div id="epg">
             <div id="timeline"></div>
             <div id="channels">
-                <!--<div class="channel"></div>-->
             </div>
             <div id="events-wrapper">
                 <div id="events" class="touchmove-slide">
-                    <!--<div class="channel">-->
-                        <!--<div class="broadcast"></div>-->
-                        <!--<div class="broadcast"></div>-->
-                        <!--<div class="broadcast"></div>-->
-                        <!--<div class="broadcast"></div>-->
-                        <!--<div class="broadcast"></div>-->
-                    <!--</div>-->
                 </div>
             </div>
         </div>
