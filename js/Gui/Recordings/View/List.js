@@ -63,14 +63,18 @@ Gui.Recordings.View.List.prototype.renderFirstLevel = function () {
 
     this.tree = this.getTree();
 
-    this.renderDirectories().renderFiles();
-
     this.tree.dispatchView();
+
+    setTimeout(function () {
+        this.renderDirectories();
+    }.bind(this), 20);
 };
 
 Gui.Recordings.View.List.prototype.renderDirectories = function () {
 
-    var i= 0, l = this.tree.data.directories.length;
+    var index = 0,
+        length = this.tree.data.directories.length,
+        interval;
 
     this.tree.data.directories.sort(this.sortCallback.bind(this));
 
@@ -78,15 +82,24 @@ Gui.Recordings.View.List.prototype.renderDirectories = function () {
         this.tree.data.directories.reverse();
     }
 
-    for (i; i<l; i++) {
-        this.module.getController('List.Directory', this.tree.data.directories[i]).dispatchView();
-    }
+    interval = setInterval(function () {
+
+        index = this.renderChunk(index, 'List.Directory', this.tree.data.directories);
+
+        if (index >= length) {
+            clearInterval(interval);
+            this.renderFiles();
+        }
+
+    }.bind(this), 10);
     return this;
 };
 
 Gui.Recordings.View.List.prototype.renderFiles = function () {
 
-    var i= 0, l = this.tree.data.files.length;
+    var index = 0,
+        length = this.tree.data.files.length,
+        interval;
 
     this.tree.data.files.sort($.proxy(this.sortCallback, this));
 
@@ -94,10 +107,31 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
         this.tree.data.files.reverse();
     }
 
-    for (i; i<l; i++) {
-        this.module.getController('List.Recording', this.tree.data.files[i]).dispatchView();
-    }
+    interval = setInterval(function () {
+
+        index = this.renderChunk(index, 'List.Recording', this.tree.data.files);
+
+        if (index >= length) {
+            clearInterval(interval);
+        }
+
+    }.bind(this), 10);
     return this;
+};
+
+Gui.Recordings.View.List.prototype.renderChunk = function (index, controller, tree) {
+
+    var limit, chunkSize = 20;
+
+    if (index + chunkSize > tree.length) {
+        chunkSize -= (index + chunkSize) % tree.length;
+    }
+
+    limit = index + chunkSize;
+    for (index; index < limit; index++) {
+        this.module.getController(controller, tree[index]).dispatchView();
+    }
+    return index;
 };
 
 Gui.Recordings.View.List.prototype.sortEvent = function (a, b) {

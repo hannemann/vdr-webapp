@@ -189,6 +189,19 @@ VDRest.Helper.prototype.sortAlpha = function (a, b) {
     return 0;
 };
 
+
+VDRest.Helper.prototype.ratingRegex = new RegExp('(((?:[Ww]ertung: *)([0-9])/[0-9])|([*]{1,}))', 'm');
+
+
+VDRest.Helper.prototype.tippRegex = new RegExp('\\[Tipp\\]', 'm');
+
+
+VDRest.Helper.prototype.topTippRegex = new RegExp('\\[TopTipp\\]', 'm');
+
+
+VDRest.Helper.prototype.tagesTippRegex = new RegExp('\\[TagesTipp\\]', 'm');
+
+
 /**
  * call in context of view model
  * @param {string} description
@@ -196,32 +209,34 @@ VDRest.Helper.prototype.sortAlpha = function (a, b) {
  */
 VDRest.Helper.prototype.parseDescription = function (description) {
 
-    var rating = new RegExp('(((?:[Ww]ertung: *)([0-9])/[0-9])|([*]{1,}))', 'm'),
-        tipp = new RegExp('\\[Tipp\\]', 'm'),
-        topTipp = new RegExp('\\[TopTipp\\]', 'm'),
-        tagesTipp = new RegExp('\\[TagesTipp\\]', 'm');
-
-    rating.test(description);
-    rating = RegExp.$1 == RegExp.$4 ? RegExp.$1.length : RegExp.$2 ? parseInt(RegExp.$3, 10) : undefined;
+    //var rating = new RegExp('(((?:[Ww]ertung: *)([0-9])/[0-9])|([*]{1,}))', 'm'),
+    //    tipp = new RegExp('\\[Tipp\\]', 'm'),
+    //    topTipp = new RegExp('\\[TopTipp\\]', 'm'),
+    //    tagesTipp = new RegExp('\\[TagesTipp\\]', 'm');
 
     this.data.view.getRating = function () {
+
+        var rating;
+
+        VDRest.Helper.prototype.ratingRegex.test(description);
+        rating = RegExp.$1 == RegExp.$4 ? RegExp.$1.length : RegExp.$2 ? parseInt(RegExp.$3, 10) : undefined;
 
         return isNaN(rating) ? 0 : rating;
     };
 
     this.data.view.getTip = function () {
 
-        return tipp.test(description);
+        return VDRest.Helper.prototype.tippRegex.test(description);
     };
 
     this.data.view.getTopTip = function () {
 
-        return topTipp.test(description);
+        return VDRest.Helper.prototype.topTippRegex.test(description);
     };
 
     this.data.view.getTipOfTheDay = function () {
 
-        return tagesTipp.test(description);
+        return VDRest.Helper.prototype.tagesTippRegex.test(description);
     };
 
     return this;

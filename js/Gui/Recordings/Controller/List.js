@@ -45,10 +45,10 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
             this.iterateRecordings();
         } else {
 
-            $(document).one(this.dataModel.events.collectionloaded, $.proxy(function () {
+            $(document).one(this.dataModel.events.collectionloaded, function () {
 
                 this.iterateRecordings();
-            }, this))
+            }.bind(this))
         }
     }
 
