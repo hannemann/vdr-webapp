@@ -248,9 +248,9 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
 
         parentView = this.module.getView('List.Directory', path);
 
-    } else if (winModule.cache.store.View.Directory && winModule.cache.store.View.Directory[path]) {
+    } else if (winModule.cache.store.View.Directory && winModule.cache.store.View.Directory[path.toCacheKey()]) {
 
-        parentView = {"node" : winModule.cache.store.View.Directory[path].body};
+        parentView = {"node": winModule.cache.store.View.Directory[path.toCacheKey()].body};
     }
 
     if (parentView) {
