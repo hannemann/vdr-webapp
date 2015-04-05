@@ -62,7 +62,7 @@ Gui.Recordings.View.List.prototype.setSorting = function (type) {
 Gui.Recordings.View.List.prototype.renderFirstLevel = function () {
 
     this.tree = this.getTree();
-
+    this.tree.view.node.empty();
     this.tree.dispatchView();
 
     setTimeout(function () {
@@ -136,6 +136,14 @@ Gui.Recordings.View.List.prototype.renderChunk = function (index, controller, tr
 
 Gui.Recordings.View.List.prototype.sortEvent = function (a, b) {
 
+    if (
+        a instanceof Gui.Recordings.Controller.List.Directory ||
+        a instanceof Gui.Recordings.Controller.List.Recording
+    ) {
+        a = a.data;
+        b = b.data;
+    }
+
     if (!a.start_time) {
 
         if (this.reverse) {
@@ -163,6 +171,14 @@ Gui.Recordings.View.List.prototype.sortEvent = function (a, b) {
  * @returns {number}
  */
 Gui.Recordings.View.List.prototype.sortAlpha = function (a, b) {
+
+    if (
+        a instanceof Gui.Recordings.Controller.List.Directory ||
+        a instanceof Gui.Recordings.Controller.List.Recording
+    ) {
+        a = a.data;
+        b = b.data;
+    }
 
     a = a.name.toLowerCase().replace(/^[^a-z]/, '');
     b = b.name.toLowerCase().replace(/^[^a-z]/, '');
