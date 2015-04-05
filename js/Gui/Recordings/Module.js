@@ -161,6 +161,10 @@ Gui.Recordings.prototype.refresh = function () {
     this.store.cache.flush();
     this.cache.flush();
     this.store.getModel('List').initList();
+    VDRest.app.getModule('Gui.Menubar')
+        .getView('Default')
+        .getHeader()
+        .text(VDRest.app.translate('Recordings'));
     this.dispatch();
 };
 
