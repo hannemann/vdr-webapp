@@ -249,11 +249,13 @@
     height: 30px;
     padding-top: 8px;
     border-radius: 8px;
-    text-align: left;
+    background: linear-gradient(135deg, rgba(149, 149, 149, 0.5) 0%, rgba(13, 13, 13, 0.5) 46%, rgba(1, 1, 1, 0.5) 50%, rgba(10, 10, 10, 0.5) 53%, rgba(78, 78, 78, 0.5) 76%, rgba(56, 56, 56, 0.5) 87%, rgba(27, 27, 27, 0.5) 100%);;
+    text-align: center;
 }
 .html5-player-controls .volume-indicator.show {
     width: 84px;
     right: 0;
+    border: 2px solid rgba(0, 0, 0, .5);
 }
 .html5-player-controls .volume-indicator span {
     display: inline-block;

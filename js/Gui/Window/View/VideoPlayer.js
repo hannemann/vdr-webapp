@@ -133,7 +133,9 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
     this.node = $('<div class="video-player-wrapper">');
     this.player = $('<video preload="none" class="normal-size">');
     this.video = this.player.get(0);
-    this.controls = $('<div class="html5-player-controls show" data-animate="opacity">');
+    this.controls = $('<div class="html5-player-controls show">');
+    this.controls.attr('data-animate', 'opacity');
+    this.defaultTitle = $('title').text();
 
     if (location.host != VDRest.config.getItem('host')) {
         this.player.prop('crossOrigin', 'anonymous');
@@ -342,9 +344,9 @@ Gui.Window.View.VideoPlayer.prototype.addVolumeControl = function () {
     this.volumeWrapper = $('<div class="volume-wrapper">').appendTo(this.controls);
     this.ctrlVolume = $('<div class="slider volume">').appendTo(this.volumeWrapper);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
-    this.volumeIndicator = $(
-        '<div class="vdr-web-symbol info volume-indicator" data-animate="opacity fast">'
-    ).appendTo(this.controls);
+    this.volumeIndicator = $('<div class="vdr-web-symbol info volume-indicator">');
+    this.volumeIndicator.attr('data-animate', 'opacity fast');
+    this.volumeIndicator.appendTo(this.controls);
     this.volumeIndicatorLabel = $('<span class="label">').appendTo(
         this.volumeIndicator
     );
@@ -694,7 +696,8 @@ Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
 
     var i, l = this.bitrates.length, item;
 
-    this.qualitySelect = $('<div class="quality-select" data-animate="opacity">');
+    this.qualitySelect = $('<div class="quality-select">');
+    this.qualitySelect.attr('data-animate', 'opacity');
     this.sizeSelect = $('<div class="select size-select">').appendTo(this.qualitySelect);
     this.bitrateSelect = $('<div class="select bitrate-select">').appendTo(this.qualitySelect);
 
@@ -918,4 +921,5 @@ Gui.Window.View.VideoPlayer.prototype.destruct = function () {
 
     Gui.Window.View.Abstract.prototype.destruct.call(me);
     $('body').removeClass('has-video-player');
+    $('title').text(this.defaultTitle);
 };
