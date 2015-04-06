@@ -1,6 +1,8 @@
 /**
  * @class
  * @constructor
+ * @property {Gui.Epg.Controller.Broadcasts.List.Broadcast[]} broadcasts
+ * @property {Gui.Epg} module
  */
 Gui.Epg.Controller.Broadcasts.List = function () {};
 
@@ -42,8 +44,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
         "channel_id" : this.data.channel_id
     });
     this.scrollLeft = 0;
-    this.firstVisible = 0;
-    this.lastVisible = 0;
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.fromTime = this.module.getFromDate().getTime();
     this.initial = true;
@@ -61,11 +61,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
     if (this.dataModel.getCollection().length > 0) {
 
         this.iterateBroadcasts({
-            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel),
+            "iterate": this.dataModel.collectionIterator.bind(this.dataModel),
             "collection" : this.dataModel.getCollection()
         });
-
-        this.hasInitialBroadcasts = true;
 
     } else {
 
@@ -109,11 +107,11 @@ Gui.Epg.Controller.Broadcasts.List.prototype.initList = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
 
-    $(document).on('broadcastsloaded-'+this.data.channel_id, $.proxy(this.iterateBroadcasts, this));
+    $(document).on('broadcastsloaded-' + this.data.channel_id, this.iterateBroadcasts.bind(this));
 
-    $(window).on('orientationchange', $.proxy(this.handleResize, this));
+    $(window).on('orientationchange.' + this.data.channel_id, this.handleResize.bind(this));
 
-    $(window).on('resize', $.proxy(this.handleResize, this));
+    $(window).on('resize.' + this.data.channel_id, this.handleResize.bind(this));
 };
 
 /**
@@ -123,9 +121,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
 
     $(document).off('broadcastsloaded-'+this.data.channel_id);
 
-    $(window).off('orientationchange', $.proxy(this.handleResize, this));
+    $(window).off('orientationchange.' + this.data.channel_id);
 
-    $(window).off('resize', $.proxy(this.handleResize, this));
+    $(window).off('resize.' + this.data.channel_id);
 };
 
 /**
@@ -156,7 +154,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
 
     var isInView = this.isInView(), newBroadcasts = [];
 
-    collection.iterate($.proxy(function (dataModel) {
+    collection.iterate(function (dataModel) {
 
         if (dataModel.data.end_date <= this.module.getFromDate()) return;
 
@@ -164,11 +162,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
             'channel' : dataModel.data.channel,
             'id' : dataModel.data.id,
             "parent" : this,
-            "dataModel" : dataModel,
-            "position" : this.broadcasts.length + newBroadcasts.length
+            "dataModel": dataModel
         }));
 
-    }, this), $.proxy(function () {
+    }.bind(this), function () {
 
         var i= 0, l;
 
@@ -184,7 +181,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
             this.isLoading = false;
         }
 
-    }, this));
+    }.bind(this));
+
+    this.hasInitialBroadcasts = this.broadcasts.length > 0;
 
     newBroadcasts = [];
     // runs in endless loop if previous collection had items but current not
@@ -238,7 +237,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleResize = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
-    var i = this.lastVisible,
+    var i = 0,
         l = this.broadcasts.length,
         metrics,
         vOffset;
@@ -291,7 +290,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
     } else if (!this.hasInitialBroadcasts) {
 
         this.getBroadcasts();
-        this.hasInitialBroadcasts = true;
     }
 };
 
@@ -312,6 +310,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
     if (l > 0) {
 
+        if (this.firstVisibleNode) this.firstVisibleNode.removeClass('first-visible');
+        if (this.lastVisibleNode) this.lastVisibleNode.removeClass('last-visible');
+
         if (this.scrollLeft <= currentScrollLeft) {
 
             // search from start until element is visible
@@ -323,9 +324,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (end > currentScrollTime && start <= currentScrollTime) {
 
-                    this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
                     this.broadcasts[i].view.node.addClass('first-visible');
-                    this.firstVisible = i;
+                    this.firstVisibleNode = this.broadcasts[i].view.node;
                     break;
                 }
             }
@@ -340,9 +340,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (i > 0 && start > visibleEndTime || i === this.broadcasts.length) {
 
-                    this.broadcasts[this.lastVisible].view.node.removeClass('last-visible');
                     this.broadcasts[i - 1].view.node.addClass('last-visible');
-                    this.lastVisible = i - 1;
+                    this.lastVisibleNode = this.broadcasts[i - 1].view.node;
                     break;
                 }
             }
@@ -358,9 +357,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (start <= visibleEndTime) {
 
-                    this.broadcasts[this.lastVisible].view.node.removeClass('last-visible');
                     this.broadcasts[i].view.node.addClass('last-visible');
-                    this.lastVisible = i;
+                    this.lastVisibleNode = this.broadcasts[i].view.node;
                     break;
                 }
             }
@@ -374,9 +372,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (end <= currentScrollTime || i === 0) {
 
-                    this.broadcasts[this.firstVisible].view.node.removeClass('first-visible');
                     this.broadcasts[i].view.node.addClass('first-visible');
-                    this.firstVisible = i;
+                    this.firstVisibleNode = this.broadcasts[i].view.node;
                     break;
                 }
             }
@@ -404,6 +401,28 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
             && bottom + threshold > metrics.broadcasts.top
             && !this.module.getController('Epg').isHidden;
 
+};
+
+
+Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function () {
+
+    this.fromTime = this.module.getFromDate().getTime();
+
+    this.broadcasts.forEach(function (broadcast) {
+
+        if (broadcast.getData('dataModel').getData('end_time') < this.fromTime / 1000) {
+            broadcast.destructView();
+            this.module.cache.flushByClassKey(broadcast.keyInCache);
+            this.module.store.cache.flushByClassKey(broadcast.keyInCache);
+            this.broadcasts.shift();
+            this.module.store.cache.store.Model['Channels.Channel'][broadcast.data.channel].cleanCollection();
+        } else {
+            broadcast.updateMetrics();
+            broadcast.view.update();
+        }
+
+    }.bind(this));
+    this.updateList();
 };
 
 /**

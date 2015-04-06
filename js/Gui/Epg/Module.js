@@ -1,6 +1,8 @@
 /**
  * Epg Module
  * @constructor
+ * @property {VDRest.Lib.Cache} cache
+ * @property {VDRest.Epg} store
  */
 Gui.Epg = function () {};
 
@@ -171,7 +173,7 @@ Gui.Epg.prototype.refresh = function (time, custom) {
 
 /**
  * retrieve date object of chosen EPG start time
- * @returns {*}
+ * @returns {Date}
  */
 Gui.Epg.prototype.getFromDate = function () {
 

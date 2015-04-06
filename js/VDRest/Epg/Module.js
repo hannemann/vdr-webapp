@@ -1,6 +1,7 @@
 /**
  * EPG Module
  * @constructor
+ * @property {VDRest.Lib.Cache} cache
  */
 VDRest.Epg = function () {};
 
@@ -33,7 +34,7 @@ VDRest.Epg.prototype.init = function () {
  */
 VDRest.Epg.prototype.initTimes = function (custom) {
 
-    this.now = new Date();
+    this.now = new Date(Date.now() - 1000 * 60 * 30);
 
     this.custom = custom || this.now;
 
@@ -50,6 +51,15 @@ VDRest.Epg.prototype.initTimes = function (custom) {
     }
 
     return this;
+};
+
+VDRest.Epg.prototype.updateNow = function () {
+
+    this.now = new Date(Date.now() - 1000 * 60 * 30);
+
+    //this.now = new Date(this.now.getTime() + 1000 * 60);
+
+    return this.now;
 };
 
 /**

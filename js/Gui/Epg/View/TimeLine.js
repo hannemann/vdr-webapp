@@ -37,6 +37,35 @@ Gui.Epg.View.TimeLine.prototype.render = function () {
 };
 
 /**
+ * periodical update
+ */
+Gui.Epg.View.TimeLine.prototype.update = function () {
+
+    var firstDate = parseInt($(this.node[0].firstChild).attr('data-date'), 10),
+        timeDiff = firstDate - this.getStartDate().getTime(),
+        width;
+
+    if (timeDiff < 0) {
+        firstDate += 1000 * 60 * 15;
+        timeDiff = firstDate - this.getStartDate().getTime();
+        this.node[0].removeChild(this.node[0].firstChild);
+        this.node[0].removeChild(this.node[0].firstChild);
+        $(this.node[0].firstChild).attr('data-date', firstDate);
+    }
+
+    width = Math.round(timeDiff / 1000 * VDRest.config.getItem('pixelPerSecond'));
+    width = width > 0 ? width + 'px' : 0;
+    this.node[0].firstChild.style.width = width;
+
+    if ($(this.node[0].lastChild).offset().left < this.module.getController('Epg').getMetrics().win.width) {
+
+        this.renderTimeLine();
+    }
+
+    this.setDate(this.getStartDate());
+};
+
+/**
  * set date text node
  * @param date
  */
@@ -55,15 +84,18 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
     var end = this.getEndTime(),
         q, ql, qr,
         markup = '',
-        className = 'even',
+        className,
         newDate = null,
         width = this.node.width(),
         quarterEnd,
         firstQuarterWidth,
         quarterWidth = this.getQuarterWidth(),
+        widthStyle,
 
     /// TODO: Bug zwischen 23:45 und 0:00 <- Datum Falsch
         firstDate;
+
+    className = end.getHours() % 2 == 0 ? 'even' : 'odd';
 
     if (!this.isRendered) {
         firstQuarterWidth = this.getFirstQuarterWidth();
@@ -88,8 +120,9 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
                 newDate = quarterEnd.getTime();
             }
         }
-        if (firstQuarterWidth) {
-            markup += '<div data-date="' + firstDate + '" class="ql ' + className + '" style="width: ' + firstQuarterWidth + 'px">' + ql + '</div>';
+        if ("undefined" !== typeof firstQuarterWidth) {
+            widthStyle = firstQuarterWidth > 0 ? firstQuarterWidth.toString() + 'px' : '0';
+            markup += '<div data-date="' + firstDate + '" class="ql ' + className + '" style="width: ' + widthStyle + '">' + ql + '</div>';
             width += firstQuarterWidth;
             firstQuarterWidth = undefined;
         } else {

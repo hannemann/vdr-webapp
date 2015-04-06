@@ -56,10 +56,22 @@
     overflow: auto;
     background-image: linear-gradient(0deg, #000000 1px, rgba(0, 0, 0, 0) 0%);
     background-size: 100px 40px;
+    z-index: 0;
+}
+
+#epg-time-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: rgba(99, 138, 195, 0.15);
+    border-right: 1px solid rgba(255, 0, 0, 0.5);
+    z-index: 1;
 }
 #broadcasts .broadcasts-list {
     height: 40px;
     position: relative;
+    z-index: 0;
 }
 #broadcasts .broadcasts-list .broadcast {
     position: absolute;

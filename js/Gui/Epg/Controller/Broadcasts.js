@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {Gui.Epg.Controller.Broadcasts.List[]} broadcastLists
  */
 Gui.Epg.Controller.Broadcasts = function () {};
 
@@ -50,11 +51,12 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    if (this.dataModel.getCollection().length) {
-        this.iterateChannels({
-            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel)
-        });
-    }
+    //if (this.dataModel.getCollection().length) {
+    //    this.iterateChannels({
+    //        "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel)
+    //    });
+    //}
+    this.startUpdateInterval();
 };
 
 /**
@@ -62,11 +64,15 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
-    $(document).one('channelsloaded', $.proxy(this.iterateChannels, this));
+    $(document).one('channelsloaded', this.iterateChannels.bind(this));
 
     if (!VDRest.helper.touchMoveCapable) {
-        this.view.wrapper.get(0).onscroll = $.proxy(this.handleScroll, this);
+        this.view.wrapper.get(0).onscroll = this.handleScroll.bind(this);
     }
+
+    $(document).on('mousedown.broadcasts touchstart.broadcasts', this.toggleUpdate.bind(this));
+
+    $(document).on('visibilitychange.broadcasts', this.toggleUpdate.bind(this, true));
 };
 
 /**
@@ -77,6 +83,65 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
     if (!VDRest.helper.touchMoveCapable) {
         $(this.view.wrapper).off('scroll', this.handleScroll);
     }
+
+    $(document).off('visibilitychange.broadcasts');
+};
+
+/**
+ * toggle update of indicator
+ */
+Gui.Epg.Controller.Broadcasts.prototype.toggleUpdate = function (instantUpdate) {
+
+    if ('visible' === document.visibilityState) {
+        this.stopUpdateInterval()
+            .startUpdateInterval();
+        if (true === instantUpdate) {
+            this.update();
+        }
+    } else {
+        this.stopUpdateInterval();
+    }
+};
+
+/**
+ * start interval to update indicator
+ */
+Gui.Epg.Controller.Broadcasts.prototype.startUpdateInterval = function () {
+
+    var d = new Date(),
+        next = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes() + 2, 0);
+
+    if ("undefined" !== typeof this.updateTimeout) {
+        clearTimeout(this.updateTimeout);
+        this.updateTimeout = undefined;
+    }
+
+    this.updateTimeout = setTimeout(function () {
+        this.update();
+        this.updateInterval = setInterval(this.update.bind(this), 60000);
+    }.bind(this), next.getTime() - d.getTime());
+};
+
+/**
+ * stop indicator update interval
+ * @returns {Gui.Epg.Controller.Broadcasts}
+ */
+Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
+
+    if (this.updateInterval) {
+        clearInterval(this.updateInterval);
+        this.updateInterval = undefined;
+    }
+    return this;
+};
+
+/**
+ * periodical update
+ */
+Gui.Epg.Controller.Broadcasts.prototype.update = function () {
+
+    this.timeUpdate();
+    this.view.updateIndicator();
 };
 
 /**
@@ -92,6 +157,10 @@ Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function (e) {
     this.scrollTimeout = setTimeout(this.handleScrollBroadcasts, 200);
 };
 
+/**
+ * iterate broadcast lists and call their scroll handler
+ * @param {jQuery.Event} e
+ */
 Gui.Epg.Controller.Broadcasts.prototype.fnHandleScrollBroadcasts = function (e) {
 
     var i;
@@ -110,7 +179,7 @@ Gui.Epg.Controller.Broadcasts.prototype.fnHandleScrollBroadcasts = function (e) 
  */
 Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) {
 
-    collection.iterate($.proxy(function (channelModel) {
+    collection.iterate(function (channelModel) {
 
         if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
 
@@ -123,7 +192,7 @@ Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) 
             "dataModel" : channelModel
         }));
 
-    }, this));
+    }.bind(this));
 
     this.dispatchChannels();
 };
@@ -214,6 +283,24 @@ Gui.Epg.Controller.Broadcasts.prototype.recoverState = function () {
 };
 
 /**
+ * trigger update of broadcast lists
+ */
+Gui.Epg.Controller.Broadcasts.prototype.timeUpdate = function () {
+
+    if ('now' === VDRest.config.getItem('lastEpg')/* &&  this.module.getController('Epg').getScrollLeft() > -10*/) {
+
+        this.module.store.updateNow();
+
+        this.module.getController('TimeLine').update();
+
+        this.broadcastLists.forEach(function (list) {
+
+            list.updateBroadcastsPosition();
+        }.bind(this));
+    }
+};
+
+/**
  * DESTROY!
  */
 Gui.Epg.Controller.Broadcasts.prototype.destructView = function () {
@@ -224,6 +311,6 @@ Gui.Epg.Controller.Broadcasts.prototype.destructView = function () {
 
         this.broadcastLists[i].destructView();
     }
-
+    this.stopUpdateInterval();
     VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

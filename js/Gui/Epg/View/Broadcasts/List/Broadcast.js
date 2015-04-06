@@ -39,7 +39,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.imageInEpgView = VDRest.config.
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
 
-    this.node = $('<div class="broadcast" data-position="' + this.getData('position') + '"></div>');
+    this.node = $('<div class="broadcast"></div>');
 
     this.info = $('<div class="content">').appendTo(this.node);
 };
@@ -49,23 +49,20 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
-    var me = this;
-
-    this.node.attr('data-right', this.getRight());
-
-    if (0 === this.getData('position')) {
+    if (0 === this.getLeft()) {
 
         this.parentView.node.append(this.node);
 
     } else {
 
-        this.parentView.node.find('div.broadcast').each(function () {
+        this.data.listController.broadcasts.forEach(function (broadcast) {
 
-            if (me.getData('position') > parseInt($(this).attr('data-position'), 10)) {
+            if (this.getStartTime() >= broadcast.data.dataModel.data.end_time) {
 
-                me.node.insertAfter(this);
+                this.node.insertAfter(broadcast.view.node);
             }
-        });
+
+        }.bind(this));
 
     }
 
@@ -75,6 +72,11 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
     this.addImage();
 
     this.isRendered = !this.isRendered;
+};
+
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.update = function () {
+
+    this.setWidth();
 };
 
 /**

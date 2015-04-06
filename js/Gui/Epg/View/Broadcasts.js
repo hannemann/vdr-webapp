@@ -19,6 +19,8 @@ Gui.Epg.View.Broadcasts.prototype.init = function () {
     this.wrapper = $('<div id="broadcasts-wrapper">');
     this.node = $('<div id="broadcasts" class="touchmove-slide">')
         .appendTo(this.wrapper);
+    this.timeIndicator = $('<div id="epg-time-indicator">')
+        .appendTo(this.node);
 };
 
 /**
@@ -27,6 +29,9 @@ Gui.Epg.View.Broadcasts.prototype.init = function () {
 Gui.Epg.View.Broadcasts.prototype.render = function () {
 
     this.wrapper.appendTo(this.parentView.node);
+    this.updateIndicator();
+
+
 };
 
 /**
@@ -50,4 +55,20 @@ Gui.Epg.View.Broadcasts.prototype.getAvailableTimespan = function (type) {
             return this.wrapper.innerWidth() / (pps * 60 * 60);
     }
 
+};
+
+Gui.Epg.View.Broadcasts.prototype.updateIndicator = function () {
+
+    var timeDiff = Date.now() - this.module.getFromDate().getTime(),
+        width;
+
+    if (timeDiff > 0) {
+        this.timeIndicator.show();
+        width = Math.round(timeDiff / 1000 * VDRest.config.getItem('pixelPerSecond')) - 1;
+    } else {
+        this.timeIndicator.hide();
+    }
+
+
+    this.timeIndicator.width(width);
 };

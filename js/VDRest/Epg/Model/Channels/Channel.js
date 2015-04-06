@@ -324,3 +324,11 @@ VDRest.Epg.Model.Channels.Channel.prototype.afterCollectionLoaded = function () 
     });
 };
 
+VDRest.Epg.Model.Channels.Channel.prototype.cleanCollection = function () {
+
+    while (
+    this.collection.length > 0 &&
+    this.collection[0].data.end_date.getTime() < this.module[VDRest.config.getItem('lastEpg')].getTime()) {
+        this.collection.shift();
+    }
+};

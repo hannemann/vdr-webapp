@@ -53,6 +53,13 @@ Gui.Epg.Controller.TimeLine.prototype.removeObserver = function () {
 
 };
 
+Gui.Epg.Controller.TimeLine.prototype.update = function () {
+
+    this.from = this.module.store[VDRest.config.getItem('lastEpg')];
+    this.module.getViewModel('TimeLine').setData('from', this.from).init();
+    this.view.update();
+};
+
 /**
  * handle scroll events
  * @param {{x: Number, y: Number, jsStyle: String}|Event} [e]

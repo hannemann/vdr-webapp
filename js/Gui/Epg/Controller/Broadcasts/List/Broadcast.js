@@ -31,7 +31,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
     this.view = this.module.getView('Broadcasts.List.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel,
-        "position" : this.getData('position')
+        "listController": this.data.parent
     });
     this.view.setParentView(this.data.parent.view);
 
@@ -59,6 +59,13 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
         right = this.view.getRight() + parentOffset.left;
 
     return left < metrics.win.width && right > metrics.broadcasts.left;
+};
+
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.updateMetrics = function () {
+
+    this.module.getViewModel('Broadcasts.List.Broadcast', this.keyInCache).calculateMetrics();
+
+    return this;
 };
 
 /**

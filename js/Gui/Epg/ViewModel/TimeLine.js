@@ -33,7 +33,9 @@ Gui.Epg.ViewModel.TimeLine.prototype.init = function () {
 
     this.initViewMethods();
 
-    this.quarterEnd = this.data.from;
+    if (!this.quarterEnd) {
+        this.quarterEnd = this.data.from;
+    }
 
     this.data.view.getQuarterEnd = function () {
 
@@ -88,6 +90,10 @@ Gui.Epg.ViewModel.TimeLine.prototype.getNextQuarterEnd = function () {
         day = this.data.from.getDate();
         quarter = (((minute + 15) / 15 | 0) * 15) % 60;
         nextHour = (((minute / 60 + .25) | 0) + hour) % 24;
+
+        if (0 === nextHour && 0 === quarter) {
+            day++;
+        }
 
         this.quarterEnd = new Date(year, month, day, nextHour, quarter, 0);
 
