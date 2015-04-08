@@ -31,7 +31,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
     this.view = this.module.getView('Broadcasts.List.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel,
-        "listController": this.data.parent
+        "listController": this.data.parent,
+        "position": this.data.position
     });
     this.view.setParentView(this.data.parent.view);
 
@@ -73,15 +74,15 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.updateMetrics = function 
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function () {
 
-    this.view.node.on('click', $.proxy(this.handleClick, this));
-    $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimer, this));
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.handleTimer, this));
+    this.view.node.on('click', this.handleClick.bind(this));
+    $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
+    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
 
     if (this.data.dataModel.data.timer_id) {
 
         $(document).one('gui-timer.deleted.'
             + [this.keyInCache, this.data.dataModel.data.timer_id, this.eventNameSpace].join('.'),
-            $.proxy(this.handleTimer, this)
+            this.handleTimer.bind(this)
         );
     }
 };
@@ -91,7 +92,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function ()
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function () {
 
-    this.view.node.off('click', $.proxy(this.handleClick, this));
+    this.view.node.off('click');
     $(document).off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 };
 
@@ -120,7 +121,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function ()
 
         $(document).one(
             'gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace,
-            $.proxy(this.handleTimer, this)
+            this.handleTimer.bind(this)
         );
     }
 

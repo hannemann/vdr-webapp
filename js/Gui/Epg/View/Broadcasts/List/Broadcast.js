@@ -39,7 +39,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.imageInEpgView = VDRest.config.
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
 
-    this.node = $('<div class="broadcast"></div>');
+    this.node = $('<div class="broadcast pos-' + this.data.position + '"></div>');
 
     this.info = $('<div class="content">').appendTo(this.node);
 };
@@ -49,21 +49,14 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
-    if (0 === this.getLeft()) {
+    var previous = this.data.listController.broadcasts[this.data.position - 1];
 
-        this.parentView.node.append(this.node);
-
+    if (0 === this.data.position) {
+        this.parentView.node.prepend(this.node);
+    } else if (previous && previous.view.isRendered) {
+        this.node.insertAfter(previous.view.node)
     } else {
-
-        this.data.listController.broadcasts.forEach(function (broadcast) {
-
-            if (this.getStartTime() >= broadcast.data.dataModel.data.end_time) {
-
-                this.node.insertAfter(broadcast.view.node);
-            }
-
-        }.bind(this));
-
+        this.parentView.node.append(this.node);
     }
 
     this.title.find('span').css({
