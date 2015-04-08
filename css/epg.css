@@ -69,6 +69,10 @@
     border-right: 1px solid rgba(255, 0, 0, 0.5);
     z-index: 1;
 }
+
+.channel-view #epg-time-indicator {
+    display: none;
+}
 #broadcasts .broadcasts-list {
     height: 40px;
     position: relative;
