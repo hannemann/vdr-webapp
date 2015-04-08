@@ -22,6 +22,7 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
     this.channelsController = this.module.getController('Channels');
     this.timeLineController = this.module.getController('TimeLine');
+    this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.handleScrollBroadcasts = this.fnHandleScrollBroadcasts.bind(this);
 
     if (VDRest.helper.touchMoveCapable) {
@@ -50,6 +51,9 @@ Gui.Epg.Controller.Broadcasts.prototype.height = function () {
 Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    this.epgController = this.module.getController('Epg');
+
+    this.setScrollData();
 
     //if (this.dataModel.getCollection().length) {
     //    this.iterateChannels({
@@ -140,7 +144,8 @@ Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.update = function () {
 
-    this.timeUpdate();
+    this.setScrollData()
+        .timeUpdate();
     this.view.updateIndicator();
 };
 
@@ -165,12 +170,30 @@ Gui.Epg.Controller.Broadcasts.prototype.fnHandleScrollBroadcasts = function (e) 
 
     var i;
 
+    this.setScrollData();
+
     for (i in this.broadcastLists) {
         if (this.broadcastLists.hasOwnProperty(i)) {
 
             this.broadcastLists[i].handleScroll(e);
         }
     }
+};
+
+Gui.Epg.Controller.Broadcasts.prototype.setScrollData = function () {
+
+    var wrapperWidth = this.view.wrapper[0].offsetWidth,
+        currentScrollLeft = Math.abs(this.epgController.getScrollLeft()),
+        currentScrollDate = new Date((currentScrollLeft / this.pixelPerSecond) * 1000 + this.module.getFromDate().getTime()),
+        currentScrollTime = currentScrollDate.getTime() / 1000,
+        visibleEndDate = new Date((wrapperWidth / this.pixelPerSecond) * 1000 + currentScrollTime * 1000),
+        visibleEndTime = visibleEndDate.getTime() / 1000;
+
+    this.currentScrollTime = currentScrollTime;
+    this.visibleEndTime = visibleEndTime;
+    this.currentScrollLeft = currentScrollLeft;
+
+    return this;
 };
 
 /**

@@ -34,7 +34,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
 
     this.epgController = this.module.getController('Epg');
     this.broadcastsController = this.epgController.getBroadcasts();
-    this.broadcastsWrapper = this.broadcastsController.view.wrapper;
     this.broadcasts = [];
     this.view = this.module.getView('Broadcasts.List', {
         "channel_id" : this.data.channel_id
@@ -301,12 +300,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
     var i,
         l = this.broadcasts.length,
-        wrapperWidth = this.broadcastsController.view.wrapper[0].offsetWidth,
-        currentScrollLeft = Math.abs(this.epgController.getScrollLeft()),
-        currentScrollDate = new Date((currentScrollLeft / this.pixelPerSecond) * 1000 + this.fromTime),
-        currentScrollTime = currentScrollDate.getTime() / 1000,
-        visibleEndDate = new Date((wrapperWidth / this.pixelPerSecond) * 1000 + currentScrollTime * 1000),
-        visibleEndTime = visibleEndDate.getTime() / 1000,
+        currentScrollLeft = this.broadcastsController.currentScrollLeft,
+        currentScrollTime = this.broadcastsController.currentScrollTime,
+        visibleEndTime = this.broadcastsController.visibleEndTime,
         broadcast, start, end;
 
     if (l > 0) {
@@ -404,7 +400,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
 
 };
 
-
+/**
+ * update position or width of all broadcasts on auto update
+ */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function () {
 
     this.fromTime = this.module.getFromDate().getTime();
