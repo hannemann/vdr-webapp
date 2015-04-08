@@ -11,6 +11,8 @@ VDRest.Epg = function () {};
  */
 VDRest.Epg.prototype = new VDRest.Abstract.Module();
 
+VDRest.Epg.prototype.nowOffset = 1000 * 60 * 30;
+
 /**
  * initialize module
  * @member {Date} now       Date Object of now
@@ -55,9 +57,23 @@ VDRest.Epg.prototype.initTimes = function (custom) {
 
 VDRest.Epg.prototype.updateNow = function () {
 
-    this.now = new Date(Date.now() - 1000 * 60 * 30);
+    this.now = new Date(Date.now() - this.nowOffset);
 
-    //this.now = new Date(this.now.getTime() + 1000 * 60);
+    /**
+     * for debugging auto scroll
+     * adjust timeout and interval in Broadcasts controller also
+     */
+    //if (!this.first) {
+    //
+    //    var m = Math.round(Math.random() * 240);
+    //
+    //    this.now = new Date(this.now.getTime() + 1000 * 60 * m);
+    //    console.log(m);
+    //    this.first = true;
+    //} else {
+    //    this.now = new Date(this.now.getTime() + 1000 * 60);
+    //}
+
 
     return this.now;
 };

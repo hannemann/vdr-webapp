@@ -182,9 +182,10 @@ div#time-line div {
 	float: left;
 	width: 15px;
 	line-height: 20px;
+    overflow: hidden;
 }
 div#time-line div.odd {
-	color: black;
+    color: #404040;
 	background: white;
 }
 div#time-line .ql,

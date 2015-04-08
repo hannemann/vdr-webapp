@@ -405,22 +405,30 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function () {
 
+    var toDelete = [];
+
     this.fromTime = this.module.getFromDate().getTime();
 
     this.broadcasts.forEach(function (broadcast) {
 
         if (broadcast.getData('dataModel').getData('end_time') < this.fromTime / 1000) {
-            broadcast.destructView();
-            this.module.cache.flushByClassKey(broadcast.keyInCache);
-            this.module.store.cache.flushByClassKey(broadcast.keyInCache);
-            this.broadcasts.shift();
-            this.module.store.cache.store.Model['Channels.Channel'][broadcast.data.channel].cleanCollection();
+            toDelete.push(broadcast);
         } else {
             broadcast.updateMetrics();
             broadcast.view.update();
         }
 
     }.bind(this));
+
+    toDelete.forEach(function (broadcast) {
+        broadcast.destructView();
+        this.module.cache.flushByClassKey(broadcast.keyInCache);
+        this.module.store.cache.flushByClassKey(broadcast.keyInCache);
+        this.broadcasts.shift();
+        this.module.store.cache.store.Model['Channels.Channel'][broadcast.data.channel].cleanCollection();
+    }.bind(this));
+
+    this.toggleBroadcastsVisibility();
     this.updateList();
 };
 

@@ -2,6 +2,7 @@
  * @class
  * @constructor
  * @property {Gui.Epg.Controller.Broadcasts.List[]} broadcastLists
+ * @property {Gui.Epg} module
  */
 Gui.Epg.Controller.Broadcasts = function () {};
 
@@ -144,9 +145,13 @@ Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.update = function () {
 
-    this.setScrollData()
-        .timeUpdate();
-    this.view.updateIndicator();
+    if ('now' === VDRest.config.getItem('lastEpg')) {
+
+        this.module.store.updateNow();
+        this.setScrollData()
+            .timeUpdate();
+        this.view.updateIndicator();
+    }
 };
 
 /**
@@ -310,17 +315,12 @@ Gui.Epg.Controller.Broadcasts.prototype.recoverState = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.timeUpdate = function () {
 
-    if ('now' === VDRest.config.getItem('lastEpg')/* &&  this.module.getController('Epg').getScrollLeft() > -10*/) {
+    this.module.getController('TimeLine').update();
 
-        this.module.store.updateNow();
+    this.broadcastLists.forEach(function (list) {
 
-        this.module.getController('TimeLine').update();
-
-        this.broadcastLists.forEach(function (list) {
-
-            list.updateBroadcastsPosition();
-        }.bind(this));
-    }
+        list.updateBroadcastsPosition();
+    }.bind(this));
 };
 
 /**

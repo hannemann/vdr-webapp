@@ -41,19 +41,28 @@ Gui.Epg.View.TimeLine.prototype.render = function () {
  */
 Gui.Epg.View.TimeLine.prototype.update = function () {
 
-    var firstDate = parseInt($(this.node[0].firstChild).attr('data-date'), 10),
-        timeDiff = firstDate - this.getStartDate().getTime(),
+    var firstDate = parseInt(this.node[0].firstChild.getAttributeNode('data-date').value, 10),
+        startTime = this.getStartDate().getTime(),
+        timeDiff = firstDate - startTime,
+        quarterWidth = this.getQuarterWidth(), i = 0,
+        pixelToRemove, nodesToRemove,
+        pixelPerSecond = VDRest.config.getItem('pixelPerSecond'),
         width;
 
     if (timeDiff < 0) {
-        firstDate += 1000 * 60 * 15;
-        timeDiff = firstDate - this.getStartDate().getTime();
-        this.node[0].removeChild(this.node[0].firstChild);
-        this.node[0].removeChild(this.node[0].firstChild);
+        pixelToRemove = Math.ceil(Math.abs(timeDiff) / 1000 * pixelPerSecond);
+        nodesToRemove = Math.ceil(pixelToRemove / quarterWidth);
+        /** add one if necessary since 15 minutes consist of 2 nodes */
+        nodesToRemove += nodesToRemove % 2 == 0 ? 0 : 1;
+        for (i; i < nodesToRemove; i++) {
+            this.node[0].removeChild(this.node[0].firstChild);
+            firstDate += i % 2 == 0 ? 1000 * 60 * 15 : 0;
+        }
+        timeDiff = firstDate - startTime;
         $(this.node[0].firstChild).attr('data-date', firstDate);
     }
 
-    width = Math.round(timeDiff / 1000 * VDRest.config.getItem('pixelPerSecond'));
+    width = Math.round(timeDiff / 1000 * pixelPerSecond);
     width = width > 0 ? width + 'px' : 0;
     this.node[0].firstChild.style.width = width;
 
@@ -88,17 +97,15 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
         newDate = null,
         width = this.node.width(),
         quarterEnd,
-        firstQuarterWidth,
+        firstQuarterData,
         quarterWidth = this.getQuarterWidth(),
         widthStyle,
-
-    /// TODO: Bug zwischen 23:45 und 0:00 <- Datum Falsch
         firstDate;
 
     className = end.getHours() % 2 == 0 ? 'even' : 'odd';
 
     if (!this.isRendered) {
-        firstQuarterWidth = this.getFirstQuarterWidth();
+        firstQuarterData = this.getFirstQuarterData();
         quarterEnd = this.getQuarterEnd();
         firstDate = quarterEnd.getTime();
     } else {
@@ -120,11 +127,11 @@ Gui.Epg.View.TimeLine.prototype.renderTimeLine = function () {
                 newDate = quarterEnd.getTime();
             }
         }
-        if ("undefined" !== typeof firstQuarterWidth) {
-            widthStyle = firstQuarterWidth > 0 ? firstQuarterWidth.toString() + 'px' : '0';
+        if ("undefined" !== typeof firstQuarterData) {
+            widthStyle = firstQuarterData.width > 0 ? firstQuarterData.width.toString() + 'px' : '0';
             markup += '<div data-date="' + firstDate + '" class="ql ' + className + '" style="width: ' + widthStyle + '">' + ql + '</div>';
-            width += firstQuarterWidth;
-            firstQuarterWidth = undefined;
+            width += firstQuarterData.width;
+            firstQuarterData = undefined;
         } else {
             markup += '<div' + (newDate ? ' data-date="' + newDate + '"' : '') + ' class="ql ' + className + '" style="width: ' + quarterWidth + 'px">' + ql + '</div>';
             width += quarterWidth * 8;
