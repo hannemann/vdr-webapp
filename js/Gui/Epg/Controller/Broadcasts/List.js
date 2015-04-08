@@ -307,8 +307,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
     if (l > 0) {
 
-        if (this.firstVisibleNode) this.firstVisibleNode.removeClass('first-visible');
-        if (this.lastVisibleNode) this.lastVisibleNode.removeClass('last-visible');
+        if (this.firstVisibleNode) {
+            this.firstVisibleNode.removeClass('first-visible');
+            this.firstVisibleNode = undefined;
+        }
+        if (this.lastVisibleNode) {
+            this.lastVisibleNode.removeClass('last-visible');
+            this.lastVisibleNode = undefined;
+        }
 
         if (this.scrollLeft <= currentScrollLeft) {
 
@@ -321,7 +327,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (end > currentScrollTime && start <= currentScrollTime) {
 
-                    this.broadcasts[i].view.node.addClass('first-visible');
                     this.firstVisibleNode = this.broadcasts[i].view.node;
                     break;
                 }
@@ -337,7 +342,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (i > 0 && start > visibleEndTime || i === this.broadcasts.length) {
 
-                    this.broadcasts[i - 1].view.node.addClass('last-visible');
                     this.lastVisibleNode = this.broadcasts[i - 1].view.node;
                     break;
                 }
@@ -354,7 +358,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (start <= visibleEndTime) {
 
-                    this.broadcasts[i].view.node.addClass('last-visible');
                     this.lastVisibleNode = this.broadcasts[i].view.node;
                     break;
                 }
@@ -369,13 +372,21 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
                 if (end <= currentScrollTime || i === 0) {
 
-                    this.broadcasts[i].view.node.addClass('first-visible');
                     this.firstVisibleNode = this.broadcasts[i].view.node;
                     break;
                 }
             }
-
         }
+
+        if (!this.firstVisibleNode) {
+            this.firstVisibleNode = this.broadcasts[0].view.node;
+        }
+        if (!this.lastVisibleNode) {
+            this.lastVisibleNode = this.broadcasts[l - 1].view.node;
+        }
+
+        this.firstVisibleNode.addClass('first-visible');
+        this.lastVisibleNode.addClass('last-visible');
 
         this.scrollLeft = currentScrollLeft;
     }
