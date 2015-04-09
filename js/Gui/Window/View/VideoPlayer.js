@@ -803,7 +803,6 @@ Gui.Window.View.VideoPlayer.prototype.updateInfo = function () {
         broadcast = this.getData('current_broadcast');
         this.title.text(broadcast.getData('title'));
         if ('' !== broadcast.getData('short_text')) {
-            this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
             this.subTitle.text(broadcast.getData('short_text'));
         }
 
