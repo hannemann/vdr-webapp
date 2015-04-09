@@ -734,7 +734,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleQualityControlActiveState = function
  */
 Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
-    var broadcast, now,
+    var now,
         me = this, end, logo,
         sourceModel = this.data.sourceModel;
 
@@ -757,32 +757,34 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
             clearTimeout(this.changeTitleTimeout);
         }
 
-        broadcast = this.getData('current_broadcast');
-        if (broadcast) {
-            this.title.text(broadcast.getData('title'));
-            if ('' !== broadcast.getData('short_text')) {
-                this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
-                this.subTitle.text(broadcast.getData('short_text'));
+        sourceModel.getCurrentBroadcast(function (broadcast) {
+            if (broadcast) {
+                this.setData('current_broadcast', broadcast);
+                this.title.text(broadcast.getData('title'));
+                if ('' !== broadcast.getData('short_text')) {
+                    this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
+                    this.subTitle.text(broadcast.getData('short_text'));
+                }
+
+                now = new Date().getTime() / 1000;
+                end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
+
+                this.changeTitleTimeout = setTimeout(function () {
+                    me.addTitle();
+                }, end);
             }
 
-            now = new Date().getTime()/1000;
-            end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
-
-            this.changeTitleTimeout = setTimeout(function () {
-                me.addTitle();
-            }, end);
-        }
-
-        logo = this.data.sourceModel.getData('image');
-        if (logo) {
-            this.infoArea.addClass('has-logo');
-            this.infoArea.css({
-                "background-image" : "url(" + logo + ")"
-            });
-        }
+            logo = this.data.sourceModel.getData('image');
+            if (logo) {
+                this.infoArea.addClass('has-logo');
+                this.infoArea.css({
+                    "background-image": "url(" + logo + ")"
+                });
+            }
+        }.bind(this));
     }
 
-    this.osd.append(this.infoArea);
+    this.osd.prepend(this.infoArea);
 
     $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
 
