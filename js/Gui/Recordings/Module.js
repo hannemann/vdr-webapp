@@ -155,7 +155,10 @@ Gui.Recordings.prototype.refresh = function () {
         VDRest.app.destroyer.pop();
         VDRest.app.observeHash.pop();
     });
-    history.go(-windows.length);
+
+    if (windows.length > 0) {
+        history.go(-windows.length);
+    }
 
     this.store.getModel('List').flushCollection();
     this.store.cache.flush();
