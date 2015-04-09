@@ -82,6 +82,11 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
     $('<div class="reload-button">').text(VDRest.app.translate('Reload App'))
         .appendTo(this.node);
 
+    if (!VDRest.helper.isTouchDevice) {
+        $('<div class="resize-button">').text(VDRest.app.translate('Window 16/9'))
+            .appendTo(this.node);
+    }
+
     return this;
 };
 

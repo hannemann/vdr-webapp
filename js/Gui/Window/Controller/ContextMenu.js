@@ -71,6 +71,9 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
     this.view.node.find('.reload-button')
         .one('mousedown', this.handleReload.bind(this));
 
+    this.view.node.find('.resize-button')
+        .one('mousedown', this.handleResize.bind(this));
+
     this.view.modalOverlay.one('click', $.proxy(function () {
 
         if (!this.skipBack) {
@@ -125,6 +128,12 @@ Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
 
         location.reload();
     });
+};
+
+Gui.Window.Controller.ContextMenu.prototype.handleResize = function () {
+
+    var height = window.innerWidth / 16 * 9;
+    window.resizeTo(window.innerWidth, height);
 };
 
 /**
