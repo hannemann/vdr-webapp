@@ -173,8 +173,12 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
                 img.crossOrigin = '';
             }
             img.height = this.node.height();
-            $('<div class="visible-epg-view broadcast-image">').append(img).prependTo(this.node);
-            VDRest.image.applyTransparencyGradient(img, src, 40, 10);
+            try {
+                $('<div class="visible-epg-view broadcast-image">').append(img).prependTo(this.node);
+                VDRest.image.applyTransparencyGradient(img, src, 40, 10);
+            } catch (e) {
+                VDRest.helper.log('Error resizing image', this, src);
+            }
         }
 
         img = $('<img>').attr('src', src);
