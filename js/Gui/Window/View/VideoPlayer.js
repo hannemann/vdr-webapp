@@ -735,7 +735,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleQualityControlActiveState = function
 Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
     var now,
-        me = this, end, logo,
+        me = this, logo, start, end, helper = this.helper(),
         sourceModel = this.data.sourceModel;
 
     if (this.infoArea) {
@@ -765,6 +765,11 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
                     this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
                     this.subTitle.text(broadcast.getData('short_text'));
                 }
+                
+                start = helper.getTimeString(broadcast.getData('start_date'));
+                end = helper.getTimeString(broadcast.getData('end_date'));
+                this.start.text(start);
+                this.end.text(end);
 
                 now = new Date().getTime() / 1000;
                 end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
