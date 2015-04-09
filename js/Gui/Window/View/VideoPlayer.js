@@ -686,6 +686,7 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
 
     this.currentProgress.text(this.helper().getDurationAsString(time, true));
     this.setTimelineSliderWidth();
+    this.updateInfo();
     return this;
 };
 
@@ -735,7 +736,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleQualityControlActiveState = function
 Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 
     var now,
-        me = this, logo, start, end, helper = this.helper(),
+        me = this, logo, end,
         sourceModel = this.data.sourceModel;
 
     if (this.infoArea) {
@@ -765,11 +766,6 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
                     this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
                     this.subTitle.text(broadcast.getData('short_text'));
                 }
-                
-                start = helper.getTimeString(broadcast.getData('start_date'));
-                end = helper.getTimeString(broadcast.getData('end_date'));
-                this.start.text(start);
-                this.end.text(end);
 
                 now = new Date().getTime() / 1000;
                 end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
@@ -794,6 +790,29 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
     $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
 
     return this;
+};
+
+/**
+ * update info area
+ */
+Gui.Window.View.VideoPlayer.prototype.updateInfo = function () {
+
+    var broadcast, start, end, helper = this.helper();
+
+    if (!this.data.isVideo) {
+        broadcast = this.getData('current_broadcast');
+        this.title.text(broadcast.getData('title'));
+        if ('' !== broadcast.getData('short_text')) {
+            this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
+            this.subTitle.text(broadcast.getData('short_text'));
+        }
+
+        start = helper.getTimeString(broadcast.getData('start_date'));
+        end = helper.getTimeString(broadcast.getData('end_date'));
+        this.start.text(start);
+        this.end.text(end);
+        $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
+    }
 };
 
 /**
