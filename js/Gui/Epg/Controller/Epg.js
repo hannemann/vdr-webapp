@@ -90,6 +90,7 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
 Gui.Epg.Controller.Epg.prototype.recover = function () {
 
     var i, cache = this.module.cache.store.Controller['Broadcasts.List'];
+    this.broadcasts.setScrollData();
     for (i in cache) {
 
         if (cache.hasOwnProperty(i)) {
