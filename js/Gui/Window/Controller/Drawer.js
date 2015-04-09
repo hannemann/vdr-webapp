@@ -35,6 +35,10 @@ Gui.Window.Controller.Drawer.prototype.init = function () {
 
     this.view = this.module.getView('Drawer', this.data);
 
+    this.indicator = VDRest.app.getModule('Gui.Menubar').getView('Default').drawerIndicator;
+
+    this.vendor = TouchMove.Helper.getTransformVendorPrefix(this.view.node[0]);
+
     this.module.getViewModel('Drawer', {
         "view" : this.view
     });
@@ -49,13 +53,17 @@ Gui.Window.Controller.Drawer.prototype.dispatchView = function () {
 
     if (!this.isDispatched) {
 
-        document.getElementsByTagName('BODY')[0].classList.add('drawer');
+        document.body.classList.add('drawer');
 
         Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
         this.addObserver();
 
-        this.triggerAnimation();
+        if ("undefined" !== typeof this.data.touchstart) {
+            this.triggerPullStart();
+        } else {
+            setTimeout(this.triggerAnimation.bind(this), 20);
+        }
     }
 };
 
@@ -68,13 +76,16 @@ Gui.Window.Controller.Drawer.prototype.triggerAnimation = function () {
 
     if (!this.isDispatched) {
 
-        document.getElementsByTagName('BODY')[0].classList.add('show');
+        document.body.classList.add('show');
         this.isDispatched = true;
+        this.addNodeObserver();
 
     } else {
 
-        document.getElementsByTagName('BODY')[0].classList.remove('show');
-        document.getElementsByTagName('BODY')[0].classList.add('hide');
+        this.removeShowClasses();
+        document.body.classList.add('hide');
+        this.view.node.one(this.transitionEndEvents, this.resetTransition.bind(this));
+        this.resetTransform();
         this.isDispatched = false;
     }
 };
@@ -88,7 +99,6 @@ Gui.Window.Controller.Drawer.prototype.animationCallback = function () {
 
         this.triggerStateChanged();
     } else {
-
         this.destructCallback();
     }
 };
@@ -130,7 +140,7 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
             .on('click', $.proxy(this.handleFavClick, this));
     }
 
-    this.view.node.on(this.animationEndEvents, $.proxy(this.animationCallback, this));
+    this.view.node.on(this.transitionEndEvents, this.animationCallback.bind(this));
 };
 
 /**
@@ -151,12 +161,220 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
     $(document).off('drawer.statechanged', this.handleStateChanged);
     $(document).off('click', this.handleStateChanged);
 
-    this.view.node.off(this.animationEndEvents);
+    this.view.node
+        .off(this.transitionEndEvents)
+        .off('touchmove.drawer')
+        .off('touchend');
 
     if (this.view.favourites) {
         this.view.favourites.find('img').off('click mousedown');
     }
 
+};
+
+/**
+ * trigger start of sliding drawer open
+ */
+Gui.Window.Controller.Drawer.prototype.triggerPullStart = function () {
+
+    this.data.deltaTouch = 0;
+    document.body.classList.add('pull');
+    $('body').on('touchmove.drawer', this.touchMove.bind(this))
+        .one('touchend', this.touchEnd.bind(this));
+};
+
+/**
+ * handle drawer movement
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.Drawer.prototype.touchMove = function (e) {
+
+    var clientX = e.originalEvent.changedTouches[0].clientX,
+        maxWidth = this.getMaxWidth(), percentage, modalOpacity, indicatorWidth;
+
+    this.pullDirection = 'left';
+
+    if ("undefined" === typeof this.data.touchstart) {
+        this.data.touchstart = clientX;
+        this.data.deltaTouch = maxWidth - clientX;
+    }
+
+    if ("undefined" === typeof this.data.startTime) {
+        this.data.startTime = Date.now();
+    }
+
+    if (this.nextPos > maxWidth - 10 - clientX - this.data.deltaTouch) {
+        this.pullDirection = 'right';
+    }
+
+    this.nextPos = maxWidth - 10 - clientX - this.data.deltaTouch;
+
+    if (this.nextPos < 0) {
+        this.nextPos = 0;
+    }
+
+    if (this.nextPos > maxWidth) {
+        this.nextPos = maxWidth;
+    }
+
+    percentage = (100 / maxWidth) * (maxWidth - this.nextPos);
+    modalOpacity = .5 * percentage / 100;
+    indicatorWidth = Math.round(11 - 6 * percentage / 100);
+
+    this.view.node[0].style.transition = 'translate 0s linear';
+    this.view.modalOverlay[0].style.transition = 'translate 0s linear';
+    this.indicator[0].style.transition = 'translate 0s linear';
+    this.view.node[0].style[this.vendor.jsStyle] = 'translate3d(-' + Math.abs(this.nextPos) + 'px, 0px, 0px)';
+    this.view.modalOverlay[0].style.background = 'rgba(0,0,0,' + modalOpacity + ')';
+    this.indicator[0].style.width = indicatorWidth + 'px';
+};
+
+/**
+ * prepare finish drawer animation
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.Drawer.prototype.touchEnd = function (e) {
+
+    var maxWidth = this.getMaxWidth(),
+        remainDuration;
+    this.touchend = e.originalEvent.changedTouches[0].clientX;
+    document.body.classList.remove('pull');
+    $('body').off('touchmove.drawer');
+    this.view.node.off('touchmove touchend');
+
+    remainDuration = this.getRemainDuration();
+    this.view.node[0].style.transition = this.vendor.prefix + 'transform ' + remainDuration + 's linear';
+    this.view.modalOverlay[0].style.transition = 'background ' + remainDuration + 's linear';
+    this.indicator[0].style.transition = 'width ' + remainDuration + 's linear';
+    this.data.touchstart = undefined;
+    this.data.startTime = undefined;
+    this.data.deltaTouch = 0;
+    if ('right' === this.pullDirection && maxWidth - this.nextPos > maxWidth / 2) {
+
+        this.exposeDrawer();
+
+    } else {
+
+        this.hideDrawer();
+    }
+};
+
+/**
+ * finish drawer open animation
+ */
+Gui.Window.Controller.Drawer.prototype.exposeDrawer = function () {
+
+    this.isDispatched = true;
+    if (0 === this.nextPos) {
+        this.addNodeObserver()
+            .resetTransition()
+            .triggerStateChanged();
+    } else {
+        this.view.node.one(this.transitionEndEvents, this.addNodeObserver.bind(this));
+        this.view.node.one(this.transitionEndEvents, this.resetTransition.bind(this));
+    }
+    document.body.classList.add('show');
+    this.resetTransform();
+};
+
+/**
+ * reset transform styles
+ * @returns {Gui.Window.Controller.Drawer}
+ */
+Gui.Window.Controller.Drawer.prototype.resetTransform = function () {
+    this.view.node[0].style[this.vendor.jsStyle] = '';
+    this.view.modalOverlay[0].style.background = '';
+    this.indicator[0].style.width = '';
+    return this;
+};
+
+/**
+ * reset transition styles
+ * @returns {Gui.Window.Controller.Drawer}
+ */
+Gui.Window.Controller.Drawer.prototype.resetTransition = function () {
+    this.view.node[0].style.transition = '';
+    this.view.modalOverlay[0].style.transition = '';
+    this.indicator[0].style.transition = '';
+    return this;
+};
+
+/**
+ * remove classes necessary to show drawer
+ * @returns {Gui.Window.Controller.Drawer}
+ */
+Gui.Window.Controller.Drawer.prototype.removeShowClasses = function () {
+    document.body.classList.remove('pull');
+    document.body.classList.remove('show');
+    return this;
+};
+
+/**
+ * add touch observer to node
+ * @returns {Gui.Window.Controller.Drawer}
+ */
+Gui.Window.Controller.Drawer.prototype.addNodeObserver = function () {
+
+    this.view.node
+        .on('touchmove.drawer', this.touchMove.bind(this))
+        .on('touchend', this.touchEnd.bind(this));
+    return this;
+};
+
+/**
+ * hide drawer
+ */
+Gui.Window.Controller.Drawer.prototype.hideDrawer = function () {
+
+    this.view.node.off(this.transitionEndEvents);
+    this.removeShowClasses();
+    if (this.nextPos < 260) {
+        this.view.node.one(this.transitionEndEvents, this.finishHideDrawer.bind(this));
+        setTimeout(this.resetTransform.bind(this), 20);
+    } else {
+        this.resetTransform()
+            .finishHideDrawer();
+    }
+};
+
+/**
+ * finish drawer
+ */
+Gui.Window.Controller.Drawer.prototype.finishHideDrawer = function () {
+
+    this.resetTransition();
+    this.isDispatched = false;
+    this.destructCallback();
+    this.cancelTriggerAnimation = true;
+    history.back();
+};
+
+/**
+ * retrieve max width of drawer
+ * @returns {Number}
+ */
+Gui.Window.Controller.Drawer.prototype.getMaxWidth = function () {
+
+    if (!this.maxWidth) {
+        this.maxWidth = parseInt(window.getComputedStyle(this.view.node[0]).getPropertyValue('max-width'), 10);
+    }
+
+    return this.maxWidth;
+};
+
+/**
+ * retrieve remain transition duration
+ * @returns {number}
+ */
+Gui.Window.Controller.Drawer.prototype.getRemainDuration = function () {
+
+    var deltaT = (Date.now() - this.data.startTime) / 1000,
+        deltaTouch = Math.abs(this.data.touchstart - this.touchend),
+        speed = deltaTouch / deltaT,
+        deltaToEnd = this.getMaxWidth() - deltaTouch,
+        remainTime = deltaToEnd / speed;
+
+    return remainTime > 1 ? 1 : remainTime;
 };
 
 /**
@@ -168,8 +386,6 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
 Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 
     var request = $(this).attr('data-module');
-
-    //if (this.stopStateChanged) return;
 
     VDRest.Abstract.Controller.prototype.vibrate();
 
@@ -193,9 +409,11 @@ Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
 
-    document.getElementsByTagName('BODY')[0].classList.remove('hide');
+    document.body.classList.remove('hide');
+    this.removeShowClasses();
 
-    document.getElementsByTagName('BODY')[0].classList.remove('drawer');
+    document.body.classList.remove('drawer');
+    this.nextPos = -this.getMaxWidth();
 
     $.event.trigger({
         "type" : "drawer.statechanged",
@@ -255,14 +473,14 @@ Gui.Window.Controller.Drawer.prototype.handleFavDown = function (e) {
     this.vibrate();
 
     if (VDRest.info.getStreamer()) {
-        this.channelClickTimeout = window.setTimeout($.proxy(function () {
+        this.channelClickTimeout = window.setTimeout(function () {
 
-            this.view.node.on(this.animationEndEvents, $.proxy(this.playFavourite, this, e));
+            this.view.node.one(this.transitionEndEvents, this.playFavourite.bind(this, e));
             this.vibrate(100);
             this.preventClick = true;
             this.handleStateChanged(e);
 
-        }, this), 500);
+        }.bind(this), 500);
     }
 };
 
@@ -286,5 +504,9 @@ Gui.Window.Controller.Drawer.prototype.playFavourite = function (e) {
  */
 Gui.Window.Controller.Drawer.prototype.destructView = function () {
 
-    this.triggerAnimation();
+    if (!this.cancelTriggerAnimation) {
+        this.triggerAnimation();
+    } else {
+        this.cancelTriggerAnimation = undefined;
+    }
 };

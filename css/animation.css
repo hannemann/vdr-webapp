@@ -94,19 +94,15 @@
 
 /* drawer */
 .drawer.show .window-drawer {
-    animation-duration: .6s;
-    animation-name: drawerShow;
+    transition: transform .6s ease-out;
+    -webkit-transition: transform .6s ease-out;
     transform: translateX(0px);
-    -webkit-animation-duration: .6s;
-    -webkit-animation-name: drawerShow;
     -webkit-transform: translateX(0px);
 }
 .drawer.hide .window-drawer {
-    animation-duration: .6s;
-    animation-name: drawerHide;
+    transition: transform .6s ease-out;
+    -webkit-transition: transform .6s ease-out;
     transform: translateX(-100%);
-    -webkit-animation-duration: .6s;
-    -webkit-animation-name: drawerHide;
     -webkit-transform: translateX(-100%);
 }
 .drawer-indicator {
@@ -115,21 +111,14 @@
 .drawer.show #menubar .drawer-indicator {
     width: 5px;
 }
-.drawer .modal-overlay {
-    background: rgba(0,0,0,0);
-}
 .drawer.show #viewport .modal-overlay {
-    animation-duration: .6s;
-    animation-name: showModal;
-    -webkit-animation-duration: .6s;
-    -webkit-animation-name: showModal;
+    transition: background .6s ease-out;
+    -webkit-transition: background .6s ease-out;
     background: rgba(0,0,0,0.5);
 }
 .drawer.hide #viewport .modal-overlay {
-    animation-duration: .6s;
-    animation-name: hideModal;
-    -webkit-animation-duration: .6s;
-    -webkit-animation-name: hideModal;
+    transition: background .6s ease-out;
+    -webkit-transition: background .6s ease-out;
     background: rgba(0,0,0,0);
 }
 #epg-channels .channel.attention {

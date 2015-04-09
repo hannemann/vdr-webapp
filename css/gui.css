@@ -32,7 +32,15 @@ ul#menubar #refresh {
 	box-shadow: 0 0 20px 0 black;
     border-right: 2px solid rgb(0,128,20);
     border-bottom: none;
+    transform: translateX(-100%);
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
+
+.drawer.pull .window-drawer {
+    transform: translateX(-250px);
+}
+
 .window-drawer .window-header,
 .window-drawer .header {
     width: calc(100% - 10px);

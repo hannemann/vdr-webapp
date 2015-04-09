@@ -136,24 +136,30 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
 
 /**
  * handle mousedown
+ * @param {jQuery.Event} e
  */
-Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function () {
+Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
     document.onselectstart = function () {
         return false
     };
 
-    this.preventClick = undefined;
-    if (!this.isMuted && VDRest.info.getStreamer()) {
+    this.preventClick = true;
 
-        this.channelClickTimeout = window.setTimeout(function () {
+    if (!e.originalEvent.changedTouches || e.originalEvent.changedTouches[0].clientX > 10) {
 
-            this.vibrate(100);
+        this.preventClick = undefined;
+        if (!this.isMuted && VDRest.info.getStreamer()) {
 
-            this.preventClick = true;
+            this.channelClickTimeout = window.setTimeout(function () {
 
-            this.startStream();
-        }.bind(this), 500);
+                this.vibrate(100);
+
+                this.preventClick = true;
+
+                this.startStream();
+            }.bind(this), 500);
+        }
     }
 };
 
