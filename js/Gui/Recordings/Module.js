@@ -163,12 +163,16 @@ Gui.Recordings.prototype.refresh = function () {
     this.store.getModel('List').flushCollection();
     this.store.cache.flush();
     this.cache.flush();
+    VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = false;
     this.store.getModel('List').initList();
     VDRest.app.getModule('Gui.Menubar')
         .getView('Default')
         .getHeader()
         .text(VDRest.app.translate('Recordings'));
     this.dispatch();
+    $(document).one('recordingslist.dispatched', function () {
+        VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
+    });
 };
 
 /**
