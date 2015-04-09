@@ -181,6 +181,7 @@ Gui.Window.Controller.Drawer.prototype.triggerPullStart = function () {
     document.body.classList.add('pull');
     $('body').on('touchmove.drawer', this.touchMove.bind(this))
         .one('touchend', this.touchEnd.bind(this));
+    this.hasTouchEndObserver = true;
 };
 
 /**
@@ -191,6 +192,11 @@ Gui.Window.Controller.Drawer.prototype.touchMove = function (e) {
 
     var clientX = e.originalEvent.changedTouches[0].clientX,
         maxWidth = this.getMaxWidth(), percentage, modalOpacity, indicatorWidth;
+
+    if (!this.hasTouchEndObserver) {
+        this.view.node.one('touchend', this.touchEnd.bind(this));
+        this.hasTouchEndObserver = true;
+    }
 
     this.pullDirection = 'left';
 
@@ -237,6 +243,7 @@ Gui.Window.Controller.Drawer.prototype.touchEnd = function (e) {
 
     var maxWidth = this.getMaxWidth(),
         remainDuration;
+
     this.touchend = e.originalEvent.changedTouches[0].clientX;
     document.body.classList.remove('pull');
     $('body').off('touchmove.drawer');
@@ -275,6 +282,7 @@ Gui.Window.Controller.Drawer.prototype.exposeDrawer = function () {
     }
     document.body.classList.add('show');
     this.resetTransform();
+    this.hasTouchEndObserver = false;
 };
 
 /**
@@ -315,9 +323,7 @@ Gui.Window.Controller.Drawer.prototype.removeShowClasses = function () {
  */
 Gui.Window.Controller.Drawer.prototype.addNodeObserver = function () {
 
-    this.view.node
-        .on('touchmove.drawer', this.touchMove.bind(this))
-        .on('touchend', this.touchEnd.bind(this));
+    this.view.node.on('touchmove.drawer', this.touchMove.bind(this));
     return this;
 };
 
