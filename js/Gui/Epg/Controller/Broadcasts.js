@@ -121,10 +121,20 @@ Gui.Epg.Controller.Broadcasts.prototype.startUpdateInterval = function () {
         this.updateTimeout = undefined;
     }
 
-    this.updateTimeout = setTimeout(function () {
-        this.update();
-        this.updateInterval = setInterval(this.update.bind(this), 60000);
-    }.bind(this), next.getTime() - d.getTime());
+    if (this.module.store.debugUpdate) {
+
+        this.updateTimeout = setTimeout(function () {
+            this.update();
+            //this.updateInterval = setInterval(this.update.bind(this), 500);
+        }.bind(this), 10000);
+    } else {
+
+        this.updateTimeout = setTimeout(function () {
+            this.update();
+            this.updateInterval = setInterval(this.update.bind(this), 60000);
+        }.bind(this), next.getTime() - d.getTime());
+    }
+
 };
 
 /**

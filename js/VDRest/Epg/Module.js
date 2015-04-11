@@ -52,28 +52,33 @@ VDRest.Epg.prototype.initTimes = function (custom) {
         this.prime.setTime(this.prime.getTime() + 24 * 60 * 60 * 1000);
     }
 
+    this.debugUpdate = false;
+
     return this;
 };
 
 VDRest.Epg.prototype.updateNow = function () {
 
-    this.now = new Date(Date.now() - this.nowOffset);
+    if (this.debugUpdate) {
 
-    /**
-     * for debugging auto scroll
-     * adjust timeout and interval in Broadcasts controller also
-     */
-    //if (!this.first) {
-    //
-    //    var m = Math.round(Math.random() * 240);
-    //
-    //    this.now = new Date(this.now.getTime() + 1000 * 60 * m);
-    //    console.log(m);
-    //    this.first = true;
-    //} else {
-    //    this.now = new Date(this.now.getTime() + 1000 * 60);
-    //}
+        /**
+         * for debugging auto scroll
+         * set this.debugUpdate to true in method initTimes
+         */
+        if (!this.first) {
 
+            var m = Math.round(Math.random() * 1440);
+
+            this.now = new Date(this.now.getTime() + 1000 * 60 * m);
+            console.log(m, this.now);
+            this.first = true;
+        } else {
+            this.now = new Date(this.now.getTime() + 1000 * 60);
+        }
+    } else {
+
+        this.now = new Date(Date.now() - this.nowOffset);
+    }
 
     return this.now;
 };

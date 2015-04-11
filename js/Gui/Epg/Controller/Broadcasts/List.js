@@ -424,9 +424,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function
 
         if (broadcast.getData('dataModel').getData('end_time') < this.fromTime / 1000) {
             toDelete.push(broadcast);
-        } else {
-            broadcast.updateMetrics();
-            broadcast.view.update();
         }
 
     }.bind(this));
@@ -439,8 +436,26 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function
         this.module.store.cache.store.Model['Channels.Channel'][broadcast.data.channel].cleanCollection();
     }.bind(this));
 
-    this.toggleBroadcastsVisibility();
-    this.updateList();
+    this.broadcasts.forEach(function (broadcast, index) {
+
+        broadcast.data.position = index;
+        broadcast.view.data.position = index;
+        broadcast.updateMetrics();
+
+        if (this.isInView()) {
+            broadcast.view.update();
+        }
+
+    }.bind(this));
+
+    if (0 === this.broadcasts.length) {
+        this.hasInitialBroadcasts = undefined;
+    }
+
+    if (this.isInView()) {
+        this.updateList();
+        this.toggleBroadcastsVisibility();
+    }
 };
 
 /**

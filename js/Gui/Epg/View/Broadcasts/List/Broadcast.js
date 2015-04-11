@@ -39,7 +39,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.imageInEpgView = VDRest.config.
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
 
-    this.node = $('<div class="broadcast pos-' + this.data.position + '"></div>');
+    this.node = $('<div class="broadcast" data-pos="' + this.data.position + '"></div>');
 
     this.info = $('<div class="content">').appendTo(this.node);
 };
@@ -70,6 +70,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.update = function () {
 
     this.setWidth();
+    this.node.attr('data-pos', this.data.position);
 };
 
 /**
