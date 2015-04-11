@@ -394,9 +394,20 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
 /**
  * determine if list is currently partly in view
+ * and epg is not hidden
  * @returns {boolean}
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
+
+    return this.isScrolledIntoInView && !this.module.getController('Epg').isHidden;
+
+};
+
+/**
+ * determine if list is currently partly in view
+ * @returns {boolean}
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () {
 
     var offset = this.view.node.offset(),
         top = offset.top,
@@ -406,8 +417,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
         threshold = 120;
 
     return top - threshold < metrics.win.height
-            && bottom + threshold > metrics.broadcasts.top
-            && !this.module.getController('Epg').isHidden;
+        && bottom + threshold > metrics.broadcasts.top;
 
 };
 
@@ -442,7 +452,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function
         broadcast.view.data.position = index;
         broadcast.updateMetrics();
 
-        if (this.isInView()) {
+        if (this.isScrolledIntoInView()) {
             broadcast.view.update();
         }
 
@@ -452,7 +462,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function
         this.hasInitialBroadcasts = undefined;
     }
 
-    if (this.isInView()) {
+    if (this.isScrolledIntoInView()) {
         this.updateList();
         this.toggleBroadcastsVisibility();
     }
