@@ -69,8 +69,11 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.update = function () {
 
-    this.setWidth();
-    this.node.attr('data-pos', this.data.position);
+    if (this.needsUpdate) {
+        this.setWidth();
+        this.node.attr('data-pos', this.data.position);
+    }
+    this.needsUpdate = false;
 };
 
 /**

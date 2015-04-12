@@ -262,6 +262,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
         for (i; i < l; i++) {
 
+            this.broadcasts[i].view.update();
+
             // dispatch broadcast if its not but should be
             if (!this.broadcasts[i].view.isRendered
                 && (this.broadcasts[i].view.getLeft() + vOffset.left - threshold < metrics.win.width || this.isChannelView)
@@ -477,9 +479,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function
         broadcast.view.data.position = index;
         broadcast.updateMetrics();
 
-        if (this.isScrolledIntoInView()) {
-            broadcast.view.update();
-        }
+        //if (this.isScrolledIntoInView()) {
+        //    broadcast.view.update();
+        //}
 
     }.bind(this));
 

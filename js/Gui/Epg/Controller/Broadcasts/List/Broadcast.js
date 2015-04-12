@@ -65,6 +65,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.isInView = function () {
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.updateMetrics = function () {
 
     this.module.getViewModel('Broadcasts.List.Broadcast', this.keyInCache).calculateMetrics();
+    this.view.needsUpdate = true;
 
     return this;
 };
