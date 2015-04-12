@@ -46,6 +46,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.fromTime = this.module.getFromDate().getTime();
     this.initial = true;
+    this.overflowCount = 1;
 
     this.addObserver();
 };
@@ -90,8 +91,18 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getStoreModel = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
 
+    var from = this.broadcasts.length > 0
+            ? this.broadcasts[this.broadcasts.length - 1].data.dataModel.data.end_date
+            : new Date(this.fromTime),
+        minTimeSpan = 3600000,
+        timeSpanAdd = this.broadcastsController.getAvailableTimeSpan('milliseconds') * this.overflowCount,
+        to = new Date(
+            from.getTime()
+            + (timeSpanAdd < minTimeSpan ? minTimeSpan : timeSpanAdd)
+        );
+
     if (VDRest.config.getItem('loadAllChannelsInitially') || this.isInView()) {
-        this.getStoreModel().getNextBroadcasts();
+        this.getStoreModel().getNextBroadcasts(to);
     }
 };
 
@@ -240,18 +251,20 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
     var i = 0,
         l = this.broadcasts.length,
         metrics,
-        vOffset;
+        vOffset,
+        threshold;
 
     if (l > 0) {
 
         metrics = this.epgController.getMetrics();
+        threshold = this.epgController.metrics.viewPort.width * this.overflowCount;
         vOffset = this.view.node.offset();
 
         for (i; i < l; i++) {
 
             // dispatch broadcast if its not but should be
             if (!this.broadcasts[i].view.isRendered
-                && (this.broadcasts[i].view.getLeft() + vOffset.left < metrics.win.width || this.isChannelView)
+                && (this.broadcasts[i].view.getLeft() + vOffset.left - threshold < metrics.win.width || this.isChannelView)
             ) {
 
                 this.broadcasts[i].dispatchView();
@@ -260,7 +273,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
         if (!this.isChannelView) {
             // load next events
-            if (this.broadcasts[l - 1].view.getLeft() + vOffset.left < metrics.win.width) {
+            if (this.broadcasts[l - 1].view.getLeft() + vOffset.left < metrics.win.width + threshold) {
 
                 this.getBroadcasts();
             }
@@ -300,9 +313,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
     var i,
         l = this.broadcasts.length,
+        timeThreshold = (this.epgController.metrics.viewPort.width / this.pixelPerSecond) * this.overflowCount,
         currentScrollLeft = this.broadcastsController.currentScrollLeft,
-        currentScrollTime = this.broadcastsController.currentScrollTime,
-        visibleEndTime = this.broadcastsController.visibleEndTime,
+        currentScrollTime = this.broadcastsController.currentScrollTime - timeThreshold,
+        visibleEndTime = this.broadcastsController.visibleEndTime + timeThreshold,
         broadcast, start, end;
 
     if (l > 0) {
@@ -410,14 +424,25 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
 Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () {
 
     var offset = this.view.node.offset(),
-        top = offset.top,
+        top = offset.top - this.view.parentView.node.offset().top,
         height = this.view.node.height(),
         bottom = top + height,
-        metrics = this.epgController.getMetrics(),
-        threshold = 120;
+        metrics = this.epgController.metrics,
+        threshold = metrics.win.height * this.overflowCount,
+        scrollTop = Math.abs(this.epgController.getScrollTop()),
+        isInView;
 
-    return top - threshold < metrics.win.height
-        && bottom + threshold > metrics.broadcasts.top;
+    if (!this.lastOffset || offset.top <= this.lastOffset.top) {
+
+        isInView = bottom + threshold / 2 >= scrollTop && bottom < scrollTop + metrics.win.height + threshold;
+    } else {
+
+        isInView = bottom + threshold >= scrollTop && bottom < scrollTop + metrics.win.height + threshold / 2;
+    }
+
+    this.lastOffset = offset;
+
+    return isInView;
 
 };
 

@@ -35,28 +35,8 @@ Gui.Epg.View.Broadcasts.prototype.render = function () {
 };
 
 /**
- * retrieve available timespan for events according to chosen type
- * depends on pixel per seconds value
- *
- * @param type
- * @returns {number}
+ * update time indicator
  */
-Gui.Epg.View.Broadcasts.prototype.getAvailableTimespan = function (type) {
-
-    var pps = VDRest.config.getItem('pixelPerSecond');
-
-    switch (type) {
-        case "seconds":
-            return this.wrapper.innerWidth() / (pps);
-        case "minutes":
-            return this.wrapper.innerWidth() / (pps * 60);
-        case "hours":
-        default:
-            return this.wrapper.innerWidth() / (pps * 60 * 60);
-    }
-
-};
-
 Gui.Epg.View.Broadcasts.prototype.updateIndicator = function () {
 
     var timeDiff = Date.now() - this.module.getFromDate().getTime(),

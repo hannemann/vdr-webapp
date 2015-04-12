@@ -76,6 +76,7 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
         this.channels.dispatchView();
         this.broadcasts.dispatchView();
         this.addObserver();
+        this.setMetrics();
 
         $.event.trigger('epg.dispatched');
 
@@ -144,6 +145,19 @@ Gui.Epg.Controller.Epg.prototype.getScrollLeft = function () {
         return this.broadcasts.view.wrapper.scrollLeft();
     } else {
         return this.broadcasts.touchScroll.slider.getState().x;
+    }
+};
+
+/**
+ * retrieve current scroll left
+ * @returns {Number}
+ */
+Gui.Epg.Controller.Epg.prototype.getScrollTop = function () {
+
+    if (!VDRest.helper.touchMoveCapable) {
+        return this.broadcasts.view.wrapper.scrollTop();
+    } else {
+        return this.broadcasts.touchScroll.slider.getState().y;
     }
 };
 

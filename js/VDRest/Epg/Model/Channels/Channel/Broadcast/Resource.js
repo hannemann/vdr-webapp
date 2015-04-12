@@ -67,8 +67,7 @@ VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.setUrl = function
 
         /** @type {Date} */
         to = to || new Date(
-            from.getTime()
-            + VDRest.app.getModule('Gui.Epg').getView('Broadcasts').getAvailableTimespan('seconds') * 1000
+            from.getTime() + 3600000
         );
 
         timeSpan = parseInt( ( to.getTime() - from.getTime() ) / 1000, 10 );

@@ -41,12 +41,6 @@ VDRest.Epg.Model.Channels.Channel.prototype._class = 'VDRest.Epg.Model.Channels.
 VDRest.Epg.Model.Channels.Channel.prototype.cacheKey = 'channel_id';
 
 /**
- * indicates if object cache entry can be invalidated
- * @type {boolean}
- */
-VDRest.Epg.Model.Channels.Channel.prototype.canInvalidate = false;
-
-/**
  * Modelpath
  * @type {string}
  * @private
@@ -120,8 +114,9 @@ VDRest.Epg.Model.Channels.Channel.prototype.getFromDate = function () {
 /**
  * load broadcasts
  * process collection afterwards
+ * @param {number|Date} [to]
  */
-VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
+VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function (to) {
 
     var from = this.collection.length > 0
             ? this.collection[this.collection.length-1].data.end_date
@@ -132,7 +127,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function () {
     this.loadedNextFrom[from.getTime()] = true;
 
     this.getResource()
-        .setUrl(from)
+        .setUrl(from, to)
         .load({
             "url" : 'broadcastsHourly',
             "callback": this.processCollection.bind(this)

@@ -165,6 +165,31 @@ Gui.Epg.Controller.Broadcasts.prototype.update = function () {
 };
 
 /**
+ * retrieve available timespan for events according to chosen type
+ * depends on pixel per seconds value
+ *
+ * @param type
+ * @returns {number}
+ */
+Gui.Epg.Controller.Broadcasts.prototype.getAvailableTimeSpan = function (type) {
+
+    var pps = VDRest.config.getItem('pixelPerSecond');
+
+    switch (type) {
+        case "milliseconds":
+            return this.view.wrapper.innerWidth() / (pps) * 1000;
+        case "seconds":
+            return this.view.wrapper.innerWidth() / (pps);
+        case "minutes":
+            return this.view.wrapper.innerWidth() / (pps * 60);
+        case "hours":
+        default:
+            return this.view.wrapper.innerWidth() / (pps * 60 * 60);
+    }
+
+};
+
+/**
  * handle scroll events
  */
 Gui.Epg.Controller.Broadcasts.prototype.handleScroll = function (e) {
