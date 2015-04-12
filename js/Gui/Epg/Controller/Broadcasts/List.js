@@ -105,6 +105,20 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
         this.getStoreModel().getNextBroadcasts(to);
     }
 };
+Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcastsByTime = function () {
+
+    var from = new Date(this.fromTime),
+        minTimeSpan = 3600000,
+        timeSpanAdd = this.broadcastsController.getAvailableTimeSpan('milliseconds') * this.overflowCount,
+        to = new Date(
+            from.getTime()
+            + (timeSpanAdd < minTimeSpan ? minTimeSpan : timeSpanAdd)
+        );
+
+    if (VDRest.config.getItem('loadAllChannelsInitially') || this.isInView()) {
+        this.getStoreModel().getByTime(from, to);
+    }
+};
 
 /**
  * poor orphaned piece of useless code
@@ -181,6 +195,16 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
         var i= 0, l;
 
         this.broadcasts = this.broadcasts.concat(newBroadcasts);
+
+        this.broadcasts.sort(function (a, b) {
+
+            return a.data.dataModel.data.start_time - b.data.dataModel.data.start_time;
+        });
+
+        this.broadcasts.forEach(function (broadcast, index) {
+            broadcast.data.position = index;
+            broadcast.view.data.position = index;
+        }.bind(this));
 
         if (this.isChannelView) {
 
@@ -278,6 +302,11 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
             if (this.broadcasts[l - 1].view.getLeft() + vOffset.left < metrics.win.width + threshold) {
 
                 this.getBroadcasts();
+            }
+            // load previous events
+            if (this.broadcasts[0].view.getLeft() > 0) {
+
+                this.getBroadcastsByTime();
             }
 
             // adjust width of parentView
@@ -453,13 +482,15 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () 
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function () {
 
-    var toDelete = [];
+    var toDelete = [],
+    //deleteAfter = this.fromTime / 1000,
+        deleteAfter = (Date.now() - 1000 * 60 * 30) / 1000;
 
     this.fromTime = this.module.getFromDate().getTime();
 
     this.broadcasts.forEach(function (broadcast) {
 
-        if (broadcast.getData('dataModel').getData('end_time') < this.fromTime / 1000) {
+        if (broadcast.getData('dataModel').getData('end_time') < deleteAfter) {
             toDelete.push(broadcast);
         }
 

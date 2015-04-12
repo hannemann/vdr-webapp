@@ -153,9 +153,9 @@ Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
 /**
  * periodical update
  */
-Gui.Epg.Controller.Broadcasts.prototype.update = function () {
+Gui.Epg.Controller.Broadcasts.prototype.update = function (force) {
 
-    if ('now' === VDRest.config.getItem('lastEpg')) {
+    if (force || 'now' === VDRest.config.getItem('lastEpg')) {
 
         this.module.store.updateNow();
         this.setScrollData()

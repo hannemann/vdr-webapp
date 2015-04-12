@@ -44,7 +44,7 @@ VDRest.Epg.prototype.initTimes = function (custom) {
         this.now.getFullYear(),
         this.now.getMonth(),
         this.now.getDate(),
-        20, 15, 0
+        23, 15, 0
     );
 
     if (this.now > this.prime) {

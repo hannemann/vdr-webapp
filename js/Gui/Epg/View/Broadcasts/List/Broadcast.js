@@ -51,6 +51,8 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
     var previous = this.data.listController.broadcasts[this.data.position - 1];
 
+    this.node.attr('data-pos', this.data.position);
+
     if (0 === this.data.position) {
         this.parentView.node.prepend(this.node);
     } else if (previous && previous.view.isRendered) {

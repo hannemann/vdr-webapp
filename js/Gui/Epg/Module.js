@@ -163,11 +163,12 @@ Gui.Epg.prototype.refresh = function (time, custom) {
 
     var me = this;
     setTimeout(function () {
-        me.getController('Epg').destructView();
-        me.cache.flush();
-        VDRest.app.getModule('VDRest.Epg').initTimes(custom).cache.flush();
+        //me.getController('Epg').destructView();
+        //me.cache.flush();
+        VDRest.app.getModule('VDRest.Epg').initTimes(custom);//.cache.flush();
         VDRest.config.setItem('lastEpg', time);
-        me.dispatch();
+        //me.dispatch();
+        me.getController('Broadcasts').update(true);
     }, 150);
 };
 
