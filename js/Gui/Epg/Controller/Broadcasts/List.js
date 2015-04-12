@@ -399,7 +399,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
 
-    return this.isScrolledIntoInView && !this.module.getController('Epg').isHidden;
+    return this.isScrolledIntoInView() && !this.module.getController('Epg').isHidden;
 
 };
 
