@@ -51,6 +51,35 @@ VDRest.Lib.Image.prototype.getComponent = function (type) {
 
 };
 
+VDRest.Lib.Image.prototype.math =
+    'degToRad = function (deg) {' +
+    '   return deg * Math.PI / 180;' +
+    '};' +
+    'getLengthByAngleAndDiameter = function (angle, circumcircleDiameter) {' +
+    '   return circumcircleDiameter * Math.sin(degToRad(angle));' +
+    '};' +
+    'getAngle = function (alpha, beta) {' +
+    '   return 180 - alpha - beta;' +
+    '};' +
+    'getCircumcircleDiameter = function (angle, length) {' +
+    '   return length / Math.sin(degToRad(angle));' +
+    '};';
+
+VDRest.Lib.Image.prototype.transparencyGradientWorkerCode = 'onmessage = function (e) {'
++ 'var x, y, end;'
++ 'for (x = 0; x < e.data.rows; x++) {'
++ '     transparency = Math.round(0 - getLengthByAngleAndDiameter(e.data.alpha, getCircumcircleDiameter(e.data.beta, e.data.rows - x)) - e.data.offset);'
++ '     y = x * e.data.columns * 4 + 3;'
++ '     end = (x+1)*e.data.columns * 4;'
++ '     for (y ; y < end; y+=4) {'
++ '         e.data.image.data[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;'
++ '         transparency += Math.floor(100 / e.data.columns * 255 / 100);'
++ '     }'
++ '}'
++ 'postMessage(e.data.image);'
++ 'close();'
++ '};';
+
 /**
  * apply transparency to image
  * @param {HTMLImageElement} img
@@ -70,47 +99,71 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
         var ca = document.createElement("canvas"),
             ctx = ca.getContext("2d"),
             image,
-            imageData,
             rows,
             columns,
             transparency,
             x, y, end,
             gamma = 90, beta = Math.Triangle.getAngle(alpha, gamma);
 
-        img.width = Math.round(img.height * (img.naturalWidth / img.naturalHeight));
-        ca.width = columns = img.width;
-        ca.height = rows = img.height;
+        this.width = Math.round(this.height * (this.naturalWidth / this.naturalHeight));
+        ca.width = columns = this.width;
+        ca.height = rows = this.height;
         // draw the image into the canvas
-        ctx.drawImage(img, 0, 0, ca.width, ca.height);
+        ctx.drawImage(this, 0, 0, ca.width, ca.height);
         // get the image data object
         image = ctx.getImageData(0, 0, ca.width, ca.height);
-        // get the image data values
-        imageData = image.data;
-        /**
-         * iterate rows
-         */
-        for (x = 0; x < rows; x++) {
-            transparency = Math.round(0 - Math.Triangle.getLengthByAngleAndDiameter(
-                alpha, Math.Triangle.getCircumcircleDiameter(beta, rows - x)
-            ) - offset);
-            /**
-             * iterate columns
-             */
-            y = x * columns * 4+ 3;
-            end = (x+1)*columns * 4;
-            for (y ; y < end; y+=4) {
-                imageData[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;
-                transparency += Math.floor(100 / ca.width * 255 / 100);
-            }
-        }
-        //after the manipulation, reset the data
-        image.data = imageData;
-        //and put the image data back to the canvas
-        ctx.putImageData(image, 0, 0);
 
-        img.src = ca.toDataURL();
-        img.onload = undefined;
-        img.classList.remove('hidden-for-processing');
+        var useMainThread = true;
+
+        if (useMainThread) {
+
+            // compute in main thread
+            /**
+             * iterate rows
+             */
+            for (x = 0; x < rows; x++) {
+                transparency = Math.round(0 - Math.Triangle.getLengthByAngleAndDiameter(
+                    alpha, Math.Triangle.getCircumcircleDiameter(beta, rows - x)
+                ) - offset);
+                /**
+                 * iterate columns
+                 */
+                y = x * columns * 4 + 3;
+                end = (x + 1) * columns * 4;
+                for (y; y < end; y += 4) {
+                    image.data[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;
+                    transparency += Math.floor(100 / ca.width * 255 / 100);
+                }
+            }
+            //and put the image data back to the canvas
+            ctx.putImageData(image, 0, 0);
+
+            this.src = ca.toDataURL();
+            this.onload = null;
+            this.classList.remove('hidden-for-processing');
+
+        } else {
+
+            // compute in worker
+
+            VDRest.thread.add(
+                VDRest.Lib.Image.prototype.math + VDRest.Lib.Image.prototype.transparencyGradientWorkerCode,
+                function (e) {
+                    ctx.putImageData(e.data, 0, 0);
+                    this.src = ca.toDataURL();
+                    this.onload = null;
+                    this.classList.remove('hidden-for-processing');
+                }.bind(this),
+                {
+                    "columns": columns,
+                    "rows": rows,
+                    "alpha": alpha,
+                    "beta": beta,
+                    "offset": offset,
+                    "image": image
+                }
+            );
+        }
     };
 
     img.src = src;

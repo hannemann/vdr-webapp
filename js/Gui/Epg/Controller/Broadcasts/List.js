@@ -275,7 +275,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
         if (!this.isChannelView) {
             // load next events
-            if (this.broadcasts[l - 1].view.getLeft() + vOffset.left < metrics.win.width + threshold) {
+            if (this.broadcasts[l - 1].view.getLeft() + vOffset.left < metrics.win.width) {
 
                 this.getBroadcasts();
             }
