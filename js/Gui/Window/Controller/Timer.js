@@ -127,20 +127,20 @@ Gui.Window.Controller.Timer.prototype.addObserver = function () {
 
     if (this.view.hasBroadcast && this.view.hasBroadcastImages()) {
 
-        this.view.image.on('click', $.proxy(this.animateImageAction, this));
+        this.view.image.on('click', this.animateImageAction.bind(this));
     }
 
-    this.view.deleteButton.on('click', $.proxy(this.deleteTimer, this));
+    this.view.deleteButton.on('click', this.deleteTimer.bind(this));
 
-    this.view.activateButton.on('click', $.proxy(this.toggleActivateTimer, this));
+    this.view.activateButton.on('click', this.toggleActivateTimer.bind(this));
 
-    this.view.subToFilenameButton.on('click', $.proxy(this.view.subToFilename, this.view));
+    this.view.subToFilenameButton.on('click', this.view.subToFilename.bind(this.view));
 
-    $(document).one('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.destroyTimer, this));
+    $(document).one('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.destroyTimer.bind(this));
 
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.update, this));
+    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
 
-    $(document).on("persisttimerchange-" + this.keyInCache, $.proxy(this.updateTimer, this));
+    $(document).on("persisttimerchange-" + this.keyInCache, this.updateTimer.bind(this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };

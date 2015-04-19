@@ -37,7 +37,7 @@ Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 
     if (this.dataModel.getCollection().length) {
         this.iterateChannels({
-            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel)
+            "iterate": this.dataModel.collectionIterator.bind(this.dataModel)
         });
     }
 
@@ -149,7 +149,7 @@ Gui.Epg.Controller.Channels.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Channels.prototype.iterateChannels = function (collection) {
 
-    collection.iterate($.proxy(function (channelModel) {
+    collection.iterate(function (channelModel) {
 
         if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
 
@@ -162,7 +162,7 @@ Gui.Epg.Controller.Channels.prototype.iterateChannels = function (collection) {
             "dataModel" : channelModel
         }));
 
-    }, this));
+    }.bind(this));
 
     this.dispatchChannels();
 };

@@ -14,11 +14,11 @@ VDRest.Timer.Model.Observer.prototype = new VDRest.Abstract.Model();
  */
 VDRest.Timer.Model.Observer.prototype.init = function () {
 
-    $(document).on('vdrest-api-actions.timer-created', $.proxy(this.addTimer, this));
+    $(document).on('vdrest-api-actions.timer-created', this.addTimer.bind(this));
 
-    $(document).on('vdrest-api-actions.timer-updated', $.proxy(this.updateTimer, this));
+    $(document).on('vdrest-api-actions.timer-updated', this.updateTimer.bind(this));
 
-    $(document).on('vdrest-api-actions.timer-deleted', $.proxy(this.deleteTimer, this));
+    $(document).on('vdrest-api-actions.timer-deleted', this.deleteTimer.bind(this));
 };
 
 /**

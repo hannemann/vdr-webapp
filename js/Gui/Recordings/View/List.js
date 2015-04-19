@@ -101,7 +101,7 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
         length = this.tree.data.files.length,
         interval;
 
-    this.tree.data.files.sort($.proxy(this.sortCallback, this));
+    this.tree.data.files.sort(this.sortCallback.bind(this));
 
     if (this.reverse) {
         this.tree.data.files.reverse();

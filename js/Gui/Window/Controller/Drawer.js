@@ -136,8 +136,8 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
 
     if (this.view.favourites) {
         this.view.favourites.find('img')
-            .on('mousedown', $.proxy(this.handleFavDown, this))
-            .on('click', $.proxy(this.handleFavClick, this));
+            .on('mousedown', this.handleFavDown.bind(this))
+            .on('click', this.handleFavClick.bind(this));
     }
 
     this.view.node.on(this.transitionEndEvents, this.animationCallback.bind(this));

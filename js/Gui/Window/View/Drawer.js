@@ -57,7 +57,7 @@ Gui.Window.View.Drawer.prototype.addClasses = function () {
  */
 Gui.Window.View.Drawer.prototype.addButtons = function () {
 
-    this.getButtons().each($.proxy(function (module, options) {
+    this.getButtons().each(function (module, options) {
 
         this.buttons.push(
             $('<div class="navi-button">')
@@ -67,7 +67,7 @@ Gui.Window.View.Drawer.prototype.addButtons = function () {
                 .appendTo(this.body)
         );
 
-    }, this));
+    }.bind(this));
 
     return this;
 };

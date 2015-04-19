@@ -122,7 +122,7 @@ Gui.EpgSearch.View.Search.prototype.requestForm = function () {
                 }
             },
             "hasSubmit" : true,
-            "changed" : $.proxy(function (fields) {
+            "changed": function (fields) {
 
                 var query = fields.query.getValue();
 
@@ -137,7 +137,7 @@ Gui.EpgSearch.View.Search.prototype.requestForm = function () {
                     });
                 }
 
-            }, this)
+            }.bind(this)
         }
     });
 

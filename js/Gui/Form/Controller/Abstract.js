@@ -68,7 +68,7 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
         }
     }
 
-    $(document).on('gui.form.update-' + this.keyInCache, $.proxy(this.update, this));
+    $(document).on('gui.form.update-' + this.keyInCache, this.update.bind(this));
 };
 /**
  * add click handler to field
@@ -76,7 +76,7 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
  */
 Gui.Form.Controller.Abstract.prototype.addClickHandler = function (field) {
 
-    field.dom.on('click', {"field":field}, $.proxy(this.handleClick, this));
+    field.dom.on('click', {"field": field}, this.handleClick.bind(this));
 };
 
 Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {

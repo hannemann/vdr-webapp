@@ -55,6 +55,6 @@ VDRest.Timer.Model.List.prototype.initList = function () {
 
     this.module.getResource(this.collectionItemModel).load({
         "url" : 'timerList',
-        "callback" : $.proxy(this.processCollection, this)
+        "callback": this.processCollection.bind(this)
     });
 };

@@ -119,7 +119,7 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
 
     VDRest.app.getModule('VDRest.Recordings')
         .getResource('List.Recording')
-        .deleteRecording(this.view, $.proxy(this.afterDeleteAction, this));
+        .deleteRecording(this.view, this.afterDeleteAction.bind(this));
 };
 
 /**

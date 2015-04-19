@@ -20,7 +20,7 @@ VDRest.Epg.Model.Broadcasts.prototype.initBroadcasts = function () {
         .setChannelLimit()
         .load({
             "url" : "initial",
-            "callback" : $.proxy(this.processCollection, this)
+            "callback": this.processCollection.bind(this)
         });
 };
 

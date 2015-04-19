@@ -75,7 +75,7 @@ Gui.Window.ViewModel.Drawer.prototype.checkDependecies = function (module) {
 
     if ("undefined" !== typeof module.pluginDependency) {
 
-        return eval(module.pluginDependency.replace(/([a-z0-9]+)/g, $.proxy(VDRest.info.hasPlugin, VDRest.info)))
+        return eval(module.pluginDependency.replace(/([a-z0-9]+)/g, VDRest.info.hasPlugin.bind(VDRest.info)))
     }
     return true
 };

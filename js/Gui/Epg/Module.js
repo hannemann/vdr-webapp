@@ -124,7 +124,7 @@ Gui.Epg.prototype.contextMenu = {
             data.gui = $('<input type="text" name="custom-time">')
                 .appendTo(data.dom);
 
-            data.gui.on('change', $.proxy(this.setCustomTime, this));
+            data.gui.on('change', this.setCustomTime.bind(this));
 
             $.event.trigger({
                 "type" : "window.request",

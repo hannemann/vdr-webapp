@@ -36,14 +36,14 @@ Gui.Remote.Controller.DPad.prototype.dispatchView = function () {
  */
 Gui.Remote.Controller.DPad.prototype.addObserver = function () {
 
-    this.view.up    .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Up'));
-    this.view.down  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Down'));
-    this.view.left  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Left'));
-    this.view.right .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Right'));
-    this.view.ok    .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Ok'));
-    this.view.menu  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Menu'));
-    this.view.back  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Back'));
-    this.view.info  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, 'Info'));
+    this.view.up.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Up'));
+    this.view.down.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Down'));
+    this.view.left.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Left'));
+    this.view.right.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Right'));
+    this.view.ok.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Ok'));
+    this.view.menu.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Menu'));
+    this.view.back.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Back'));
+    this.view.info.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Info'));
 };
 
 /**

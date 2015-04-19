@@ -37,7 +37,7 @@ Gui.Timer.Controller.List.prototype.dispatchView = function () {
     if (this.dataModel.getCollection().length > 0) {
 
         this.iterateTimers({
-            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel),
+            "iterate": this.dataModel.collectionIterator.bind(this.dataModel),
             "collection" : this.dataModel.getCollection()
         });
     } else {
@@ -54,7 +54,7 @@ Gui.Timer.Controller.List.prototype.dispatchView = function () {
  */
 Gui.Timer.Controller.List.prototype.iterateTimers = function (collection) {
 
-    collection.iterate($.proxy(function (timerModel) {
+    collection.iterate(function (timerModel) {
 
         this.timerList.setData(
 
@@ -67,7 +67,7 @@ Gui.Timer.Controller.List.prototype.iterateTimers = function (collection) {
             })
         );
 
-    }, this));
+    }.bind(this));
 
     this.dispatchList();
 };
@@ -88,7 +88,7 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
  */
 Gui.Timer.Controller.List.prototype.addObserver = function () {
 
-    $(document).one('timersloaded', $.proxy(this.iterateTimers, this));
+    $(document).one('timersloaded', this.iterateTimers.bind(this));
 };
 
 /**

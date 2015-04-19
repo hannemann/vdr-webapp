@@ -55,9 +55,9 @@ Gui.Timer.Controller.List.Timer.prototype.dispatchView = function () {
  */
 Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
 
-    this.view.node.on('click', $.proxy(this.windowAction, this));
+    this.view.node.on('click', this.windowAction.bind(this));
 
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.update, this));
+    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
 };
 
 /**
@@ -109,9 +109,9 @@ Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
 
     this.vibrate();
     this.removeObserver();
-    $(document).one(this.animationEndEvents, $.proxy(function () {
+    $(document).one(this.animationEndEvents, function () {
         this.addObserver();
-    }, this));
+    }.bind(this));
 
     $.event.trigger({
         "type" : "window.request",

@@ -49,8 +49,8 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
             //}
 
             this.data[i].button.one(
-                'mousedown', $.proxy(
-                    this.handleButtonClick,
+                'mousedown',
+                this.handleButtonClick.bind(
                     this,
                     this.data[i].fn,
                     VDRest.app.getModule(this.data[i].scope)
@@ -74,13 +74,13 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
     this.view.node.find('.resize-button')
         .one('mousedown', this.handleResize.bind(this));
 
-    this.view.modalOverlay.one('click', $.proxy(function () {
+    this.view.modalOverlay.one('click', function () {
 
         if (!this.skipBack) {
             history.back();
         }
         this.skipBack = undefined;
-    }, this));
+    }.bind(this));
 };
 
 /**

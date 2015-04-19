@@ -31,11 +31,11 @@ Gui.Window.Controller.Confirm.prototype.init = function () {
  */
 Gui.Window.Controller.Confirm.prototype.addObserver = function () {
 
-    this.view.ok.one('click', $.proxy(this.okAction, this));
+    this.view.ok.one('click', this.okAction.bind(this));
 
-    this.view.cancel.one('click', $.proxy(this.cancel, this));
+    this.view.cancel.one('click', this.cancel.bind(this));
 
-    $(window).on("resize", $.proxy(this.setPosition, this));
+    $(window).on("resize", this.setPosition.bind(this));
 };
 
 /**
@@ -43,11 +43,11 @@ Gui.Window.Controller.Confirm.prototype.addObserver = function () {
  */
 Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
 
-    this.view.ok.off('click', $.proxy(this.okAction, this));
+    this.view.ok.off('click');
 
-    this.view.cancel.off('click', $.proxy(this.cancel, this));
+    this.view.cancel.off('click');
 
-    $(window).off("resize", $.proxy(this.setPosition, this));
+    $(window).off("resize");
 };
 
 /**

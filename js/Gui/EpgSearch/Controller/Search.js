@@ -39,7 +39,7 @@ Gui.EpgSearch.Controller.Search.prototype.dispatchView = function () {
  */
 Gui.EpgSearch.Controller.Search.prototype.addObserver = function () {
 
-    $(document).on('epgsearchcomplete', $.proxy(this.initResults, this));
+    $(document).on('epgsearchcomplete', this.initResults.bind(this));
 };
 
 /**
@@ -47,7 +47,7 @@ Gui.EpgSearch.Controller.Search.prototype.addObserver = function () {
  */
 Gui.EpgSearch.Controller.Search.prototype.removeObserver = function () {
 
-    $(document).off('epgsearchcomplete', $.proxy(this.initResults, this));
+    $(document).off('epgsearchcomplete');
 };
 
 /**
@@ -63,7 +63,7 @@ Gui.EpgSearch.Controller.Search.prototype.initResults = function (resultCollecti
         this.broadcastList[i].destructView();
     }
 
-    resultCollection.iterate($.proxy(function (dataModel) {
+    resultCollection.iterate(function (dataModel) {
 
         this.broadcastList.push(this.module.getController('Broadcast', {
             'channel' : dataModel.data.channel,
@@ -73,7 +73,7 @@ Gui.EpgSearch.Controller.Search.prototype.initResults = function (resultCollecti
         }));
 
         this.broadcastList[this.broadcastList.length - 1].dispatchView();
-    }, this));
+    }.bind(this));
 };
 
 /**

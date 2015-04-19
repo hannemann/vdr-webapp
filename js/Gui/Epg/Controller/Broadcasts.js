@@ -55,12 +55,6 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
     this.epgController = this.module.getController('Epg');
 
     this.setScrollData();
-
-    //if (this.dataModel.getCollection().length) {
-    //    this.iterateChannels({
-    //        "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel)
-    //    });
-    //}
     this.startUpdateInterval();
 };
 

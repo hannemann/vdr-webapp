@@ -74,7 +74,7 @@ Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (posi
  */
 Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 
-    this.view.node.on('click', $.proxy(this.requestWindowAction, this));
+    this.view.node.on('click', this.requestWindowAction.bind(this));
 
     if (VDRest.helper.isTouchDevice) {
         this.view.node
@@ -146,7 +146,7 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function () {
 
     this.preventClick = undefined;
     if (VDRest.info.getStreamer()) {
-        this.clickTimeout = window.setTimeout($.proxy(function () {
+        this.clickTimeout = window.setTimeout(function () {
 
             this.vibrate(100);
 
@@ -154,7 +154,7 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function () {
 
             this.startStream();
 
-        }, this), 500);
+        }.bind(this), 500);
     }
 };
 

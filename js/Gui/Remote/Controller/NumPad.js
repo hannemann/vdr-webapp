@@ -36,17 +36,17 @@ Gui.Remote.Controller.NumPad.prototype.dispatchView = function () {
  */
 Gui.Remote.Controller.NumPad.prototype.addObserver = function () {
 
-    this.view.one   .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '1'));
-    this.view.two   .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '2'));
-    this.view.three .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '3'));
-    this.view.four  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '4'));
-    this.view.five  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '5'));
-    this.view.six   .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '6'));
-    this.view.seven .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '7'));
-    this.view.eight .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '8'));
-    this.view.nine  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '9'));
-    this.view.zero  .on('click', $.proxy(this.defaultController.sendKey, this.defaultController, '0'));
-    this.view.txt   .on('click', $.proxy(this.requestKbd, this));
+    this.view.one.on('click', this.defaultController.sendKey.bind(this.defaultController, '1'));
+    this.view.two.on('click', this.defaultController.sendKey.bind(this.defaultController, '2'));
+    this.view.three.on('click', this.defaultController.sendKey.bind(this.defaultController, '3'));
+    this.view.four.on('click', this.defaultController.sendKey.bind(this.defaultController, '4'));
+    this.view.five.on('click', this.defaultController.sendKey.bind(this.defaultController, '5'));
+    this.view.six.on('click', this.defaultController.sendKey.bind(this.defaultController, '6'));
+    this.view.seven.on('click', this.defaultController.sendKey.bind(this.defaultController, '7'));
+    this.view.eight.on('click', this.defaultController.sendKey.bind(this.defaultController, '8'));
+    this.view.nine.on('click', this.defaultController.sendKey.bind(this.defaultController, '9'));
+    this.view.zero.on('click', this.defaultController.sendKey.bind(this.defaultController, '0'));
+    this.view.txt.on('click', this.requestKbd.bind(this));
 };
 
 /**
@@ -82,7 +82,7 @@ Gui.Remote.Controller.NumPad.prototype.requestKbd = function () {
     $('<span>').text(VDRest.app.translate('Input Text')).appendTo(data.dom);
     data.gui = $('<input type="text" name="remote-txt">')
         .appendTo(data.dom);
-    data.gui.on('change', $.proxy(this.sendKbd, this));
+    data.gui.on('change', this.sendKbd.bind(this));
 
     $.event.trigger({
         "type" : "window.request",

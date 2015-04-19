@@ -59,14 +59,14 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
 
     if (this.view.image) {
 
-        this.view.image.on('click', $.proxy(this.animateImageAction, this));
+        this.view.image.on('click', this.animateImageAction.bind(this));
     }
 
     $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
     $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
     $(document).on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
-    this.view.recordButton.on('click', $.proxy(this.toggleTimerAction, this));
-    this.view.editButton.on('click', $.proxy(this.editTimerAction, this));
+    this.view.recordButton.on('click', this.toggleTimerAction.bind(this));
+    this.view.editButton.on('click', this.editTimerAction.bind(this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };

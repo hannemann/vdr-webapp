@@ -32,9 +32,9 @@ Gui.Tabs.Controller.Abstract.prototype.dispatchView = function () {
  */
 Gui.Tabs.Controller.Abstract.prototype.addObserver = function () {
 
-    $(document).on("destruct.window-" + this.data.keyInCache, $.proxy(this.destruct, this));
+    $(document).on("destruct.window-" + this.data.keyInCache, this.destruct.bind(this));
 
-    $(document).on('gui.tabs.update-' + this.data.keyInCache, $.proxy(this.update, this));
+    $(document).on('gui.tabs.update-' + this.data.keyInCache, this.update.bind(this));
 };
 
 /**
@@ -42,9 +42,9 @@ Gui.Tabs.Controller.Abstract.prototype.addObserver = function () {
  */
 Gui.Tabs.Controller.Abstract.prototype.removeObserver = function () {
 
-    $(document).off("destruct.window-" + this.data.keyInCache, $.proxy(this.destruct, this));
+    $(document).off("destruct.window-" + this.data.keyInCache, this.destruct.bind(this));
 
-    $(document).off('gui.tabs.update-' + this.data.keyInCache, $.proxy(this.update, this));
+    $(document).off('gui.tabs.update-' + this.data.keyInCache, this.update.bind(this));
 };
 
 /**
@@ -91,7 +91,7 @@ Gui.Tabs.Controller.Abstract.prototype.updateCacheKey = function (keyInCache) {
  */
 Gui.Tabs.Controller.Abstract.prototype.addDomEvents = function () {
 
-    this.view.tabs.find('li').on('click', $.proxy(this.handleClick, this));
+    this.view.tabs.find('li').on('click', this.handleClick.bind(this));
 };
 
 Gui.Tabs.Controller.Abstract.prototype.handleClick = function (e) {

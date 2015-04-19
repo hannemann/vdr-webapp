@@ -28,7 +28,7 @@ Gui.Menubar.Controller.Default.prototype.init = function () {
 
     this.view = this.module.getView('Default');
 
-    $(document).on('dispatch.after', $.proxy(this.view.setTitle, this.view));
+    $(document).on('dispatch.after', this.view.setTitle.bind(this.view));
 
     this.view.setParentView({"node":$('body')});
 

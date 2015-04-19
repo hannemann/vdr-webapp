@@ -255,11 +255,11 @@ Gui.Epg.Controller.Epg.prototype.handleOrientationChange = function () {
 
     if (!this.module.isMuted) {
 
-        setTimeout($.proxy(function () {
+        setTimeout(function () {
 
             this.setMetrics();
             this.recover();
-        }, this), 500);
+        }.bind(this), 500);
     }
 };
 

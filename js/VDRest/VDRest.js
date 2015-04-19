@@ -103,7 +103,7 @@ VDRest.App.prototype.run = function () {
     }
 
     if ("object" === typeof window.onhashchange) {
-        window.onhashchange = $.proxy(this.locationChange, this);
+        window.onhashchange = this.locationChange.bind(this);
     } else {
         this.pollLocation();
     }
@@ -123,12 +123,12 @@ VDRest.App.prototype.run = function () {
             }
 		}
 
-        $(document).one('infoupdate', $.proxy(function () {
+        $(document).one('infoupdate', function () {
 
             VDRest.info = this.getModule('VDRest.Info').getModel('Info');
             this.dispatch(start);
 
-        }, this));
+        }.bind(this));
 
         $.event.trigger('updateinfo');
 
@@ -162,10 +162,10 @@ VDRest.App.prototype.setLocationHash = function (hash) {
  */
 VDRest.App.prototype.pollLocation = function () {
 
-    setInterval($.proxy(function () {
+    setInterval(function () {
 
         this.locationChange();
-    }, this), 100);
+    }.bind(this), 100);
 };
 
 /**
@@ -327,7 +327,7 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 VDRest.App.prototype.getConfig = function () {
 
 //	this.modules['Gui.Config'].init();
-	this.dispatch('Gui.Config', $.proxy(this.run, this));
+    this.dispatch('Gui.Config', this.run.bind(this));
 };
 
 /**

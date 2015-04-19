@@ -58,13 +58,13 @@ VDRest.Recordings.Model.List.prototype.init = function () {
  */
 VDRest.Recordings.Model.List.prototype.initList = function () {
 
-    $(document).one(this.events.collectionloaded, $.proxy(function () {
+    $(document).one(this.events.collectionloaded, function () {
 
         this.hasCollection = true;
-    }, this));
+    }.bind(this));
 
     this.module.getResource(this.collectionItemModel).load({
         "url" : 'recordingList',
-        "callback" : $.proxy(this.processCollection, this)
+        "callback": this.processCollection.bind(this)
     });
 };

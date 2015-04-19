@@ -413,13 +413,13 @@ Gui.Window.View.Timer.prototype.renderEditTab = function () {
             "catConfig" : config.editForm.categories,
             "fields" : config.editForm.fields,
             "hasSubmit" : true,
-            "changed" : $.proxy(function () {
+            "changed": function () {
 
                 $.event.trigger({
                     "type" : "persisttimerchange-" + this.keyInCache,
                     "payload" : config.editForm.fields
                 });
-            }, this)
+            }.bind(this)
         }
     });
 

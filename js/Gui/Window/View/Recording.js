@@ -223,13 +223,13 @@ Gui.Window.View.Recording.prototype.renderEditTab = function () {
             "catConfig" : config.editForm.categories,
             "fields" : config.editForm.fields,
             "hasSubmit" : true,
-            "changed" : $.proxy(function () {
+            "changed": function () {
 
                 $.event.trigger({
                     "type" : "persistrecordingschange-" + this.keyInCache,
                     "payload" : config.editForm.fields
                 });
-            }, this)
+            }.bind(this)
         }
     });
 

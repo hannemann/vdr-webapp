@@ -58,7 +58,7 @@ VDRest.Info.Model.Info.prototype.load = function () {
     this.getResource().load({
         "url" : "info",
         "method" : "GET",
-        "callback" : $.proxy(function (e) {
+        "callback": function (e) {
 
             var i;
 
@@ -72,7 +72,7 @@ VDRest.Info.Model.Info.prototype.load = function () {
 
             $.event.trigger('infoupdate');
 
-        }, this)
+        }.bind(this)
     });
 };
 

@@ -83,7 +83,7 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView,
 
     l = directories.length;
 
-    directories.sort($.proxy(listView.sortCallback, listView));
+    directories.sort(listView.sortCallback.bind(listView));
 
     if (this.module.getView('List').reverse) {
         directories.reverse();
@@ -100,7 +100,7 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView,
 
     i = 0; l = files.length;
 
-    files.sort($.proxy(listView.sortCallback, listView));
+    files.sort(listView.sortCallback.bind(listView));
 
     if (listView.reverse) {
         files.reverse();

@@ -33,12 +33,12 @@ VDRest.Osd.Model.Osd.prototype.init = function () {
  */
 VDRest.Osd.Model.Osd.prototype.loadOsd = function () {
 
-    setTimeout($.proxy(function () {
+    setTimeout(function () {
         this.resource.load({
             "url" : "main",
-            "callback" : $.proxy(this.triggerOsdLoaded, this)
+            "callback": this.triggerOsdLoaded.bind(this)
         });
-    }, this), VDRest.config.getItem('osdDelay'));
+    }.bind(this), VDRest.config.getItem('osdDelay'));
 };
 
 /**
