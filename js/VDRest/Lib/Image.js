@@ -66,14 +66,18 @@ VDRest.Lib.Image.prototype.math =
     '};';
 
 VDRest.Lib.Image.prototype.transparencyGradientWorkerCode = 'onmessage = function (e) {'
-+ 'var x, y, end;'
++ 'var x, y, start, end;'
 + 'for (x = 0; x < e.data.rows; x++) {'
-+ '     transparency = Math.round(0 - getLengthByAngleAndDiameter(e.data.alpha, getCircumcircleDiameter(e.data.beta, e.data.rows - x)) - e.data.offset);'
-+ '     y = x * e.data.columns * 4 + 3;'
-+ '     end = (x+1)*e.data.columns * 4;'
-+ '     for (y ; y < end; y+=4) {'
-+ '         e.data.image.data[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;'
-+ '         transparency += Math.floor(100 / e.data.columns * 255 / 100);'
++ '     transparency = Math.round(0 - getLengthByAngleAndDiameter(e.data.alpha, getCircumcircleDiameter(e.data.beta, e.data.rows - x)));'
++ '     start = x * e.data.columns * 4 + 3;'
++ '     end = (x+1) * e.data.columns * 4;'
++ '     for (y = start ; y < end; y+=4) {'
++ '         if (y < start + e.data.offset * 4) {'
++ '             e.data.image.data[y] = 0;'
++ '         } else {'
++ '             e.data.image.data[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;'
++ '             transparency += 100 / e.data.width * 255 / 100;'
++ '         }'
 + '     }'
 + '}'
 + 'postMessage({"id" : e.data.id, "payload" : e.data.image});'
@@ -89,7 +93,7 @@ VDRest.Lib.Image.prototype.transparencyGradientWorkerCode = 'onmessage = functio
  * @param {function} complete callback
  * @param {String} id
  */
-VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha, offset, width, complete, id) {
+VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha, offset, id, width, complete) {
 
     img.classList.add('hidden-for-processing');
 
@@ -139,7 +143,7 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
             for (x = 0; x < rows; x++) {
                 transparency = Math.round(0 - Math.Triangle.getLengthByAngleAndDiameter(
                     alpha, Math.Triangle.getCircumcircleDiameter(beta, rows - x)
-                ) - offset);
+                ));
                 /**
                  * iterate columns
                  */
@@ -147,10 +151,9 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
                 end = (x + 1) * columns * 4;
                 for (y = start; y < end; y += 4) {
                     if (y < start + offset * 4) {
-                        imageData[y] = 0;
+                        image.data[y] = 0;
                     } else {
                         image.data[y] = transparency >= 0 ? transparency <= 255 ? transparency : 255 : 0;
-                        //transparency += Math.floor(100 / ca.width * 255 / 100);
                         transparency += 100 / width * 255 / 100;
                     }
                 }
@@ -175,6 +178,7 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
                 "alpha": alpha,
                 "beta": beta,
                 "offset": offset,
+                "width": width,
                 "image": image,
                 "id": id
             };
@@ -184,6 +188,9 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
                 this.onload = null;
                 this.src = ca.toDataURL();
                 this.classList.remove('hidden-for-processing');
+                if ("function" === typeof complete) {
+                    complete(img);
+                }
             }.bind(this);
 
             VDRest.thread.add(

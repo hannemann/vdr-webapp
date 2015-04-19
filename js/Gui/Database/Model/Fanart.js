@@ -78,7 +78,7 @@ Gui.Database.Model.Fanart.prototype.createCollage = function (fanarts, model, ca
         imgurl = VDRest.Api.Resource.prototype.getBaseUrl() + 'scraper/image/' + fanarts[i];
         VDRest.helper.log(imgurl, offset);
         grwidth = i < l - 1 ? grwidth : 0;
-        VDRest.image.applyTransparencyGradient(tmp[i], imgurl, deg, offset, grwidth, function () {
+        VDRest.image.applyTransparencyGradient(tmp[i], imgurl, deg, offset, imgurl.toCacheKey(), grwidth, function () {
 
             c++;
             if (c == l) {
