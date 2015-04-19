@@ -76,8 +76,7 @@ VDRest.Lib.Image.prototype.transparencyGradientWorkerCode = 'onmessage = functio
 + '         transparency += Math.floor(100 / e.data.columns * 255 / 100);'
 + '     }'
 + '}'
-+ 'postMessage(e.data.image);'
-+ 'close();'
++ 'postMessage({"id" : e.data.id, "payload" : e.data.image});'
 + '};';
 
 /**
@@ -86,8 +85,9 @@ VDRest.Lib.Image.prototype.transparencyGradientWorkerCode = 'onmessage = functio
  * @param {String} src
  * @param {Number} alpha integer, angle of gradient
  * @param {Number} offset integer, offset of gradient
+ * @param {String} id
  */
-VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha, offset) {
+VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha, offset, id) {
 
     img.classList.add('hidden-for-processing');
 
@@ -102,7 +102,7 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
             rows,
             columns,
             transparency,
-            x, y, end,
+            x, y, end, post, callback,
             gamma = 90, beta = Math.Triangle.getAngle(alpha, gamma);
 
         this.width = Math.round(this.height * (this.naturalWidth / this.naturalHeight));
@@ -113,7 +113,7 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
         // get the image data object
         image = ctx.getImageData(0, 0, ca.width, ca.height);
 
-        var useMainThread = true;
+        var useMainThread = false;
 
         if (useMainThread) {
 
@@ -138,30 +138,35 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
             //and put the image data back to the canvas
             ctx.putImageData(image, 0, 0);
 
-            this.src = ca.toDataURL();
             this.onload = null;
+            this.src = ca.toDataURL();
             this.classList.remove('hidden-for-processing');
 
         } else {
 
             // compute in worker
 
+            post = {
+                "columns": columns,
+                "rows": rows,
+                "alpha": alpha,
+                "beta": beta,
+                "offset": offset,
+                "image": image,
+                "id": id
+            };
+
+            callback = function (imageData) {
+                ctx.putImageData(imageData, 0, 0);
+                this.onload = null;
+                this.src = ca.toDataURL();
+                this.classList.remove('hidden-for-processing');
+            }.bind(this);
+
             VDRest.thread.add(
-                VDRest.Lib.Image.prototype.math + VDRest.Lib.Image.prototype.transparencyGradientWorkerCode,
-                function (e) {
-                    ctx.putImageData(e.data, 0, 0);
-                    this.src = ca.toDataURL();
-                    this.onload = null;
-                    this.classList.remove('hidden-for-processing');
-                }.bind(this),
-                {
-                    "columns": columns,
-                    "rows": rows,
-                    "alpha": alpha,
-                    "beta": beta,
-                    "offset": offset,
-                    "image": image
-                }
+                VDRest.image.math + VDRest.image.transparencyGradientWorkerCode,
+                post,
+                callback
             );
         }
     };

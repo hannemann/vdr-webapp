@@ -179,7 +179,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
             img.height = this.node.height();
             try {
                 $('<div class="visible-epg-view broadcast-image">').append(img).prependTo(this.node);
-                VDRest.image.applyTransparencyGradient(img, src, 40, 10);
+                VDRest.image.applyTransparencyGradient(img, src, 40, 10, this.keyInCache);
             } catch (e) {
                 VDRest.helper.log('Error resizing image', this, src);
             }

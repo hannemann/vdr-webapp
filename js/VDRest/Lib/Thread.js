@@ -1,92 +1,78 @@
 /**
  * @constructor
- * @property {threadRequest} dispatcher
  */
 var Thread = function () {
 };
 
 /**
  * @typedef {{}} threadRequest
- * @property {Worker} worker
- * @property {Function} cb
- * @property {{}} postData
+ * @property {String} id
  */
 
 /**
- *
- * @type {threadRequest[]}
+ * @type {Object.<Worker>}
  */
-Thread.prototype.heap = [];
-
-Thread.prototype.max = 5;
+Thread.prototype.workers = {};
 
 /**
- * @param {Worker} worker
- * @param {Function} cb
- * @param {{}} postData
- * @returns threadRequest
+ * @type {Object.<Function>}
  */
-Thread.prototype.register = function (worker, cb, postData) {
-
-    var request = {
-        "worker": worker,
-        "cb": cb,
-        "postData": postData
-    };
-
-    request.worker.addEventListener('message', cb);
-
-    this.heap.push(request);
-
-    return request;
-};
+Thread.prototype.callbacks = {};
 
 /**
- * @param {Worker} worker
+ * callback wrapper
+ * @param e
  */
-Thread.prototype.free = function (worker) {
+Thread.prototype.callback = function (e) {
 
-    this.heap.forEach(function (w, i) {
-        if (w.worker === worker) {
-            this.heap.splice(i, 1);
-            w.worker.removeEventListener('message');
-        }
-    }.bind(this));
-};
+    this.callbacks[e.data.id](e.data.payload);
 
-/**
- * @param {threadRequest} request
- */
-Thread.prototype.startWait = function (request) {
-
-    if (this.heap.length >= this.max) {
-        this.dispatcher.worker.addEventListener('message', this.start.bind(this, request));
-    } else {
-        this.start(request);
-    }
-};
-
-/**
- * @param {threadRequest} request
- */
-Thread.prototype.start = function (request) {
-
-    request.worker.addEventListener('message', this.free.bind(this, request.worker));
-    request.worker.postMessage(request.postData);
+    delete this.callbacks[e.data.id];
 };
 
 /**
  *
  * @param {String} code
- * @param {Function} cb
- * @param {{}} postData
+ * @param {threadRequest} postData
+ * @param {Function} callback
  * @returns {Thread}
  */
-Thread.prototype.add = function (code, cb, postData) {
+Thread.prototype.add = function (code, postData, callback) {
 
-    var blob, url, worker, request;
+    var worker;
 
-    //debugger;
+    worker = this.getWorker(code);
+
+    this.callbacks[postData.id] = callback;
+
+    worker.postMessage(postData);
+};
+
+/**
+ * @param {String} code
+ * @return {Worker}
+ */
+Thread.prototype.getWorker = function (code) {
+
+    var blobUrl;
+
+    if (!this.workers[code]) {
+        blobUrl = this.getBlobUrl(code);
+        this.workers[code] = new Worker(blobUrl);
+
+        this.workers[code].addEventListener('message', this.callback.bind(this));
+    }
+
+    return this.workers[code];
+};
+
+/**
+ * @param {String} code
+ * @return {String}
+ */
+Thread.prototype.getBlobUrl = function (code) {
+
+    var blob, url;
 
     blob = new Blob(
         [code],
@@ -94,12 +80,8 @@ Thread.prototype.add = function (code, cb, postData) {
     );
     url = URL.createObjectURL(blob);
 
-    worker = new Worker(url);
+    return url;
 
-    request = this.register(worker, cb, postData);
-
-    this.startWait(request);
-    this.dispatcher = request;
 };
 
 VDRest.thread = new Thread();
