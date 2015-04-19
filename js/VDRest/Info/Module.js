@@ -25,7 +25,7 @@ VDRest.Info.prototype.init = function () {
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
-    $(document).on('updateinfo', function () {
+    $document.on('updateinfo', function () {
 
         me.getModel('Info').load();
     });
@@ -34,7 +34,7 @@ VDRest.Info.prototype.init = function () {
         this.startInfoInterval();
     }
 
-    $(document).on('visibilitychange', this.toggleInfoUpdate.bind(this));
+    $document.on('visibilitychange', this.toggleInfoUpdate.bind(this));
 };
 
 VDRest.Info.prototype.toggleInfoUpdate = function () {

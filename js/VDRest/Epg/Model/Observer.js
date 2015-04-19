@@ -18,11 +18,11 @@ VDRest.Epg.Model.Observer.prototype.init = function () {
 
     this.timers = {};
 
-    $(document).on('vdrest-api-actions.timer-deleted', this.handleTimerDeleted.bind(this));
+    $document.on('vdrest-api-actions.timer-deleted', this.handleTimerDeleted.bind(this));
 
-    $(document).on('vdrest-api-actions.timer-created', this.handleTimerCreated.bind(this));
+    $document.on('vdrest-api-actions.timer-created', this.handleTimerCreated.bind(this));
 
-    $(document).on('vdrest-api-actions.timer-updated', this.handleTimerUpdated.bind(this));
+    $document.on('vdrest-api-actions.timer-updated', this.handleTimerUpdated.bind(this));
 
 };
 

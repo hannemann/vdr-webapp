@@ -63,15 +63,15 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
-    $(document).one('channelsloaded', this.iterateChannels.bind(this));
+    $document.one('channelsloaded', this.iterateChannels.bind(this));
 
     if (!VDRest.helper.touchMoveCapable) {
         this.view.wrapper.get(0).onscroll = this.handleScroll.bind(this);
     }
 
-    $(document).on('mousedown.broadcasts touchstart.broadcasts', this.toggleUpdate.bind(this));
+    $document.on('mousedown.broadcasts touchstart.broadcasts', this.toggleUpdate.bind(this));
 
-    $(document).on('visibilitychange.broadcasts', this.toggleUpdate.bind(this, true));
+    $document.on('visibilitychange.broadcasts', this.toggleUpdate.bind(this, true));
 };
 
 /**
@@ -83,7 +83,7 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
         $(this.view.wrapper).off('scroll', this.handleScroll);
     }
 
-    $(document).off('visibilitychange.broadcasts');
+    $document.off('visibilitychange.broadcasts');
 };
 
 /**
@@ -263,7 +263,7 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 
     if (VDRest.config.getItem('useSlowServerStrategy')) {
 
-        $(document).one('broadcastsloaded', function () {
+        $document.one('broadcastsloaded', function () {
 
             for (i;i<l;i++) {
 

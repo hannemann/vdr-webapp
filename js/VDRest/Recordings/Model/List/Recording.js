@@ -26,7 +26,7 @@ VDRest.Recordings.Model.List.Recording.prototype.cacheKey = 'file_name';
  */
 VDRest.Recordings.Model.List.Recording.prototype.init = function () {
 
-    $(document).on('vdrest-api-actions.recording-updated.' + this.data.file_name.toCacheKey(), this.update.bind(this));
+    $document.on('vdrest-api-actions.recording-updated.' + this.data.file_name.toCacheKey(), this.update.bind(this));
 };
 
 /**

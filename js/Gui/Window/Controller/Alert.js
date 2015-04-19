@@ -37,7 +37,7 @@ Gui.Window.Controller.Alert.prototype.addObserver = function () {
         this.view.settings.one('click', this.settingsAction.bind(this))
     }
 
-    $(window).on("resize", this.setPosition.bind(this));
+    $window.on("resize", this.setPosition.bind(this));
 };
 
 /**
@@ -47,7 +47,7 @@ Gui.Window.Controller.Alert.prototype.removeObserver = function () {
 
     this.view.ok.off('click');
 
-    $(window).off("resize");
+    $window.off("resize");
 };
 
 /**
@@ -67,7 +67,7 @@ Gui.Window.Controller.Alert.prototype.settingsAction = function () {
 
     this.vibrate();
 
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
         VDRest.Abstract.Controller.prototype.destructView.call(this);
         VDRest.app.dispatch('Gui.Config');
     }.bind(this));

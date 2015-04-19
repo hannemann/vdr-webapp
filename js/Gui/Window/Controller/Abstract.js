@@ -78,5 +78,5 @@ Gui.Window.Controller.Abstract.prototype.destructView = function () {
         "type" : "destruct.window-" + this.keyInCache
     });
 
-    $(document).off("destruct.window-" + this.keyInCache);
+    $document.off("destruct.window-" + this.keyInCache);
 };

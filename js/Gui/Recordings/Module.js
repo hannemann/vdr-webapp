@@ -170,7 +170,7 @@ Gui.Recordings.prototype.refresh = function () {
         .getHeader()
         .text(VDRest.app.translate('Recordings'));
     this.dispatch();
-    $(document).one('recordingslist.dispatched', function () {
+    $document.one('recordingslist.dispatched', function () {
         VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
     });
 };

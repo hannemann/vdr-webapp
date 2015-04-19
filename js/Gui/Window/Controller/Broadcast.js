@@ -62,9 +62,9 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
         this.view.image.on('click', this.animateImageAction.bind(this));
     }
 
-    $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
-    $(document).on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
+    $document.on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
+    $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
+    $document.on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
     this.view.recordButton.on('click', this.toggleTimerAction.bind(this));
     this.view.editButton.on('click', this.editTimerAction.bind(this));
 
@@ -80,7 +80,7 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
         this.view.image.off('click');
     }
     this.view.recordButton.off('click');
-    $(document).off('gui-timer.' + this.eventNameSpace);
+    $document.off('gui-timer.' + this.eventNameSpace);
 };
 
 /**

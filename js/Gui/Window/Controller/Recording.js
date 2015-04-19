@@ -59,7 +59,7 @@ Gui.Window.Controller.Recording.prototype.addObserver = function () {
         this.view.watchButton.on('click', this.watchRecordingAction.bind(this));
     }
 
-    $(document).on('persistrecordingschange-' + this.keyInCache, this.updateRecordingAction.bind(this));
+    $document.on('persistrecordingschange-' + this.keyInCache, this.updateRecordingAction.bind(this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -76,7 +76,7 @@ Gui.Window.Controller.Recording.prototype.removeObserver = function () {
         this.view.watchButton.off('click');
     }
 
-    $(document).off('persistrecordingschange-' + this.keyInCache);
+    $document.off('persistrecordingschange-' + this.keyInCache);
 };
 
 /**

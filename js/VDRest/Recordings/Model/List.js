@@ -58,7 +58,7 @@ VDRest.Recordings.Model.List.prototype.init = function () {
  */
 VDRest.Recordings.Model.List.prototype.initList = function () {
 
-    $(document).one(this.events.collectionloaded, function () {
+    $document.one(this.events.collectionloaded, function () {
 
         this.hasCollection = true;
     }.bind(this));

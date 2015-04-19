@@ -173,8 +173,8 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
 
     this.metrics = {
         "win" : {
-            "width": $(window).width(),
-            "height": $(window).height()
+            "width": $window.width(),
+            "height": $window.height()
         },
         "viewPort" : {
             "top" : vOffset.top,
@@ -233,9 +233,9 @@ Gui.Epg.Controller.Epg.prototype.getIsChannelView = function () {
  */
 Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 
-    $(window).on('orientationchange.epg-controller', this.handleOrientationChange.bind(this));
-    $(window).on('resize', this.setMetrics.bind(this));
-    $(document).on('epg.channelview', this.setIsChannelView.bind(this));
+    $window.on('orientationchange.epg-controller', this.handleOrientationChange.bind(this));
+    $window.on('resize', this.setMetrics.bind(this));
+    $document.on('epg.channelview', this.setIsChannelView.bind(this));
 };
 
 /**
@@ -243,9 +243,9 @@ Gui.Epg.Controller.Epg.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
 
-    $(window).off('orientationchange.epg-controller');
-    $(window).off('resize');
-    $(document).off('epg.channelview');
+    $window.off('orientationchange.epg-controller');
+    $window.off('resize');
+    $document.off('epg.channelview');
 };
 
 /**

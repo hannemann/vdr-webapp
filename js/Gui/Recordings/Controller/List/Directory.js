@@ -92,7 +92,7 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
     e.preventDefault();
     e.stopPropagation();
     this.removeObserver();
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
         this.addObserver();
     }.bind(this));
 

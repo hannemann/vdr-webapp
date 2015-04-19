@@ -57,7 +57,7 @@ Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
 
     this.view.node.on('click', this.windowAction.bind(this));
 
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
+    $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
 };
 
 /**
@@ -67,7 +67,7 @@ Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
 
     this.view.node.off('click');
 
-    $(document).off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
+    $document.off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 };
 
 /**
@@ -109,7 +109,7 @@ Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
 
     this.vibrate();
     this.removeObserver();
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
         this.addObserver();
     }.bind(this));
 

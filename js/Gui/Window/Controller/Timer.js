@@ -52,7 +52,7 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function (callback) {
 
     } else {
 
-        $(document).one('broadcastsloaded-' + this.data.resource.channel, function (e) {
+        $document.one('broadcastsloaded-' + this.data.resource.channel, function (e) {
 
             var duration = 0, candidate = null;
 
@@ -136,11 +136,11 @@ Gui.Window.Controller.Timer.prototype.addObserver = function () {
 
     this.view.subToFilenameButton.on('click', this.view.subToFilename.bind(this.view));
 
-    $(document).one('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.destroyTimer.bind(this));
+    $document.one('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.destroyTimer.bind(this));
 
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
+    $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
 
-    $(document).on("persisttimerchange-" + this.keyInCache, this.updateTimer.bind(this));
+    $document.on("persisttimerchange-" + this.keyInCache, this.updateTimer.bind(this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -161,9 +161,9 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
 
     this.view.subToFilenameButton.off('click');
 
-    $(document).off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
+    $document.off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 
-    $(document).off("persisttimerchange-" + this.keyInCache);
+    $document.off("persisttimerchange-" + this.keyInCache);
 };
 
 /**

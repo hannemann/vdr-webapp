@@ -43,7 +43,7 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
 
     var me = this, i;
 
-    $(document).on("destruct.form-" + this.keyInCache + " destruct.window-" + this.keyInCache, function () {
+    $document.on("destruct.form-" + this.keyInCache + " destruct.window-" + this.keyInCache, function () {
 
         me.view.destruct();
         me.module.cache.flushByClassKey(me);
@@ -68,7 +68,7 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
         }
     }
 
-    $(document).on('gui.form.update-' + this.keyInCache, this.update.bind(this));
+    $document.on('gui.form.update-' + this.keyInCache, this.update.bind(this));
 };
 /**
  * add click handler to field
@@ -208,7 +208,7 @@ Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
         }
     }
 
-    $(document).off('gui.form.update-' + this.keyInCache);
+    $document.off('gui.form.update-' + this.keyInCache);
 };
 
 /**

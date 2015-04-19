@@ -36,7 +36,7 @@ Gui.Config.prototype.init = function () {
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
-    $(document).on('Config.request', function (e) {
+    $document.on('Config.request', function (e) {
 
         me.dispatch(e.object);
     });

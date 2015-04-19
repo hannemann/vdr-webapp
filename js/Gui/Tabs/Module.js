@@ -57,7 +57,7 @@ Gui.Tabs.prototype.init = function () {
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
-    $(document).on('tabs.request', function (e) {
+    $document.on('tabs.request', function (e) {
 
         me.dispatch(e.tabConfig);
     });

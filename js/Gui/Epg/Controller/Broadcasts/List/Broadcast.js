@@ -76,12 +76,12 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.updateMetrics = function 
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function () {
 
     this.view.node.on('click', this.handleClick.bind(this));
-    $(document).on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
-    $(document).on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
+    $document.on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
+    $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
 
     if (this.data.dataModel.data.timer_id) {
 
-        $(document).one('gui-timer.deleted.'
+        $document.one('gui-timer.deleted.'
             + [this.keyInCache, this.data.dataModel.data.timer_id, this.eventNameSpace].join('.'),
             this.handleTimer.bind(this)
         );
@@ -94,7 +94,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function ()
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function () {
 
     this.view.node.off('click');
-    $(document).off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
+    $document.off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 };
 
 /**
@@ -120,7 +120,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function ()
 
     if (this.data.dataModel.data.timer_exists) {
 
-        $(document).one(
+        $document.one(
             'gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace,
             this.handleTimer.bind(this)
         );

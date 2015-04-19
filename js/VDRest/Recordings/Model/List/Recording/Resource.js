@@ -53,7 +53,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
         }
     });
 
-    $(document).one('window.confirm.confirm', function () {
+    $document.one('window.confirm.confirm', function () {
 
         request.url = this.getBaseUrl() + 'recordings/delete';
         request.data = {

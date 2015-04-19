@@ -54,7 +54,7 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
         "resource" : this.dataModel.data
     });
 
-    $(document).on("vdrest-api-actions.recording-updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
+    $document.on("vdrest-api-actions.recording-updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
 };
 
 /**
@@ -194,7 +194,7 @@ Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = functio
     this.vibrate();
     e.preventDefault();
     e.stopPropagation();
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
         this.addObserver();
     }.bind(this));
     this.removeObserver();

@@ -30,7 +30,7 @@ Gui.Menubar.prototype.init = function () {
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
-    $(document).one('dispatch.before', function () {
+    $document.one('dispatch.before', function () {
         me.dispatch();
     });
 };

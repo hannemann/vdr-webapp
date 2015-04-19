@@ -45,7 +45,7 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
             this.iterateRecordings();
         } else {
 
-            $(document).one(this.dataModel.events.collectionloaded, function () {
+            $document.one(this.dataModel.events.collectionloaded, function () {
 
                 this.iterateRecordings();
             }.bind(this))

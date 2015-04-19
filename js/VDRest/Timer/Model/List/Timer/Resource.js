@@ -93,7 +93,7 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.deleteTimer = function (adapter
         }
     });
 
-    $(document).one('window.confirm.confirm', function () {
+    $document.one('window.confirm.confirm', function () {
 
         request.url = url;
         request.method = 'DELETE';

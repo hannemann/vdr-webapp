@@ -94,7 +94,7 @@ Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callba
 
     history.back();
 
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
 
         callback.call(scope);
     });
@@ -111,7 +111,7 @@ Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
 
     history.back();
 
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
 
         VDRest.app.dispatch('Gui.Config');
     });
@@ -124,7 +124,7 @@ Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
 
     this.vibrate();
 
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
 
         location.reload();
     });
@@ -143,7 +143,7 @@ Gui.Window.Controller.ContextMenu.prototype.handleFullscreen = function () {
 
     this.vibrate();
 
-    $(document).one(this.animationEndEvents, function () {
+    $document.one(this.animationEndEvents, function () {
 
         location.reload();
     });

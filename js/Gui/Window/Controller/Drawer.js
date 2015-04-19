@@ -129,9 +129,9 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
         }
     }
 
-    $(document).one('drawer.statechanged', function () {
+    $document.one('drawer.statechanged', function () {
 
-        $(document).one('click', me.handleStateChanged);
+        $document.one('click', me.handleStateChanged);
     });
 
     if (this.view.favourites) {
@@ -158,8 +158,8 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
         }
     }
 
-    $(document).off('drawer.statechanged', this.handleStateChanged);
-    $(document).off('click', this.handleStateChanged);
+    $document.off('drawer.statechanged', this.handleStateChanged);
+    $document.off('click', this.handleStateChanged);
 
     this.view.node
         .off(this.transitionEndEvents)
@@ -399,7 +399,7 @@ Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 
     history.back();
 
-    $(document).one('drawer.statechanged', function () {
+    $document.one('drawer.statechanged', function () {
 
         if (request) {
 

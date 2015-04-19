@@ -288,7 +288,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function (call
         end = new Date(Date.now() + 3600 * 6 * 1000);
     }
 
-    $(window).one('broadcastsloaded-' + this.getData('channel_id'), function () {
+    $window.one('broadcastsloaded-' + this.getData('channel_id'), function () {
 
         var found = false;
         l = this.collection.length;

@@ -37,7 +37,7 @@ Gui.Window.Controller.Input.prototype.dispatchView = function () {
  */
 Gui.Window.Controller.Input.prototype.setPosition = function () {
 
-    var winHeight = $(window).height(), height = this.view.node.height(), top;
+    var winHeight = $window.height(), height = this.view.node.height(), top;
 
     if ("Input" === this.keyInCache) {
         top = '25%';
@@ -76,7 +76,7 @@ Gui.Window.Controller.Input.prototype.addObserver = function () {
 
     this.view.cancel.on('click', this.cancel.bind(this));
 
-    $(window).on("resize", this.setPosition.bind(this));
+    $window.on("resize", this.setPosition.bind(this));
 };
 
 /**
@@ -93,7 +93,7 @@ Gui.Window.Controller.Input.prototype.removeObserver = function () {
 
     this.view.cancel.off('click');
 
-    $(window).off("resize");
+    $window.off("resize");
 };
 
 /**

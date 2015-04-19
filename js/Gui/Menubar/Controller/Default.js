@@ -28,7 +28,7 @@ Gui.Menubar.Controller.Default.prototype.init = function () {
 
     this.view = this.module.getView('Default');
 
-    $(document).on('dispatch.after', this.view.setTitle.bind(this.view));
+    $document.on('dispatch.after', this.view.setTitle.bind(this.view));
 
     this.view.setParentView({"node":$('body')});
 
@@ -80,18 +80,18 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (e) {
  */
 Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
-    $(document).on('drawer.statechanged', this.onDrawerReady.bind(this));
+    $document.on('drawer.statechanged', this.onDrawerReady.bind(this));
 
-    $(document).on('drawer.animate', this.onDrawerAnimate.bind(this));
+    $document.on('drawer.animate', this.onDrawerAnimate.bind(this));
 
     this.view.titleWrapper.on('click', this.onIconClick.bind(this));
 
-    $(document).on('dispatch.after', this.handlePostDispatch.bind(this));
+    $document.on('dispatch.after', this.handlePostDispatch.bind(this));
 
     this.view.settingsButton.on('click', this.requestContextMenu.bind(this));
 
-    $(document).on('showThrobber', this.showThrobber.bind(this));
-    $(document).on('hideThrobber', this.hideThrobber.bind(this));
+    $document.on('showThrobber', this.showThrobber.bind(this));
+    $document.on('hideThrobber', this.hideThrobber.bind(this));
     this.view.throbber.on('click', $.xhrPool.abortAll.bind($.xhrPool));
 };
 

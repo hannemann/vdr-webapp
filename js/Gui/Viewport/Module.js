@@ -30,7 +30,7 @@ Gui.Viewport.prototype.init = function () {
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
-    $(document).one('menubar.init', function () {
+    $document.one('menubar.init', function () {
         me.dispatch();
     });
 };

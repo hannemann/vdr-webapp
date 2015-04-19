@@ -39,7 +39,7 @@ Gui.EpgSearch.Controller.Search.prototype.dispatchView = function () {
  */
 Gui.EpgSearch.Controller.Search.prototype.addObserver = function () {
 
-    $(document).on('epgsearchcomplete', this.initResults.bind(this));
+    $document.on('epgsearchcomplete', this.initResults.bind(this));
 };
 
 /**
@@ -47,7 +47,7 @@ Gui.EpgSearch.Controller.Search.prototype.addObserver = function () {
  */
 Gui.EpgSearch.Controller.Search.prototype.removeObserver = function () {
 
-    $(document).off('epgsearchcomplete');
+    $document.off('epgsearchcomplete');
 };
 
 /**

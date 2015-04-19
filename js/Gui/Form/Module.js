@@ -30,7 +30,7 @@ Gui.Form.prototype.init = function () {
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
-    $(document).on('form.request', function (e) {
+    $document.on('form.request', function (e) {
 
         me.dispatch(e.config);
     });

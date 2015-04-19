@@ -45,9 +45,9 @@ Gui.Osd.Controller.Default.prototype.addObserver = function () {
 
     var me = this;
 
-    $(document).on('osdloaded', this.refreshView.bind(this));
+    $document.on('osdloaded', this.refreshView.bind(this));
 
-    $(document).on('remotekeypress', this.handleRemotePress.bind(this));
+    $document.on('remotekeypress', this.handleRemotePress.bind(this));
 
     this.view.red && this.view.red.on('click', this.sendKey.bind(this, 'Red'));
     this.view.green && this.view.green.on('click', this.sendKey.bind(this, 'Green'));
@@ -69,9 +69,9 @@ Gui.Osd.Controller.Default.prototype.addObserver = function () {
  */
 Gui.Osd.Controller.Default.prototype.removeObserver = function () {
 
-    $(document).off('osdloaded');
+    $document.off('osdloaded');
 
-    $(document).off('remotekeypress');
+    $document.off('remotekeypress');
 
     this.view.red    && this.view.red.off('click');
     this.view.green  && this.view.green.off('click');

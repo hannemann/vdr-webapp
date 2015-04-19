@@ -123,7 +123,7 @@ VDRest.App.prototype.run = function () {
             }
 		}
 
-        $(document).one('infoupdate', function () {
+        $document.one('infoupdate', function () {
 
             VDRest.info = this.getModule('VDRest.Info').getModel('Info');
             this.dispatch(start);
@@ -222,7 +222,7 @@ VDRest.App.prototype.observe = function (hash) {
 VDRest.App.prototype.addDestroyer = function (destroyer, callback) {
 
     this.destroyer.push(destroyer);
-    $(document).one(destroyer, callback);
+    $document.one(destroyer, callback);
 };
 
 /**
@@ -379,7 +379,10 @@ VDRest.App.prototype.translate = function () {
 
 VDRest.app = new VDRest.App();
 
-$(document).ready(function () {
+$document = $(document);
+$window = $(window);
+
+$document.ready(function () {
 
 	VDRest.app.run();
 });

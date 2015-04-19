@@ -88,7 +88,7 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
  */
 Gui.Timer.Controller.List.prototype.addObserver = function () {
 
-    $(document).one('timersloaded', this.iterateTimers.bind(this));
+    $document.one('timersloaded', this.iterateTimers.bind(this));
 };
 
 /**

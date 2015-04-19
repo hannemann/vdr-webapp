@@ -70,7 +70,7 @@ Gui.Window.prototype.init = function () {
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
-    $(document).on('window.request', function (e) {
+    $document.on('window.request', function (e) {
 
         me.dispatch(e.payload);
     });
