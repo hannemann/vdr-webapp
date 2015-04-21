@@ -21,6 +21,16 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype._class = 'VDRest.SearchTimer
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.resultJSON = 'searchtimers';
 
 /**
+ * @type {Object.<String>}
+ */
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.useChannel = {
+    "NoChannel": 0,
+    "Interval": 1,
+    "Group": 2,
+    "FTAOnly": 3
+};
+
+/**
  * flags
  * @type {{}}
  */
