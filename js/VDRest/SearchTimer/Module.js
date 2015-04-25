@@ -21,7 +21,7 @@ VDRest.SearchTimer.prototype.name = 'SearchTimer';
  */
 VDRest.SearchTimer.prototype.initList = function () {
 
-    this.getController('List');
+    this.getController('Default');
 };
 
 /**

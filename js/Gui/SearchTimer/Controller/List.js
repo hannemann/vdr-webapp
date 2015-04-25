@@ -42,7 +42,7 @@ Gui.SearchTimer.Controller.List.prototype.dispatchView = function () {
         });
     } else {
 
-        this.dataModel.initList();
+        this.module.store.initList();
     }
 
     $.event.trigger('searchtimerlist.dispatched');
