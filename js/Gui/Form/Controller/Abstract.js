@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {Gui.Form.View.Abstract} view
  */
 Gui.Form.Controller.Abstract = function () {};
 
@@ -225,7 +226,7 @@ Gui.Form.Controller.Abstract.prototype.hasDependencies = function (fieldName) {
         if (this.view.data.fields.hasOwnProperty(i)) {
 
             depends = this.view.data.fields[i].depends;
-            if ("undefined" !== typeof depends && depends === fieldName) {
+            if ("undefined" !== typeof depends && (depends === fieldName || depends[fieldName])) {
 
                 return true;
             }
@@ -249,9 +250,9 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
         if (this.view.data.fields.hasOwnProperty(i)) {
 
             depends = this.view.data.fields[i].depends;
-            if ("undefined" !== typeof depends && depends === fieldName) {
+            if ("undefined" !== typeof depends && (depends === fieldName || depends[fieldName])) {
 
-                if (field.gui.prop('checked')) {
+                if (!this.isDisabled(field, depends)) {
 
                     this.view.data.fields[i].dom.removeClass('disabled');
                     this.view.data.fields[i].disabled = false;
@@ -264,6 +265,44 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
             }
         }
     }
+    return false;
+};
+
+/**
+ * check if field has to be disabled
+ * @param field
+ * @param depends
+ * @return {boolean}
+ */
+Gui.Form.Controller.Abstract.prototype.isDisabled = function (field, depends) {
+
+    var value = field.getValue(), i;
+
+    if ("boolean" === field.type && !value) {
+        return true;
+    }
+
+    if ('enum' === field.type || 'channel' === field.type) {
+        if (field.multiselect) {
+
+        } else {
+            for (i in depends) {
+                if (depends.hasOwnProperty(i) && this.view.data.fields.hasOwnProperty(i)) {
+                    if (value.value !== depends[i]) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    if ('string' === field.type || 'number' === field.type || 'directory' === field.type) {
+
+        if (value !== depends) {
+            return true;
+        }
+    }
+
     return false;
 };
 

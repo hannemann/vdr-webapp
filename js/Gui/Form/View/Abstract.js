@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {{fields: {}}} data
  */
 Gui.Form.View.Abstract = function () {};
 
@@ -254,7 +255,7 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
 
     if ("undefined" !== typeof field.depends) {
 
-        if (!this.data.fields[field.depends].getValue()) {
+        if (this.isDisabled(field)) {
 
             field.dom.addClass('disabled');
             field.disabled = true;
@@ -262,6 +263,27 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
     }
 
     return field;
+};
+
+/**
+ * check if field has to be disabled
+ * @param {{depends: {}|string}} field
+ * @return {boolean}
+ */
+Gui.Form.View.Abstract.prototype.isDisabled = function (field) {
+
+    if ('string' === typeof field.depends && !this.data.fields[field.depends].getValue()) {
+        return true;
+    } else {
+        for (i in field.depends) {
+            if (this.data.fields.hasOwnProperty(i) && field.depends.hasOwnProperty(i)) {
+                if (this.data.fields[i].getValue() !== field.depends[i]) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 };
 
 /**
