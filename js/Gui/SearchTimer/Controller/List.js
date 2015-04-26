@@ -22,6 +22,8 @@ Gui.SearchTimer.Controller.List.prototype.init = function () {
 
     this.timerList = VDRest.Lib.Object.prototype.getInstance();
 
+    this.channelgroups = {};
+
     this.dataModel = this.module.store.getModel('List');
 };
 
@@ -54,7 +56,7 @@ Gui.SearchTimer.Controller.List.prototype.dispatchView = function () {
  */
 Gui.SearchTimer.Controller.List.prototype.iterateTimers = function (collection) {
 
-    collection.iterate($.proxy(function (timerModel) {
+    collection.iterate(function (timerModel) {
 
         this.timerList.setData(
 
@@ -67,7 +69,7 @@ Gui.SearchTimer.Controller.List.prototype.iterateTimers = function (collection) 
             })
         );
 
-    }, this));
+    }.bind(this));
 
     this.dispatchList();
 };
@@ -88,7 +90,19 @@ Gui.SearchTimer.Controller.List.prototype.dispatchList = function () {
  */
 Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
 
-    $(document).one('searchtimersloaded', $.proxy(this.iterateTimers, this));
+    $document.one('searchtimersloaded', this.iterateTimers.bind(this));
+    $document.one('channelgroupsloaded', this.storeChannelGroups.bind(this));
+};
+
+Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collection) {
+
+    collection.iterate(function (channelgroup) {
+
+        this.channelgroups[channelgroup.keyInCache] = {
+            "label": channelgroup.data
+        };
+
+    }.bind(this));
 };
 
 /**

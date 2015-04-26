@@ -26,6 +26,10 @@ Gui.Window.Controller.Select.prototype.init = function () {
  */
 Gui.Window.Controller.Select.prototype.dispatchView = function () {
 
+    if ("function" === typeof this.data.renderBefore) {
+        this.data.renderBefore();
+    }
+
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     this.addObserver();

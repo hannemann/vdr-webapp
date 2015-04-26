@@ -122,6 +122,11 @@ Gui.Window.Controller.Input.prototype.okAction = function (e) {
         this.setDirectory();
     }
 
+    if ("datetime" === type) {
+
+        this.setDateTime();
+    }
+
     // TODO: change behaviour... Window has to be closed before action is taken... Add visual feedback for long lastin actions like setting custom time in epg context menu
 
     this.data.gui.change();
@@ -142,6 +147,45 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
 };
 
 /**
+ * copy strings to target
+ */
+Gui.Window.Controller.Input.prototype.setDateTime = function () {
+
+    var value = this.data.format,
+        output = this.data.output_format,
+        reg = new RegExp('%[' + this.supported.all + ']');
+
+    this.view.body.find('select').each(function () {
+
+        var val = $(this).val();
+        value = value.replace(reg, val);
+        if (this.classList.contains('year')) {
+            output = output.replace(/Y/, val);
+        }
+        if (this.classList.contains('month')) {
+            output = output.replace(/m/, val);
+        }
+        if (this.classList.contains('monthname')) {
+            output = output.replace(/F/, val);
+        }
+        if (this.classList.contains('day')) {
+            output = output.replace(/d/, val);
+        }
+        if (this.classList.contains('hour')) {
+            output = output.replace(/H/, val);
+        }
+        if (this.classList.contains('minute')) {
+            output = output.replace(/i/, val);
+        }
+    });
+
+    this.data.gui.val(value);
+    this.data.value = output;
+
+    return value;
+};
+
+/**
  * copy enum
  */
 Gui.Window.Controller.Input.prototype.setEnum = function () {
@@ -150,24 +194,47 @@ Gui.Window.Controller.Input.prototype.setEnum = function () {
 
     if (this.data.multiselect) {
 
-        value.each(function () {
-            values.push(VDRest.app.translate(this.value));
-        });
+        this.data.selected = [];
+
+        for (i in this.data.values) {
+
+            if (this.data.values.hasOwnProperty(i)) {
+
+                this.data.values[i].selected = false;
+            }
+        }
+        value.each(function (key, input) {
+            values.push(VDRest.app.translate(input.value));
+
+            for (i in this.data.values) {
+
+                if (this.data.values.hasOwnProperty(i)) {
+
+                    if (this.data.values[i].label === input.value) {
+                        this.data.values[i].selected = true;
+                        this.data.selected.push(this.data.values[i].value);
+                    }
+                }
+            }
+        }.bind(this));
 
         this.data.gui.val(values.join(', '));
 
     } else {
 
         this.data.gui.val(VDRest.app.translate(value.val()));
-    }
 
-    for (i in this.data.values) {
+        for (i in this.data.values) {
 
-        if (this.data.values.hasOwnProperty(i)) {
+            if (this.data.values.hasOwnProperty(i)) {
 
-            this.data.values[i].selected = false;
+                this.data.values[i].selected = false;
 
-            this.data.values[i].selected = (this.data.values[i].label === value.val());
+                this.data.values[i].selected = (this.data.values[i].label === value.val());
+                if (this.data.values[i].selected) {
+                    this.data.selected = this.data.values[i].value;
+                }
+            }
         }
     }
 
@@ -222,6 +289,10 @@ Gui.Window.Controller.Input.prototype.cancel = function () {
 Gui.Window.Controller.Input.prototype.goBack = function () {
 
     this.module.cache.invalidateClasses(this);
+
+    if ("function" === typeof this.data.onchange) {
+        this.data.onchange(this);
+    }
 
     history.back();
 };

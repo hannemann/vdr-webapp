@@ -103,6 +103,11 @@ Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {
             type = 'DirectoryChooser';
         }
 
+        if ("datetime" === e.data.field.type) {
+
+            type = 'DateTime';
+        }
+
         if ("info" === e.data.field.type) {
 
             type = e.data.field.window;
@@ -184,6 +189,35 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
         field.getValue = function () {
 
             return this.gui.prop('checked');
+        }
+    } else if (field.type === 'datetime') {
+
+        field.getValue = function () {
+
+            var value = this.value.toString(),
+                template = this.format,
+                regs = Gui.Window.Controller.DateTime.prototype.supported,
+                parts = this.output_format.split(''),
+                reg = '', match;
+
+            if (0 == value) {
+                return '';
+            }
+
+            parts.forEach(function (f) {
+                reg += ("(" + regs[f].regString + ")");
+            });
+            reg = new RegExp(reg);
+            match = value.match(reg);
+            if (match) {
+                match.forEach(function (hit, index) {
+                    if (index > 0) {
+                        reg = new RegExp('%' + parts[index - 1]);
+                        template = template.replace(reg, hit);
+                    }
+                });
+            }
+            return template;
         }
     }
 };
@@ -283,11 +317,13 @@ Gui.Form.Controller.Abstract.prototype.isDisabled = function (field, depends) {
     }
 
     if ('enum' === field.type || 'channel' === field.type) {
-        if (field.multiselect) {
-
-        } else {
-            for (i in depends) {
-                if (depends.hasOwnProperty(i) && this.view.data.fields.hasOwnProperty(i)) {
+        for (i in depends) {
+            if (depends.hasOwnProperty(i) && this.view.data.fields.hasOwnProperty(i)) {
+                if (depends[i] instanceof Array) {
+                    if (depends[i].indexOf(value.value) < 0) {
+                        return true;
+                    }
+                } else {
                     if (value.value !== depends[i]) {
                         return true;
                     }

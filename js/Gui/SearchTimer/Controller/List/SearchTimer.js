@@ -19,8 +19,6 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.cacheKey = 'id';
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.init = function () {
 
-    console.log(this.data);
-
     this.eventNameSpace = this.module.namespace + this.module.name;
 
     this.view = this.module.getView('List.SearchTimer', {

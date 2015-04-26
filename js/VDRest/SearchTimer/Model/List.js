@@ -58,3 +58,19 @@ VDRest.SearchTimer.Model.List.prototype.initList = function () {
         "callback": this.processCollection.bind(this)
     });
 };
+
+/**
+ * callback
+ */
+VDRest.SearchTimer.Model.List.prototype.afterCollectionLoaded = function () {
+
+    this.collection.sort(function (a, b) {
+
+        a = a.data.search.toLowerCase().replace(/^[^a-z]/, '');
+        b = b.data.search.toLowerCase().replace(/^[^a-z]/, '');
+
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    });
+};

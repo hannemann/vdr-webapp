@@ -25,9 +25,9 @@ Gui.Form.View.Abstract.prototype.init = function () {
  */
 Gui.Form.View.Abstract.prototype.render = function () {
 
-    this.prepareFields();
-
-    this.renderCategories();
+    this.addClasses()
+        .prepareFields()
+        .renderCategories();
 
     if (this.data.hasSubmit) {
 
@@ -45,9 +45,20 @@ Gui.Form.View.Abstract.prototype.render = function () {
 /**
  * render buttons
  */
+Gui.Form.View.Abstract.prototype.addClasses = function () {
+
+    if (this.data.className) {
+        this.node.addClass(this.data.className);
+    }
+    return this;
+};
+
+/**
+ * render buttons
+ */
 Gui.Form.View.Abstract.prototype.addSubmit = function () {
 
-
+    return this;
 };
 
 /**
@@ -69,6 +80,8 @@ Gui.Form.View.Abstract.prototype.prepareFields = function () {
             }
         }
     }
+
+    return this;
 };
 
 /**
@@ -106,6 +119,11 @@ Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
     if ("directory" === field.type) {
 
         this.getDirectory(id, field);
+    }
+
+    if ("datetime" === field.type) {
+
+        this.getDateTime(id, field);
     }
 
     if ("info" === field.type) {
@@ -163,13 +181,23 @@ Gui.Form.View.Abstract.prototype.getString = function (id, field) {
  */
 Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 
-    var selected = field.getValue();
+    var selected = field.getValue(), val;
 
     this.decorateField(id, field);
 
+    if (field.multiselect) {
+        val = [];
+        selected.forEach(function (s) {
+            val.push(s.label);
+        });
+        val = val.join(', ');
+    } else {
+        val = VDRest.app.translate(selected.label)
+    }
+
     field.gui
         .attr('type', 'text')
-        .val(VDRest.app.translate(selected.label));
+        .val(val);
 
     field.dom.append(field.gui);
 };
@@ -177,11 +205,20 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 /**
  * set type text
  * @param {string} id
- * @param {{}} field
+ * @param {{values: {}}} field
  */
 Gui.Form.View.Abstract.prototype.getChannel = function (id, field) {
 
-    var selected = field.getValue(), values = [], i, l, label;
+    var selected, values = [], i, l, label;
+
+    field.values = this.getChannelValues();
+    this.setSelectedChannels(field, field.selected);
+
+    if ("function" === typeof field.getValuesAfter) {
+        field.getValuesAfter();
+    }
+
+    selected = field.getValue();
 
     this.decorateField(id, field);
 
@@ -215,6 +252,22 @@ Gui.Form.View.Abstract.prototype.getDirectory = function (id, field) {
     this.decorateField(id, field);
 
     field.gui.attr('type', 'text');
+
+    field.dom.append(field.gui);
+};
+
+/**
+ * set type text
+ * @param {string} id
+ * @param {{}} field
+ */
+Gui.Form.View.Abstract.prototype.getDateTime = function (id, field) {
+
+    this.decorateField(id, field);
+
+    field.gui.attr('type', 'text');
+
+    field.gui.val(field.getValue());
 
     field.dom.append(field.gui);
 };
@@ -272,13 +325,22 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
  */
 Gui.Form.View.Abstract.prototype.isDisabled = function (field) {
 
+    var i;
+
     if ('string' === typeof field.depends && !this.data.fields[field.depends].getValue()) {
         return true;
     } else {
         for (i in field.depends) {
-            if (this.data.fields.hasOwnProperty(i) && field.depends.hasOwnProperty(i)) {
-                if (this.data.fields[i].getValue() !== field.depends[i]) {
-                    return true;
+            if (field.depends.hasOwnProperty(i) && this.data.fields.hasOwnProperty(i)) {
+
+                if ('enum' === this.data.fields[i].type || 'channel' === this.data.fields[i].type) {
+                    if (field.depends[i] instanceof Array) {
+                        if (field.depends[i].indexOf(this.data.fields[i].getValue().value) < 0) {
+                            return true;
+                        }
+                    } else if (this.data.fields[i].getValue().value !== field.depends[i]) {
+                        return true;
+                    }
                 }
             }
         }
@@ -329,6 +391,51 @@ Gui.Form.View.Abstract.prototype.renderCategories = function () {
         if (this.categories.hasOwnProperty(i)) {
 
             this.categories[i].appendTo(this.node);
+        }
+    }
+
+    return this;
+};
+
+Gui.Form.View.Abstract.prototype.getChannelValues = function () {
+
+    var channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels').collection,
+        values = {}, i = 0, l;
+
+    l = channels.length;
+
+    for (i; i < l; i++) {
+
+        values[channels[i].data.channel_id] = {
+            "label": channels[i].data.name,
+            "value": channels[i].data.channel_id,
+            "index": i
+        };
+
+
+        if (channels[i].data.image) {
+
+            values[channels[i].data.channel_id].image = channels[i].data.image;
+        }
+    }
+
+    return values;
+};
+
+Gui.Form.View.Abstract.prototype.setSelectedChannels = function (field, selected) {
+
+    var i;
+
+    if ("function" === typeof selected) {
+        selected = selected();
+    } else if ("string" === typeof selected.forEach) {
+        selected = [selected];
+    }
+
+    for (i in field.values) {
+
+        if (field.values.hasOwnProperty(i)) {
+            field.values[i].selected = selected.indexOf(i) > -1;
         }
     }
 };

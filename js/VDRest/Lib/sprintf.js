@@ -11,6 +11,9 @@
         sign: /^[\+\-]/
     };
 
+    /**
+     * @return {String}
+     */
     function sprintf() {
         var key = arguments[0], cache = sprintf.cache;
         if (!(cache[key] && cache.hasOwnProperty(key))) {
@@ -19,6 +22,9 @@
         return sprintf.format.call(null, cache[key], arguments)
     }
 
+    /**
+     * @return {String}
+     */
     sprintf.format = function(parse_tree, argv) {
         var cursor = 1, tree_length = parse_tree.length, node_type = "", arg, output = [], i, k, match, pad, pad_character, pad_length, is_positive = true, sign = "";
         for (i = 0; i < tree_length; i++) {

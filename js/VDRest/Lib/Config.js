@@ -477,36 +477,9 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "channel",
         "multiselect" : true,
         "label" : "Favourites",
-        "values" : function () {
+        "selected": function () {
 
-            var channels = VDRest.app.getModule('VDRest.Epg').getModel('Channels').collection,
-                values = {}, i=0, l,
-                favourites = VDRest.config.getItem('favourites');
-
-            try {
-                favourites = JSON.parse(favourites);
-            } catch (e) {
-                favourites = [];
-            }
-
-            l = channels.length;
-
-            for (i;i<l;i++) {
-
-                values[channels[i].data.channel_id] = {
-                    "label" : channels[i].data.name,
-                    "selected" : favourites.indexOf(channels[i].data.channel_id) > -1,
-                    "value" : channels[i].data.channel_id
-                };
-
-
-                if (channels[i].data.image) {
-
-                    values[channels[i].data.channel_id].image = channels[i].data.image;
-                }
-            }
-
-            return values;
+            return JSON.parse(VDRest.config.getItem('favourites'));
         }
     },
     "useHtmlPlayer"    :   {

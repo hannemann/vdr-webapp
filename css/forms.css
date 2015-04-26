@@ -161,6 +161,19 @@ form .disabled * {
     float: left;
 }
 
+.window-input.date-time {
+    text-align: center;
+}
+
+.window-input.date-time select,
+.window-input.date-time option {
+    color: black;
+}
+
+form.window.searchtimer .disabled {
+    display: none;
+}
+
 
 @media (min-width: 800px), (min-height: 800px) {
     .window-input.select .wrapper {

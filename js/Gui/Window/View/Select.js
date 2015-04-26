@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {{}|Function} values
  */
 Gui.Window.View.Select = function () {};
 
@@ -95,6 +96,12 @@ Gui.Window.View.Select.prototype.prepareValue = function (value) {
 
         value.gui.prop('checked', true);
         value.dom.addClass('selected');
+    }
+
+    if (value.disabled) {
+
+        value.gui.attr('disabled', true);
+        value.dom.addClass('disabled');
     }
 
     value.gui.on('change', function () {

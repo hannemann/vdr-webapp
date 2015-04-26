@@ -45,6 +45,10 @@ Gui.Window.View.Input.prototype.addClasses = function () {
 
     this.node.addClass('window-input clearer');
 
+    if (this.data.className) {
+        this.node.addClass(this.data.className);
+    }
+
     return this;
 };
 

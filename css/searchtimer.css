@@ -20,3 +20,7 @@
 .timer.searchtimer.list-item.active .search:after {
     background: green;
 }
+
+.window.searchtimer label.disabled {
+    display: none;
+}

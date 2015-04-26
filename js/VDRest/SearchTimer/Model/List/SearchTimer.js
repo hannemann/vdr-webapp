@@ -31,6 +31,18 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.useChannel = {
 };
 
 /**
+ * @type {Object.<String>}
+ */
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.searchModes = {
+    "Phrase": 0,
+    "all Words": 1,
+    "one Word": 2,
+    "Exact": 3,
+    "Regular Expression": 4,
+    "Fuzzy": 5
+};
+
+/**
  * flags
  * @type {{}}
  */
