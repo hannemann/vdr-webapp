@@ -71,6 +71,18 @@ Gui.SearchTimer.prototype.contextMenu = {
                 }
             })
         }
+    },
+
+    "Refresh": {
+        "labels": {
+            "on": VDRest.app.translate("Refresh")
+        },
+        "state": "on",
+        "scope": 'Gui.SearchTimer',
+        "fn": function () {
+
+            this.refresh();
+        }
     }
 };
 
@@ -79,8 +91,16 @@ Gui.SearchTimer.prototype.contextMenu = {
  */
 Gui.SearchTimer.prototype.dispatch = function () {
 
-    this.store = VDRest.app.getModule('VDRest.SearchTimer');
+    this.store = this.getStore();
     this.getController('List').dispatchView();
+};
+
+Gui.SearchTimer.prototype.getStore = function () {
+
+    if (!this.store) {
+        this.store = VDRest.app.getModule('VDRest.SearchTimer');
+    }
+    return this.store;
 };
 
 /**
@@ -89,6 +109,22 @@ Gui.SearchTimer.prototype.dispatch = function () {
 Gui.SearchTimer.prototype.destruct = function () {
 
     this.getController('List').destructView(true);
+};
+
+/**
+ * refresh
+ */
+Gui.SearchTimer.prototype.refresh = function () {
+
+    this.getView('List').node.empty();
+
+    this.getStore().getModel('List').flushCollection();
+    delete this.store.cache.store.Model['List.SearchTimer'];
+    delete this.store.cache.store.Controller['Default'];
+    delete this.cache.store.Controller['List.SearchTimer'];
+    delete this.cache.store.View['List.SearchTimer'];
+    delete this.cache.store.ViewModel['List.SearchTimer'];
+    this.dispatch();
 };
 
 /**
