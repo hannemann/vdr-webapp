@@ -320,7 +320,7 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
         .val((field.value ? field.value : ''));
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
-    $('<span>').text(VDRest.app.translate(field.label)).appendTo(field.dom);
+    $('<span>').html(VDRest.app.translate(field.label)).appendTo(field.dom);
 
     if (field.hasOwnProperty('info')) {
 
