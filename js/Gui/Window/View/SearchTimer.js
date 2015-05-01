@@ -28,24 +28,14 @@ Gui.Window.View.SearchTimer.prototype.isModalTransparent = true;
 /**
  * @type {boolean}
  */
-Gui.Window.View.SearchTimer.prototype.hasHeader = true;
-
-Gui.Window.View.SearchTimer.prototype.init = function () {
-
-    if (this.getData('is_new')) {
-
-        this.hasHeader = false;
-    }
-
-    Gui.Window.View.Abstract.prototype.init.call(this);
-};
+Gui.Window.View.SearchTimer.prototype.hasHeader = false;
 
 /**
  * render
  */
 Gui.Window.View.SearchTimer.prototype.render = function () {
 
-    this.decorateHeader().decorateBody();
+    this.addClasses().getSearchForm();
 
     this.node.addClass('collapsed');
 
@@ -55,59 +45,27 @@ Gui.Window.View.SearchTimer.prototype.render = function () {
 };
 
 /**
- * decorate header
- */
-Gui.Window.View.SearchTimer.prototype.decorateHeader = function () {
-
-    this.addClasses()
-        .addTitle();
-
-    return this;
-};
-
-/**
  * add classes
  * @return {Gui.Window.View.SearchTimer}
  */
 Gui.Window.View.SearchTimer.prototype.addClasses = function () {
 
-    this.node.addClass('searchtimer');
-    return this;
-};
-/**
- * add Title
- * @returns {Gui.Window.View.SearchTimer}
- */
-Gui.Window.View.SearchTimer.prototype.addTitle = function () {
-
-    this.title = $('<h2 class="window-title left">')
-        .text(this.getSearch())
-        .appendTo(this.header);
-
+    this.node.addClass('searchtimer window-form');
     return this;
 };
 
 /**
- * decorate body
+ * trigger search form
  */
-Gui.Window.View.SearchTimer.prototype.decorateBody = function () {
-
-    this.body.addClass('has-tabs');
-
-    return this;
-};
-
 Gui.Window.View.SearchTimer.prototype.getSearchForm = function () {
 
-    var dom = $('<div>'),
-        /** @type searchTimerFormConfig */
-        config = this.getSearchFormData();
+    var config = this.getSearchFormData();
 
     $.event.trigger({
         "type": "form.request",
         "config": {
             "parentView": {
-                "node": dom
+                "node": this.body
             },
             "reference": "searchTimerForm",
             "cacheKey": this.cacheKey,
@@ -115,13 +73,9 @@ Gui.Window.View.SearchTimer.prototype.getSearchForm = function () {
             "id": this.getId(),
             "catConfig": config.categories,
             "fields": config.fields,
-            "className": "searchtimer"
+            "className": "searchtimer",
+            "hasButtons": true,
+            "buttonContainer": this.node
         }
     });
-
-    return dom;
-};
-
-Gui.Window.View.SearchTimer.prototype.getTimerForm = function () {
-    return this.getTimerFormData();
 };

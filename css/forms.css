@@ -12,6 +12,23 @@ form label {
     display: block;
     width: 100%;
 }
+
+form label.constrained {
+    width: calc(100% - 20px);
+    width: -webkit-calc(100% - 20px);
+    margin-left: 20px;
+    overflow: hidden;
+    transition: max-height .3s ease-out;
+    max-height: 100px;
+    transform: translateZ(0);
+    perspective: 1000px;
+    backface-visibility: hidden;
+}
+
+form label.constrained.disabled {
+    max-height: 0;
+    transition-timing-function: ease-in;
+}
 .window-input.select label input[type="radio"],
 .window-input.select label input[type="checkbox"] {
     margin: 5px 0 0 5px;
@@ -111,10 +128,11 @@ form input[type="number"] {
     text-align: left;
 }
 
-form .form-field-boolean {
+form .form-field-boolean span.wrapper {
     padding: 5px 0 10px 0;
     border-bottom: 1px solid white;
     margin-bottom: 5px;
+    display: block;
 }
 
 form .disabled,
@@ -128,8 +146,9 @@ form .disabled * {
     overflow-y: hidden;
 }
 
+.window-form .window-body,
 .window-input.select .window-body {
-    height: calc(100% - 60px);
+    height: calc(100% - 61px);
     overflow-y: hidden;
     padding: 0;
 }
@@ -168,6 +187,10 @@ form .disabled * {
 .window-input.date-time select,
 .window-input.date-time option {
     color: black;
+}
+
+form.searchtimer {
+    padding: 0 20px;
 }
 
 form.window.searchtimer .disabled {

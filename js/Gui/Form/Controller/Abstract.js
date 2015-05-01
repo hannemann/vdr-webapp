@@ -179,6 +179,9 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
                 return this.text.val();
             };
             break;
+        case 'info':
+            return false;
+            break;
         default:
             throw new TypeError('Field type ' + field.type + ' not supported');
             break;
@@ -302,7 +305,7 @@ Gui.Form.Controller.Abstract.prototype.hasDependencies = function (fieldName) {
  */
 Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, fieldName) {
 
-    var i, depends;
+    var i, n, dc = true, depends;
 
     for (i in this.view.data.fields) {
 
@@ -324,6 +327,26 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
             }
         }
     }
+
+    for (i in this.view.categories) {
+
+        dc = true;
+        if (this.view.categories.hasOwnProperty(i)) {
+            for (n in this.view.data.fields) {
+                if (
+                    this.view.data.fields.hasOwnProperty(n) &&
+                    this.view.data.fields[n].category === i && !this.view.data.fields[n].disabled
+                ) {
+                    dc = false;
+                    this.view.categories[i].show(0);
+                }
+            }
+            if (dc) {
+                this.view.categories[i].hide();
+            }
+        }
+    }
+
     return false;
 };
 
@@ -335,36 +358,44 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
  */
 Gui.Form.Controller.Abstract.prototype.isDisabled = function (field, depends) {
 
-    var value = field.getValue(), i;
+    var value = field.getValue(), i, disabled = false, type;
 
-    if ("boolean" === field.type && !value) {
-        return true;
+    if ("boolean" === field.type) {
+        disabled = !value;
+    }
+
+    if ('string' === field.type || 'number' === field.type || 'directory' === field.type) {
+
+        disabled = value !== depends;
     }
 
     if ('enum' === field.type || 'channel' === field.type) {
         for (i in depends) {
             if (depends.hasOwnProperty(i) && this.view.data.fields.hasOwnProperty(i)) {
+                value = this.view.data.fields[i].getValue();
                 if (depends[i] instanceof Array) {
                     if (depends[i].indexOf(value.value) < 0) {
-                        return true;
+                        disabled = true;
                     }
                 } else {
-                    if (value.value !== depends[i]) {
-                        return true;
+                    type = this.view.data.fields[i].type;
+
+                    if ("boolean" === type) {
+
+                        disabled = !value;
+                    } else if ('string' === type || 'number' === type || 'directory' === type) {
+
+                        disabled = value !== depends;
+                    } else {
+
+                        disabled = value.value !== depends[i];
                     }
                 }
             }
         }
     }
 
-    if ('string' === field.type || 'number' === field.type || 'directory' === field.type) {
-
-        if (value !== depends) {
-            return true;
-        }
-    }
-
-    return false;
+    return disabled;
 };
 
 /**

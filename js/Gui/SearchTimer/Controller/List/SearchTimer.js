@@ -55,11 +55,11 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.dispatchView = function ()
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () {
 
-    this.view.node.on('click', $.proxy(this.windowAction, this));
+    this.view.node.on('click', this.windowAction.bind(this));
 
-    this.view.node.on('touchstart', $.proxy(this.windowAction, this));
+    this.view.node.on('touchstart', this.windowAction.bind(this));
 
-    $(document).on('gui-searchtimer.updated.' + this.keyInCache + '.' + this.eventNameSpace, $.proxy(this.update, this));
+    $(document).on('gui-searchtimer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
 };
 
 /**
@@ -109,7 +109,11 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.update = function (e) {
 /**
  * request edit window
  */
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function () {
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function (e) {
+
+    e.preventDefault();
+
+    this.vibrate();
 
     $.event.trigger({
         "type" : "window.request",

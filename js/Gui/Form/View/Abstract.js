@@ -29,9 +29,9 @@ Gui.Form.View.Abstract.prototype.render = function () {
         .prepareFields()
         .renderCategories();
 
-    if (this.data.hasSubmit) {
+    if (this.data.hasButtons) {
 
-        this.addSubmit();
+        this.addButtons();
     }
 
     if (this.data.owner && this.data.reference) {
@@ -56,7 +56,15 @@ Gui.Form.View.Abstract.prototype.addClasses = function () {
 /**
  * render buttons
  */
-Gui.Form.View.Abstract.prototype.addSubmit = function () {
+Gui.Form.View.Abstract.prototype.addButtons = function () {
+
+    this.cancel = $('<div class="button button-cancel">')
+        .text(VDRest.app.translate('Cancel'))
+        .appendTo(this.data.buttonContainer);
+
+    this.ok = $('<div class="button button-confirm">')
+        .text('OK')
+        .appendTo(this.data.buttonContainer);
 
     return this;
 };
@@ -148,7 +156,8 @@ Gui.Form.View.Abstract.prototype.getBoolean = function (id, field) {
 
     field.gui.attr('type', 'checkbox').prop('checked', field.checked);
 
-    field.dom.addClass('form-field-boolean').append(field.gui);
+    field.dom.addClass('form-field-boolean');
+    field.gui.appendTo(field.dom.find('span.wrapper'));
 };
 
 /**
@@ -315,16 +324,30 @@ Gui.Form.View.Abstract.prototype.getInfo = function (id, field) {
  */
 Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
 
+    var wrapper;
+
     field.gui = $('<input name="' + (field.name ? field.name : id) + '">')
         .attr('readonly', true)
         .val((field.value ? field.value : ''));
 
     field.dom = $('<label id="' + id + '" class="clearer text">');
-    $('<span>').html(VDRest.app.translate(field.label)).appendTo(field.dom);
+
+    if ("boolean" === field.type) {
+        wrapper = $('<span class="wrapper clearer">');
+        field.dom.append(wrapper);
+    }
+
+    if (field.depends) {
+        field.dom.addClass('constrained');
+    }
+
+    $('<span>').html(VDRest.app.translate(field.label)).appendTo("boolean" === field.type ? wrapper : field.dom);
 
     if (field.hasOwnProperty('info')) {
 
-        $('<span class="info">').text(VDRest.app.translate(field.info)).appendTo(field.dom);
+        $('<span class="info">')
+            .text(VDRest.app.translate(field.info))
+            .appendTo("boolean" === field.type ? wrapper : field.dom);
     }
 
     field.disabled = false;
@@ -348,27 +371,54 @@ Gui.Form.View.Abstract.prototype.decorateField = function (id, field) {
  */
 Gui.Form.View.Abstract.prototype.isDisabled = function (field) {
 
-    var i;
+    var i, type, disabled = false;
 
-    if ('string' === typeof field.depends && !this.data.fields[field.depends].getValue()) {
-        return true;
+    if ('string' === typeof field.depends) {
+
+        disabled = !this.data.fields[field.depends].getValue();
+
     } else {
+
         for (i in field.depends) {
+
             if (field.depends.hasOwnProperty(i) && this.data.fields.hasOwnProperty(i)) {
 
-                if ('enum' === this.data.fields[i].type || 'channel' === this.data.fields[i].type) {
+                type = this.data.fields[i].type;
+                if ('enum' === type || 'channel' === type) {
+
                     if (field.depends[i] instanceof Array) {
+
                         if (field.depends[i].indexOf(this.data.fields[i].getValue().value) < 0) {
-                            return true;
+                            disabled = true;
+                            break;
                         }
-                    } else if (this.data.fields[i].getValue().value !== field.depends[i]) {
-                        return true;
+
+                    } else {
+
+                        if (this.data.fields[i].getValue().value !== field.depends[i]) {
+                            disabled = true;
+                            break;
+                        }
+                    }
+
+                } else if ('boolean' === type) {
+
+                    if (!this.data.fields[i].getValue()) {
+                        disabled = true;
+                        break;
+                    }
+
+                } else if ('string' === type || 'number' === type || 'directory' === type) {
+
+                    if (this.data.fields[i].getValue() !== field.depends[i]) {
+                        disabled = true;
+                        break;
                     }
                 }
             }
         }
     }
-    return false;
+    return disabled;
 };
 
 /**

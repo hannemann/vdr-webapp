@@ -222,6 +222,17 @@
 .window-input .window-body {
     padding: 0 20px;
 }
+
+.window-form {
+    border-bottom: none;
+}
+
+.window-form form {
+    overflow: auto;
+    height: 100%;
+}
+
+.window-form .button,
 .window-input .button {
     float: left;
     border: none;
@@ -232,9 +243,13 @@
     text-align: center;
     margin: 10px 0 0 0;
 }
+
+.window-form .button:active,
 .window-input .button:active {
     background-color: rgba(255,255,255,0.5);
 }
+
+.window-form .button-confirm,
 .window-input .button-confirm {
     margin: 10px 0 0 0;
     width: calc(50% - 1px);
