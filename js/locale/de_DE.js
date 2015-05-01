@@ -76,6 +76,7 @@ VDRest.app.de_DE = {
     "All": "Alle",
     "Selection": "Auswahl",
     "Use in Favorites": "in Favoriten verwenden",
+    "Use Extended EPG Info": "Erw. EPG Information verwenden",
     "minutes before switch": "Minuten vor Umschalten",
     "No": "Nein",
     "Yes": "Ja",

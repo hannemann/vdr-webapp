@@ -120,6 +120,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormCategories = function ()
  * @property {searchTimerCommonField} tolerance
  * @property {searchTimerCommonField} match_case
  * @property {searchTimerCommonField} use_search_in
+ * @property {searchTimerCommonField} use_ext_epg_info
  * @property {searchTimerCommonField} use_channel
  * @property {searchTimerCommonField} channel_min
  * @property {searchTimerCommonField} channel_max
@@ -144,33 +145,36 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormCategories = function ()
  */
 Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
 
-    this.searchFormFields = {
-        "search": this.getSearchField(),
-        "mode": this.getSearchModeField(),
-        "tolerance": this.getToleranceField(),
-        "match_case": this.getMatchCaseField(),
-        "use_search_in": this.getUseSearchInField(),
-        "use_channel": this.getUseChannelField(),
-        "channel_min": this.getChannelMinField(),
-        "channel_max": this.getChannelMaxField(),
-        "channels": this.getChannelGroupField(),
-        "use_time": this.getUseTimeField(),
-        "start_time": this.getStartTimeField(),
-        "stop_time": this.getStopTimeField(),
-        "use_duration": this.getUseDurationField(),
-        "duration_min": this.getUseDurationMinField(),
-        "duration_max": this.getUseDurationMaxField(),
-        "use_dayofweek": this.getUseDayOfWeekField(),
-        "dayofweek": this.getDayOfWeekField(),
-        "blacklist_mode": this.getBlacklistModeField(),
-        "blacklist_ids": this.getBlacklistSelectorField(),
-        "use_in_favorites": this.getUseInFavoritesField(),
-        "use_as_searchtimer": this.getUseAsSearchTimerField(),
-        "use_as_searchtimer_from": this.getSearchTimerFromField(),
-        "use_as_searchtimer_til": this.getSearchTimerTilField(),
-        "search_timer_action": this.getSearchTimerActionField(),
-        "switch_min_before": this.getSwitchMinBeforeField()
-    };
+    this.searchFormFields = {};
+
+
+    this.searchFormFields.search = this.getSearchField();
+    this.searchFormFields.mode = this.getSearchModeField();
+    this.searchFormFields.tolerance = this.getToleranceField();
+    this.searchFormFields.match_case = this.getMatchCaseField();
+    this.searchFormFields.use_search_in = this.getUseSearchInField();
+    this.searchFormFields.use_ext_epg_info = this.getUseExtEpgInfoField();
+    this.getExtEpgInfoFields();
+    this.searchFormFields.use_channel = this.getUseChannelField();
+    this.searchFormFields.channel_min = this.getChannelMinField();
+    this.searchFormFields.channel_max = this.getChannelMaxField();
+    this.searchFormFields.channels = this.getChannelGroupField();
+    this.searchFormFields.use_time = this.getUseTimeField();
+    this.searchFormFields.start_time = this.getStartTimeField();
+    this.searchFormFields.stop_time = this.getStopTimeField();
+    this.searchFormFields.use_duration = this.getUseDurationField();
+    this.searchFormFields.duration_min = this.getUseDurationMinField();
+    this.searchFormFields.duration_max = this.getUseDurationMaxField();
+    this.searchFormFields.use_dayofweek = this.getUseDayOfWeekField();
+    this.searchFormFields.dayofweek = this.getDayOfWeekField();
+    this.searchFormFields.blacklist_mode = this.getBlacklistModeField();
+    this.searchFormFields.blacklist_ids = this.getBlacklistSelectorField();
+    this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
+    this.searchFormFields.use_as_searchtimer = this.getUseAsSearchTimerField();
+    this.searchFormFields.use_as_searchtimer_from = this.getSearchTimerFromField();
+    this.searchFormFields.use_as_searchtimer_til = this.getSearchTimerTilField();
+    this.searchFormFields.search_timer_action = this.getSearchTimerActionField();
+    this.searchFormFields.switch_min_before = this.getSwitchMinBeforeField();
 
     return this.searchFormFields;
 };
@@ -308,6 +312,104 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseSearchInField = function () {
             }
         }
     }
+};
+
+/**
+ * @return {searchTimerCommonField}
+ */
+Gui.Window.ViewModel.SearchTimer.prototype.getUseExtEpgInfoField = function () {
+
+    return {
+        "category": "search",
+        "type": "boolean",
+        "label": VDRest.app.translate('Use Extended EPG Info'),
+        "checked": this.resource.use_ext_epg_info
+    }
+};
+
+/**
+ * @return {searchTimerCommonField}
+ */
+Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoFields = function () {
+
+
+    //debugger;
+
+    var e = this.resource.ext_epg_info,
+        collection = VDRest.app.getModule('VDRest.SearchTimer').getModel('ExtEPGInfoList').getCollection(),
+        selected = {};
+
+
+    e.forEach(function (sel) {
+
+        sel = sel.split('#');
+        selected[sel[0]] = sel[1];
+    }.bind(this));
+
+
+    collection.forEach(function (def) {
+
+        if (0 === def.data.values.length) {
+            this.searchFormFields['ext_epg_info_' + def.data.id] = this.getExtEpgInfoSimpleField(
+                def,
+                selected[def.data.id]
+            );
+        } else {
+            this.searchFormFields['ext_epg_info_' + def.data.id] = this.getExtEpgInfoComboField(
+                def,
+                selected[def.data.id],
+                def.data.values
+            );
+        }
+
+
+    }.bind(this));
+
+
+};
+
+/**
+ * @return {searchTimerCommonField}
+ */
+Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoSimpleField = function (def, value) {
+
+    return {
+        "category": "search",
+        "type": "string",
+        "label": VDRest.app.translate(def.data.name),
+        "value": value,
+        "depends": "use_ext_epg_info"
+    };
+};
+
+/**
+ * @return {searchTimerCommonField}
+ */
+Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoComboField = function (def, value, values) {
+
+    var field = {
+        "category": "search",
+        "type": "combobox",
+        "label": VDRest.app.translate(def.data.name),
+        "depends": "use_ext_epg_info",
+        "multiselect": true,
+        "text_input_seperator": ', ',
+        "text_value": value
+    }, selected = value.split(', ');
+
+    field.values = {};
+
+    values.forEach(function (value) {
+
+        field.values[value] = {
+            "label": value,
+            "value": value,
+            "selected": selected.indexOf(value) > -1
+        }
+
+    }.bind(this));
+
+    return field;
 };
 
 /**

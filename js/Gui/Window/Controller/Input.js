@@ -127,6 +127,11 @@ Gui.Window.Controller.Input.prototype.okAction = function (e) {
         this.setDateTime();
     }
 
+    if ("combobox" === type) {
+
+        this.setComboBox();
+    }
+
     // TODO: change behaviour... Window has to be closed before action is taken... Add visual feedback for long lastin actions like setting custom time in epg context menu
 
     this.data.gui.change();
@@ -142,6 +147,34 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
     var value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]').val();
 
     this.data.gui.val(value);
+
+    return value;
+};
+
+/**
+ * copy strings to target
+ */
+Gui.Window.Controller.Input.prototype.setComboBox = function () {
+
+    var value = this.view.header.find('input[name="' + this.data.gui.attr('name') + '_text"]').val(),
+        i, values = this.data.values;
+
+    this.data.gui.val(value);
+
+    for (i in values) {
+        if (values.hasOwnProperty(i)) {
+            values[i].selected = false;
+        }
+    }
+
+    value.split(this.data.text_input_seperator).forEach(function (v) {
+
+        for (i in values) {
+            if (values.hasOwnProperty(i) && v == i) {
+                values[i].selected = true;
+            }
+        }
+    }.bind(this));
 
     return value;
 };

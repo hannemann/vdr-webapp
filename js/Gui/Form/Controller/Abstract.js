@@ -113,6 +113,11 @@ Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {
             type = e.data.field.window;
         }
 
+        if ("combobox" === e.data.field.type) {
+
+            type = 'ComboBox';
+        }
+
         this.vibrate();
         this.requestInput(e.data.field, type);
     }
@@ -218,6 +223,12 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
                 });
             }
             return template;
+        }
+    } else if ("combobox" === field.type) {
+
+        field.getValue = function () {
+
+            return this.text.val().toString().split(this.text_input_seperator);
         }
     }
 };

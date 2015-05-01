@@ -295,7 +295,7 @@ VDRest.Abstract.Module.prototype.getInitData = function (id, cacheKey) {
 
     var data = {},
         keys = cacheKey.split(this.cache.cacheKeySeparator),
-        ids = id.split(this.cache.cacheKeySeparator),
+        ids = id.toString().split(this.cache.cacheKeySeparator),
         i = 0, l = keys.length;
 
     if (l > 1 && l != ids.length) {

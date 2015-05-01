@@ -130,6 +130,11 @@ Gui.Form.View.Abstract.prototype.prepareField = function (id, field) {
 
         this.getInfo(id, field);
     }
+
+    if ("combobox" === field.type) {
+
+        this.getComboBox(id, field);
+    }
 };
 
 /**
@@ -187,9 +192,11 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
 
     if (field.multiselect) {
         val = [];
-        selected.forEach(function (s) {
-            val.push(s.label);
-        });
+        if (selected instanceof Array) {
+            selected.forEach(function (s) {
+                val.push(s.label);
+            });
+        }
         val = val.join(', ');
     } else {
         val = VDRest.app.translate(selected.label)
@@ -198,6 +205,22 @@ Gui.Form.View.Abstract.prototype.getEnum = function (id, field) {
     field.gui
         .attr('type', 'text')
         .val(val);
+
+    field.dom.append(field.gui);
+};
+
+/**
+ * set type text, add value
+ * @param {string} id
+ * @param {{}} field
+ */
+Gui.Form.View.Abstract.prototype.getComboBox = function (id, field) {
+
+    this.decorateField(id, field);
+
+    field.gui
+        .attr('type', 'text')
+        .val(field.text_value);
 
     field.dom.append(field.gui);
 };
