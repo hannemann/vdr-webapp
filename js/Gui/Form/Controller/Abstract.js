@@ -82,44 +82,43 @@ Gui.Form.Controller.Abstract.prototype.addClickHandler = function (field) {
 
 Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {
 
-    var type = 'Input';
-
     e.preventDefault();
 
     if (!e.data.field.disabled) {
 
-        if ("enum" === e.data.field.type) {
-
-            type = 'Select';
-        }
-
-        if ("channel" === e.data.field.type) {
-
-            type = 'ChannelChooser';
-        }
-
-        if ("directory" === e.data.field.type) {
-
-            type = 'DirectoryChooser';
-        }
-
-        if ("datetime" === e.data.field.type) {
-
-            type = 'DateTime';
-        }
-
-        if ("info" === e.data.field.type) {
-
-            type = e.data.field.window;
-        }
-
-        if ("combobox" === e.data.field.type) {
-
-            type = 'ComboBox';
-        }
-
         this.vibrate();
-        this.requestInput(e.data.field, type);
+        this.requestInput(e.data.field, this.getWindowType(e.data.field));
+    }
+};
+
+/**
+ * determine type of window to be raised
+ * @param {{type: String}} field
+ * @return {string}
+ */
+Gui.Form.Controller.Abstract.prototype.getWindowType = function (field) {
+
+    switch (field.type) {
+        case 'enum':
+            return 'Select';
+            break;
+        case 'channel':
+            return 'ChannelChooser';
+            break;
+        case 'directory':
+            return 'DirectoryChooser';
+            break;
+        case 'datetime':
+            return 'DateTime';
+            break;
+        case 'info':
+            return 'e.data.field.window';
+            break;
+        case 'combobox':
+            return 'ComboBox';
+            break;
+        default:
+            return 'Input';
     }
 };
 
@@ -155,82 +154,97 @@ Gui.Form.Controller.Abstract.prototype.addChangeHandler = function (field, field
  */
 Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
 
-    if (field.type === 'enum' || field.type === 'channel') {
+    switch (field.type) {
+        case 'enum':
+        case 'channel':
+            field.getValue = this.getEnumValue;
+            break;
+        case 'datetime':
+            field.getValue = this.getDateTimeValue;
+            break;
+        case 'string':
+        case 'number':
+        case 'directory':
+            field.getValue = function () {
+                return this.gui.val();
+            };
+            break;
+        case 'boolean':
+            field.getValue = function () {
+                return this.gui.prop('checked');
+            };
+            break;
+        case 'combobox':
+            field.getValue = function () {
+                return this.text.val();
+            };
+            break;
+        default:
+            throw new TypeError('Field type ' + field.type + ' not supported');
+            break;
+    }
+};
 
-        field.getValue = function () {
+/**
+ * retrieve value of dateTime Field
+ * @return {*}
+ */
+Gui.Form.Controller.Abstract.prototype.getDateTimeValue = function () {
 
-            var i, values = this.values, retVal = [];
+    var value = this.value.toString(),
+        template = this.format,
+        regs = Gui.Window.Controller.DateTime.prototype.supported,
+        parts = this.output_format.split(''),
+        reg = '', match;
 
-            if ("function" === typeof this.values) {
+    if (0 == value) {
+        return '';
+    }
 
-                values = this.values();
+    parts.forEach(function (f) {
+        reg += ("(" + regs[f].regString + ")");
+    });
+    reg = new RegExp(reg);
+    match = value.match(reg);
+    if (match) {
+        match.forEach(function (hit, index) {
+            if (index > 0) {
+                reg = new RegExp('%' + parts[index - 1]);
+                template = template.replace(reg, hit);
             }
+        });
+    }
+    return template;
+};
 
-            for (i in values) {
+/**
+ * retrieve value of enum like field
+ * @return {*}
+ */
+Gui.Form.Controller.Abstract.prototype.getEnumValue = function () {
 
-                if (values.hasOwnProperty(i)) {
+    var i, values = this.values, retVal = [];
 
-                    if (values[i].selected) {
-                        if (field.multiselect) {
-                            retVal.push(values[i]);
-                        } else {
-                            return values[i];
-                        }
-                    }
+    if ("function" === typeof this.values) {
+
+        values = this.values();
+    }
+
+    for (i in values) {
+
+        if (values.hasOwnProperty(i)) {
+
+            if (values[i].selected) {
+                if (this.multiselect) {
+                    retVal.push(values[i]);
+                } else {
+                    return values[i];
                 }
             }
-
-            return retVal.length > 0 ? retVal : {"value" : null};
-        }
-    } else if (field.type === 'string' || field.type === 'number' || field.type === 'directory') {
-
-        field.getValue = function () {
-
-            return this.gui.val();
-        }
-
-    } else if (field.type === 'boolean') {
-
-        field.getValue = function () {
-
-            return this.gui.prop('checked');
-        }
-    } else if (field.type === 'datetime') {
-
-        field.getValue = function () {
-
-            var value = this.value.toString(),
-                template = this.format,
-                regs = Gui.Window.Controller.DateTime.prototype.supported,
-                parts = this.output_format.split(''),
-                reg = '', match;
-
-            if (0 == value) {
-                return '';
-            }
-
-            parts.forEach(function (f) {
-                reg += ("(" + regs[f].regString + ")");
-            });
-            reg = new RegExp(reg);
-            match = value.match(reg);
-            if (match) {
-                match.forEach(function (hit, index) {
-                    if (index > 0) {
-                        reg = new RegExp('%' + parts[index - 1]);
-                        template = template.replace(reg, hit);
-                    }
-                });
-            }
-            return template;
-        }
-    } else if ("combobox" === field.type) {
-
-        field.getValue = function () {
-
-            return this.text.val().toString().split(this.text_input_seperator);
         }
     }
+
+    return retVal.length > 0 ? retVal : {"value": null};
 };
 
 /**
