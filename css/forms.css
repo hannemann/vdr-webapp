@@ -29,6 +29,12 @@ form label.constrained.disabled {
     max-height: 0;
     transition-timing-function: ease-in;
 }
+
+.window-input.select label.indent {
+    width: calc(100% - 5px);
+    width: -webkit-calc(100% - 5px);
+    margin-left: 5px;
+}
 .window-input.select label input[type="radio"],
 .window-input.select label input[type="checkbox"] {
     margin: 5px 0 0 5px;

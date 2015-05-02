@@ -81,6 +81,10 @@ Gui.Window.View.Select.prototype.prepareValue = function (value) {
 
     value.dom = $('<label class="clearer">');
 
+    if (value.className) {
+        value.dom.addClass(value.className);
+    }
+
     if (value.image) {
         html += '<img src="' + value.image + '">';
     }

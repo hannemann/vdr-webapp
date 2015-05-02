@@ -131,6 +131,12 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     this.searchFormFields.use_search_in = this.getEnumField(
         "parameter", 'Search in', this.getSearchInValues(), undefined, true
     );
+    this.searchFormFields.use_content_descriptors = this.getBooleanField(
+        "parameter", 'Use content descriptors', (this.resource.content_descriptors !== '')
+    );
+    this.searchFormFields.content_descriptors = this.getEnumField(
+        "parameter", 'Content descriptors', this.getContentDescriptorValues(), "use_content_descriptors", true
+    );
     this.searchFormFields.use_ext_epg_info = this.getBooleanField(
         "parameter", 'Use Extended EPG Info', this.resource.use_ext_epg_info
     );
@@ -1078,6 +1084,27 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function 
 
         value *= 2;
     }.bind(this));
+};
+
+Gui.Window.ViewModel.SearchTimer.prototype.getContentDescriptorValues = function () {
+
+    var collection = VDRest.app.getModule('VDRest.Epg').getModel('ContentDescriptors').getCollection(),
+        values = {}, selection = this.resource.content_descriptors.match(/.{1,2}/g) || [];
+
+    collection.forEach(function (descr) {
+
+        values[descr.data.id] = {
+            "label": descr.data.name,
+            "value": descr.data.id,
+            "selected": selection.indexOf(descr.data.id) > -1
+        };
+        if (!descr.data.is_group) {
+            values[descr.data.id].className = "indent";
+        }
+
+    }.bind(this));
+
+    return values;
 };
 
 
