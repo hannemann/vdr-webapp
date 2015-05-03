@@ -55,9 +55,20 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.dispatchView = function ()
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.windowAction.bind(this));
+    this.view.node.on('click', this.requestWindowAction.bind(this));
 
-    this.view.node.on('touchstart', this.windowAction.bind(this));
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node
+            .on('touchend', this.handleUp.bind(this))
+            .on('touchmove', this.handleMove.bind(this))
+            .on('touchstart', this.handleDown.bind(this))
+        ;
+    } else {
+        this.view.node
+            .on('mouseup', this.handleUp.bind(this))
+            .on('mousedown', this.handleDown.bind(this))
+        ;
+    }
 
     $(document).on('gui-searchtimer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
 };
@@ -67,11 +78,67 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () 
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.removeObserver = function () {
 
-    this.view.node.off('touchstart');
-
-    this.view.node.off('click');
+    this.view.node.off('click touchend touchstart touchmove mouseup mousedown');
 
     $(document).off('gui-searchtimer.' + this.keyInCache + '.' + this.eventNameSpace);
+};
+
+
+/**
+ * handle mouseup
+ * @param {jQuery.Event} e
+ */
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleUp = function (e) {
+
+    e.preventDefault();
+
+    if (!this.isMuted) {
+
+        if ("undefined" === typeof this.preventClick) {
+
+            this.vibrate();
+
+            if ("undefined" !== typeof this.clickTimeout) {
+                window.clearTimeout(this.clickTimeout);
+            }
+            this.requestWindowAction(e)
+        }
+    }
+    document.onselectstart = function () {
+        return true
+    };
+};
+
+/**
+ * prevent click on move
+ */
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleMove = function () {
+
+    this.preventClick = true;
+
+    //if ("undefined" !== typeof this.clickTimeout) {
+    //    window.clearTimeout(this.clickTimeout);
+    //}
+};
+
+/**
+ * handle mousedown
+ */
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleDown = function () {
+
+    document.onselectstart = function () {
+        return false
+    };
+
+    this.preventClick = undefined;
+
+    //this.clickTimeout = window.setTimeout(function () {
+    //
+    //    this.vibrate(100);
+    //
+    //    this.preventClick = true;
+    //
+    //}.bind(this), 500);
 };
 
 /**
@@ -109,7 +176,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.update = function (e) {
 /**
  * request edit window
  */
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.windowAction = function (e) {
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestWindowAction = function (e) {
 
     e.preventDefault();
 
