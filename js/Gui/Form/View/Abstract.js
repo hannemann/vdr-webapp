@@ -29,7 +29,7 @@ Gui.Form.View.Abstract.prototype.render = function () {
         .prepareFields()
         .renderCategories();
 
-    if (this.data.hasButtons) {
+    if ("function" === typeof this.data.onsubmit) {
 
         this.addButtons();
     }

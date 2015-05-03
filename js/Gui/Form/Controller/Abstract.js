@@ -51,6 +51,13 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
         me.removeObserver();
     });
 
+    if ("function" === typeof this.data.onsubmit) {
+        this.view.cancel.on('click', function () {
+            history.back();
+        });
+        this.view.ok.on('click', this.submit.bind(this));
+    }
+
     for (i in this.view.data.fields) {
 
         if (this.view.data.fields.hasOwnProperty(i)) {
@@ -71,6 +78,47 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
 
     $document.on('gui.form.update-' + this.keyInCache, this.update.bind(this));
 };
+
+/**
+ * remove event listeners
+ */
+Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
+
+    var i;
+
+    if ("function" === typeof this.data.onsubmit) {
+        this.view.cancel.off('click');
+        this.view.ok.off('click');
+    }
+
+    for (i in this.view.data.fields) {
+
+        if (this.view.data.fields.hasOwnProperty(i)) {
+
+            if (this.view.data.fields[i].dom) {
+                this.view.data.fields[i].dom.off('click');
+            }
+
+            if (this.view.data.fields[i].gui) {
+                this.view.data.fields[i].gui.off('change');
+            }
+        }
+    }
+
+    $document.off('gui.form.update-' + this.keyInCache);
+};
+
+Gui.Form.Controller.Abstract.prototype.submit = function () {
+
+    this.data.container.one(this.animationEndEvents, function () {
+
+        this.data.onsubmit(this.data.fields);
+
+    }.bind(this));
+
+    history.back();
+};
+
 /**
  * add click handler to field
  * @param field
@@ -248,30 +296,6 @@ Gui.Form.Controller.Abstract.prototype.getEnumValue = function () {
     }
 
     return retVal.length > 0 ? retVal : {"value": null};
-};
-
-/**
- * remove event listeners
- */
-Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
-
-    var i;
-
-    for (i in this.view.data.fields) {
-
-        if (this.view.data.fields.hasOwnProperty(i)) {
-
-            if (this.view.data.fields[i].dom) {
-                this.view.data.fields[i].dom.off('click');
-            }
-
-            if (this.view.data.fields[i].gui) {
-                this.view.data.fields[i].gui.off('change');
-            }
-        }
-    }
-
-    $document.off('gui.form.update-' + this.keyInCache);
 };
 
 /**

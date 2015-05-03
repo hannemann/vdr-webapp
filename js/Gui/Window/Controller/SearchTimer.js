@@ -36,6 +36,46 @@ Gui.Window.Controller.SearchTimer.prototype.init = function () {
     VDRest.helper.log(this);
 };
 
+Gui.Window.Controller.SearchTimer.prototype.dispatchView = function () {
+
+    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+
+    this.requestSearchForm();
+};
+
+
+/**
+ * trigger search form
+ */
+Gui.Window.Controller.SearchTimer.prototype.requestSearchForm = function () {
+
+    var config = this.view.getSearchFormData();
+
+    $.event.trigger({
+        "type": "form.request",
+        "config": {
+            "parentView": {
+                "node": this.view.body
+            },
+            "reference": "searchTimerForm",
+            "cacheKey": this.cacheKey,
+            "keyInCache": this.keyInCache,
+            "id": this.data.id,
+            "catConfig": config.categories,
+            "fields": config.fields,
+            "className": "searchtimer",
+            "onsubmit": this.saveAction.bind(this),
+            "buttonContainer": this.view.node,
+            "container": this.view.node
+        }
+    });
+};
+
+Gui.Window.Controller.SearchTimer.prototype.saveAction = function (fields) {
+
+    debugger;
+};
+
 /**
  * Destroy
  */

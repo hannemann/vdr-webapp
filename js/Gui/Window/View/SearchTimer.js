@@ -35,7 +35,7 @@ Gui.Window.View.SearchTimer.prototype.hasHeader = false;
  */
 Gui.Window.View.SearchTimer.prototype.render = function () {
 
-    this.addClasses().getSearchForm();
+    this.addClasses();//.getSearchForm();
 
     this.node.addClass('collapsed');
 
