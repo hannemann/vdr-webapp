@@ -157,19 +157,24 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     this.searchFormFields.use_duration = this.getBooleanField(
         "parameter", 'Use duration', this.resource.use_duration
     );
-    this.searchFormFields.duration_min = this.getNumberField(
-        "parameter", 'Min duration', this.resource.duration_min, 'use_duration'
-    );
-    this.searchFormFields.duration_max = this.getNumberField(
-        "parameter", 'Max duration', this.resource.duration_max, 'use_duration'
-    );
+
+    //this.searchFormFields.duration_min = this.getNumberField(
+    //    "parameter", 'Min duration', this.resource.duration_min, 'use_duration'
+    //);
+    //this.searchFormFields.duration_max = this.getNumberField(
+    //    "parameter", 'Max duration', this.resource.duration_max, 'use_duration'
+    //);
+    this.searchFormFields.duration_min = this.getMinDurationField();
+    this.searchFormFields.duration_max = this.getMaxDurationField();
+
     this.searchFormFields.use_dayofweek = this.getBooleanField(
         "parameter", 'Use day of week', this.resource.use_dayofweek
     );
     this.searchFormFields.dayofweek = this.getDayOfWeekField();
     this.searchFormFields.blacklist_mode = this.getBlacklistModeField();
     this.searchFormFields.blacklist_ids = this.getBlacklistSelectorField();
-    this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
+    // not available in OSD Edit Menu
+    //this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
 
     /**
      * searchtimer
@@ -243,6 +248,9 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     );
     this.searchFormFields.margin_stop = this.getNumberField(
         "timer", "Margin stop", this.resource.margin_stop, {"use_as_searchtimer": [1, 2]}
+    );
+    this.searchFormFields.use_vps = this.getBooleanField(
+        "timer", "Use VPS", this.resource.use_vps, {"use_as_searchtimer": [1, 2]}
     );
     this.searchFormFields.del_mode = this.getEnumField(
         "timer", "Auto delete searchtimer", this.getDelModeValues(), {"use_as_searchtimer": [1, 2]}
@@ -458,7 +466,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoFields = function () {
         } else {
             this.searchFormFields['ext_epg_info_' + def.data.id] = this.getExtEpgInfoComboField(
                 def,
-                selected[def.data.id],
+                selected[def.data.id] || '',
                 def.data.values
             );
         }
@@ -527,6 +535,38 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStopTimeField = function () {
         "format": "%H:%i",
         "depends": "use_time",
         "value": this.resource.stop_time,
+        "output_format": "Hi"
+    }
+};
+
+/**
+ * @return {searchTimerCommonField}
+ */
+Gui.Window.ViewModel.SearchTimer.prototype.getMinDurationField = function () {
+
+    return {
+        "category": "parameter",
+        "type": "datetime",
+        "label": VDRest.app.translate("Min duration"),
+        "format": "%H:%i",
+        "depends": "use_duration",
+        "value": VDRest.helper.pad(this.resource.duration_min, 4),
+        "output_format": "Hi"
+    }
+};
+
+/**
+ * @return {searchTimerCommonField}
+ */
+Gui.Window.ViewModel.SearchTimer.prototype.getMaxDurationField = function () {
+
+    return {
+        "category": "parameter",
+        "type": "datetime",
+        "label": VDRest.app.translate("Max duration"),
+        "format": "%H:%i",
+        "depends": "use_duration",
+        "value": VDRest.helper.pad(this.resource.duration_max, 4),
         "output_format": "Hi"
     }
 };

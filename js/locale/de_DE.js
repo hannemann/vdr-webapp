@@ -79,6 +79,7 @@ VDRest.app.de_DE = {
     "Selection": "Auswahl",
     "None": "Keine",
     "Phrase": "Ausdruck",
+    "Directory": "Verzeichnis",
     "Use content descriptors": "Verwende Kennung für Inhalt",
     "Content descriptors": "Kennung für Inhalt",
     "Min. summary match in %%": "Min. Übereinstimmung in %%",
