@@ -197,7 +197,7 @@ Gui.Form.Controller.Abstract.prototype.getDateTimeValue = function () {
     var value = this.value.toString(),
         template = this.format,
         regs = Gui.Window.Controller.DateTime.prototype.supported,
-        parts = this.output_format.split(''),
+        parts = this.form_order.split(''),
         reg = '', match;
 
     if (0 == value) {

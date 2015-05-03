@@ -519,7 +519,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStartTimeField = function () {
         "format": "%H:%i",
         "depends": "use_time",
         "value": this.resource.start_time,
-        "output_format": "Hi"
+        "form_order": "Hi"
     }
 };
 
@@ -535,7 +535,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStopTimeField = function () {
         "format": "%H:%i",
         "depends": "use_time",
         "value": this.resource.stop_time,
-        "output_format": "Hi"
+        "form_order": "Hi"
     }
 };
 
@@ -551,7 +551,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getMinDurationField = function () {
         "format": "%H:%i",
         "depends": "use_duration",
         "value": VDRest.helper.pad(this.resource.duration_min, 4),
-        "output_format": "Hi"
+        "form_order": "Hi"
     }
 };
 
@@ -567,7 +567,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getMaxDurationField = function () {
         "format": "%H:%i",
         "depends": "use_duration",
         "value": VDRest.helper.pad(this.resource.duration_max, 4),
-        "output_format": "Hi"
+        "form_order": "Hi"
     }
 };
 
@@ -793,17 +793,18 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function 
     }
 };
 /**
+ * not available in osd edit menu
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () {
-
-    return {
-        "category": "parameter",
-        "type": "boolean",
-        "label": VDRest.app.translate('Use in Favorites'),
-        "checked": this.resource.use_in_favorites
-    }
-};
+//Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () {
+//
+//    return {
+//        "category": "parameter",
+//        "type": "boolean",
+//        "label": VDRest.app.translate('Use in Favorites'),
+//        "checked": this.resource.use_in_favorites
+//    }
+//};
 
 /**
  * @return {searchTimerCommonField}
@@ -853,7 +854,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerFromField = function ()
                 VDRest.helper.pad(d.getMonth() + 1, 2) +
                 VDRest.helper.pad(d.getDate(), 2)
         }.bind(this)(),
-        "output_format": "Ymd"
+        "form_order": "Ymd"
     }
 };
 
@@ -876,7 +877,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerTilField = function () 
                 VDRest.helper.pad(d.getMonth() + 1, 2) +
                 VDRest.helper.pad(d.getDate(), 2)
         }.bind(this)(),
-        "output_format": "Ymd"
+        "form_order": "Ymd"
     }
 };
 
@@ -1160,9 +1161,4 @@ Gui.Window.ViewModel.SearchTimer.prototype.getChannelGroupFieldValues = function
     }
 
     return cGroups;
-};
-
-Gui.Window.ViewModel.SearchTimer.prototype.getTimerFormData = function () {
-
-    return 'Boing';
 };
