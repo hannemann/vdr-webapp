@@ -71,6 +71,14 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTi
     });
 };
 
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.toggleActive = function (id) {
+
+    var model = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', id);
+
+    model.data.use_as_searchtimer = model.data.use_as_searchtimer == 0 ? 1 : 0;
+    model.save();
+};
+
 /**
  * delete SearchTimer
  * @param adapter

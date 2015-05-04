@@ -60,13 +60,18 @@ Gui.SearchTimer.prototype.contextMenu = {
         "scope" : 'Gui.SearchTimer',
         "fn" : function () {
 
+            var sTimer = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id": -1});
+
             $.event.trigger({
                 "type" : "window.request",
                 "payload" : {
                     "type" : "SearchTimer",
                     "data" : {
-                        "is_new" : true,
-                        "resource" : VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id":""})
+                        "id": -1,
+                        "resource": sTimer,
+                        "onsubmit": function (fields) {
+                            sTimer.copyFromForm(fields).save();
+                        }
                     }
                 }
             })
