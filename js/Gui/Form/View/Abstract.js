@@ -457,13 +457,27 @@ Gui.Form.View.Abstract.prototype.getCategory = function (cat) {
  */
 Gui.Form.View.Abstract.prototype.renderCategories = function () {
 
-    var i;
+    var i, dc, n;
 
     for (i in this.categories) {
 
         if (this.categories.hasOwnProperty(i)) {
 
             this.categories[i].appendTo(this.node);
+
+            dc = true;
+            for (n in this.data.fields) {
+                if (
+                    this.data.fields.hasOwnProperty(n) &&
+                    this.data.fields[n].category === i && !this.data.fields[n].disabled
+                ) {
+                    dc = false;
+                    this.categories[i].show(0);
+                }
+            }
+            if (dc) {
+                this.categories[i].hide();
+            }
         }
     }
 

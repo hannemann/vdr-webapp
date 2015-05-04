@@ -80,6 +80,8 @@ VDRest.app.de_DE = {
     "None": "Keine",
     "Phrase": "Ausdruck",
     "Directory": "Verzeichnis",
+    "Ignore missing categories": "Ignoriere fehlende Kategorien",
+    "Unmute Sound": "Ton anschalten",
     "Use content descriptors": "Verwende Kennung für Inhalt",
     "Content descriptors": "Kennung für Inhalt",
     "Min. summary match in %%": "Min. Übereinstimmung in %%",

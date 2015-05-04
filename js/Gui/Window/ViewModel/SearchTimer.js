@@ -141,6 +141,9 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
         "parameter", 'Use Extended EPG Info', this.resource.use_ext_epg_info
     );
     this.getExtEpgInfoFields();
+    this.searchFormFields.ignore_missing_epg_cats = this.getBooleanField(
+        "parameter", 'Ignore missing categories', this.resource.ignore_missing_epg_cats, 'use_ext_epg_info'
+    );
     this.searchFormFields.use_channel = this.getEnumField(
         "parameter", 'Use Channel', this.getUseChannelValues()
     );
@@ -158,12 +161,6 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
         "parameter", 'Use duration', this.resource.use_duration
     );
 
-    //this.searchFormFields.duration_min = this.getNumberField(
-    //    "parameter", 'Min duration', this.resource.duration_min, 'use_duration'
-    //);
-    //this.searchFormFields.duration_max = this.getNumberField(
-    //    "parameter", 'Max duration', this.resource.duration_max, 'use_duration'
-    //);
     this.searchFormFields.duration_min = this.getMinDurationField();
     this.searchFormFields.duration_max = this.getMaxDurationField();
 
@@ -174,7 +171,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     this.searchFormFields.blacklist_mode = this.getBlacklistModeField();
     this.searchFormFields.blacklist_ids = this.getBlacklistSelectorField();
     // not available in OSD Edit Menu
-    //this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
+    this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
 
     /**
      * searchtimer
@@ -184,52 +181,78 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     this.searchFormFields.use_as_searchtimer_til = this.getSearchTimerTilField();
     this.searchFormFields.search_timer_action = this.getSearchTimerActionField();
     this.searchFormFields.switch_min_before = this.getSwitchMinBeforeField();
+
+
+    this.searchFormFields.unmute_sound_on_switch = this.getBooleanField(
+        "searchtimer", "Unmute Sound", this.resource.unmute_sound_on_switch, {
+            "use_as_searchtimer": [1, 2], "search_timer_action": [2, 3]
+        }
+    );
+
     this.searchFormFields.use_series_recording = this.getUseSeriesRecordingField();
     this.searchFormFields.directory = this.getDirectoryField();
     this.searchFormFields.del_recs_after_days = this.getDelRecsAfterDaysField();
     this.searchFormFields.keep_recs = this.getKeepRecsField();
     this.searchFormFields.pause_on_recs = this.getPauseOnRecsField();
 
-
+    /**
+     * repeats
+     */
     this.searchFormFields.avoid_repeats = this.getBooleanField(
-        "repeats", "Avoid repeats", this.resource.avoid_repeats, {"use_as_searchtimer": [1, 2]}
+        "repeats", "Avoid repeats", this.resource.avoid_repeats, {
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.allowed_repeats = this.getNumberField(
         "repeats", "Allowed repeats", this.resource.allowed_repeats, {
             "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0,
             "avoid_repeats": true
         }
     );
     this.searchFormFields.repeats_within_days = this.getNumberField(
         "repeats", "Repeats withing &hellip; days only", this.resource.repeats_within_days, {
             "avoid_repeats": true,
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         }
     );
     this.searchFormFields.compare_title = this.getBooleanField(
-        "repeats", "Compare title", this.resource.compare_title, {"avoid_repeats": true, "use_as_searchtimer": [1, 2]}
+        "repeats", "Compare title", this.resource.compare_title, {
+            "avoid_repeats": true,
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.compare_subtitle = this.getEnumField(
         "repeats", "Compare subtitle", this.getCompareSubtitleValues(), {
             "avoid_repeats": true,
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         }
     );
     this.searchFormFields.compare_summary = this.getBooleanField(
         "repeats", "Compare summary", this.resource.compare_summary, {
             "avoid_repeats": true,
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         }
     );
     this.searchFormFields.summary_match = this.getNumberField(
         "repeats", "Min. summary match in %%", this.resource.summary_match, {
             "avoid_repeats": true,
             "compare_summary": true,
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         }
     );
     this.searchFormFields.compare_time = this.getEnumField(
-        "repeats", "Compare time", this.getCompareTimeValues(), {"avoid_repeats": true, "use_as_searchtimer": [1, 2]}
+        "repeats", "Compare time", this.getCompareTimeValues(), {
+            "avoid_repeats": true,
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.getCompareCategoriesField();
 
@@ -238,32 +261,55 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
      * Timer
      */
     this.searchFormFields.priority = this.getNumberField(
-        "timer", "Priority", this.resource.priority, {"use_as_searchtimer": [1, 2]}
+        "timer", "Priority", this.resource.priority, {
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.lifetime = this.getNumberField(
-        "timer", "Lifetime", this.resource.lifetime, {"use_as_searchtimer": [1, 2]}
+        "timer", "Lifetime", this.resource.lifetime, {
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.margin_start = this.getNumberField(
-        "timer", "Margin start", this.resource.margin_start, {"use_as_searchtimer": [1, 2]}
+        "timer", "Margin start", this.resource.margin_start, {
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.margin_stop = this.getNumberField(
-        "timer", "Margin stop", this.resource.margin_stop, {"use_as_searchtimer": [1, 2]}
+        "timer", "Margin stop", this.resource.margin_stop, {
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.use_vps = this.getBooleanField(
-        "timer", "Use VPS", this.resource.use_vps, {"use_as_searchtimer": [1, 2]}
+        "timer", "Use VPS", this.resource.use_vps, {
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.del_mode = this.getEnumField(
-        "timer", "Auto delete searchtimer", this.getDelModeValues(), {"use_as_searchtimer": [1, 2]}
+        "timer", "Auto delete searchtimer", this.getDelModeValues(), {
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
     this.searchFormFields.del_after_count_recs = this.getNumberField(
         "timer", "after &hellip; recordings", this.resource.del_after_count_recs, {
             "del_mode": 1,
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         }
     );
     this.searchFormFields.del_after_days_of_first_rec = this.getNumberField(
         "timer", "after &hellip; days after first recording",
-        this.resource.del_after_days_of_first_rec, {"del_mode": 2, "use_as_searchtimer": [1, 2]}
+        this.resource.del_after_days_of_first_rec, {
+            "del_mode": 2,
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
+        }
     );
 
 
@@ -339,7 +385,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getNumberField = function (category, 
         "category": category,
         "type": "number",
         "label": VDRest.app.translate(label),
-        "value": value
+        "value": isNaN(value) ? 0 : value
     };
 
     if ("undefined" !== typeof depends) {
@@ -426,17 +472,20 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchInValues = function () {
         "use_title": {
             "label": VDRest.app.translate('Title'),
             "value": true,
-            "selected": this.resource.use_title
+            "selected": this.resource.use_title,
+            "descriptor": 'use_title'
         },
         "use_subtitle": {
             "label": VDRest.app.translate('Subtitle'),
             "value": true,
-            "selected": this.resource.use_subtitle
+            "selected": this.resource.use_subtitle,
+            "descriptor": 'use_subtitle'
         },
         "use_description": {
             "label": VDRest.app.translate('Description'),
             "value": true,
-            "selected": this.resource.use_description
+            "selected": this.resource.use_description,
+            "descriptor": 'use_description'
         }
     }
 };
@@ -518,7 +567,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStartTimeField = function () {
         "label": VDRest.app.translate("Broadcast start after"),
         "format": "%H:%i",
         "depends": "use_time",
-        "value": this.resource.start_time,
+        "value": VDRest.helper.pad(this.resource.start_time, 4),
         "form_order": "Hi"
     }
 };
@@ -534,7 +583,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStopTimeField = function () {
         "label": VDRest.app.translate("Broadcast start before"),
         "format": "%H:%i",
         "depends": "use_time",
-        "value": this.resource.stop_time,
+        "value": VDRest.helper.pad(this.resource.stop_time, 4),
         "form_order": "Hi"
     }
 };
@@ -746,7 +795,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistModeField = function () {
                 "value": 0,
                 "selected": this.resource.blacklist_mode === 0
             },
-            "no": {
+            "selection": {
                 "label": VDRest.app.translate('Selection'),
                 "value": 1,
                 "selected": this.resource.blacklist_mode === 1
@@ -796,15 +845,15 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function 
  * not available in osd edit menu
  * @return {searchTimerCommonField}
  */
-//Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () {
-//
-//    return {
-//        "category": "parameter",
-//        "type": "boolean",
-//        "label": VDRest.app.translate('Use in Favorites'),
-//        "checked": this.resource.use_in_favorites
-//    }
-//};
+Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () {
+
+    return {
+        "category": "parameter",
+        "type": "boolean",
+        "label": VDRest.app.translate('Use in Favorites'),
+        "checked": this.resource.use_in_favorites
+    }
+};
 
 /**
  * @return {searchTimerCommonField}
@@ -848,7 +897,13 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerFromField = function ()
         "depends": {"use_as_searchtimer": 2},
         "value": function () {
 
-            var d = new Date(this.resource.use_as_searchtimer_from * 1000);
+            var d;
+
+            if (0 === this.resource.use_as_searchtimer_from) {
+                return '';
+            }
+
+            d = new Date(this.resource.use_as_searchtimer_from * 1000);
 
             return d.getFullYear().toString() +
                 VDRest.helper.pad(d.getMonth() + 1, 2) +
@@ -871,7 +926,12 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerTilField = function () 
         "depends": {"use_as_searchtimer": 2},
         "value": function () {
 
-            var d = new Date(this.resource.use_as_searchtimer_til * 1000);
+            var d;
+
+            if (0 === this.resource.use_as_searchtimer_til) {
+                return '';
+            }
+            d = new Date(this.resource.use_as_searchtimer_til * 1000);
 
             return d.getFullYear().toString() +
                 VDRest.helper.pad(d.getMonth() + 1, 2) +
@@ -928,11 +988,11 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSwitchMinBeforeField = function ()
 
     return {
         "category": "searchtimer",
-        "type": "string",
+        "type": "number",
         "label": VDRest.app.translate('minutes before switch'),
         "depends": {
             "use_as_searchtimer": [1, 2],
-            "search_timer_action": 2
+            "search_timer_action": [2, 3]
         },
         "value": this.resource.switch_min_before
     }
@@ -947,7 +1007,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseSeriesRecordingField = function
         "type": "boolean",
         "label": VDRest.app.translate('Is series recording'),
         "depends": {
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         },
         "checked": this.resource.use_series_recording
     }
@@ -963,7 +1024,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDirectoryField = function () {
             "type": "combobox",
             "label": VDRest.app.translate('Directory'),
             "depends": {
-                "use_as_searchtimer": [1, 2]
+                "use_as_searchtimer": [1, 2],
+                "search_timer_action": 0
             },
             "text_input_seperator": ', ',
             "text_value": this.resource.directory
@@ -995,7 +1057,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDelRecsAfterDaysField = function (
         "type": "number",
         "label": VDRest.app.translate('Delete after &hellip; days'),
         "depends": {
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         },
         "value": this.resource.del_recs_after_days
     }
@@ -1011,7 +1074,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getKeepRecsField = function () {
         "type": "number",
         "label": VDRest.app.translate('Keep &hellip; recordings'),
         "depends": {
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         },
         "value": this.resource.keep_recs
     }
@@ -1027,7 +1091,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getPauseOnRecsField = function () {
         "type": "number",
         "label": VDRest.app.translate('Pause after &hellip; recordings'),
         "depends": {
-            "use_as_searchtimer": [1, 2]
+            "use_as_searchtimer": [1, 2],
+            "search_timer_action": 0
         },
         "value": this.resource.pause_on_recs
     }
@@ -1120,7 +1185,12 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function 
             "type": "boolean",
             "label": VDRest.app.translate('Compare %s', item.data.name),
             "checked": (Math.abs(this.resource.compare_categories) & value) > 0,
-            "depends": {"avoid_repeats": true, "use_as_searchtimer": [1, 2]}
+            "depends": {
+                "avoid_repeats": true,
+                "use_as_searchtimer": [1, 2],
+                "search_timer_action": 0
+            },
+            "value": value
         };
 
         value *= 2;

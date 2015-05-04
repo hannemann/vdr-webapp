@@ -28,7 +28,7 @@ Gui.Window.Controller.SearchTimer.prototype.init = function () {
     this.module.getViewModel('SearchTimer', {
         "id" : this.data.id,
         "view" : this.view,
-        "resource" : this.data.resource
+        "resource": this.data.resource.data
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
@@ -64,16 +64,11 @@ Gui.Window.Controller.SearchTimer.prototype.requestSearchForm = function () {
             "catConfig": config.categories,
             "fields": config.fields,
             "className": "searchtimer",
-            "onsubmit": this.saveAction.bind(this),
+            "onsubmit": this.data.onsubmit,
             "buttonContainer": this.view.node,
             "container": this.view.node
         }
     });
-};
-
-Gui.Window.Controller.SearchTimer.prototype.saveAction = function (fields) {
-
-    debugger;
 };
 
 /**

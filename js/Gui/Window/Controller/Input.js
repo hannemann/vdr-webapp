@@ -185,7 +185,7 @@ Gui.Window.Controller.Input.prototype.setComboBox = function () {
 Gui.Window.Controller.Input.prototype.setDateTime = function () {
 
     var value = this.data.format,
-        output = this.data.output_format,
+        output = this.data.form_order,
         reg = new RegExp('%[' + this.supported.all + ']');
 
     this.view.body.find('select').each(function () {

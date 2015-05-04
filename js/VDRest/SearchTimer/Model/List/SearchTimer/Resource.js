@@ -28,26 +28,27 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.urls = {
 
 /**
  * create or update SearchTimer
- * @param adapter
+ * @param {{}} data
  * @param {string} callerId     cacheKey id of broadcast
  * @param {function} [callback]
  */
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTimer = function (adapter, callerId, callback) {
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTimer = function (data, callerId, callback) {
 
     var method = 'PUT',
         event = 'updated',
-        data, request = {};
-
-    data = adapter.getData();
+        request = {};
 
     // set method
-    if ("undefined" === typeof data.SearchTimer_id) {
+    if ("undefined" === typeof data.id) {
 
         method = 'POST';
         event = 'created';
     }
 
-    request.url = this.getBaseUrl() + '/SearchTimers';
+    // mo PUT method in api defined...
+    method = 'POST';
+
+    request.url = this.getBaseUrl() + 'searchtimers';
     request.method = method;
     request.data = data;
 
@@ -55,13 +56,13 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTi
 
         VDRest.helper.log(result);
 
-        $.event.trigger({
-            "type" : 'vdrest-api-actions.SearchTimer-' + event,
-            "payload" : {
-                "callerId" : callerId,
-                "SearchTimer" : result.SearchTimers[0]
-            }
-        });
+        //$.event.trigger({
+        //    "type" : 'vdrest-api-actions.SearchTimer-' + event,
+        //    "payload" : {
+        //        "callerId" : callerId,
+        //        "SearchTimer" : result.SearchTimers[0]
+        //    }
+        //});
 
         if ("function" === typeof callback) {
 

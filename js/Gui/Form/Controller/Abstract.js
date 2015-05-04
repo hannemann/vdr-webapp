@@ -214,6 +214,9 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
         case 'number':
         case 'directory':
             field.getValue = function () {
+                if ('number' === field.type) {
+                    return parseFloat(this.gui.val());
+                }
                 return this.gui.val();
             };
             break;
@@ -224,7 +227,7 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
             break;
         case 'combobox':
             field.getValue = function () {
-                return this.text.val();
+                return this.gui.val();
             };
             break;
         case 'info':
@@ -295,7 +298,7 @@ Gui.Form.Controller.Abstract.prototype.getEnumValue = function () {
         }
     }
 
-    return retVal.length > 0 ? retVal : {"value": null};
+    return this.multiselect ? retVal : {"value": null};
 };
 
 /**
@@ -336,7 +339,7 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
         if (this.view.data.fields.hasOwnProperty(i)) {
 
             depends = this.view.data.fields[i].depends;
-            if ("undefined" !== typeof depends && (depends === fieldName || depends[fieldName])) {
+            if ("undefined" !== typeof depends && (depends === fieldName || "undefined" !== typeof depends[fieldName])) {
 
                 if (!this.isDisabled(field, depends)) {
 
@@ -415,6 +418,9 @@ Gui.Form.Controller.Abstract.prototype.isDisabled = function (field, depends) {
                         disabled = value.value !== depends[i];
                     }
                 }
+            }
+            if (disabled) {
+                break;
             }
         }
     }

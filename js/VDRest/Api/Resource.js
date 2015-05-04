@@ -162,6 +162,13 @@ VDRest.Api.Resource.prototype.onSuccess = function () {};
  */
 VDRest.Api.Resource.prototype.onError = function (e) {
 
+    var alertStatus = [
+        502,
+        403,
+        406,
+        407
+    ];
+
     VDRest.helper.log(e);
 
     if (0 === e.readyState && 0 === e.status && e.statusText !== 'abort') {
@@ -179,7 +186,7 @@ VDRest.Api.Resource.prototype.onError = function (e) {
         });
     }
 
-    if (4 === e.readyState && ( 502 === e.status || 403 === e.status )) {
+    if (4 === e.readyState && alertStatus.indexOf(e.status) > -1) {
 
         $.event.trigger({
             "type": "window.request",
