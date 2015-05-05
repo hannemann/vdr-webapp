@@ -115,6 +115,10 @@ Gui.Window.View.DateTime.prototype.addSelects = function () {
 
     this.body.html(template);
 
+    if (this.data.showInfo) {
+        this.body.append(this.data.dom.find('.info').clone());
+    }
+
     return this;
 };
 

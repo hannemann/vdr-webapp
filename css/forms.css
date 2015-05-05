@@ -195,6 +195,10 @@ form .disabled * {
     color: black;
 }
 
+.window-input.date-time span.info {
+    display: block;
+}
+
 form.searchtimer {
     padding: 0 20px;
 }
