@@ -167,6 +167,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestWindowAction = func
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = function (e) {
 
+    var toggleLabel = (this.data.dataModel.data.use_as_searchtimer == 0 ? 'A' : 'Dea') + 'ctivate';
+
     e.stopPropagation();
 
     this.preventClick = true;
@@ -180,7 +182,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
                     "header": this.data.dataModel.data.search,
                     "buttons": {
                         "toggle": {
-                            "label": VDRest.app.translate('Toggle active state'),
+                            "label": VDRest.app.translate(toggleLabel),
                             "fn": this.toggleActiveAction.bind(this)
                         },
                         "delete": {

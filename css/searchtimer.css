@@ -1,3 +1,7 @@
+.timer.searchtimer.list-item {
+    min-height: 50px;
+}
+
 .timer.searchtimer.list-item .search {
     font-size: 16px;
 }
@@ -19,4 +23,9 @@
 
 .timer.searchtimer.list-item.active .search:after {
     background: green;
+}
+
+.timer.searchtimer.list-item .channels {
+    font-size: 12px;
+    max-width: calc(100% - 20px);
 }

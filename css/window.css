@@ -207,6 +207,37 @@
     box-shadow: 0 0 40px 0 rgb(255, 163, 0), 0 0 30px #FFFFFF inset;
 }
 
+/** item menu */
+
+.window-item-menu {
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    padding: 0;
+    width: 80%;
+    border-bottom: none;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.window-item-menu .header {
+    border-bottom: 1px solid white;
+    padding: 10px;
+}
+
+.window-item-menu .button {
+    width: calc(100% - 20px);
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 10px;
+}
+
+.window-item-menu .button:last-child {
+    border-style: none;
+}
+
 /* Inpput Popup */
 .window-input {
     top: auto;
