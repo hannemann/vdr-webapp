@@ -35,9 +35,7 @@ Gui.Window.View.SearchTimer.prototype.hasHeader = false;
  */
 Gui.Window.View.SearchTimer.prototype.render = function () {
 
-    this.addClasses();//.getSearchForm();
-
-    this.node.addClass('collapsed');
+    this.addClasses();
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 
@@ -50,32 +48,6 @@ Gui.Window.View.SearchTimer.prototype.render = function () {
  */
 Gui.Window.View.SearchTimer.prototype.addClasses = function () {
 
-    this.node.addClass('searchtimer window-form');
+    this.node.addClass('collapsed searchtimer window-form');
     return this;
-};
-
-/**
- * trigger search form
- */
-Gui.Window.View.SearchTimer.prototype.getSearchForm = function () {
-
-    var config = this.getSearchFormData();
-
-    $.event.trigger({
-        "type": "form.request",
-        "config": {
-            "parentView": {
-                "node": this.body
-            },
-            "reference": "searchTimerForm",
-            "cacheKey": this.cacheKey,
-            "keyInCache": this.keyInCache,
-            "id": this.getId(),
-            "catConfig": config.categories,
-            "fields": config.fields,
-            "className": "searchtimer",
-            "hasButtons": true,
-            "buttonContainer": this.node
-        }
-    });
 };

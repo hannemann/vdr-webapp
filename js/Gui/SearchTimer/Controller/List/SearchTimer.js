@@ -138,6 +138,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleDown = function () {
         if (!this.module.isMuted) {
             this.vibrate(100);
             this.preventClick = true;
+            this.requestMenuAction();
         }
     }.bind(this), 500);
 };
@@ -191,6 +192,23 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestWindowAction = func
                 "id" : this.dataModel.data.id,
                 "resource": this.dataModel,
                 "onsubmit": this.saveAction.bind(this)
+            }
+        }
+    })
+};
+
+/**
+ * request edit window
+ */
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = function () {
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "ItemMenu",
+            "data": {
+                "id": this.dataModel.data.id,
+                "resource": this.dataModel
             }
         }
     })

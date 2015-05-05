@@ -55,6 +55,8 @@ Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
 /**
  * add event handler
  * add destroyer to VDRest.app
+ *
+ * TODO: remove observer
  */
 Gui.Window.Controller.Abstract.prototype.addObserver = function () {
 
@@ -65,6 +67,25 @@ Gui.Window.Controller.Abstract.prototype.addObserver = function () {
             history.back();
         });
     }
+};
+
+/**
+ * adjust position in case keyboard pops up
+ */
+Gui.Window.Controller.Abstract.prototype.setPosition = function () {
+
+    var winHeight = $window.height(), height = this.view.node.height(), top;
+
+    if ("Input" === this.keyInCache) {
+        top = '25%';
+    } else {
+        top = parseInt((winHeight - height) / 2, 10) + 'px';
+    }
+
+    this.view.node.css({
+        "transition": "top .2s",
+        "top": top
+    });
 };
 
 /**
