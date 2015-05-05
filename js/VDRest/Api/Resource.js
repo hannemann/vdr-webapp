@@ -139,8 +139,9 @@ VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
     )
         .done(function (result) {
 
+            // TODO: wipe out responseCache...
             me.responseCache[request.url] = result;
-            callback(result);
+            callback(result, arguments[2]);
 
         }).fail(function () {
 

@@ -39,7 +39,7 @@ Gui.SearchTimer.Controller.List.prototype.dispatchView = function () {
     if (this.dataModel.getCollection().length > 0) {
 
         this.iterateTimers({
-            "iterate" : $.proxy(this.dataModel.collectionIterator, this.dataModel),
+            "iterate": this.dataModel.collectionIterator.bind(this.dataModel),
             "collection" : this.dataModel.getCollection()
         });
     } else {
@@ -86,12 +86,29 @@ Gui.SearchTimer.Controller.List.prototype.dispatchList = function () {
 };
 
 /**
+ * dispatch timers
+ */
+Gui.SearchTimer.Controller.List.prototype.dispatchNew = function (e) {
+
+    var id = e.payload.data.id,
+        controller = this.module.getController('List.SearchTimer', {
+            "id": e.payload.data.id,
+            "parent": this,
+            "dataModel": e.payload
+        });
+
+    this.timerList.setData(id, controller);
+    controller.dispatchView();
+};
+
+/**
  * add event listeners
  */
 Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
 
     $document.one('searchtimersloaded', this.iterateTimers.bind(this));
     $document.one('channelgroupsloaded', this.storeChannelGroups.bind(this));
+    $document.on('gui-searchtimer.created', this.dispatchNew.bind(this));
 };
 
 Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collection) {

@@ -93,7 +93,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.init = function () {
             "use_channel": 0,
             "channel_min": "-0-0-0",
             "channel_max": "-0-0-0",
-            "channels": "",
+            "channels": VDRest.app.translate('all'),
             "use_duration": false,
             "duration_min": 0,
             "duration_max": 0,
@@ -139,9 +139,36 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.init = function () {
 /**
  * @type {string}
  */
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.save = function () {
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.save = function (fields) {
 
-    this.module.getResource('List.SearchTimer').addOrUpdateSearchTimer(this.data);
+    this.newData = this.copyFromForm(fields);
+
+    $window.on('vdrest-api-actions.SearchTimer-created', this.handleCreate.bind(this));
+    $window.on('vdrest-api-actions.SearchTimer-updated', this.handleUpdate.bind(this));
+
+    this.module.getResource('List.SearchTimer').addOrUpdateSearchTimer(this.newData);
+};
+
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleCreate = function (e) {
+
+    this.data = this.newData;
+    delete this.newData;
+    this.data.id = e.payload.id;
+    this.module.getModel('List').collection.push(this);
+
+    console.log(this.module.getModel('List').collection.indexOf(this));
+
+    $.event.trigger({
+        "type": "gui-searchtimer.created",
+        "payload": this
+    });
+};
+
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleUpdate = function (e) {
+
+    this.data = this.newData;
+    delete this.newData;
+    console.log('model updated');
 };
 
 /**
@@ -252,8 +279,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.copyFromForm = function (fie
         }
     }
 
-    this.data = n;
-    return this
+    return n
 };
 
 /**

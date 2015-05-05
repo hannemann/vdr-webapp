@@ -32,37 +32,43 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.urls = {
  * @param {string} callerId     cacheKey id of broadcast
  * @param {function} [callback]
  */
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTimer = function (data, callerId, callback) {
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTimer = function (data, callback) {
 
     var method = 'PUT',
         event = 'updated',
-        request = {};
+        request = {}, id = data.id;
 
     // set method
-    if ("undefined" === typeof data.id) {
+    if (id < 0) {
 
         method = 'POST';
         event = 'created';
     }
 
-    // mo PUT method in api defined...
+    // no PUT method in api defined...
     method = 'POST';
 
     request.url = this.getBaseUrl() + 'searchtimers';
     request.method = method;
     request.data = data;
 
-    this.fetchAsync(request, function (result) {
+    this.fetchAsync(request, function (result, xhr) {
 
         VDRest.helper.log(result);
 
-        //$.event.trigger({
-        //    "type" : 'vdrest-api-actions.SearchTimer-' + event,
-        //    "payload" : {
-        //        "callerId" : callerId,
-        //        "SearchTimer" : result.SearchTimers[0]
-        //    }
-        //});
+        if ('created' === event) {
+            id = xhr.statusText.replace(/[^0-9]/g, '');
+            if (id != '') {
+                id = parseInt(id, 10);
+            }
+        }
+
+        $.event.trigger({
+            "type": 'vdrest-api-actions.SearchTimer-' + event,
+            "payload": {
+                "id": id
+            }
+        });
 
         if ("function" === typeof callback) {
 
@@ -83,13 +89,13 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.toggleActive = func
  * delete SearchTimer
  * @param adapter
  */
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer = function (adapter) {
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer = function (id) {
 
     var url, data, request = {}, me = this;
 
     data = adapter.getData();
 
-    url = this.getBaseUrl() + '/SearchTimers/' + data.SearchTimer_id;
+    url = this.getBaseUrl() + '/searchtimers.json?id=' + id;
 
     $.event.trigger({
         "type" : "window.request",
@@ -113,7 +119,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
 
                 $.event.trigger({
                     "type" : "vdrest-api-actions.SearchTimer-deleted",
-                    "payload" : data.SearchTimer_id
+                    "payload": id
                 });
             });
 

@@ -70,7 +70,7 @@ Gui.SearchTimer.prototype.contextMenu = {
                         "id": -1,
                         "resource": sTimer,
                         "onsubmit": function (fields) {
-                            sTimer.copyFromForm(fields).save();
+                            sTimer.save(fields);
                         }
                     }
                 }

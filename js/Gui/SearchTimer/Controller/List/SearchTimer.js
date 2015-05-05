@@ -29,14 +29,10 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.init = function () {
         this.data.parent.view
     );
 
-    this.dataModel = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {
-        "id" : this.data.id
-    });
-
     this.module.getViewModel('List.SearchTimer', {
         "id" : this.data.id,
         "view" : this.view,
-        "resource" : this.dataModel.data
+        "resource": this.data.dataModel.data
     });
 };
 
@@ -166,7 +162,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.update = function (e) {
     this.module.getViewModel('List.SearchTimer', {
         "id" : this.data.id,
         "view" : this.view,
-        "resource" : this.dataModel.data
+        "resource": this.data.dataModel.data
     });
 
     this.removeObserver();
@@ -189,8 +185,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestWindowAction = func
         "payload" : {
             "type" : "SearchTimer",
             "data" : {
-                "id" : this.dataModel.data.id,
-                "resource": this.dataModel,
+                "id": this.data.dataModel.data.id,
+                "resource": this.data.dataModel,
                 "onsubmit": this.saveAction.bind(this)
             }
         }
@@ -207,8 +203,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
         "payload": {
             "type": "ItemMenu",
             "data": {
-                "id": this.dataModel.data.id,
-                "resource": this.dataModel
+                "id": this.data.dataModel.data.id,
+                "resource": this.data.dataModel
             }
         }
     })
@@ -216,5 +212,5 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
 
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.saveAction = function (fields) {
 
-    this.dataModel.copyFromForm(fields).save();
+    this.data.dataModel.save(fields);
 };
