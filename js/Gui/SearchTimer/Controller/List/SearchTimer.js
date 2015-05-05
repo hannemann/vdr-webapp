@@ -169,7 +169,9 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
 
     var toggleLabel = (this.data.dataModel.data.use_as_searchtimer == 0 ? 'A' : 'Dea') + 'ctivate';
 
-    e.stopPropagation();
+    if (e) {
+        e.stopPropagation();
+    }
 
     this.preventClick = true;
 
