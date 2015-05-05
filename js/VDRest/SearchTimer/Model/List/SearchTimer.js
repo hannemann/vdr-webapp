@@ -149,14 +149,25 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.save = function (fields) {
     this.module.getResource('List.SearchTimer').addOrUpdateSearchTimer(this.newData);
 };
 
+/**
+ * @type {string}
+ */
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.delete = function () {
+
+    $window.on('vdrest-api-actions.SearchTimer-deleted', this.handleDelete.bind(this));
+
+    this.module.getResource('List.SearchTimer').delete(this.data.id);
+};
+
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleCreate = function (e) {
 
+    delete this.module.cache.store.Model['List.SearchTimer'][this.data.id];
     this.data = this.newData;
     delete this.newData;
     this.data.id = e.payload.id;
+    this.keyInCache = this.data.id;
+    this.module.cache.store.Model['List.SearchTimer'][this.keyInCache] = this;
     this.module.getModel('List').collection.push(this);
-
-    console.log(this.module.getModel('List').collection.indexOf(this));
 
     $.event.trigger({
         "type": "gui-searchtimer.created",
@@ -169,6 +180,20 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleUpdate = function (e) 
     this.data = this.newData;
     delete this.newData;
     console.log('model updated');
+};
+
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleDelete = function (e) {
+
+    var collection = this.module.getModel('List').collection;
+    delete this.module.cache.store.Model['List.SearchTimer'][this.data.id];
+    collection.splice(collection.indexOf(this), 1);
+
+    $.event.trigger({
+        "type": "gui-searchtimer.deleted",
+        "payload": this.keyInCache
+    });
+
+    delete this;
 };
 
 /**

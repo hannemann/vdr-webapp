@@ -22,14 +22,13 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype._class = 'VDRest.Se
  */
 VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.urls = {
 
-    "delete" : "SearchTimers",
+    "delete": "searchtimers/",
     "searchTimerList" : "searchtimers.json"
 };
 
 /**
  * create or update SearchTimer
  * @param {{}} data
- * @param {string} callerId     cacheKey id of broadcast
  * @param {function} [callback]
  */
 VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTimer = function (data, callback) {
@@ -87,15 +86,12 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.toggleActive = func
 
 /**
  * delete SearchTimer
- * @param adapter
+ * @param {number} id
  */
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer = function (id) {
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.delete = function (id) {
 
-    var url, data, request = {}, me = this;
-
-    data = adapter.getData();
-
-    url = this.getBaseUrl() + '/searchtimers.json?id=' + id;
+    var url = this.getBaseUrl() + this.urls.delete + id,
+        request = {};
 
     $.event.trigger({
         "type" : "window.request",
@@ -103,7 +99,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
             "type" : "Confirm",
             "data" : {
                 "message" : "Delete SearchTimer?",
-                "id" : 'delete.SearchTimer' + data.SearchTimer_id
+                "id": 'delete.SearchTimer' + id
             }
         }
     });
@@ -115,7 +111,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
 
         setTimeout(function () {
 
-            me.fetchAsync(request, function () {
+            this.fetchAsync(request, function () {
 
                 $.event.trigger({
                     "type" : "vdrest-api-actions.SearchTimer-deleted",
@@ -123,8 +119,8 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
                 });
             });
 
-        }, 100);
-    });
+        }.bind(this), 100);
+    }.bind(this));
 };
 
 /**

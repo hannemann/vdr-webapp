@@ -109,6 +109,7 @@ Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
     $document.one('searchtimersloaded', this.iterateTimers.bind(this));
     $document.one('channelgroupsloaded', this.storeChannelGroups.bind(this));
     $document.on('gui-searchtimer.created', this.dispatchNew.bind(this));
+    $document.on('gui-searchtimer.deleted', this.delete.bind(this));
 };
 
 Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collection) {
@@ -127,7 +128,18 @@ Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collect
  */
 Gui.SearchTimer.Controller.List.prototype.removeObserver = function () {
 
-    $(document).off('searchtimersloaded');
+    $document.off('gui-searchtimer.created');
+    $document.off('gui-searchtimer.deleted');
+};
+
+/**
+ * delete search timer from list
+ * @param e
+ */
+Gui.SearchTimer.Controller.List.prototype.delete = function (e) {
+
+    this.timerList.getData(e.payload).destructView();
+    this.timerList.unsData(e.payload);
 };
 
 /**
