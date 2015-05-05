@@ -188,6 +188,10 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
                         "delete": {
                             "label": VDRest.app.translate('Delete'),
                             "fn": this.deleteAction.bind(this)
+                        },
+                        "test": {
+                            "label": VDRest.app.translate('Test'),
+                            "fn": this.testAction.bind(this)
                         }
                     }
                 }
@@ -209,4 +213,9 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.toggleActiveAction = funct
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.deleteAction = function () {
 
     this.data.dataModel.deleteSearchTimer();
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.testAction = function () {
+
+    this.data.dataModel.testSearchTimer();
 };

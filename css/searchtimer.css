@@ -30,3 +30,9 @@
     font-size: 12px;
     max-width: calc(100% - 20px);
 }
+
+.epg-search-view.searchtimer-test {
+    position: absolute;
+    top: 0;
+    background: #696969;
+}

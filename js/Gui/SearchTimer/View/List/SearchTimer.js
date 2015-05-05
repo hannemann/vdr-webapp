@@ -76,8 +76,6 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.addChannels = function () {
  */
 Gui.SearchTimer.View.List.SearchTimer.prototype.addTimes = function () {
 
-    debugger;
-
     var startTime = this.getStartTime(), stopTime = this.getStopTime();
 
     if (!startTime && !stopTime) {

@@ -1,6 +1,7 @@
 /**
  * Channels resource
  * @constructor
+ * @property {{}} data
  */
 VDRest.SearchTimer.Model.List.SearchTimer = function () {};
 
@@ -20,27 +21,27 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype._class = 'VDRest.SearchTimer
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.resultJSON = 'searchtimers';
 
-/**
- * @type {Object.<String>}
- */
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.useChannel = {
-    "NoChannel": 0,
-    "Interval": 1,
-    "Group": 2,
-    "FTAOnly": 3
-};
-
-/**
- * @type {Object.<String>}
- */
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.searchModes = {
-    "Phrase": 0,
-    "all Words": 1,
-    "one Word": 2,
-    "Exact": 3,
-    "Regular Expression": 4,
-    "Fuzzy": 5
-};
+///**
+// * @type {Object.<String>}
+// */
+//VDRest.SearchTimer.Model.List.SearchTimer.prototype.useChannel = {
+//    "NoChannel": 0,
+//    "Interval": 1,
+//    "Group": 2,
+//    "FTAOnly": 3
+//};
+//
+///**
+// * @type {Object.<String>}
+// */
+//VDRest.SearchTimer.Model.List.SearchTimer.prototype.searchModes = {
+//    "Phrase": 0,
+//    "all Words": 1,
+//    "one Word": 2,
+//    "Exact": 3,
+//    "Regular Expression": 4,
+//    "Fuzzy": 5
+//};
 
 /**
  * flags
@@ -167,6 +168,16 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.deleteSearchTimer = function
 /**
  * @type {string}
  */
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.testSearchTimer = function () {
+
+    $window.one('vdrest-api-actions.SearchTimer-test', this.handleTest.bind(this));
+
+    this.module.getResource('List.SearchTimer').testSearchTimer(this);
+};
+
+/**
+ * @type {string}
+ */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.toggleActive = function () {
 
     this.newData = this.data;
@@ -220,6 +231,15 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleDelete = function () {
     });
 
     delete this;
+};
+
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleTest = function (e) {
+
+    var model = VDRest.app.getModule('VDRest.Epg').getModel('Search');
+
+    model.setIsSearchTimerTest().flushCollection();
+    model.processCollection(e.payload);
+    model.unsetIsSearchTimerTest()
 };
 
 /**

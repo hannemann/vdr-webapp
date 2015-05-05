@@ -102,6 +102,23 @@ Gui.SearchTimer.Controller.List.prototype.dispatchNew = function (e) {
 };
 
 /**
+ * dispatch test result
+ */
+Gui.SearchTimer.Controller.List.prototype.dispatchTestResult = function (e) {
+
+    var controller = this.module.getController('Search');
+
+    VDRest.app.saveHistoryState(
+        controller.eventPrefix + '.hashChanged',
+        controller.destructView.bind(controller),
+        this.module.name + '-' + controller.eventPrefix
+    );
+
+    controller.dispatchView();
+    controller.initResults(e);
+};
+
+/**
  * add event listeners
  */
 Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
@@ -110,6 +127,19 @@ Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
     $document.one('channelgroupsloaded', this.storeChannelGroups.bind(this));
     $document.on('gui-searchtimer.created', this.dispatchNew.bind(this));
     $document.on('gui-searchtimer.deleted', this.delete.bind(this));
+    $document.on('gui-searchtimer.test', this.dispatchTestResult.bind(this));
+};
+
+/**
+ * remove event listeners
+ */
+Gui.SearchTimer.Controller.List.prototype.removeObserver = function () {
+
+    $document.off('searchtimersloaded', this.iterateTimers.bind(this));
+    $document.off('channelgroupsloaded', this.storeChannelGroups.bind(this));
+    $document.off('gui-searchtimer.created');
+    $document.off('gui-searchtimer.deleted');
+    $document.off('gui-searchtimer.test');
 };
 
 Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collection) {
@@ -121,15 +151,6 @@ Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collect
         };
 
     }.bind(this));
-};
-
-/**
- * remove event listeners
- */
-Gui.SearchTimer.Controller.List.prototype.removeObserver = function () {
-
-    $document.off('gui-searchtimer.created');
-    $document.off('gui-searchtimer.deleted');
 };
 
 /**

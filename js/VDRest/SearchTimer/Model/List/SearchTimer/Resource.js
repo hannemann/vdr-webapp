@@ -23,7 +23,8 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype._class = 'VDRest.Se
 VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.urls = {
 
     "delete": "searchtimers/",
-    "searchTimerList" : "searchtimers.json"
+    "searchTimerList": "searchtimers.json",
+    "test": "searchtimers/search/"
 };
 
 /**
@@ -33,7 +34,8 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.urls = {
 VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.callbackEvents = [
     'vdrest-api-actions.SearchTimer-updated',
     'vdrest-api-actions.SearchTimer-created',
-    'vdrest-api-actions.SearchTimer-deleted'
+    'vdrest-api-actions.SearchTimer-deleted',
+    'vdrest-api-actions.SearchTimer-test'
 ];
 
 /**
@@ -119,6 +121,27 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
 
         }.bind(this), 100);
     }.bind(this));
+};
+
+/**
+ * test SearchTimer
+ * @param {VDRest.SearchTimer.Model.List.SearchTimer} model
+ */
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.testSearchTimer = function (model) {
+
+    var
+        request = {
+            "url": this.getBaseUrl() + this.urls.test + model.data.id + '.json',
+            "method": 'GET'
+        };
+
+    this.fetchAsync(request, function (result) {
+
+        $.event.trigger({
+            "type": "vdrest-api-actions.SearchTimer-test",
+            "payload": result
+        });
+    });
 };
 
 /**
