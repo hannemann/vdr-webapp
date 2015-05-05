@@ -47,6 +47,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.dispatchView = function ()
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
+    this.isMuted = true;
+
     this.addObserver();
 };
 
@@ -92,7 +94,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleUp = function (e) {
 
     e.preventDefault();
 
-    if (!this.isMuted) {
+    if (!this.module.isMuted) {
 
         if ("undefined" === typeof this.preventClick) {
 
@@ -116,9 +118,9 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleMove = function () {
 
     this.preventClick = true;
 
-    //if ("undefined" !== typeof this.clickTimeout) {
-    //    window.clearTimeout(this.clickTimeout);
-    //}
+    if ("undefined" !== typeof this.clickTimeout) {
+        window.clearTimeout(this.clickTimeout);
+    }
 };
 
 /**
@@ -132,13 +134,12 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleDown = function () {
 
     this.preventClick = undefined;
 
-    //this.clickTimeout = window.setTimeout(function () {
-    //
-    //    this.vibrate(100);
-    //
-    //    this.preventClick = true;
-    //
-    //}.bind(this), 500);
+    this.clickTimeout = window.setTimeout(function () {
+        if (!this.module.isMuted) {
+            this.vibrate(100);
+            this.preventClick = true;
+        }
+    }.bind(this), 500);
 };
 
 /**

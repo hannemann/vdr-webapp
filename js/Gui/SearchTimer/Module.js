@@ -91,6 +91,36 @@ Gui.SearchTimer.prototype.contextMenu = {
     }
 };
 
+Gui.SearchTimer.prototype.depends = [
+    'recordingdirsloaded',
+    'extepginfosloaded',
+    'channelgroupsloaded',
+    'blacklistsloaded',
+    'contentdescriptorsloaded'
+];
+
+Gui.SearchTimer.prototype.init = function () {
+
+    VDRest.Abstract.Module.prototype.init.call(this);
+
+    this.isMuted = true;
+
+    this.dependsEvents = this.depends.join(' ');
+
+    $window.on(this.dependsEvents, this.unmute.bind(this));
+};
+
+Gui.SearchTimer.prototype.unmute = function (e) {
+
+    this.depends.splice(this.depends.indexOf(e.type, 1));
+
+    if (0 === this.depends.length) {
+
+        $window.off(this.dependsEvents, this.unmute.bind(this));
+        this.isMuted = false;
+    }
+};
+
 /**
  * dispatch default view
  */
