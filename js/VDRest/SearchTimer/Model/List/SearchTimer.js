@@ -62,14 +62,6 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.flags = {
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.cacheKey = 'id';
 
 /**
- * TODO:
- * SearchTimers::ToggleActive
- * SearchTimers::Delete
- * SearchTimers::TriggerUpdate <- Suchtimer update
- * SearchResults::GetByID <- Testen
- */
-
-/**
  * initialize
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.init = function () {

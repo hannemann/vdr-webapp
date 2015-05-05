@@ -117,5 +117,25 @@ VDRest.Api.TimerAdapter.Abstract.prototype = {
     "getVpsSet" : function () {
 
         return this.timer.flags & VDRest.Timer.Model.List.Timer.prototype.flags.uses_vps;
+    },
+
+    "getAux": function (timer) {
+
+        var p = new DOMParser(),
+            s = new XMLSerializer(),
+            x = p.parseFromString(timer.aux, "text/xml"),
+            node = x.getElementsByTagName('epgsearch')[0],
+            v;
+
+        if (node && this.broadcast.channel) {
+            v = x.getElementsByTagName('channel_id')[0] || x.createElement('channel_id');
+            v.textContent = this.broadcast.channel;
+            node.appendChild(v);
+            return s.serializeToString(x);
+        } else if (this.broadcast.channel) {
+            return this.broadcast.channel + '/' + this.broadcast.id;
+        } else {
+            return '';
+        }
     }
 };

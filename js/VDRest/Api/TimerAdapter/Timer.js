@@ -42,7 +42,7 @@ VDRest.Api.TimerAdapter.Timer.prototype.normalize = function () {
 
     this.flags = this.getFlags();
 
-    this.aux = this.broadcast.channel && this.broadcast.channel + '/' + this.broadcast.id + ':' || '';
+    this.aux = this.getAux(this.timer);
 
     return this;
 };
