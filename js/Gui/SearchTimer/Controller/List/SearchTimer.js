@@ -32,7 +32,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.init = function () {
     this.module.getViewModel('List.SearchTimer', {
         "id" : this.data.id,
         "view" : this.view,
-        "resource": this.data.dataModel.data
+        "resource": this.data.dataModel
     });
 };
 
@@ -68,7 +68,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () 
         ;
     }
 
-    $(document).on('gui-searchtimer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
+    $document.on('gui-searchtimer.updated.' + this.keyInCache, this.view.decorate.bind(this.view));
 };
 
 /**
@@ -78,7 +78,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.removeObserver = function 
 
     this.view.node.off('click touchend touchstart touchmove mouseup mousedown');
 
-    $(document).off('gui-searchtimer.' + this.keyInCache + '.' + this.eventNameSpace);
+    $document.off('gui-searchtimer.updated.' + this.keyInCache);
 };
 
 
@@ -137,38 +137,6 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleDown = function () {
             this.requestMenuAction();
         }
     }.bind(this), 500);
-};
-
-/**
- * update data, cache, view
- */
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.update = function (e) {
-
-    var timer = e.payload, cache = this.module.cache.store;
-
-    this.data.id = timer.keyInCache;
-    this.view.data.id = timer.keyInCache;
-
-    delete cache.Controller['List.SearchTimer'][this.keyInCache];
-    delete cache.View['List.SearchTimer'][this.keyInCache];
-    delete cache.ViewModel['List.SearchTimer'][this.keyInCache];
-
-    this.keyInCache = timer.keyInCache;
-    cache.Controller['List.SearchTimer'][this.keyInCache] = this;
-
-    this.view.keyInCache = timer.keyInCache;
-    cache.View['List.SearchTimer'][this.keyInCache] = this.view;
-
-    this.module.getViewModel('List.SearchTimer', {
-        "id" : this.data.id,
-        "view" : this.view,
-        "resource": this.data.dataModel.data
-    });
-
-    this.removeObserver();
-    this.addObserver();
-
-    this.view.update();
 };
 
 /**

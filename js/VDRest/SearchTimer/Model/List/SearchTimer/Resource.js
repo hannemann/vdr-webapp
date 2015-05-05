@@ -27,25 +27,31 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.urls = {
 };
 
 /**
+ * url store
+ * @type {{channelList: string}}
+ */
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.callbackEvents = [
+    'vdrest-api-actions.SearchTimer-updated',
+    'vdrest-api-actions.SearchTimer-created',
+    'vdrest-api-actions.SearchTimer-deleted'
+];
+
+/**
  * create or update SearchTimer
  * @param {{}} data
  * @param {function} [callback]
  */
 VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTimer = function (data, callback) {
 
-    var method = 'PUT',
+    var method = 'POST',
         event = 'updated',
         request = {}, id = data.id;
 
-    // set method
+    // set event
     if (id < 0) {
 
-        method = 'POST';
         event = 'created';
     }
-
-    // no PUT method in api defined...
-    method = 'POST';
 
     request.url = this.getBaseUrl() + 'searchtimers';
     request.method = method;
@@ -88,7 +94,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.toggleActive = func
  * delete SearchTimer
  * @param {number} id
  */
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.delete = function (id) {
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer = function (id) {
 
     var url = this.getBaseUrl() + this.urls.delete + id,
         request = {};
@@ -133,4 +139,10 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.setIdUrl = function
     this.urls.byId = 'SearchTimers/' + id + '.json';
 
     return this;
+};
+
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.onError = function (e) {
+
+    $window.off(this.callbackEvents.join(' '));
+    VDRest.Api.Resource.prototype.onError.call(this, e);
 };

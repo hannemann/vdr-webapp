@@ -25,7 +25,7 @@ Gui.SearchTimer.ViewModel.List.SearchTimer.prototype.dateReg = /([0-9]{4})-([0-9
  */
 Gui.SearchTimer.ViewModel.List.SearchTimer.prototype.init = function () {
 
-    this.resource = this.data.resource;
+    this.resource = this.data.resource.data;
 
     this.initViewMethods();
 };

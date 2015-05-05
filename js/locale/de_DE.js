@@ -16,6 +16,7 @@ VDRest.app.de_DE = {
     "Set Time" : "Zeit eingeben",
     "Now" : "Jetzt",
     "Next" : "Nächstes",
+    "all": "alle",
     "Configuration" : "Konfiguration",
     "Reload App" : "Neu Laden",
     "EPG Search" : "EPG Suche",

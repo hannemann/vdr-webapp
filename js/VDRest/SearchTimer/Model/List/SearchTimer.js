@@ -143,8 +143,13 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.save = function (fields) {
 
     this.newData = this.copyFromForm(fields);
 
-    $window.on('vdrest-api-actions.SearchTimer-created', this.handleCreate.bind(this));
-    $window.on('vdrest-api-actions.SearchTimer-updated', this.handleUpdate.bind(this));
+    // fail
+    //this.newData.use_channel = 1;
+    //this.newData.channel_min = '';
+    //this.newData.channel_max = '';
+
+    $window.one('vdrest-api-actions.SearchTimer-created', this.handleCreate.bind(this));
+    $window.one('vdrest-api-actions.SearchTimer-updated', this.handleUpdate.bind(this));
 
     this.module.getResource('List.SearchTimer').addOrUpdateSearchTimer(this.newData);
 };
@@ -152,11 +157,11 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.save = function (fields) {
 /**
  * @type {string}
  */
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.delete = function () {
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.deleteSearchTimer = function () {
 
-    $window.on('vdrest-api-actions.SearchTimer-deleted', this.handleDelete.bind(this));
+    $window.one('vdrest-api-actions.SearchTimer-deleted', this.handleDelete.bind(this));
 
-    this.module.getResource('List.SearchTimer').delete(this.data.id);
+    this.module.getResource('List.SearchTimer').deleteSearchTimer(this.data.id);
 };
 
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleCreate = function (e) {
@@ -173,16 +178,24 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleCreate = function (e) 
         "type": "gui-searchtimer.created",
         "payload": this
     });
+
+    $window.off('vdrest-api-actions.SearchTimer-updated');
 };
 
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleUpdate = function (e) {
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleUpdate = function () {
 
     this.data = this.newData;
     delete this.newData;
-    console.log('model updated');
+
+    $.event.trigger({
+        "type": "gui-searchtimer.updated." + this.keyInCache,
+        "payload": this
+    });
+
+    $window.off('vdrest-api-actions.SearchTimer-created');
 };
 
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleDelete = function (e) {
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleDelete = function () {
 
     var collection = this.module.getModel('List').collection;
     delete this.module.cache.store.Model['List.SearchTimer'][this.data.id];
@@ -265,7 +278,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.copyFromForm = function (fie
                     case 'channels':
                         if (this.getChannels(v, fields) === false) {
                             n['use_channel'] = 0;
-                            n[i] = 0;
+                            n[i] = VDRest.app.translate('all');
                         } else {
                             n[i] = this.getChannels(v, fields);
                         }
@@ -318,7 +331,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.getChannels = function (v, f
     var ret = '', usage = fields.use_channel.getValue().value;
 
     if (usage == 0 || usage == 3) {
-        return 0;
+        return VDRest.app.translate('all');
     }
 
     if (1 === usage) {

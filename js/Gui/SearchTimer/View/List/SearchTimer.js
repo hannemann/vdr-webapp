@@ -47,14 +47,6 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.decorate = function () {
 };
 
 /**
- * call decorator
- */
-Gui.SearchTimer.View.List.SearchTimer.prototype.update = function () {
-
-    this.decorate();
-};
-
-/**
  * add class names
  */
 Gui.SearchTimer.View.List.SearchTimer.prototype.addClasses = function () {
