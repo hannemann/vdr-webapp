@@ -25,8 +25,6 @@ Gui.Recordings.ViewModel.List.Recording.prototype.dateReg = /([0-9]{4})-([0-9]{2
  */
 Gui.Recordings.ViewModel.List.Recording.prototype.init = function () {
 
-    this.resource = this.data.resource;
-
     this.initViewMethods();
 };
 
@@ -41,7 +39,7 @@ Gui.Recordings.ViewModel.List.Recording.prototype.initViewMethods = function () 
 
     this.data.view.getStartDate = function () {
 
-        var date = new Date(me.resource.event_start_time*1000), string = '';
+        var date = new Date(me.data.resource.data.event_start_time * 1000), string = '';
 
         string += me.helper().getWeekDay(date, true) + '. ' + me.helper().getDateString(date, true);
 
@@ -63,5 +61,5 @@ Gui.Recordings.ViewModel.List.Recording.prototype.initViewMethods = function () 
         return me.data.view.getName().split('~').slice(0, -1).join('~');
     };
 
-    VDRest.Helper.prototype.parseDescription.call(this, this.resource.event_description);
+    VDRest.Helper.prototype.parseDescription.call(this, this.data.resource.data.event_description);
 };

@@ -16,7 +16,7 @@ VDRest.Api.TimerAdapter.Generic.prototype.setData = function (client) {
 
     this.timer = client.data;
     this.broadcast = client.broadcast.data;
-    this.resource = client.resource;
+    this.resource = client.resource.data;
 
     return this;
 };
@@ -43,6 +43,7 @@ VDRest.Api.TimerAdapter.Generic.prototype.normalize = function () {
 
     this.flags = this.getFlags();
 
+    // TODO: don't delete searchtimer data
     this.aux = this.broadcast.channel && this.broadcast.channel + '/' + this.broadcast.id + ':' || '';
 
     return this;

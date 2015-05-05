@@ -39,33 +39,33 @@ Gui.Window.ViewModel.Timer.prototype.initViewMethods = function () {
 
     this.data.view.getDate = function () {
 
-        var date = new Date(me.resource.day);
+        var date = new Date(me.data.resource.data.day);
 
         return VDRest.helper.getWeekDay(date, true) + '. ' + VDRest.helper.getDateString(date, true);
     };
 
     this.data.view.getStartTime = function () {
 
-        return VDRest.helper.getTimeString(new Date(me.resource.start_timestamp));
+        return VDRest.helper.getTimeString(new Date(me.data.resource.data.start_timestamp));
     };
 
     this.data.view.getEndTime = function () {
 
-        return VDRest.helper.getTimeString(new Date(me.resource.stop_timestamp))
+        return VDRest.helper.getTimeString(new Date(me.data.resource.data.stop_timestamp))
     };
 
     this.data.view.getDirName = function () {
 
-        return me.resource.filename.split('~').slice(0, -1).join('~');
+        return me.data.resource.data.filename.split('~').slice(0, -1).join('~');
     };
 
-    VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this, this.broadcast.data, 'broadcast');
+    VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this, this.data.broadcast, 'broadcast');
 
     VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this);
 
     this.data.view.getFilename = function () {
 
-        var wholename = me.resource.filename;
+        var wholename = me.data.resource.data.filename;
 
         return wholename.split('~').pop();
     };

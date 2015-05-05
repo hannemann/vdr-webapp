@@ -27,8 +27,8 @@ Gui.Epg.ViewModel.TimeLine.prototype.init = function () {
 
     var me = this;
 
-    this.resource = {
-        "start_date" : this.data.from
+    this.data.resource = {
+        "data": {"start_date": this.data.from}
     };
 
     this.initViewMethods();

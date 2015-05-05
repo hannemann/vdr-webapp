@@ -37,12 +37,12 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function (callback) {
 
     this.broadcast = new VDRest.Lib.Object();
 
-    if (this.data.resource.event_id > 0) {
+    if (this.data.resource.data.event_id > 0) {
 
         VDRest.app.getModule('VDRest.Epg')
             .loadModel(
             'Channels.Channel.Broadcast',
-            this.data.resource.channel + '/' + this.data.resource.event_id,
+            this.data.resource.data.channel + '/' + this.data.resource.data.event_id,
             function (broadcast) {
 
                 this.broadcast = broadcast;
@@ -52,13 +52,13 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function (callback) {
 
     } else {
 
-        $document.one('broadcastsloaded-' + this.data.resource.channel, function (e) {
+        $document.one('broadcastsloaded-' + this.data.resource.data.channel, function (e) {
 
             var duration = 0, candidate = null;
 
             e.iterate(function (broadcast) {
 
-                if (broadcastHelper.match(this.data.resource, broadcast.data)) {
+                if (broadcastHelper.match(this.data.resource.data, broadcast.data)) {
 
                     this.broadcast = broadcast;
 
@@ -82,11 +82,11 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function (callback) {
             }
         }.bind(this));
 
-        VDRest.app.getModule('VDRest.Epg').loadModel('Channels.Channel', this.data.resource.channel, function (channel) {
+        VDRest.app.getModule('VDRest.Epg').loadModel('Channels.Channel', this.data.resource.data.channel, function (channel) {
 
             channel.getByTime(
-                new Date(this.data.resource.start_timestamp),
-                new Date(this.data.resource.stop_timestamp)
+                new Date(this.data.resource.data.start_timestamp),
+                new Date(this.data.resource.data.stop_timestamp)
             );
         }.bind(this));
     }
@@ -102,7 +102,7 @@ Gui.Window.Controller.Timer.prototype.dispatchView = function () {
         if (this.broadcast instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
 
             this.view.setHasBroadcast();
-            this.data.resource.event_id = this.broadcast.getData('id');
+            this.data.resource.data.event_id = this.broadcast.getData('id');
         }
 
         this.module.getViewModel('Timer', {
@@ -197,11 +197,13 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
 
     // todo: rollback user input in case of an error
 
+    debugger;
+
     for (i in fields) {
 
         if (
             fields.hasOwnProperty(i)
-            && me.data.resource.hasOwnProperty(i)
+            && me.data.resource.data.hasOwnProperty(i)
             && "function" === typeof fields[i].getValue
         ) {
 
@@ -214,7 +216,7 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
         updateData.data.filename = fields.dirname.getValue() + '~' + fields.filename.getValue();
     }
 
-    updateData.data.is_active = this.data.resource.is_active;
+    updateData.data.is_active = this.data.resource.data.is_active;
 
     adapter = new VDRest.Api.TimerAdapter(updateData);
 
@@ -226,14 +228,14 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
 
                 if (
                     fields.hasOwnProperty(i)
-                    && me.data.resource.hasOwnProperty(i)
+                    && me.data.resource.data.hasOwnProperty(i)
                     && "function" === typeof fields[i].getValue
                 ) {
 
-                    me.data.resource[i] = fields[i].getValue();
+                    me.data.resource.data[i] = fields[i].getValue();
                 }
             }
-            me.data.resource.filename = updateData.data.filename;
+            me.data.resource.data.filename = updateData.data.filename;
         });
 };
 
@@ -266,7 +268,7 @@ Gui.Window.Controller.Timer.prototype.update = function (e) {
     this.eventPrefix = 'window.timer-' + timer.keyInCache;
 
     this.data.id = timer.keyInCache;
-    this.data.resource = timer.data;
+    this.data.resource.data = timer.data;
 
     delete cache.Controller['Timer'][this.keyInCache];
     delete cache.View['Timer'][this.keyInCache];
@@ -299,7 +301,7 @@ Gui.Window.Controller.Timer.prototype.toggleActivateTimer = function () {
 
     this.vibrate();
 
-    this.data.resource.is_active = !this.data.resource.is_active;
+    this.data.resource.data.is_active = !this.data.resource.data.is_active;
 
     VDRest.app.getModule('VDRest.Timer')
         .getResource('List.Timer')
@@ -320,7 +322,7 @@ Gui.Window.Controller.Timer.prototype.getAdapter = function () {
  */
 Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
 
-    this.view.handleTimerActive(this.data.resource.is_active);
+    this.view.handleTimerActive(this.data.resource.data.is_active);
 };
 
 /**

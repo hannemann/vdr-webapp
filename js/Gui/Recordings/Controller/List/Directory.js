@@ -44,11 +44,11 @@ Gui.Recordings.Controller.List.Directory.prototype.init = function () {
     this.view.setParentView(
         this.data.parent.view
     );
-
+//debugger;
     this.module.getViewModel('List.Directory', {
         "path" : this.data.path,
         "view" : this.view,
-        "resource" : this.data
+        "resource": {"data": this.data}
     });
 };
 

@@ -29,16 +29,6 @@ Gui.Window.ViewModel.SearchTimer.prototype.weekDays = {
 };
 
 /**
- * initialize resources
- */
-Gui.Window.ViewModel.SearchTimer.prototype.init = function () {
-
-    this.resource = this.data.resource;
-
-    this.initViewMethods();
-};
-
-/**
  * add magic methods
  */
 Gui.Window.ViewModel.SearchTimer.prototype.initViewMethods = function () {
@@ -117,32 +107,32 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
 
 
     this.searchFormFields.search = this.getStringField(
-        "search", "Query", this.resource.search
+        "search", "Query", this.data.resource.data.search
     );
     this.searchFormFields.mode = this.getEnumField(
         "search", 'Mode', this.getSearchModeValues()
     );
     this.searchFormFields.tolerance = this.getNumberField(
-        "search", 'Tolerance', this.resource.tolerance, {"mode": 5}
+        "search", 'Tolerance', this.data.resource.data.tolerance, {"mode": 5}
     );
     this.searchFormFields.match_case = this.getBooleanField(
-        "parameter", 'Match case', this.resource.match_case
+        "parameter", 'Match case', this.data.resource.data.match_case
     );
     this.searchFormFields.use_search_in = this.getEnumField(
         "parameter", 'Search in', this.getSearchInValues(), undefined, true
     );
     this.searchFormFields.use_content_descriptors = this.getBooleanField(
-        "parameter", 'Use content descriptors', (this.resource.content_descriptors !== '')
+        "parameter", 'Use content descriptors', (this.data.resource.data.content_descriptors !== '')
     );
     this.searchFormFields.content_descriptors = this.getEnumField(
         "parameter", 'Content descriptors', this.getContentDescriptorValues(), "use_content_descriptors", true
     );
     this.searchFormFields.use_ext_epg_info = this.getBooleanField(
-        "parameter", 'Use Extended EPG Info', this.resource.use_ext_epg_info
+        "parameter", 'Use Extended EPG Info', this.data.resource.data.use_ext_epg_info
     );
     this.getExtEpgInfoFields();
     this.searchFormFields.ignore_missing_epg_cats = this.getBooleanField(
-        "parameter", 'Ignore missing categories', this.resource.ignore_missing_epg_cats, 'use_ext_epg_info'
+        "parameter", 'Ignore missing categories', this.data.resource.data.ignore_missing_epg_cats, 'use_ext_epg_info'
     );
     this.searchFormFields.use_channel = this.getEnumField(
         "parameter", 'Use Channel', this.getUseChannelValues()
@@ -153,19 +143,19 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
         "parameter", 'Channel Group', this.getChannelGroupFieldValues(), {"use_channel": 2}
     );
     this.searchFormFields.use_time = this.getBooleanField(
-        "parameter", 'Use Time', this.resource.use_time
+        "parameter", 'Use Time', this.data.resource.data.use_time
     );
     this.searchFormFields.start_time = this.getStartTimeField();
     this.searchFormFields.stop_time = this.getStopTimeField();
     this.searchFormFields.use_duration = this.getBooleanField(
-        "parameter", 'Use duration', this.resource.use_duration
+        "parameter", 'Use duration', this.data.resource.data.use_duration
     );
 
     this.searchFormFields.duration_min = this.getMinDurationField();
     this.searchFormFields.duration_max = this.getMaxDurationField();
 
     this.searchFormFields.use_dayofweek = this.getBooleanField(
-        "parameter", 'Use day of week', this.resource.use_dayofweek
+        "parameter", 'Use day of week', this.data.resource.data.use_dayofweek
     );
     this.searchFormFields.dayofweek = this.getDayOfWeekField();
     this.searchFormFields.blacklist_mode = this.getBlacklistModeField();
@@ -184,7 +174,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
 
 
     this.searchFormFields.unmute_sound_on_switch = this.getBooleanField(
-        "searchtimer", "Unmute Sound", this.resource.unmute_sound_on_switch, {
+        "searchtimer", "Unmute Sound", this.data.resource.data.unmute_sound_on_switch, {
             "use_as_searchtimer": [1, 2], "search_timer_action": [2, 3]
         }
     );
@@ -199,27 +189,27 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
      * repeats
      */
     this.searchFormFields.avoid_repeats = this.getBooleanField(
-        "repeats", "Avoid repeats", this.resource.avoid_repeats, {
+        "repeats", "Avoid repeats", this.data.resource.data.avoid_repeats, {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
     );
     this.searchFormFields.allowed_repeats = this.getNumberField(
-        "repeats", "Allowed repeats", this.resource.allowed_repeats, {
+        "repeats", "Allowed repeats", this.data.resource.data.allowed_repeats, {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0,
             "avoid_repeats": true
         }
     );
     this.searchFormFields.repeats_within_days = this.getNumberField(
-        "repeats", "Repeats withing &hellip; days only", this.resource.repeats_within_days, {
+        "repeats", "Repeats withing &hellip; days only", this.data.resource.data.repeats_within_days, {
             "avoid_repeats": true,
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
     );
     this.searchFormFields.compare_title = this.getBooleanField(
-        "repeats", "Compare title", this.resource.compare_title, {
+        "repeats", "Compare title", this.data.resource.data.compare_title, {
             "avoid_repeats": true,
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
@@ -233,14 +223,14 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
         }
     );
     this.searchFormFields.compare_summary = this.getBooleanField(
-        "repeats", "Compare summary", this.resource.compare_summary, {
+        "repeats", "Compare summary", this.data.resource.data.compare_summary, {
             "avoid_repeats": true,
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
     );
     this.searchFormFields.summary_match = this.getNumberField(
-        "repeats", "Min. summary match in %%", this.resource.summary_match, {
+        "repeats", "Min. summary match in %%", this.data.resource.data.summary_match, {
             "avoid_repeats": true,
             "compare_summary": true,
             "use_as_searchtimer": [1, 2],
@@ -261,31 +251,31 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
      * Timer
      */
     this.searchFormFields.priority = this.getNumberField(
-        "timer", "Priority", this.resource.priority, {
+        "timer", "Priority", this.data.resource.data.priority, {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
     );
     this.searchFormFields.lifetime = this.getNumberField(
-        "timer", "Lifetime", this.resource.lifetime, {
+        "timer", "Lifetime", this.data.resource.data.lifetime, {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
     );
     this.searchFormFields.margin_start = this.getNumberField(
-        "timer", "Margin start", this.resource.margin_start, {
+        "timer", "Margin start", this.data.resource.data.margin_start, {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
     );
     this.searchFormFields.margin_stop = this.getNumberField(
-        "timer", "Margin stop", this.resource.margin_stop, {
+        "timer", "Margin stop", this.data.resource.data.margin_stop, {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
     );
     this.searchFormFields.use_vps = this.getBooleanField(
-        "timer", "Use VPS", this.resource.use_vps, {
+        "timer", "Use VPS", this.data.resource.data.use_vps, {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         }
@@ -297,7 +287,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
         }
     );
     this.searchFormFields.del_after_count_recs = this.getNumberField(
-        "timer", "after &hellip; recordings", this.resource.del_after_count_recs, {
+        "timer", "after &hellip; recordings", this.data.resource.data.del_after_count_recs, {
             "del_mode": 1,
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
@@ -305,7 +295,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     );
     this.searchFormFields.del_after_days_of_first_rec = this.getNumberField(
         "timer", "after &hellip; days after first recording",
-        this.resource.del_after_days_of_first_rec, {
+        this.data.resource.data.del_after_days_of_first_rec, {
             "del_mode": 2,
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
@@ -433,32 +423,32 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchModeValues = function () {
         "phrase": {
             "label": VDRest.app.translate('Phrase'),
             "value": 0,
-            "selected": this.resource.mode === 0
+            "selected": this.data.resource.data.mode === 0
         },
         "and": {
             "label": VDRest.app.translate('AND'),
             "value": 1,
-            "selected": this.resource.mode === 1
+            "selected": this.data.resource.data.mode === 1
         },
         "or": {
             "label": VDRest.app.translate('OR'),
             "value": 2,
-            "selected": this.resource.mode === 2
+            "selected": this.data.resource.data.mode === 2
         },
         "exact": {
             "label": VDRest.app.translate('Exact'),
             "value": 3,
-            "selected": this.resource.mode === 3
+            "selected": this.data.resource.data.mode === 3
         },
         "regex": {
             "label": VDRest.app.translate('RegEx'),
             "value": 4,
-            "selected": this.resource.mode === 4
+            "selected": this.data.resource.data.mode === 4
         },
         "fuzzy": {
             "label": VDRest.app.translate('Fuzzy'),
             "value": 5,
-            "selected": this.resource.mode === 5
+            "selected": this.data.resource.data.mode === 5
         }
     };
 };
@@ -472,19 +462,19 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchInValues = function () {
         "use_title": {
             "label": VDRest.app.translate('Title'),
             "value": true,
-            "selected": this.resource.use_title,
+            "selected": this.data.resource.data.use_title,
             "descriptor": 'use_title'
         },
         "use_subtitle": {
             "label": VDRest.app.translate('Subtitle'),
             "value": true,
-            "selected": this.resource.use_subtitle,
+            "selected": this.data.resource.data.use_subtitle,
             "descriptor": 'use_subtitle'
         },
         "use_description": {
             "label": VDRest.app.translate('Description'),
             "value": true,
-            "selected": this.resource.use_description,
+            "selected": this.data.resource.data.use_description,
             "descriptor": 'use_description'
         }
     }
@@ -495,7 +485,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchInValues = function () {
  */
 Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoFields = function () {
 
-    var e = this.resource.ext_epg_info,
+    var e = this.data.resource.data.ext_epg_info,
         collection = VDRest.app.getModule('VDRest.SearchTimer').getModel('ExtEPGInfoList').getCollection(),
         selected = {};
 
@@ -567,7 +557,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStartTimeField = function () {
         "label": VDRest.app.translate("Broadcast start after"),
         "format": "%H:%i",
         "depends": "use_time",
-        "value": VDRest.helper.pad(this.resource.start_time, 4),
+        "value": VDRest.helper.pad(this.data.resource.data.start_time, 4),
         "form_order": "Hi"
     }
 };
@@ -583,7 +573,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStopTimeField = function () {
         "label": VDRest.app.translate("Broadcast start before"),
         "format": "%H:%i",
         "depends": "use_time",
-        "value": VDRest.helper.pad(this.resource.stop_time, 4),
+        "value": VDRest.helper.pad(this.data.resource.data.stop_time, 4),
         "form_order": "Hi"
     }
 };
@@ -599,7 +589,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getMinDurationField = function () {
         "label": VDRest.app.translate("Min duration"),
         "format": "%H:%i",
         "depends": "use_duration",
-        "value": VDRest.helper.pad(this.resource.duration_min, 4),
+        "value": VDRest.helper.pad(this.data.resource.data.duration_min, 4),
         "form_order": "Hi"
     }
 };
@@ -615,7 +605,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getMaxDurationField = function () {
         "label": VDRest.app.translate("Max duration"),
         "format": "%H:%i",
         "depends": "use_duration",
-        "value": VDRest.helper.pad(this.resource.duration_max, 4),
+        "value": VDRest.helper.pad(this.data.resource.data.duration_max, 4),
         "form_order": "Hi"
     }
 };
@@ -629,22 +619,22 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseChannelValues = function () {
         "no": {
             "label": VDRest.app.translate('No'),
             "value": 0,
-            "selected": this.resource.use_channel === 0
+            "selected": this.data.resource.data.use_channel === 0
         },
         "range": {
             "label": VDRest.app.translate('Range'),
             "value": 1,
-            "selected": this.resource.use_channel === 1
+            "selected": this.data.resource.data.use_channel === 1
         },
         "channelgroup": {
             "label": VDRest.app.translate('Channel Group'),
             "value": 2,
-            "selected": this.resource.use_channel === 2
+            "selected": this.data.resource.data.use_channel === 2
         },
         "ftaonly": {
             "label": VDRest.app.translate('Free to air only'),
             "value": 3,
-            "selected": this.resource.use_channel === 3
+            "selected": this.data.resource.data.use_channel === 3
         }
     }
 };
@@ -659,7 +649,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getChannelMinField = function () {
         "type": "channel",
         "label": VDRest.app.translate('From Channel'),
         "depends": {"use_channel": 1},
-        "selected": this.resource.channel_min,
+        "selected": this.data.resource.data.channel_min,
         "onchange": function () {
             this.searchFormFields.channel_max.getValuesAfter();
         }.bind(this)
@@ -676,7 +666,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getChannelMaxField = function () {
         "type": "channel",
         "label": VDRest.app.translate('To Channel'),
         "depends": {"use_channel": 1},
-        "selected": this.resource.channel_max,
+        "selected": this.data.resource.data.channel_max,
         "className": "searchtimer",
         "getValuesAfter": function () {
             var i,
@@ -743,37 +733,37 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDayOfWeekField = function () {
             "monday": {
                 "label": VDRest.app.translate('Monday'),
                 "value": this.weekDays.monday,
-                "selected": Math.abs(this.resource.dayofweek) & this.weekDays.monday
+                "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.monday
             },
             "tuesday": {
                 "label": VDRest.app.translate('Tuesday'),
                 "value": this.weekDays.tuesday,
-                "selected": Math.abs(this.resource.dayofweek) & this.weekDays.tuesday
+                "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.tuesday
             },
             "wednesday": {
                 "label": VDRest.app.translate('Wednesday'),
                 "value": this.weekDays.wednesday,
-                "selected": Math.abs(this.resource.dayofweek) & this.weekDays.wednesday
+                "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.wednesday
             },
             "thursday": {
                 "label": VDRest.app.translate('Thursday'),
                 "value": this.weekDays.thursday,
-                "selected": Math.abs(this.resource.dayofweek) & this.weekDays.thursday
+                "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.thursday
             },
             "friday": {
                 "label": VDRest.app.translate('Friday'),
                 "value": this.weekDays.friday,
-                "selected": Math.abs(this.resource.dayofweek) & this.weekDays.friday
+                "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.friday
             },
             "saturday": {
                 "label": VDRest.app.translate('Saturday'),
                 "value": this.weekDays.saturday,
-                "selected": Math.abs(this.resource.dayofweek) & this.weekDays.saturday
+                "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.saturday
             },
             "sunday": {
                 "label": VDRest.app.translate('Sunday'),
                 "value": this.weekDays.sunday,
-                "selected": Math.abs(this.resource.dayofweek) & this.weekDays.sunday
+                "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.sunday
             }
         },
         "depends": "use_dayofweek"
@@ -793,22 +783,22 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistModeField = function () {
             "global_only": {
                 "label": VDRest.app.translate('Global only'),
                 "value": 0,
-                "selected": this.resource.blacklist_mode === 0
+                "selected": this.data.resource.data.blacklist_mode === 0
             },
             "selection": {
                 "label": VDRest.app.translate('Selection'),
                 "value": 1,
-                "selected": this.resource.blacklist_mode === 1
+                "selected": this.data.resource.data.blacklist_mode === 1
             },
             "all": {
                 "label": VDRest.app.translate('All'),
                 "value": 2,
-                "selected": this.resource.blacklist_mode === 2
+                "selected": this.data.resource.data.blacklist_mode === 2
             },
             "none": {
                 "label": VDRest.app.translate('None'),
                 "value": 3,
-                "selected": this.resource.blacklist_mode === 3
+                "selected": this.data.resource.data.blacklist_mode === 3
             }
         }
     }
@@ -828,7 +818,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function 
         blacklists[search] = {
             "label": search,
             "value": id,
-            "selected": this.resource.blacklist_ids.indexOf(id) > -1
+            "selected": this.data.resource.data.blacklist_ids.indexOf(id) > -1
         }
     }.bind(this));
 
@@ -851,7 +841,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () 
         "category": "parameter",
         "type": "boolean",
         "label": VDRest.app.translate('Use in Favorites'),
-        "checked": this.resource.use_in_favorites
+        "checked": this.data.resource.data.use_in_favorites
     }
 };
 
@@ -868,17 +858,17 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseAsSearchTimerField = function (
             "yes": {
                 "label": VDRest.app.translate('Yes'),
                 "value": 1,
-                "selected": this.resource.use_as_searchtimer === 1
+                "selected": this.data.resource.data.use_as_searchtimer === 1
             },
             "no": {
                 "label": VDRest.app.translate('No'),
                 "value": 0,
-                "selected": this.resource.use_as_searchtimer === 0
+                "selected": this.data.resource.data.use_as_searchtimer === 0
             },
             "user_defined": {
                 "label": VDRest.app.translate('User defined'),
                 "value": 2,
-                "selected": this.resource.use_as_searchtimer === 2
+                "selected": this.data.resource.data.use_as_searchtimer === 2
             }
         }
     }
@@ -899,11 +889,11 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerFromField = function ()
 
             var d;
 
-            if (0 === this.resource.use_as_searchtimer_from) {
+            if (0 === this.data.resource.data.use_as_searchtimer_from) {
                 return '';
             }
 
-            d = new Date(this.resource.use_as_searchtimer_from * 1000);
+            d = new Date(this.data.resource.data.use_as_searchtimer_from * 1000);
 
             return d.getFullYear().toString() +
                 VDRest.helper.pad(d.getMonth() + 1, 2) +
@@ -928,10 +918,10 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerTilField = function () 
 
             var d;
 
-            if (0 === this.resource.use_as_searchtimer_til) {
+            if (0 === this.data.resource.data.use_as_searchtimer_til) {
                 return '';
             }
-            d = new Date(this.resource.use_as_searchtimer_til * 1000);
+            d = new Date(this.data.resource.data.use_as_searchtimer_til * 1000);
 
             return d.getFullYear().toString() +
                 VDRest.helper.pad(d.getMonth() + 1, 2) +
@@ -955,27 +945,27 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerActionField = function 
             "record": {
                 "label": VDRest.app.translate('Record'),
                 "value": 0,
-                "selected": this.resource.search_timer_action === 0
+                "selected": this.data.resource.data.search_timer_action === 0
             },
             "announce": {
                 "label": VDRest.app.translate('Announce'),
                 "value": 1,
-                "selected": this.resource.search_timer_action === 1
+                "selected": this.data.resource.data.search_timer_action === 1
             },
             "switch": {
                 "label": VDRest.app.translate('Switch'),
                 "value": 2,
-                "selected": this.resource.search_timer_action === 2
+                "selected": this.data.resource.data.search_timer_action === 2
             },
             "announce_switch": {
                 "label": VDRest.app.translate('Announce and Switch'),
                 "value": 3,
-                "selected": this.resource.search_timer_action === 3
+                "selected": this.data.resource.data.search_timer_action === 3
             },
             "announce_by_mail": {
                 "label": VDRest.app.translate('Announce by mail'),
                 "value": 4,
-                "selected": this.resource.search_timer_action === 4
+                "selected": this.data.resource.data.search_timer_action === 4
             }
         }
     }
@@ -994,7 +984,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSwitchMinBeforeField = function ()
             "use_as_searchtimer": [1, 2],
             "search_timer_action": [2, 3]
         },
-        "value": this.resource.switch_min_before
+        "value": this.data.resource.data.switch_min_before
     }
 };
 /**
@@ -1010,7 +1000,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseSeriesRecordingField = function
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         },
-        "checked": this.resource.use_series_recording
+        "checked": this.data.resource.data.use_series_recording
     }
 };
 
@@ -1028,7 +1018,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDirectoryField = function () {
                 "search_timer_action": 0
             },
             "text_input_seperator": ', ',
-            "text_value": this.resource.directory
+            "text_value": this.data.resource.data.directory
         },
         directories = VDRest.app.getModule('VDRest.SearchTimer').getModel('RecordingDirs').getCollection();
 
@@ -1039,7 +1029,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDirectoryField = function () {
         field.values[value.data] = {
             "label": value.data,
             "value": value.data,
-            "selected": value.data == this.resource.directory
+            "selected": value.data == this.data.resource.data.directory
         }
 
     }.bind(this));
@@ -1060,7 +1050,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDelRecsAfterDaysField = function (
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         },
-        "value": this.resource.del_recs_after_days
+        "value": this.data.resource.data.del_recs_after_days
     }
 };
 
@@ -1077,7 +1067,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getKeepRecsField = function () {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         },
-        "value": this.resource.keep_recs
+        "value": this.data.resource.data.keep_recs
     }
 };
 
@@ -1094,7 +1084,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getPauseOnRecsField = function () {
             "use_as_searchtimer": [1, 2],
             "search_timer_action": 0
         },
-        "value": this.resource.pause_on_recs
+        "value": this.data.resource.data.pause_on_recs
     }
 };
 
@@ -1107,12 +1097,12 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareSubtitleValues = function (
         "no": {
             "label": VDRest.app.translate('No'),
             "value": 0,
-            "selected": this.resource.compare_subtitle == 0
+            "selected": this.data.resource.data.compare_subtitle == 0
         },
         "exists": {
             "label": VDRest.app.translate('If exists'),
             "value": 1,
-            "selected": this.resource.compare_subtitle == 1
+            "selected": this.data.resource.data.compare_subtitle == 1
         }
     };
 };
@@ -1126,22 +1116,22 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareTimeValues = function () {
         "no": {
             "label": VDRest.app.translate('No'),
             "value": 0,
-            "selected": this.resource.compare_time == 0
+            "selected": this.data.resource.data.compare_time == 0
         },
         "day": {
             "label": VDRest.app.translate('Same Day'),
             "value": 1,
-            "selected": this.resource.compare_time == 1
+            "selected": this.data.resource.data.compare_time == 1
         },
         "week": {
             "label": VDRest.app.translate('Same Week'),
             "value": 2,
-            "selected": this.resource.compare_time == 2
+            "selected": this.data.resource.data.compare_time == 2
         },
         "month": {
             "label": VDRest.app.translate('Same Month'),
             "value": 3,
-            "selected": this.resource.compare_time == 3
+            "selected": this.data.resource.data.compare_time == 3
         }
     };
 };
@@ -1155,17 +1145,17 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDelModeValues = function () {
         "no": {
             "label": VDRest.app.translate('No'),
             "value": 0,
-            "selected": this.resource.del_mode == 0
+            "selected": this.data.resource.data.del_mode == 0
         },
         "recordings_count": {
             "label": VDRest.app.translate('Recordings count'),
             "value": 1,
-            "selected": this.resource.del_mode == 1
+            "selected": this.data.resource.data.del_mode == 1
         },
         "days_count": {
             "label": VDRest.app.translate('Days count'),
             "value": 2,
-            "selected": this.resource.del_mode == 2
+            "selected": this.data.resource.data.del_mode == 2
         }
     };
 };
@@ -1184,7 +1174,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function 
             "category": "repeats",
             "type": "boolean",
             "label": VDRest.app.translate('Compare %s', item.data.name),
-            "checked": (Math.abs(this.resource.compare_categories) & value) > 0,
+            "checked": (Math.abs(this.data.resource.data.compare_categories) & value) > 0,
             "depends": {
                 "avoid_repeats": true,
                 "use_as_searchtimer": [1, 2],
@@ -1200,7 +1190,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function 
 Gui.Window.ViewModel.SearchTimer.prototype.getContentDescriptorValues = function () {
 
     var collection = VDRest.app.getModule('VDRest.Epg').getModel('ContentDescriptors').getCollection(),
-        values = {}, selection = this.resource.content_descriptors.match(/.{1,2}/g) || [];
+        values = {}, selection = this.data.resource.data.content_descriptors.match(/.{1,2}/g) || [];
 
     collection.forEach(function (descr) {
 
@@ -1226,7 +1216,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getChannelGroupFieldValues = function
     for (i in cGroups) {
         if (cGroups.hasOwnProperty(i)) {
             cGroups[i].value = i;
-            cGroups[i].selected = i === this.resource.channels;
+            cGroups[i].selected = i === this.data.resource.data.channels;
         }
     }
 

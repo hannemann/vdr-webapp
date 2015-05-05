@@ -28,7 +28,7 @@ Gui.Window.Controller.SearchTimer.prototype.init = function () {
     this.module.getViewModel('SearchTimer', {
         "id" : this.data.id,
         "view" : this.view,
-        "resource": this.data.resource.data
+        "resource": this.data.resource
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);

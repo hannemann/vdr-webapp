@@ -30,7 +30,7 @@ Gui.Window.Controller.Recording.prototype.init = function () {
     this.module.getViewModel('Recording', {
         "id": this.keyInCache,
         "view" : this.view,
-        "resource" : recording.getData()
+        "resource": recording
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
