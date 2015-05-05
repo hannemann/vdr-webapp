@@ -25,6 +25,7 @@
     background: green;
 }
 
+.timer.searchtimer.list-item .times,
 .timer.searchtimer.list-item .channels {
     font-size: 12px;
     max-width: calc(100% - 20px);

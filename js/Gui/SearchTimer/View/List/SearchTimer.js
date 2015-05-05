@@ -19,13 +19,13 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.cacheKey = 'id';
  */
 Gui.SearchTimer.View.List.SearchTimer.prototype.init = function () {
 
-
-    // TODO: create own css?
     this.node = $('<div class="timer searchtimer list-item clearer">');
+
+    this.search = $('<div class="search">').appendTo(this.node);
 
     this.channels = $('<div class="channels">').appendTo(this.node);
 
-    this.search = $('<div class="search">').appendTo(this.node);
+    this.times = $('<div class="times">').appendTo(this.node);
 };
 
 /**
@@ -44,7 +44,10 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.render = function () {
  */
 Gui.SearchTimer.View.List.SearchTimer.prototype.decorate = function () {
 
-    this.addClasses().addChannels().addSearch();
+    this.addClasses()
+        .addSearch()
+        .addChannels()
+        .addTimes();
     return this;
 };
 
@@ -64,6 +67,32 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.addClasses = function () {
 Gui.SearchTimer.View.List.SearchTimer.prototype.addChannels = function () {
 
     this.channels.text(VDRest.app.translate('Channels') + ': ' + this.getChannels());
+
+    return this;
+};
+
+/**
+ * add channels
+ */
+Gui.SearchTimer.View.List.SearchTimer.prototype.addTimes = function () {
+
+    debugger;
+
+    var startTime = this.getStartTime(), stopTime = this.getStopTime();
+
+    if (!startTime && !stopTime) {
+        startTime = '--:--';
+    } else {
+        startTime = VDRest.helper.pad(startTime, 4).replace(/^([0-9]{2})([0-9]{2})/, "$1:$2")
+    }
+
+    if (!stopTime) {
+        stopTime = '--:--';
+    } else {
+        stopTime = VDRest.helper.pad(stopTime, 4).replace(/^([0-9]{2})([0-9]{2})/, "$1:$2")
+    }
+
+    this.times.html(startTime + "&nbsp;-&nbsp;" + stopTime);
 
     return this;
 };
