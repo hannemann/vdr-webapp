@@ -78,6 +78,18 @@ Gui.SearchTimer.prototype.contextMenu = {
         }
     },
 
+    "SearchTimerUpdate": {
+        "labels": {
+            "on": VDRest.app.translate("Trigger Update")
+        },
+        "state": "on",
+        "scope": 'Gui.SearchTimer',
+        "fn": function () {
+
+            this.triggerUpdate();
+        }
+    },
+
     "Refresh": {
         "labels": {
             "on": VDRest.app.translate("Refresh")
@@ -130,6 +142,9 @@ Gui.SearchTimer.prototype.dispatch = function () {
     this.getController('List').dispatchView();
 };
 
+/**
+ * @return {VDRest.SearchTimer}
+ */
 Gui.SearchTimer.prototype.getStore = function () {
 
     if (!this.store) {
@@ -160,6 +175,28 @@ Gui.SearchTimer.prototype.refresh = function () {
     delete this.cache.store.View['List.SearchTimer'];
     delete this.cache.store.ViewModel['List.SearchTimer'];
     this.dispatch();
+};
+
+/**
+ * refresh
+ */
+Gui.SearchTimer.prototype.triggerUpdate = function () {
+
+    $window.one('vdrest-api-actions.SearchTimer-update-triggered', function () {
+
+        $.event.trigger({
+            "type": "window.request",
+            "payload": {
+                "type": "Notification",
+                "data": {
+                    "text": VDRest.app.translate('Update triggered')
+                }
+            }
+        });
+
+    }.bind(this));
+
+    this.getStore().getResource('List.SearchTimer').triggerUpdate();
 };
 
 /**

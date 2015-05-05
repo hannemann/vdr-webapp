@@ -42,6 +42,8 @@ VDRest.app.de_DE = {
     "Delete Timer" : "Timer löschen",
     "Show Timers": "Zeige Timer",
     "Perform search": "Suche ausführen",
+    "Update triggered": "Update angestossen",
+    "Trigger Update": "Update anstossen",
     "Delete Recording" : "Aufnahme löschen",
     "Deactivate Timer" : "Timer deaktivieren",
     "Activate Timer" : "Timer aktivieren",

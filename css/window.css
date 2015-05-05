@@ -207,6 +207,35 @@
     box-shadow: 0 0 40px 0 rgb(255, 163, 0), 0 0 30px #FFFFFF inset;
 }
 
+/** Notification */
+.window-notification {
+    position: absolute;
+    right: 0;
+    bottom: 10%;
+    left: 0;
+    margin: auto;
+    width: 90%;
+    color: white;
+    font-weight: bold;
+    background-color: rgba(10, 40, 10, 0.50);
+    transition: opacity .7s linear;
+    text-align: center;
+    border-radius: 20px;
+    opacity: 0;
+    line-height: 16px;
+    font-size: 16px;
+    height: 16px;
+    padding: 10px 0;
+}
+
+.window-notification.show {
+    opacity: 1;
+}
+
+.window-notification.error {
+    background-color: rgba(255, 0, 0, 0.50);
+}
+
 /** item menu */
 
 .window-item-menu {
