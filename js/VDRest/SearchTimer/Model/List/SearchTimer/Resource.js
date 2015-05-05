@@ -82,21 +82,13 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.addOrUpdateSearchTi
     });
 };
 
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.toggleActive = function (id) {
-
-    var model = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', id);
-
-    model.data.use_as_searchtimer = model.data.use_as_searchtimer == 0 ? 1 : 0;
-    model.save();
-};
-
 /**
  * delete SearchTimer
- * @param {number} id
+ * @param {{}} data
  */
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer = function (id) {
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer = function (data) {
 
-    var url = this.getBaseUrl() + this.urls.delete + id,
+    var url = this.getBaseUrl() + this.urls.delete + data.id,
         request = {};
 
     $.event.trigger({
@@ -104,8 +96,8 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
         "payload" : {
             "type" : "Confirm",
             "data" : {
-                "message" : "Delete SearchTimer?",
-                "id": 'delete.SearchTimer' + id
+                "message": "Delete SearchTimer \"" + data.search + "\"?",
+                "id": 'delete.SearchTimer' + data.id
             }
         }
     });
@@ -121,7 +113,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
 
                 $.event.trigger({
                     "type" : "vdrest-api-actions.SearchTimer-deleted",
-                    "payload": id
+                    "payload": data.id
                 });
             });
 

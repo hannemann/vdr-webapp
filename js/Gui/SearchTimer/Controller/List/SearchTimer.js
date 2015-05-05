@@ -43,8 +43,6 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.dispatchView = function ()
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.isMuted = true;
-
     this.addObserver();
 };
 
@@ -61,11 +59,13 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () 
             .on('touchmove', this.handleMove.bind(this))
             .on('touchstart', this.handleDown.bind(this))
         ;
+        this.view.menuButton.on('touchstart', this.requestMenuAction.bind(this));
     } else {
         this.view.node
             .on('mouseup', this.handleUp.bind(this))
             .on('mousedown', this.handleDown.bind(this))
         ;
+        this.view.menuButton.on('mousedown', this.requestMenuAction.bind(this));
     }
 
     $document.on('gui-searchtimer.updated.' + this.keyInCache, this.view.decorate.bind(this.view));
@@ -79,6 +79,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.removeObserver = function 
     this.view.node.off('click touchend touchstart touchmove mouseup mousedown');
 
     $document.off('gui-searchtimer.updated.' + this.keyInCache);
+    this.view.menuButton.off('click');
 };
 
 
@@ -164,15 +165,30 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestWindowAction = func
 /**
  * request edit window
  */
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = function () {
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = function (e) {
+
+    e.stopPropagation();
+
+    this.preventClick = true;
 
     $.event.trigger({
         "type": "window.request",
         "payload": {
             "type": "ItemMenu",
             "data": {
-                "id": this.data.dataModel.data.id,
-                "resource": this.data.dataModel
+                "config": {
+                    "header": this.data.dataModel.data.search,
+                    "buttons": {
+                        "toggle": {
+                            "label": VDRest.app.translate('Toggle active state'),
+                            "fn": this.toggleActiveAction.bind(this)
+                        },
+                        "delete": {
+                            "label": VDRest.app.translate('Delete'),
+                            "fn": this.deleteAction.bind(this)
+                        }
+                    }
+                }
             }
         }
     })
@@ -181,4 +197,14 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.saveAction = function (fields) {
 
     this.data.dataModel.save(fields);
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.toggleActiveAction = function () {
+
+    this.data.dataModel.toggleActive();
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.deleteAction = function () {
+
+    this.data.dataModel.deleteSearchTimer();
 };

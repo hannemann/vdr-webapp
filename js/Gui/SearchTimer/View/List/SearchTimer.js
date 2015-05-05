@@ -33,7 +33,8 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.init = function () {
  */
 Gui.SearchTimer.View.List.SearchTimer.prototype.render = function () {
 
-    this.decorate();
+    this.decorate()
+        .addMenuButton();
 
     VDRest.Abstract.View.prototype.render.call(this);
 };
@@ -44,6 +45,7 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.render = function () {
 Gui.SearchTimer.View.List.SearchTimer.prototype.decorate = function () {
 
     this.addClasses().addChannels().addSearch();
+    return this;
 };
 
 /**
@@ -62,6 +64,17 @@ Gui.SearchTimer.View.List.SearchTimer.prototype.addClasses = function () {
 Gui.SearchTimer.View.List.SearchTimer.prototype.addChannels = function () {
 
     this.channels.text(VDRest.app.translate('Channels') + ': ' + this.getChannels());
+
+    return this;
+};
+
+/**
+ * add channels
+ */
+Gui.SearchTimer.View.List.SearchTimer.prototype.addMenuButton = function () {
+
+    this.menuButton = $('<div>').html('&vellip;').addClass('listitem-menu-button');
+    this.menuButton.appendTo(this.node);
 
     return this;
 };

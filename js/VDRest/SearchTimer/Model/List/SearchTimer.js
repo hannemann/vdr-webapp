@@ -161,7 +161,20 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.deleteSearchTimer = function
 
     $window.one('vdrest-api-actions.SearchTimer-deleted', this.handleDelete.bind(this));
 
-    this.module.getResource('List.SearchTimer').deleteSearchTimer(this.data.id);
+    this.module.getResource('List.SearchTimer').deleteSearchTimer(this.data);
+};
+
+/**
+ * @type {string}
+ */
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.toggleActive = function () {
+
+    this.newData = this.data;
+    this.newData.use_as_searchtimer = this.data.use_as_searchtimer == 0 ? 1 : 0;
+
+    $window.one('vdrest-api-actions.SearchTimer-updated', this.handleUpdate.bind(this));
+
+    this.module.getResource('List.SearchTimer').addOrUpdateSearchTimer(this.newData);
 };
 
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleCreate = function (e) {

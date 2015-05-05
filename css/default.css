@@ -94,6 +94,14 @@ ul {
     white-space: nowrap;
 }
 
+.listitem-menu-button {
+    position: absolute;
+    right: -2px;
+    top: 10px;
+    text-align: center;
+    width: 20px;
+}
+
 .top-tipp:after,
 .rating-1:after,
 .rating-2:after,
