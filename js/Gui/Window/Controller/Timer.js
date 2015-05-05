@@ -164,6 +164,8 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
     $document.off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 
     $document.off("persisttimerchange-" + this.keyInCache);
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**

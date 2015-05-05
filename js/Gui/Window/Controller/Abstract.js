@@ -55,8 +55,6 @@ Gui.Window.Controller.Abstract.prototype.dispatchView = function () {
 /**
  * add event handler
  * add destroyer to VDRest.app
- *
- * TODO: remove observer
  */
 Gui.Window.Controller.Abstract.prototype.addObserver = function () {
 
@@ -66,6 +64,17 @@ Gui.Window.Controller.Abstract.prototype.addObserver = function () {
 
             history.back();
         });
+    }
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Window.Controller.Abstract.prototype.removeObserver = function () {
+
+    if (this.view.closeButton) {
+
+        this.view.closeButton.off('click');
     }
 };
 

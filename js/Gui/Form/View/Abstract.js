@@ -513,16 +513,18 @@ Gui.Form.View.Abstract.prototype.setSelectedChannels = function (field, selected
 
     var i;
 
-    if ("function" === typeof selected) {
-        selected = selected();
-    } else if ("string" === typeof selected.forEach) {
-        selected = [selected];
-    }
+    if ("undefined" !== typeof selected) {
+        if ("function" === typeof selected) {
+            selected = selected();
+        } else if ("string" === typeof selected.forEach) {
+            selected = [selected];
+        }
 
-    for (i in field.values) {
+        for (i in field.values) {
 
-        if (field.values.hasOwnProperty(i)) {
-            field.values[i].selected = selected.indexOf(i) > -1;
+            if (field.values.hasOwnProperty(i)) {
+                field.values[i].selected = selected.indexOf(i) > -1;
+            }
         }
     }
 };

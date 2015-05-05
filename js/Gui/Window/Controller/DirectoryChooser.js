@@ -22,7 +22,7 @@ Gui.Window.Controller.DirectoryChooser.prototype.init = function () {
 };
 
 /**
- * initialize view
+ * add event listeners
  */
 Gui.Window.Controller.DirectoryChooser.prototype.addObserver = function () {
 
@@ -34,7 +34,7 @@ Gui.Window.Controller.DirectoryChooser.prototype.addObserver = function () {
 
         var node = $(this);
 
-        $(this).on('mouseup', function (e) {
+        node.on('mouseup', function (e) {
 
             me.vibrate();
 
@@ -48,5 +48,20 @@ Gui.Window.Controller.DirectoryChooser.prototype.addObserver = function () {
             }
             $(this).addClass('active');
         })
+    });
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Window.Controller.DirectoryChooser.prototype.removeObserver = function () {
+
+    Gui.Window.Controller.Select.prototype.removeObserver.call(this);
+
+    this.view.node.find('label').each(function () {
+
+        var node = $(this);
+
+        node.off('mouseup');
     });
 };

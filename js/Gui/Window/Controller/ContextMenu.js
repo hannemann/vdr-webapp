@@ -84,6 +84,36 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
 };
 
 /**
+ * remove event listeners
+ */
+Gui.Window.Controller.ContextMenu.prototype.removeObserver = function () {
+
+    var i,
+        config = VDRest.app.getModule('Gui.Config');
+
+    for (i in this.data) {
+
+        if (this.data.hasOwnProperty(i) && i !== 'isDispatched') {
+
+            this.data[i].button.off('mousedown')
+        }
+    }
+
+    if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
+
+        this.view.node.find('.config-button').off('mousedown');
+    }
+
+    //this.view.node.find('.fullscreen-button').off('mousedown');
+
+    this.view.node.find('.reload-button').off('mousedown');
+
+    this.view.node.find('.resize-button').off('mousedown');
+
+    this.view.modalOverlay.off('click');
+};
+
+/**
  * call method defined as callback
  */
 Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callback, scope) {

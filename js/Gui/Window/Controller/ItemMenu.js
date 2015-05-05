@@ -51,6 +51,12 @@ Gui.Window.Controller.ItemMenu.prototype.addObserver = function () {
 };
 
 /**
+ * add event listeners
+ */
+Gui.Window.Controller.ItemMenu.prototype.removeObserver = function () {
+};
+
+/**
  * call method defined as callback
  */
 Gui.Window.Controller.ItemMenu.prototype.handleButtonClick = function (callback, scope) {

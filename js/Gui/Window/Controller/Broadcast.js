@@ -81,6 +81,8 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
     }
     this.view.recordButton.off('click');
     $document.off('gui-timer.' + this.eventNameSpace);
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**

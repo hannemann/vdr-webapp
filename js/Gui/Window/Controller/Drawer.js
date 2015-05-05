@@ -170,6 +170,7 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
         this.view.favourites.find('img').off('click mousedown');
     }
 
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**

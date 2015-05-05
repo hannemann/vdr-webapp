@@ -77,6 +77,8 @@ Gui.Window.Controller.Recording.prototype.removeObserver = function () {
     }
 
     $document.off('persistrecordingschange-' + this.keyInCache);
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**

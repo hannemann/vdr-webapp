@@ -48,6 +48,8 @@ Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
     this.view.cancel.off('click');
 
     $window.off("resize");
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**
