@@ -189,9 +189,13 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
                             "label": VDRest.app.translate('Delete'),
                             "fn": this.deleteAction.bind(this)
                         },
-                        "test": {
-                            "label": VDRest.app.translate('Test'),
-                            "fn": this.testAction.bind(this)
+                        "search": {
+                            "label": VDRest.app.translate('Perform search'),
+                            "fn": this.performSearchAction.bind(this)
+                        },
+                        "timers": {
+                            "label": VDRest.app.translate('Show Timers'),
+                            "fn": this.showTimersAction.bind(this)
                         }
                     }
                 }
@@ -215,7 +219,27 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.deleteAction = function ()
     this.data.dataModel.deleteSearchTimer();
 };
 
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.testAction = function () {
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.performSearchAction = function () {
 
-    this.data.dataModel.testSearchTimer();
+    this.data.dataModel.performSearch();
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = function () {
+
+    var controller = VDRest.app.getModule('Gui.Timer').getController('List'),
+        callback = function () {
+            controller.destructView();
+            this.module.dispatch();
+        }.bind(this);
+
+    VDRest.app.saveHistoryState(
+        'SearchTimer.ShowTimers.hashChanged',
+        callback,
+        this.module.name + '-ShowTimer' + this.data.id
+    );
+
+    controller.applySearchTimerFilter(this.data.id)
+        .dispatchView();
+
+    this.module.destruct();
 };

@@ -35,13 +35,13 @@ VDRest.Epg.Model.Search.prototype.init = function () {
     };
 };
 
-VDRest.Epg.Model.Search.prototype.setIsSearchTimerTest = function () {
+VDRest.Epg.Model.Search.prototype.setIsSearchTimer = function () {
 
-    this.events.collectionloaded = 'gui-searchtimer.test';
+    this.events.collectionloaded = 'gui-searchtimer.perform';
     return this;
 };
 
-VDRest.Epg.Model.Search.prototype.unsetIsSearchTimerTest = function () {
+VDRest.Epg.Model.Search.prototype.unsetIsSearchTimer = function () {
 
     this.events.collectionloaded = 'epgsearchcomplete';
     return this;

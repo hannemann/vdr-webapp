@@ -49,6 +49,16 @@ Gui.Timer.Controller.List.prototype.dispatchView = function () {
 };
 
 /**
+ * apply searchtimer filter
+ * @param {number} id
+ */
+Gui.Timer.Controller.List.prototype.applySearchTimerFilter = function (id) {
+
+    this.searchTimerId = id;
+    return this;
+};
+
+/**
  * iterate data model collection
  * @param {object} collection
  */
@@ -57,13 +67,12 @@ Gui.Timer.Controller.List.prototype.iterateTimers = function (collection) {
     collection.iterate(function (timerModel) {
 
         this.timerList.setData(
-
             timerModel.data.id,
 
             this.module.getController('List.Timer', {
-                "id" : timerModel.data.id,
-                "parent" : this,
-                "dataModel" : timerModel
+                "id": timerModel.data.id,
+                "parent": this,
+                "dataModel": timerModel
             })
         );
 
@@ -79,8 +88,32 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
 
     this.timerList.each(function () {
 
-        arguments[1].dispatchView();
-    });
+        if (
+            !this.searchTimerId ||
+            (this.searchTimerId && this.getSearchTimerId(arguments[1]) === this.searchTimerId)
+        ) {
+            arguments[1].dispatchView();
+        }
+    }.bind(this));
+    this.searchTimerId = undefined;
+};
+
+Gui.Timer.Controller.List.prototype.getSearchTimerId = function (timer) {
+
+    var p = new DOMParser(),
+        x = p.parseFromString(timer.dataModel.data.aux, "text/xml"),
+        node = x.getElementsByTagName('s-id')[0],
+        textNode,
+        sId = false;
+
+    if (node) {
+        textNode = node.childNodes[0];
+        if (textNode) {
+            sId = parseInt(textNode.nodeValue, 10)
+        }
+    }
+
+    return sId;
 };
 
 /**

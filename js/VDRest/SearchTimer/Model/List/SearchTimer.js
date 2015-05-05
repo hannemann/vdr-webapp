@@ -168,11 +168,11 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.deleteSearchTimer = function
 /**
  * @type {string}
  */
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.testSearchTimer = function () {
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.performSearch = function () {
 
-    $window.one('vdrest-api-actions.SearchTimer-test', this.handleTest.bind(this));
+    $window.one('vdrest-api-actions.SearchTimer-test', this.handleSearchResult.bind(this));
 
-    this.module.getResource('List.SearchTimer').testSearchTimer(this);
+    this.module.getResource('List.SearchTimer').performSearch(this);
 };
 
 /**
@@ -233,13 +233,13 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleDelete = function () {
     delete this;
 };
 
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleTest = function (e) {
+VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleSearchResult = function (e) {
 
     var model = VDRest.app.getModule('VDRest.Epg').getModel('Search');
 
-    model.setIsSearchTimerTest().flushCollection();
+    model.setIsSearchTimer().flushCollection();
     model.processCollection(e.payload);
-    model.unsetIsSearchTimerTest()
+    model.unsetIsSearchTimer()
 };
 
 /**

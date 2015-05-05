@@ -40,6 +40,8 @@ VDRest.app.de_DE = {
     "Developer options" : "Entwickler Optionen",
     "Add Timer" : "Timer anlegen",
     "Delete Timer" : "Timer löschen",
+    "Show Timers": "Zeige Timer",
+    "Perform search": "Suche ausführen",
     "Delete Recording" : "Aufnahme löschen",
     "Deactivate Timer" : "Timer deaktivieren",
     "Activate Timer" : "Timer aktivieren",

@@ -24,7 +24,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.urls = {
 
     "delete": "searchtimers/",
     "searchTimerList": "searchtimers.json",
-    "test": "searchtimers/search/"
+    "search": "searchtimers/search/"
 };
 
 /**
@@ -127,11 +127,11 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
  * test SearchTimer
  * @param {VDRest.SearchTimer.Model.List.SearchTimer} model
  */
-VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.testSearchTimer = function (model) {
+VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.performSearch = function (model) {
 
     var
         request = {
-            "url": this.getBaseUrl() + this.urls.test + model.data.id + '.json',
+            "url": this.getBaseUrl() + this.urls.search + model.data.id + '.json',
             "method": 'GET'
         };
 

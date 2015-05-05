@@ -197,8 +197,6 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
 
     // todo: rollback user input in case of an error
 
-    debugger;
-
     for (i in fields) {
 
         if (
