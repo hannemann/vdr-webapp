@@ -47,6 +47,7 @@ VDRest.app.de_DE = {
     "Delete Recording" : "Aufnahme löschen",
     "Deactivate Timer" : "Timer deaktivieren",
     "Activate Timer" : "Timer aktivieren",
+    "Delete SearchTimer \"%s\"?": "SearchTimer \"%s\" löschen?",
     "File" : "Datei",
     "Filename" : "Dateiname",
     "Search IMDB" : "IMDB durchsuchen",

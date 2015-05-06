@@ -377,7 +377,8 @@ VDRest.App.prototype.translate = function () {
         return sprintf.apply(window, args);
     }
 
-    return key;
+    args.unshift(key);
+    return sprintf.apply(window, args);
 };
 
 VDRest.app = new VDRest.App();

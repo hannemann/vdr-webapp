@@ -100,7 +100,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.deleteSearchTimer =
         "payload" : {
             "type" : "Confirm",
             "data" : {
-                "message": "Delete SearchTimer \"" + data.search + "\"?",
+                "message": VDRest.app.translate("Delete SearchTimer \"%s\"?", data.search),
                 "id": 'delete.SearchTimer' + data.id
             }
         }
