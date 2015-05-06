@@ -90,7 +90,7 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
 
         if (
             !this.searchTimerId ||
-            (this.searchTimerId && this.getSearchTimerId(arguments[1]) === this.searchTimerId)
+            (this.searchTimerId && arguments[1].dataModel.isCreatedBySearchTimer(this.searchTimerId))
         ) {
             arguments[1].dispatchView();
         }

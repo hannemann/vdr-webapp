@@ -200,6 +200,10 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
                         "timers": {
                             "label": VDRest.app.translate('Show Timers'),
                             "fn": this.showTimersAction.bind(this)
+                        },
+                        "bulkdelete": {
+                            "label": VDRest.app.translate('Delete created Timers'),
+                            "fn": this.bulkDeleteTimersAction.bind(this)
                         }
                     }
                 }
@@ -246,4 +250,38 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = functio
         .dispatchView();
 
     this.module.destruct();
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.bulkDeleteTimersAction = function () {
+
+    var dataModel = VDRest.app.getModule('VDRest.Timer').getModel('List'),
+        collection = dataModel.getCollection();
+
+    if (collection.length > 0) {
+
+        this.deleteCollection(collection);
+    } else {
+
+        $window.one('timersloaded', this.deleteCollection.bind(this));
+
+        dataModel.initList();
+    }
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.deleteCollection = function (collection) {
+
+    var idsToDelete = [];
+
+    if (collection instanceof jQuery.Event) {
+        collection = collection.collection;
+        if (!collection instanceof Array) return false;
+    }
+
+    collection.forEach(function (timer) {
+        if (timer.isCreatedBySearchTimer(this.data.id)) {
+            idsToDelete.push(timer.data.id);
+        }
+    }.bind(this));
+
+    VDRest.app.getModule('VDRest.Timer').getModel('List').bulkDelete(idsToDelete);
 };
