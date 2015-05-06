@@ -128,7 +128,7 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.bulkDelete = function (ids) {
         "payload": {
             "type": "Confirm",
             "data": {
-                "message": VDRest.app.translate("Bulk Delete Timer") + '?',
+                "message": VDRest.app.translate("Delete %d Timer?", ids.length),
                 "id": 'bulkdelete.timer'
             }
         }

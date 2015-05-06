@@ -82,6 +82,8 @@ VDRest.app.de_DE = {
     "Record": "Aufnehmen",
     "Announce": "Ankündigen",
     "Switch": "Umschalten",
+    "Delete created Timers": "Erstellte Timer löschen",
+    "Delete %d Timer?": "%d Timer löschen?",
     "Use blacklists": "Ausschlusslisten verwenden",
     "Blacklists": "Ausschlusslisten",
     "Global only": "Nur globale",
