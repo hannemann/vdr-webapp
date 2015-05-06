@@ -99,6 +99,29 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormCategories = function ()
  * @property {searchTimerCommonField} use_as_searchtimer_til
  * @property {searchTimerCommonField} searchtimer_action
  * @property {searchTimerCommonField} switch_min_before
+ * @property {searchTimerCommonField} unmute_sound_on_switch
+ * @property {searchTimerCommonField} use_series_recording
+ * @property {searchTimerCommonField} directory
+ * @property {searchTimerCommonField} del_recs_after_days
+ * @property {searchTimerCommonField} keep_recs
+ * @property {searchTimerCommonField} pause_on_recs
+ * @property {searchTimerCommonField} avoid_repeats
+ * @property {searchTimerCommonField} allowed_repeats
+ * @property {searchTimerCommonField} repeats_within_days
+ * @property {searchTimerCommonField} compare_title
+ * @property {searchTimerCommonField} compare_subtitle
+ * @property {searchTimerCommonField} compare_summary
+ * @property {searchTimerCommonField} summary_match
+ * @property {searchTimerCommonField} compare_time
+ * @property {searchTimerCommonField} compare_categories
+ * @property {searchTimerCommonField} priority
+ * @property {searchTimerCommonField} lifetime
+ * @property {searchTimerCommonField} margin_start
+ * @property {searchTimerCommonField} margin_stop
+ * @property {searchTimerCommonField} use_vps
+ * @property {searchTimerCommonField} del_mode
+ * @property {searchTimerCommonField} del_after_count_recs
+ * @property {searchTimerCommonField} del_after_days_of_first_rec
  * @return {searchTimerFormFields}
  */
 Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
@@ -121,12 +144,15 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     this.searchFormFields.use_search_in = this.getEnumField(
         "parameter", 'Search in', this.getSearchInValues(), undefined, true
     );
-    this.searchFormFields.use_content_descriptors = this.getBooleanField(
-        "parameter", 'Use content descriptors', (this.data.resource.data.content_descriptors !== '')
-    );
-    this.searchFormFields.content_descriptors = this.getEnumField(
-        "parameter", 'Content descriptors', this.getContentDescriptorValues(), "use_content_descriptors", true
-    );
+
+    // cannot delete hence disabled
+    //this.searchFormFields.use_content_descriptors = this.getBooleanField(
+    //    "parameter", 'Use content descriptors', (this.data.resource.data.content_descriptors !== '')
+    //);
+    //this.searchFormFields.content_descriptors = this.getEnumField(
+    //    "parameter", 'Content descriptors', this.getContentDescriptorValues(), "use_content_descriptors", true
+    //);
+
     this.searchFormFields.use_ext_epg_info = this.getBooleanField(
         "parameter", 'Use Extended EPG Info', this.data.resource.data.use_ext_epg_info
     );
@@ -161,7 +187,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
     this.searchFormFields.blacklist_mode = this.getBlacklistModeField();
     this.searchFormFields.blacklist_ids = this.getBlacklistSelectorField();
     // not available in OSD Edit Menu
-    this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
+    //this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
 
     /**
      * searchtimer
@@ -538,7 +564,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoComboField = function (d
         field.values[value] = {
             "label": value,
             "value": value,
-            "selected": selected.indexOf(value) > -1
+            "selected": selected.indexOf(value) > -1,
+            "translate": false
         }
 
     }.bind(this));
@@ -818,7 +845,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function 
         blacklists[search] = {
             "label": search,
             "value": id,
-            "selected": this.data.resource.data.blacklist_ids.indexOf(id) > -1
+            "selected": this.data.resource.data.blacklist_ids.indexOf(id) > -1,
+            "translate": false
         }
     }.bind(this));
 
@@ -835,15 +863,15 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function 
  * not available in osd edit menu
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () {
-
-    return {
-        "category": "parameter",
-        "type": "boolean",
-        "label": 'Use in Favorites',
-        "checked": this.data.resource.data.use_in_favorites
-    }
-};
+//Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () {
+//
+//    return {
+//        "category": "parameter",
+//        "type": "boolean",
+//        "label": 'Use in Favorites',
+//        "checked": this.data.resource.data.use_in_favorites
+//    }
+//};
 
 /**
  * @return {searchTimerCommonField}
@@ -1029,7 +1057,8 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDirectoryField = function () {
         field.values[value.data] = {
             "label": value.data,
             "value": value.data,
-            "selected": value.data == this.data.resource.data.directory
+            "selected": value.data == this.data.resource.data.directory,
+            "translate": false
         }
 
     }.bind(this));
@@ -1187,36 +1216,48 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function 
     }.bind(this));
 };
 
-Gui.Window.ViewModel.SearchTimer.prototype.getContentDescriptorValues = function () {
+/**
+ * @typedef {{data:{name:string,id:string,is_group:boolean}}} descr
+ * @return {{}}
+ */
+//Gui.Window.ViewModel.SearchTimer.prototype.getContentDescriptorValues = function () {
+//
+//    var collection = VDRest.app.getModule('VDRest.Epg').getModel('ContentDescriptors').getCollection(),
+//        values = {}, selection = this.data.resource.data.content_descriptors.match(/.{1,2}/g) || [];
+//
+//    collection.forEach(function (descr) {
+//
+//        values[descr.data.id] = {
+//            "label": descr.data.name,
+//            "value": descr.data.id,
+//            "selected": selection.indexOf(descr.data.id) > -1,
+//            "translate" : false
+//        };
+//        if (!descr.data.is_group) {
+//            values[descr.data.id].className = "indent";
+//        }
+//
+//    }.bind(this));
+//
+//    return values;
+//};
 
-    var collection = VDRest.app.getModule('VDRest.Epg').getModel('ContentDescriptors').getCollection(),
-        values = {}, selection = this.data.resource.data.content_descriptors.match(/.{1,2}/g) || [];
-
-    collection.forEach(function (descr) {
-
-        values[descr.data.id] = {
-            "label": descr.data.name,
-            "value": descr.data.id,
-            "selected": selection.indexOf(descr.data.id) > -1
-        };
-        if (!descr.data.is_group) {
-            values[descr.data.id].className = "indent";
-        }
-
-    }.bind(this));
-
-    return values;
-};
-
-
+/**
+ * retrieve channelgroups
+ * @return {Gui.SearchTimer.Controller.List.channelgroups}
+ */
 Gui.Window.ViewModel.SearchTimer.prototype.getChannelGroupFieldValues = function () {
 
+    /**
+     * @type {Gui.SearchTimer.Controller.List.channelgroups}
+     */
     var cGroups = VDRest.app.getModule('Gui.SearchTimer').getController('List').channelgroups, i;
 
     for (i in cGroups) {
         if (cGroups.hasOwnProperty(i)) {
             cGroups[i].value = i;
             cGroups[i].selected = i === this.data.resource.data.channels;
+            cGroups[i].translate = false;
         }
     }
 
