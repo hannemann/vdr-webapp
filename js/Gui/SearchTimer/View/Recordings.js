@@ -2,18 +2,18 @@
  * @class
  * @constructor
  */
-Gui.SearchTimer.View.Search = function () {
+Gui.SearchTimer.View.Recordings = function () {
 };
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.SearchTimer.View.Search.prototype = new VDRest.Abstract.View();
+Gui.SearchTimer.View.Recordings.prototype = new VDRest.Abstract.View();
 
 /**
  * render
  */
-Gui.SearchTimer.View.Search.prototype.init = function () {
+Gui.SearchTimer.View.Recordings.prototype.init = function () {
 
     this.node = $('<div class="epg-search-view simple-list">');
 };
@@ -21,7 +21,7 @@ Gui.SearchTimer.View.Search.prototype.init = function () {
 /**
  * render
  */
-Gui.SearchTimer.View.Search.prototype.render = function () {
+Gui.SearchTimer.View.Recordings.prototype.render = function () {
 
     this.node.addClass('window viewport-fullsize collapsed');
 
@@ -33,7 +33,7 @@ Gui.SearchTimer.View.Search.prototype.render = function () {
 /**
  * destroy window
  */
-Gui.SearchTimer.View.Search.prototype.destruct = function () {
+Gui.SearchTimer.View.Recordings.prototype.destruct = function () {
 
     var me = this;
     // apply animation

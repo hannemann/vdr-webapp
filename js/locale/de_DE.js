@@ -84,6 +84,7 @@ VDRest.app.de_DE = {
     "Switch": "Umschalten",
     "Delete created Timers": "Erstellte Timer löschen",
     "Delete %d Timer?": "%d Timer löschen?",
+    "Show Recordings": "Zeige Aufnahmen",
     "Use blacklists": "Ausschlusslisten verwenden",
     "Blacklists": "Ausschlusslisten",
     "Global only": "Nur globale",

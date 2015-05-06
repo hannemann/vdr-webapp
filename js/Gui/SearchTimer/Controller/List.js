@@ -124,6 +124,28 @@ Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
 };
 
 /**
+ * dispatch test result
+ */
+Gui.SearchTimer.Controller.List.prototype.dispatchRecordings = function (e) {
+
+    var controller = this.module.getController('Recordings'),
+        callback = function () {
+            controller.destructView();
+            this.module.dispatch();
+        }.bind(this);
+
+    VDRest.app.saveHistoryState(
+        controller.eventPrefix + '.hashChanged',
+        callback,
+        this.module.name + '-' + controller.eventPrefix
+    );
+
+    this.module.destruct();
+    controller.dispatchView();
+    controller.initResults(e);
+};
+
+/**
  * add event listeners
  */
 Gui.SearchTimer.Controller.List.prototype.addObserver = function () {

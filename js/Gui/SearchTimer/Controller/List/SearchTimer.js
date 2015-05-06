@@ -201,6 +201,10 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
                             "label": VDRest.app.translate('Show Timers'),
                             "fn": this.showTimersAction.bind(this)
                         },
+                        "recordings": {
+                            "label": VDRest.app.translate('Show Recordings'),
+                            "fn": this.showRecordingssAction.bind(this)
+                        },
                         "bulkdelete": {
                             "label": VDRest.app.translate('Delete created Timers'),
                             "fn": this.bulkDeleteTimersAction.bind(this)
@@ -250,6 +254,32 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = functio
         .dispatchView();
 
     this.module.destruct();
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.showRecordingssAction = function () {
+
+    var dataModel = VDRest.app.getModule('VDRest.Recordings').getModel('List'),
+        collection = dataModel.getCollection();
+
+    if (collection.length > 0) {
+
+        this.dispatchRecordings({
+            "iterate": dataModel.resultIterator.bind(dataModel),
+            "collection": collection
+        });
+    } else {
+
+        $window.one('timersloaded', this.dispatchRecordings.bind(this));
+
+        dataModel.initList();
+    }
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.dispatchRecordings = function (collection) {
+
+    var controller = this.module.getController('List');
+    collection.sid = this.data.id;
+    controller.dispatchRecordings(collection);
 };
 
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.bulkDeleteTimersAction = function () {

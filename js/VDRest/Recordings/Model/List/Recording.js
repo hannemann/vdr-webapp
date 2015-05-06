@@ -66,3 +66,26 @@ VDRest.Recordings.Model.List.Recording.prototype.getStreamUrl = function (stream
         + recordingId
         + '.rec.ts';
 };
+
+/**
+ * determine if timer was created by search timer with given id
+ * @param {number} id
+ * @return {boolean}
+ */
+VDRest.Recordings.Model.List.Recording.prototype.getRecordedBySearchTimer = function (id) {
+
+    var p = new DOMParser(),
+        x = p.parseFromString(this.data.aux, "text/xml"),
+        node = x.getElementsByTagName('s-id')[0],
+        textNode,
+        sId = false;
+
+    if (node) {
+        textNode = node.childNodes[0];
+        if (textNode) {
+            sId = parseInt(textNode.nodeValue, 10)
+        }
+    }
+
+    return sId === id;
+};

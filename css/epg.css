@@ -378,8 +378,10 @@ div#time-line .ql.hour {
     border-radius: 5px;
 }
 
+.epg-search-view .broadcast .visible-channel-view .description,
 .channel-view #broadcasts .broadcast .visible-channel-view .description {
     height: calc(.75em * 5);
+    overflow: hidden;
 }
 #broadcasts .broadcasts-list .broadcast.first-visible,
 #broadcasts .broadcasts-list .broadcast.first-visible ~ .broadcast {
