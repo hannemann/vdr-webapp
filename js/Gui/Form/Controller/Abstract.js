@@ -217,28 +217,20 @@ Gui.Form.Controller.Abstract.prototype.addChangeHandler = function (field, field
  */
 Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
 
-    if (field.type === 'enum' || field.type === 'channel') {
-
-        field.getValue = function () {
-
-            var i, values = this.values, retVal = [];
-
-            if ("function" === typeof this.values) {
-
-                values = this.values();
-            }
-
-            for (i in values) {
-
-                if (values.hasOwnProperty(i)) {
-
-                    if (values[i].selected) {
-                        if (field.multiselect) {
-                            retVal.push(values[i]);
-                        } else {
-                            return values[i];
-                        }
-                    }
+    switch (field.type) {
+        case 'enum':
+        case 'channel':
+            field.getValue = this.getEnumValue;
+            break;
+        case 'datetime':
+            field.getValue = this.getDateTimeValue;
+            break;
+        case 'string':
+        case 'number':
+        case 'directory':
+            field.getValue = function () {
+                if ('number' === field.type) {
+                    return parseFloat(this.gui.val());
                 }
                 return this.gui.val();
             };
