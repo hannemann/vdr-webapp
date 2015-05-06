@@ -89,7 +89,9 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.removeObserver = function 
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleUp = function (e) {
 
-    e.preventDefault();
+    if (e.cancelable) {
+        e.preventDefault();
+    }
 
     if (!this.module.isMuted) {
 
