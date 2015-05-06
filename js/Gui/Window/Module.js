@@ -93,13 +93,15 @@ Gui.Window.prototype.dispatch = function (payload) {
 
     if (!(controller.singleton && controller.view.isRendered)) {
 
-        suffix += payload.hashSuffix ? payload.hashSuffix : '';
+        if (!controller.noHistory) {
+            suffix += payload.hashSuffix ? payload.hashSuffix : '';
 
-        VDRest.app.saveHistoryState(
-            controller.eventPrefix + '.hashChanged',
-            controller.destructView.bind(controller),
-            this.name + '-' + suffix
-        );
+            VDRest.app.saveHistoryState(
+                controller.eventPrefix + '.hashChanged',
+                controller.destructView.bind(controller),
+                this.name + '-' + suffix
+            );
+        }
 
         controller.dispatchView();
     }

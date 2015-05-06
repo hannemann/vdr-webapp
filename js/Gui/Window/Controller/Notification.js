@@ -3,6 +3,8 @@ Gui.Window.Controller.Notification = function () {
 
 Gui.Window.Controller.Notification.prototype = new VDRest.Abstract.Controller();
 
+Gui.Window.Controller.Notification.prototype.noHistory = true;
+
 Gui.Window.Controller.Notification.prototype.init = function () {
 
     this.view = this.module.getView('Notification', this.data);
