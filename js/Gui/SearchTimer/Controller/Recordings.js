@@ -49,11 +49,16 @@ Gui.SearchTimer.Controller.Recordings.prototype.initResults = function (resultCo
             this.recordingsList.push(this.module.getController('Recording', {
                 'file_name': dataModel.data.file_name,
                 "parent": this,
-                "dataModel": dataModel
+                "dataModel": dataModel,
+                "name": dataModel.data.name
             }));
-
-            this.recordingsList[this.recordingsList.length - 1].dispatchView();
         }
+    }.bind(this));
+
+    this.recordingsList.sort(VDRest.helper.sortAlpha);
+
+    this.recordingsList.forEach(function (recording) {
+        recording.dispatchView();
     }.bind(this));
 };
 
