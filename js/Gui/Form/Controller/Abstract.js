@@ -146,28 +146,32 @@ Gui.Form.Controller.Abstract.prototype.handleClick = function (e) {
  */
 Gui.Form.Controller.Abstract.prototype.getWindowType = function (field) {
 
+    var type;
+
     switch (field.type) {
         case 'enum':
-            return 'Select';
+            type = 'Select';
             break;
         case 'channel':
-            return 'ChannelChooser';
+            type = 'ChannelChooser';
             break;
         case 'directory':
-            return 'DirectoryChooser';
+            type = 'DirectoryChooser';
             break;
         case 'datetime':
-            return 'DateTime';
+            type = 'DateTime';
             break;
         case 'info':
-            return 'e.data.field.window';
+            type = 'e.data.field.window';
             break;
         case 'combobox':
-            return 'ComboBox';
+            type = 'ComboBox';
             break;
         default:
-            return 'Input';
+            type = 'Input';
     }
+
+    return type;
 };
 
 /**
@@ -232,10 +236,8 @@ Gui.Form.Controller.Abstract.prototype.addGetter = function (field) {
             break;
         case 'info':
             return false;
-            break;
         default:
             throw new TypeError('Field type ' + field.type + ' not supported');
-            break;
     }
 };
 

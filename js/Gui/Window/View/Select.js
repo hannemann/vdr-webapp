@@ -75,7 +75,7 @@ Gui.Window.View.Select.prototype.addValues = function () {
  */
 Gui.Window.View.Select.prototype.prepareValue = function (value) {
 
-    var name = this.data.gui.attr('name'), html = '', type, label;
+    var name = this.data.gui.attr('name'), html = '', type;
 
     type = this.data.multiselect ? 'checkbox' : 'radio';
 
