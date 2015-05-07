@@ -479,7 +479,12 @@ VDRest.Lib.Config.prototype.fields = {
         "label" : "Favourites",
         "selected": function () {
 
-            return JSON.parse(VDRest.config.getItem('favourites'));
+            try {
+                return JSON.parse(VDRest.config.getItem('favourites'));
+            } catch (e) {
+                return [];
+            }
+
         }
     },
     "useHtmlPlayer"    :   {
