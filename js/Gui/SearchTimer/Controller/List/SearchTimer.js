@@ -189,6 +189,10 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestMenuAction = functi
                             "label": VDRest.app.translate(toggleLabel),
                             "fn": this.toggleActiveAction.bind(this)
                         },
+                        "template": {
+                            "label": VDRest.app.translate('Save as Template'),
+                            "fn": this.saveAsTemplateAction.bind(this)
+                        },
                         "delete": {
                             "label": VDRest.app.translate('Delete'),
                             "fn": this.deleteAction.bind(this)
@@ -224,6 +228,36 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.saveAction = function (fie
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.toggleActiveAction = function () {
 
     this.data.dataModel.toggleActive();
+};
+
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.saveAsTemplateAction = function () {
+
+
+
+
+    var data = {
+        "type": "string",
+        "dom": $('<label class="clearer text">'),
+        "value" : this.data.dataModel.data.search
+    };
+
+    $('<span>').text(VDRest.app.translate('Enter name')).appendTo(data.dom);
+
+    data.gui = $('<input type="text" name="template-name">')
+        .appendTo(data.dom);
+    data.gui.val(data.value);
+
+    data.gui.one('change', function (e) {
+        this.module.store.getModel('Templates').saveAsTemplate(this.data.dataModel, e.target.value);
+    }.bind(this));
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Input",
+            "data" : data
+        }
+    });
 };
 
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.deleteAction = function () {

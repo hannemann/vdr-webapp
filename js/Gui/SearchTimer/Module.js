@@ -60,21 +60,17 @@ Gui.SearchTimer.prototype.contextMenu = {
         "scope" : 'Gui.SearchTimer',
         "fn" : function () {
 
-            var sTimer = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id": -1});
+            var sTimer, templates, m = VDRest.app.getModule('VDRest.SearchTimer');
 
-            $.event.trigger({
-                "type" : "window.request",
-                "payload" : {
-                    "type" : "SearchTimer",
-                    "data" : {
-                        "id": -1,
-                        "resource": sTimer,
-                        "onsubmit": function (fields) {
-                            sTimer.save(fields);
-                        }
-                    }
-                }
-            })
+            templates = m.getModel('Templates');
+
+            if (templates.length > 0) {
+                this.getTemplateSelect(templates.getData());
+            } else {
+
+                sTimer = m.getModel('List.SearchTimer', {"id": -1});
+                this.requestForm(sTimer);
+            }
         }
     },
 
@@ -175,6 +171,79 @@ Gui.SearchTimer.prototype.refresh = function () {
     delete this.cache.store.View['List.SearchTimer'];
     delete this.cache.store.ViewModel['List.SearchTimer'];
     this.dispatch();
+};
+
+/**
+ * retrieve template select window
+ * @param {{}} templates
+ */
+Gui.SearchTimer.prototype.getTemplateSelect = function (templates) {
+
+    var data, values = {
+
+        "none" : {
+            "label" : VDRest.app.translate("No Template"),
+            "value" : false,
+            "selected" : true
+        }
+    }, i;
+
+    for (i in templates) {
+        if (templates.hasOwnProperty(i)) {
+            values[i] = {
+                "label" : i,
+                "value" : i,
+                "translate" : false
+            }
+        }
+    }
+
+    data = {
+        "type": "enum",
+        "dom": $('<label class="clearer text">'),
+        "values": values,
+        "value" : ""
+    };
+
+    $('<span>').text(VDRest.app.translate('Choose Template')).appendTo(data.dom);
+
+    data.gui = $('<input type="text" name="template">')
+        .appendTo(data.dom);
+    data.gui.val(data.value);
+
+    data.gui.one('change', this.requestForm.bind(this));
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Select",
+            "data" : data
+        }
+    });
+};
+
+Gui.SearchTimer.prototype.requestForm = function (e) {
+
+    var sTimer = VDRest.app.getModule('VDRest.SearchTimer')
+        .getModel('List.SearchTimer', {"id" : -1});
+
+    if (e instanceof jQuery.Event && e.target.value !== VDRest.app.translate('No Template')) {
+        sTimer.loadTemplate(e.target.value);
+    }
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "SearchTimer",
+            "data" : {
+                "id": -1,
+                "resource": sTimer,
+                "onsubmit": function (fields) {
+                    sTimer.save(fields);
+                }
+            }
+        }
+    })
 };
 
 /**

@@ -53,6 +53,8 @@ VDRest.app.de_DE = {
     "Search IMDB" : "IMDB durchsuchen",
     "Cancel" : "Abbrechen",
     "Custom Time" : "Eigene Zeit",
+    "No Template" : "Keine Vorlage",
+    "Save as Template" : "Als Vorlage speichern",
     "Please enter desired date (optional) and/or time in format [[yyyy]mmdd] [h]hmm<br>(<strong>20141224 2015</strong> for <strong>2014.12.24 20:15</strong> o\'clock)" : "Bitte das gewünschte Datum (optional) und/oder die Zeit im Format [[yyyy]mmtt] [s]smm eingeben<br>(<strong>20141224 2015</strong> für <strong>24.12.2014 20:15</strong> Uhr)",
     "Search" : "Suche",
     "Advanced" : "Erweitert",
