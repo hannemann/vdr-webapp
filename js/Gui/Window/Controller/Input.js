@@ -112,10 +112,6 @@ Gui.Window.Controller.Input.prototype.okAction = function (e) {
         this.setComboBox();
     }
 
-    // TODO: change behaviour... Window has to be closed before action is taken... Add visual feedback for long lastin actions like setting custom time in epg context menu
-
-    this.data.gui.change();
-
     this.goBack();
 };
 
@@ -301,11 +297,15 @@ Gui.Window.Controller.Input.prototype.cancel = function () {
  */
 Gui.Window.Controller.Input.prototype.goBack = function () {
 
-    this.module.cache.invalidateClasses(this);
+    $window.one(this.animationEndEvents, function () {
 
-    if ("function" === typeof this.data.onchange) {
-        this.data.onchange(this);
-    }
+        this.module.cache.invalidateClasses(this);
+
+        this.data.gui.change();
+        if ("function" === typeof this.data.onchange) {
+            this.data.onchange(this);
+        }
+    }.bind(this));
 
     history.back();
 };
