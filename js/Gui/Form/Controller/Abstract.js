@@ -317,7 +317,7 @@ Gui.Form.Controller.Abstract.prototype.hasDependencies = function (fieldName) {
         if (this.view.data.fields.hasOwnProperty(i)) {
 
             depends = this.view.data.fields[i].depends;
-            if ("undefined" !== typeof depends && (depends === fieldName || depends[fieldName])) {
+            if ("undefined" !== typeof depends && (depends === fieldName || depends.hasOwnProperty(fieldName))) {
 
                 return true;
             }
@@ -334,14 +334,14 @@ Gui.Form.Controller.Abstract.prototype.hasDependencies = function (fieldName) {
  */
 Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, fieldName) {
 
-    var i, n, dc = true, depends;
+    var i, n, dc, depends;
 
     for (i in this.view.data.fields) {
 
         if (this.view.data.fields.hasOwnProperty(i)) {
 
             depends = this.view.data.fields[i].depends;
-            if ("undefined" !== typeof depends && (depends === fieldName || "undefined" !== typeof depends[fieldName])) {
+            if ("undefined" !== typeof depends && (depends === fieldName || depends.hasOwnProperty(fieldName))) {
 
                 if (!this.isDisabled(field, depends)) {
 
