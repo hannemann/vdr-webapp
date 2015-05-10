@@ -33,7 +33,7 @@ Gui.Window.View.Input.prototype.render = function () {
 
     if ("string" === type || "number" === type) {
 
-        this.body.find('input').focus();
+        this.body.find('input').focus().select();
     }
 };
 
