@@ -18,8 +18,8 @@ form label.constrained {
     width: -webkit-calc(100% - 20px);
     margin-left: 20px;
     overflow: hidden;
-    transition: max-height .3s ease-out;
-    max-height: 100px;
+    transition: max-height .6s ease-out;
+    max-height: 200px;
     transform: translateZ(0);
     perspective: 1000px;
     backface-visibility: hidden;
