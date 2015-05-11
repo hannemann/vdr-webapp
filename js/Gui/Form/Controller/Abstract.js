@@ -53,8 +53,9 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
 
     if ("function" === typeof this.data.onsubmit) {
         this.view.cancel.on('click', function () {
+            this.vibrate();
             history.back();
-        });
+        }.bind(this));
         this.view.ok.on('click', this.submit.bind(this));
     }
 
@@ -109,6 +110,8 @@ Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
 };
 
 Gui.Form.Controller.Abstract.prototype.submit = function () {
+
+    this.vibrate();
 
     this.data.container.one(this.animationEndEvents, function () {
 

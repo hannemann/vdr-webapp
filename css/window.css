@@ -236,37 +236,6 @@
     background-color: rgba(255, 0, 0, 0.50);
 }
 
-/** item menu */
-
-.window-item-menu {
-    top: auto;
-    bottom: auto;
-    left: auto;
-    right: auto;
-    padding: 0;
-    width: 80%;
-    border-bottom: none;
-    margin-left: 10%;
-    margin-right: 10%;
-}
-
-.window-item-menu .header {
-    border-bottom: 1px solid white;
-    padding: 10px;
-}
-
-.window-item-menu .button {
-    width: calc(100% - 20px);
-    background: none;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 10px;
-}
-
-.window-item-menu .button:last-child {
-    border-style: none;
-}
-
 /* Inpput Popup */
 .window-input {
     top: auto;
@@ -339,6 +308,8 @@ div.window.confirm li:first-child {
     border-right: 1px solid white;
 }
 
+
+/** context/item menu */
 .context-menu {
     position: absolute;
     right: 10px;
@@ -351,8 +322,38 @@ div.window.confirm li:first-child {
     border-top: 1px solid rgb(150, 150,150);
     padding: 10px;
 }
+
+.window-item-menu {
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    padding: 0;
+    width: 80%;
+    border-bottom: none;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.window-item-menu .header {
+    border-bottom: 1px solid white;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.window-item-menu .button {
+    width: calc(100% - 20px);
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 10px;
+}
+.window-item-menu .button:last-child {
+    border-style: none;
+}
 .context-menu div.menu-button.active,
-.context-menu div:active {
+.context-menu div:active,
+.window-item-menu .button:active {
     background-color: rgba(255,255,255,0.5);
     color: black;
 }

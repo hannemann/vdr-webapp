@@ -102,6 +102,10 @@ ul {
     width: 20px;
 }
 
+.listitem-menu-button:active {
+    background-color: rgba(255,255,255,0.5);
+}
+
 .top-tipp:after,
 .rating-1:after,
 .rating-2:after,

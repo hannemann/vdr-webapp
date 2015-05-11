@@ -21,6 +21,8 @@ Gui.Window.Controller.ItemMenu.prototype.init = function () {
     this.view = this.module.getView('ItemMenu', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
+
+    this.vibrate();
 };
 
 /**
