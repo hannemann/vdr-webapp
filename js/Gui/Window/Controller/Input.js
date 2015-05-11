@@ -112,7 +112,7 @@ Gui.Window.Controller.Input.prototype.okAction = function (e) {
         this.setComboBox();
     }
 
-    this.goBack();
+    this.goBack(true);
 };
 
 /**
@@ -289,21 +289,24 @@ Gui.Window.Controller.Input.prototype.cancel = function () {
 
     this.vibrate();
 
-    this.goBack();
+    this.goBack(false);
 };
 
 /**
  * destroy, trigger change
+ * @param {boolean} trigger
  */
-Gui.Window.Controller.Input.prototype.goBack = function () {
+Gui.Window.Controller.Input.prototype.goBack = function (trigger) {
 
     $window.one(this.animationEndEvents, function () {
 
         this.module.cache.invalidateClasses(this);
 
-        this.data.gui.change();
-        if ("function" === typeof this.data.onchange) {
-            this.data.onchange(this);
+        if (trigger) {
+            this.data.gui.change();
+            if ("function" === typeof this.data.onchange) {
+                this.data.onchange(this);
+            }
         }
     }.bind(this));
 
