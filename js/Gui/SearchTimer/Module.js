@@ -228,7 +228,7 @@ Gui.SearchTimer.prototype.requestForm = function (e) {
 
 Gui.SearchTimer.prototype.selectDeleteTemplates = function () {
 
-    var data = this.getHelper('Templates').getMultiSelect('Choose Template');
+    var data = this.getHelper('Templates').getMultiSelect('Choose Templates');
 
     data.gui.one('change', this.doDeleteTemplates.bind(this));
 

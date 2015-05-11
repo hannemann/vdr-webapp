@@ -57,13 +57,11 @@ Gui.SearchTimer.Helper.Templates.prototype.getTemplateSelectData = function (lab
         "type": "enum",
         "dom": $('<label class="clearer text">'),
         "values": values,
-        "value" : ""
+        "value" : "",
+        "label" : label
     };
 
     data.multiselect = multiselect === true;
-
-    $('<span>').text(VDRest.app.translate(label)).appendTo(data.dom);
-
     data.gui = $('<input type="text" name="template">')
         .appendTo(data.dom);
     data.gui.val(data.value);
