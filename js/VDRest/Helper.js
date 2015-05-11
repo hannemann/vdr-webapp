@@ -175,6 +175,17 @@ VDRest.Helper.prototype.log = function () {
 };
 
 /**
+ * log to console in debug mode
+ */
+VDRest.Helper.prototype.error = function () {
+
+    if (VDRest.config.getItem('debug')) {
+
+        console.error.apply(console, arguments);
+    }
+};
+
+/**
  * decode vdr style entity encoding
  * @param {String} string
  * @return {*}
