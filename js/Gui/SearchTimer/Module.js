@@ -60,15 +60,14 @@ Gui.SearchTimer.prototype.contextMenu = {
         "scope" : 'Gui.SearchTimer',
         "fn" : function () {
 
-            var sTimer, templates, m = VDRest.app.getModule('VDRest.SearchTimer');
+            var sTimer;
 
-            templates = m.getModel('Templates');
-
-            if (templates.length > 0) {
-                this.getTemplateSelect(templates.getData());
+            if (this.getHelper('Templates').hasTemplates()) {
+                this.getTemplateSelect();
             } else {
 
-                sTimer = m.getModel('List.SearchTimer', {"id": -1});
+                sTimer = VDRest.app.getModule('VDRest.SearchTimer')
+                    .getModel('List.SearchTimer', {"id": -1});
                 this.requestForm(sTimer);
             }
         }
@@ -95,6 +94,18 @@ Gui.SearchTimer.prototype.contextMenu = {
         "fn": function () {
 
             this.refresh();
+        }
+    },
+
+    "TemplateDelete" : {
+        "labels" : {
+            "on" : VDRest.app.translate("Delete Templates")
+        },
+        "state" : "on",
+        "scope" : "Gui.SearchTimer",
+        "fn" : function () {
+
+            this.selectDeleteTemplates();
         }
     }
 };
@@ -175,41 +186,10 @@ Gui.SearchTimer.prototype.refresh = function () {
 
 /**
  * retrieve template select window
- * @param {{}} templates
  */
-Gui.SearchTimer.prototype.getTemplateSelect = function (templates) {
+Gui.SearchTimer.prototype.getTemplateSelect = function () {
 
-    var data, values = {
-
-        "none" : {
-            "label" : VDRest.app.translate("No Template"),
-            "value" : false,
-            "selected" : true
-        }
-    }, i;
-
-    for (i in templates) {
-        if (templates.hasOwnProperty(i)) {
-            values[i] = {
-                "label" : i,
-                "value" : i,
-                "translate" : false
-            }
-        }
-    }
-
-    data = {
-        "type": "enum",
-        "dom": $('<label class="clearer text">'),
-        "values": values,
-        "value" : ""
-    };
-
-    $('<span>').text(VDRest.app.translate('Choose Template')).appendTo(data.dom);
-
-    data.gui = $('<input type="text" name="template">')
-        .appendTo(data.dom);
-    data.gui.val(data.value);
+    var data = this.getHelper('Templates').getSingleSelectWithNone('Choose Template');
 
     data.gui.one('change', this.requestForm.bind(this));
 
@@ -244,6 +224,33 @@ Gui.SearchTimer.prototype.requestForm = function (e) {
             }
         }
     })
+};
+
+Gui.SearchTimer.prototype.selectDeleteTemplates = function () {
+
+    var data = this.getHelper('Templates').getMultiSelect('Choose Template');
+
+    data.gui.one('change', this.doDeleteTemplates.bind(this));
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Select",
+            "data" : data
+        }
+    });
+
+};
+
+/**
+ * delete templates
+ * @param {jQuery.Event} e
+ */
+Gui.SearchTimer.prototype.doDeleteTemplates = function (e) {
+
+    var names = e.target.value.split(', ');
+
+    this.getHelper('Templates').deleteTemplates(names);
 };
 
 /**
