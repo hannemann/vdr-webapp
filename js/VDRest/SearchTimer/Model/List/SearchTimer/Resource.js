@@ -177,6 +177,10 @@ VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.setIdUrl = function
     return this;
 };
 
+/**
+ * handle error
+ * @param e
+ */
 VDRest.SearchTimer.Model.List.SearchTimer.Resource.prototype.onError = function (e) {
 
     $window.off(this.callbackEvents.join(' '));

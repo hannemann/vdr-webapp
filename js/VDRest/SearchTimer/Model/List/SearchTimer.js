@@ -21,41 +21,6 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype._class = 'VDRest.SearchTimer
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.resultJSON = 'searchtimers';
 
-///**
-// * @type {Object.<String>}
-// */
-//VDRest.SearchTimer.Model.List.SearchTimer.prototype.useChannel = {
-//    "NoChannel": 0,
-//    "Interval": 1,
-//    "Group": 2,
-//    "FTAOnly": 3
-//};
-//
-///**
-// * @type {Object.<String>}
-// */
-//VDRest.SearchTimer.Model.List.SearchTimer.prototype.searchModes = {
-//    "Phrase": 0,
-//    "all Words": 1,
-//    "one Word": 2,
-//    "Exact": 3,
-//    "Regular Expression": 4,
-//    "Fuzzy": 5
-//};
-
-/**
- * flags
- * @type {{}}
- */
-VDRest.SearchTimer.Model.List.SearchTimer.prototype.flags = {
-
-    "inactive"      :   0x0000,
-    "is_active"     :   0x0001,
-    "is_instant"    :   0x0002,
-    "uses_vps"      :   0x0004
-
-};
-
 /**
  * @type {string}
  */
@@ -72,7 +37,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.init = function () {
 };
 
 /**
- *
+ * load data from template
  * @param {string} template
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.loadTemplate = function (template) {
@@ -87,7 +52,8 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.loadTemplate = function (tem
 
 
 /**
- * @type {string}
+ * save searchTimer
+ * @param {{}} fields
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.save = function (fields) {
 
@@ -105,7 +71,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.save = function (fields) {
 };
 
 /**
- * @type {string}
+ * delete searchTimer
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.deleteSearchTimer = function () {
 
@@ -115,7 +81,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.deleteSearchTimer = function
 };
 
 /**
- * @type {string}
+ * perform search
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.performSearch = function () {
 
@@ -125,7 +91,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.performSearch = function () 
 };
 
 /**
- * @type {string}
+ * toggle active state
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.toggleActive = function () {
 
@@ -137,6 +103,10 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.toggleActive = function () {
     this.module.getResource('List.SearchTimer').addOrUpdateSearchTimer(this.newData);
 };
 
+/**
+ * handle create new searchTimer
+ * @param {{payload:{}}} e
+ */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleCreate = function (e) {
 
     delete this.module.cache.store.Model['List.SearchTimer'][this.data.id];
@@ -155,6 +125,9 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleCreate = function (e) 
     $window.off('vdrest-api-actions.SearchTimer-updated');
 };
 
+/**
+ * handle update of searchTimer
+ */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleUpdate = function () {
 
     this.data = this.newData;
@@ -168,6 +141,9 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleUpdate = function () {
     $window.off('vdrest-api-actions.SearchTimer-created');
 };
 
+/**
+ * handle delete of searchTimer
+ */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleDelete = function () {
 
     var collection = this.module.getModel('List').collection;
@@ -182,6 +158,10 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleDelete = function () {
     delete this;
 };
 
+/**
+ * handle searchResult
+ * @param {{payload:{}}} e
+ */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.handleSearchResult = function (e) {
 
     var model = VDRest.app.getModule('VDRest.Epg').getModel('Search');
@@ -304,9 +284,9 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.copyFromForm = function (fie
 
 /**
  * fetch channels from form
- * @param v
- * @param fields
- * @return {*}
+ * @param {{}} v
+ * @param {{}} fields
+ * @return {string|boolean}
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.getChannels = function (v, fields) {
 
@@ -341,7 +321,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.getChannels = function (v, f
 
 /**
  * compute day of week value
- * @param v
+ * @param {{}} v
  * @return {number}
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.getDayOfWeek = function (v) {
@@ -377,8 +357,8 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.getMultiselectAsArray = func
 
 /**
  * get search in
- * @param field
- * @param n
+ * @param {{values:Object}} field
+ * @param {{}} n
  */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.getSearchIn = function (field, n) {
 
@@ -391,6 +371,69 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.getSearchIn = function (fiel
     }
 };
 
+
+/**
+ * @typedef {{}} searchTimerData
+ * @property {number} id
+ * @property {string} search
+ * @property {number} mode
+ * @property {number} tolerance
+ * @property {boolean} match_case
+ * @property {boolean} use_title
+ * @property {boolean} use_subtitle
+ * @property {boolean} use_description
+ * @property {string} content_descriptors
+ * @property {boolean} use_ext_epg_info
+ * @property {Array.<string>} ext_epg_info
+ * @property {boolean} use_in_favorites
+ * @property {boolean} use_time
+ * @property {number} start_time
+ * @property {number} stop_time
+ * @property {number} use_channel
+ * @property {string} channel_min
+ * @property {string} channel_max
+ * @property {string} channels
+ * @property {boolean} use_duration
+ * @property {number} duration_min
+ * @property {number} duration_max
+ * @property {boolean} use_dayofweek
+ * @property {number} dayofweek
+ * @property {number} use_as_searchtimer
+ * @property {number} use_as_searchtimer_from
+ * @property {number} use_as_searchtimer_til
+ * @property {number} searchtimer_action
+ * @property {boolean} use_series_recording
+ * @property {string} directory
+ * @property {number} del_recs_after_days
+ * @property {number} keep_recs
+ * @property {number} pause_on_recs
+ * @property {number} blacklist_mode
+ * @property {Array.<number>} blacklist_ids
+ * @property {number} switch_min_before
+ * @property {boolean} avoid_repeats
+ * @property {number} allowed_repeats
+ * @property {number} repeats_within_days
+ * @property {boolean} compare_title
+ * @property {number} compare_subtitle
+ * @property {boolean} compare_summary
+ * @property {number} compare_categories
+ * @property {number} priority
+ * @property {number} lifetime
+ * @property {number} margin_start
+ * @property {number} margin_stop
+ * @property {boolean} use_vps
+ * @property {number} del_mode
+ * @property {number} del_after_count_recs
+ * @property {number} del_after_days_of_first_rec
+ * @property {boolean} ignore_missing_epg_cats
+ * @property {boolean} unmute_sound_on_switch
+ * @property {number} summary_match
+ * @property {number} compare_time
+ */
+
+/**
+ * @returns searchTimerData
+ */
 VDRest.SearchTimer.Model.List.SearchTimer.prototype.getInitData = function () {
 
     return {
