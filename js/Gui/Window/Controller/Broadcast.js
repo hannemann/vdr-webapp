@@ -118,7 +118,8 @@ Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
             $.event.trigger({
                 "type": "window.request",
                 "payload": {
-                    "type": "Timer",
+                    "type": "Window.Timer",
+                    "module" : VDRest.app.getModule('Gui.Timer'),
                     "data": {
                         "id": timer.data.id,
                         "resource": timer,

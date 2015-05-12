@@ -2,47 +2,47 @@
  * @class
  * @constructor
  */
-Gui.Window.View.Timer = function () {};
+Gui.Timer.View.Window.Timer = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.Timer.prototype = new Gui.Window.View.Abstract();
+Gui.Timer.View.Window.Timer.prototype = new Gui.Window.View.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.View.Timer.prototype.cacheKey = 'id';
+Gui.Timer.View.Window.Timer.prototype.cacheKey = 'id';
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Timer.prototype.isModal = true;
+Gui.Timer.View.Window.Timer.prototype.isModal = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Timer.prototype.isModalTransparent = true;
+Gui.Timer.View.Window.Timer.prototype.isModalTransparent = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Timer.prototype.hasHeader = true;
+Gui.Timer.View.Window.Timer.prototype.hasHeader = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Timer.prototype.hasBroadcast = false;
+Gui.Timer.View.Window.Timer.prototype.hasBroadcast = false;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Timer.prototype.hasDesktopCloseButton = true;
+Gui.Timer.View.Window.Timer.prototype.hasDesktopCloseButton = true;
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.Timer.prototype.init = function () {
+Gui.Timer.View.Window.Timer.prototype.init = function () {
 
     Gui.Window.View.Abstract.prototype.init.call(this);
 };
@@ -50,7 +50,7 @@ Gui.Window.View.Timer.prototype.init = function () {
 /**
  * render
  */
-Gui.Window.View.Timer.prototype.render = function () {
+Gui.Timer.View.Window.Timer.prototype.render = function () {
 
     this.addClasses().decorateHeader().decorateBody();
 
@@ -64,7 +64,7 @@ Gui.Window.View.Timer.prototype.render = function () {
 /**
  * update
  */
-Gui.Window.View.Timer.prototype.update = function () {
+Gui.Timer.View.Window.Timer.prototype.update = function () {
 
     this.header.empty();
 
@@ -73,9 +73,9 @@ Gui.Window.View.Timer.prototype.update = function () {
 
 /**
  * add classes to window
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.addClasses = function () {
+Gui.Timer.View.Window.Timer.prototype.addClasses = function () {
 
 
     return this;
@@ -83,9 +83,9 @@ Gui.Window.View.Timer.prototype.addClasses = function () {
 
 /**
  * set view has a broadcast object
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.setHasBroadcast = function () {
+Gui.Timer.View.Window.Timer.prototype.setHasBroadcast = function () {
 
     this.hasBroadcast = true;
 
@@ -94,9 +94,9 @@ Gui.Window.View.Timer.prototype.setHasBroadcast = function () {
 
 /**
  * decorate header with title subtitle and image if available
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.decorateHeader = function () {
+Gui.Timer.View.Window.Timer.prototype.decorateHeader = function () {
 
     this.details = $('<ul class="window-header-details">');
 
@@ -112,9 +112,9 @@ Gui.Window.View.Timer.prototype.decorateHeader = function () {
 
 /**
  * decorate body with tabs
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.decorateBody = function () {
+Gui.Timer.View.Window.Timer.prototype.decorateBody = function () {
 
 
     return this;
@@ -122,9 +122,9 @@ Gui.Window.View.Timer.prototype.decorateBody = function () {
 
 /**
  * add Title
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.addTitle = function () {
+Gui.Timer.View.Window.Timer.prototype.addTitle = function () {
 
     var title;
 
@@ -147,9 +147,9 @@ Gui.Window.View.Timer.prototype.addTitle = function () {
 
 /**
  * add details list to header
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.addDetails = function () {
+Gui.Timer.View.Window.Timer.prototype.addDetails = function () {
 
     if (this.hasBroadcast && this.hasBroadcastShortText()) {
 
@@ -180,9 +180,9 @@ Gui.Window.View.Timer.prototype.addDetails = function () {
 
 /**
  * add epg image to header
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.addMainImage = function () {
+Gui.Timer.View.Window.Timer.prototype.addMainImage = function () {
 
     if (this.hasBroadcast && this.hasBroadcastImages()) {
 
@@ -195,9 +195,9 @@ Gui.Window.View.Timer.prototype.addMainImage = function () {
 
 /**
  * add filename to header
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.addFilename = function () {
+Gui.Timer.View.Window.Timer.prototype.addFilename = function () {
 
     $('<div class="additional-info">')
         .text(VDRest.app.translate('File') + ': ' + this.getFilename())
@@ -208,9 +208,9 @@ Gui.Window.View.Timer.prototype.addFilename = function () {
 
 /**
  * animate epg image on click
- * @returns {Gui.Window.View.Timer}
+ * @returns {Gui.Timer.View.Window.Timer}
  */
-Gui.Window.View.Timer.prototype.animateImage = function () {
+Gui.Timer.View.Window.Timer.prototype.animateImage = function () {
 
     this.node.toggleClass('image-expanded');
 
@@ -232,7 +232,7 @@ Gui.Window.View.Timer.prototype.animateImage = function () {
  * retrieve tabs configuration
  * @type {Object}
  */
-Gui.Window.View.Timer.prototype.getTabConfig = function () {
+Gui.Timer.View.Window.Timer.prototype.getTabConfig = function () {
 
     this.body.addClass('has-tabs');
 
@@ -287,7 +287,7 @@ Gui.Window.View.Timer.prototype.getTabConfig = function () {
  * retrieve tools tab configuration
  * @returns {object}
  */
-Gui.Window.View.Timer.prototype.getEditConfig = function () {
+Gui.Timer.View.Window.Timer.prototype.getEditConfig = function () {
 
     var button, text, me = this;
 
@@ -353,7 +353,7 @@ Gui.Window.View.Timer.prototype.getEditConfig = function () {
  * retrieve web tab configuration
  * @returns {object}
  */
-Gui.Window.View.Timer.prototype.getWebConfig = function () {
+Gui.Timer.View.Window.Timer.prototype.getWebConfig = function () {
 
     return {
         "imdb":{
@@ -378,7 +378,7 @@ Gui.Window.View.Timer.prototype.getWebConfig = function () {
  * render contents of tool tab
  * return {jQuery}
  */
-Gui.Window.View.Timer.prototype.renderEditTab = function () {
+Gui.Timer.View.Window.Timer.prototype.renderEditTab = function () {
 
     var i, dom, buttonList, button, config = this.getEditConfig();
 
@@ -429,7 +429,7 @@ Gui.Window.View.Timer.prototype.renderEditTab = function () {
 /**
  * generate filename from title and subtitle of broadcast
  */
-Gui.Window.View.Timer.prototype.subToFilename = function () {
+Gui.Timer.View.Window.Timer.prototype.subToFilename = function () {
 
     VDRest.Abstract.Controller.prototype.vibrate();
 
@@ -442,7 +442,7 @@ Gui.Window.View.Timer.prototype.subToFilename = function () {
  * render contents of web tab
  * @returns {jQuery}
  */
-Gui.Window.View.Timer.prototype.renderWebTab = function () {
+Gui.Timer.View.Window.Timer.prototype.renderWebTab = function () {
 
     var i, dom, button, config = this.getWebConfig();
 
@@ -464,7 +464,7 @@ Gui.Window.View.Timer.prototype.renderWebTab = function () {
  * toggle color and text of activate button
  * @param active
  */
-Gui.Window.View.Timer.prototype.handleTimerActive = function (active) {
+Gui.Timer.View.Window.Timer.prototype.handleTimerActive = function (active) {
 
     this.activateButton.toggleClass('is-active', active);
 

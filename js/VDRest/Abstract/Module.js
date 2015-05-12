@@ -34,6 +34,14 @@ VDRest.Abstract.Module.prototype.init = function () {
 
     window[this.namespace][this.name].Helper = function () {};
 
+    window[this.namespace][this.name].Controller.Window = function () {};
+
+    window[this.namespace][this.name].View.Window = function () {};
+
+    window[this.namespace][this.name].ViewModel.Window = function () {};
+
+    window[this.namespace][this.name].Helper.Window = function () {};
+
     this.cache = new VDRest.Lib.Cache();
 
     this.cache.module = this;

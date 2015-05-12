@@ -2,22 +2,22 @@
  * @class
  * @constructor
  */
-Gui.Window.ViewModel.Timer = function () {};
+Gui.Timer.ViewModel.Window.Timer = function () {};
 
 /**
  * @type {VDRest.Abstract.ViewModel}
  */
-Gui.Window.ViewModel.Timer.prototype = new Gui.Timer.ViewModel.List.Timer();
+Gui.Timer.ViewModel.Window.Timer.prototype = new Gui.Timer.ViewModel.List.Timer();
 
 /**
  * @type {string}
  */
-Gui.Window.ViewModel.Timer.prototype.cacheKey = 'id';
+Gui.Timer.ViewModel.Window.Timer.prototype.cacheKey = 'id';
 
 /**
  * initialize resources
  */
-Gui.Window.ViewModel.Timer.prototype.init = function () {
+Gui.Timer.ViewModel.Window.Timer.prototype.init = function () {
 
     this.resource = this.data.resource;
     this.broadcast = this.data.broadcast;
@@ -28,7 +28,7 @@ Gui.Window.ViewModel.Timer.prototype.init = function () {
 /**
  * add magic methods
  */
-Gui.Window.ViewModel.Timer.prototype.initViewMethods = function () {
+Gui.Timer.ViewModel.Window.Timer.prototype.initViewMethods = function () {
 
     var me = this;
 
@@ -65,8 +65,8 @@ Gui.Window.ViewModel.Timer.prototype.initViewMethods = function () {
 
     this.data.view.getFilename = function () {
 
-        var wholename = me.data.resource.data.filename;
+        var wholeName = me.data.resource.data.filename;
 
-        return wholename.split('~').pop();
+        return wholeName.split('~').pop();
     };
 };

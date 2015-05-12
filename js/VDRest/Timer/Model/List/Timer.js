@@ -60,3 +60,30 @@ VDRest.Timer.Model.List.Timer.prototype.isCreatedBySearchTimer = function (id) {
 
     return sId === id;
 };
+
+/**
+ * delete Timer
+ */
+VDRest.Timer.Model.List.Timer.prototype.deleteTimer = function () {
+
+    $window.one('vdrest-api-actions.timer-deleted', this.handleDelete.bind(this));
+
+    this.module.getResource('List.Timer').deleteSearchTimer(this.data);
+};
+
+/**
+ * handle delete of Timer
+ */
+VDRest.Timer.Model.List.Timer.prototype.handleDelete = function () {
+
+    var collection = this.module.getModel('List').collection;
+    delete this.module.cache.store.Model['List.Timer'][this.data.id];
+    collection.splice(collection.indexOf(this), 1);
+
+    $.event.trigger({
+        "type": "gui-timer.deleted",
+        "payload": this.keyInCache
+    });
+
+    delete this;
+};

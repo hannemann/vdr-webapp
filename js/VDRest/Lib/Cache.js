@@ -10,10 +10,19 @@ VDRest.Lib.Cache = function () {
 
     this.store = {
         "Model" : {},
-        "View" : {},
-        "ViewModel" : {},
-        "Controller" : {},
-        "Helper" : {}
+        "View" : {
+            "Window" : {}
+        },
+        "ViewModel" : {
+            "Window" : {}
+        },
+        "Controller" : {
+            "Window" : {}
+        },
+        "Helper" : {
+            "Window" : {}
+        }
+
     };
 };
 

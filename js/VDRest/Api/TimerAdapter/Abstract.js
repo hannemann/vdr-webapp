@@ -127,12 +127,12 @@ VDRest.Api.TimerAdapter.Abstract.prototype = {
             node = x.getElementsByTagName('epgsearch')[0],
             v;
 
-        if (node && this.broadcast.channel) {
+        if (node && this.broadcast && this.broadcast.channel) {
             v = x.getElementsByTagName('channel_id')[0] || x.createElement('channel_id');
             v.textContent = this.broadcast.channel;
             node.appendChild(v);
             return s.serializeToString(x);
-        } else if (this.broadcast.channel) {
+        } else if (this.broadcast && this.broadcast.channel) {
             return this.broadcast.channel + '/' + this.broadcast.id;
         } else {
             return '';

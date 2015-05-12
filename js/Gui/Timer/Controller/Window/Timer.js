@@ -2,28 +2,28 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.Timer = function () {};
+Gui.Timer.Controller.Window.Timer = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.Controller.Timer.prototype = new Gui.Window.Controller.Abstract();
+Gui.Timer.Controller.Window.Timer.prototype = new Gui.Window.Controller.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.Controller.Timer.prototype.cacheKey = 'id';
+Gui.Timer.Controller.Window.Timer.prototype.cacheKey = 'id';
 
 /**
  * init view and view model
  */
-Gui.Window.Controller.Timer.prototype.init = function () {
+Gui.Timer.Controller.Window.Timer.prototype.init = function () {
 
     this.eventPrefix = 'window.timer-' + this.data.id;
 
     this.eventNameSpace = this.module.namespace + '-' + this.module.name;
 
-    this.view = this.module.getView('Timer', this.data);
+    this.view = this.module.getView('Window.Timer', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
@@ -31,7 +31,7 @@ Gui.Window.Controller.Timer.prototype.init = function () {
 /**
  * load broadcast
  */
-Gui.Window.Controller.Timer.prototype.getBroadcast = function (callback) {
+Gui.Timer.Controller.Window.Timer.prototype.getBroadcast = function (callback) {
 
     var broadcastHelper = VDRest.app.getModule('VDRest.Timer').getHelper('Broadcast');
 
@@ -95,7 +95,7 @@ Gui.Window.Controller.Timer.prototype.getBroadcast = function (callback) {
 /**
  * dispatch view
  */
-Gui.Window.Controller.Timer.prototype.dispatchView = function () {
+Gui.Timer.Controller.Window.Timer.prototype.dispatchView = function () {
 
     this.getBroadcast(function () {
 
@@ -105,7 +105,7 @@ Gui.Window.Controller.Timer.prototype.dispatchView = function () {
             this.data.resource.data.event_id = this.broadcast.getData('id');
         }
 
-        this.module.getViewModel('Timer', {
+        this.module.getViewModel('Window.Timer', {
             "id": this.data.id,
             "view": this.view,
             "resource": this.data.resource,
@@ -123,7 +123,7 @@ Gui.Window.Controller.Timer.prototype.dispatchView = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.Timer.prototype.addObserver = function () {
+Gui.Timer.Controller.Window.Timer.prototype.addObserver = function () {
 
     if (this.view.hasBroadcast && this.view.hasBroadcastImages()) {
 
@@ -148,7 +148,7 @@ Gui.Window.Controller.Timer.prototype.addObserver = function () {
 /**
  * remove event listeners
  */
-Gui.Window.Controller.Timer.prototype.removeObserver = function () {
+Gui.Timer.Controller.Window.Timer.prototype.removeObserver = function () {
 
     if (this.view.hasBroadcast && this.view.hasBroadcastImages()) {
 
@@ -171,7 +171,7 @@ Gui.Window.Controller.Timer.prototype.removeObserver = function () {
 /**
  * trigger timer delete
  */
-Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
+Gui.Timer.Controller.Window.Timer.prototype.deleteTimer = function () {
 
     this.vibrate();
 
@@ -183,7 +183,7 @@ Gui.Window.Controller.Timer.prototype.deleteTimer = function () {
 /**
  * trigger timer update at vdr
  */
-Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
+Gui.Timer.Controller.Window.Timer.prototype.updateTimer = function (e) {
 
     var i, fields = e.payload,
         me = this,
@@ -240,7 +240,7 @@ Gui.Window.Controller.Timer.prototype.updateTimer = function (e) {
 /**
  * trigger update of involved models in cache etc.
  */
-Gui.Window.Controller.Timer.prototype.update = function (e) {
+Gui.Timer.Controller.Window.Timer.prototype.update = function (e) {
 
     var timer = e.payload,
         cache = this.module.cache.store;
@@ -268,17 +268,17 @@ Gui.Window.Controller.Timer.prototype.update = function (e) {
     this.data.id = timer.keyInCache;
     this.data.resource.data = timer.data;
 
-    delete cache.Controller['Timer'][this.keyInCache];
-    delete cache.View['Timer'][this.keyInCache];
-    delete cache.ViewModel['Timer'][this.keyInCache];
+    delete cache.Controller['Window.Timer'][this.keyInCache];
+    delete cache.View['Window.Timer'][this.keyInCache];
+    delete cache.ViewModel['Window.Timer'][this.keyInCache];
 
     this.keyInCache = timer.keyInCache;
-    cache.Controller['Timer'][this.keyInCache] = this;
+    cache.Controller['Window.Timer'][this.keyInCache] = this;
 
     this.view.keyInCache = timer.keyInCache;
-    cache.View['Timer'][this.keyInCache] = this.view;
+    cache.View['Window.Timer'][this.keyInCache] = this.view;
 
-    this.module.getViewModel('Timer', {
+    this.module.getViewModel('Window.Timer', {
         "id" : this.data.id,
         "view" : this.view,
         "resource" : this.data.resource,
@@ -295,7 +295,7 @@ Gui.Window.Controller.Timer.prototype.update = function (e) {
 /**
  * trigger timer activate
  */
-Gui.Window.Controller.Timer.prototype.toggleActivateTimer = function () {
+Gui.Timer.Controller.Window.Timer.prototype.toggleActivateTimer = function () {
 
     this.vibrate();
 
@@ -310,7 +310,7 @@ Gui.Window.Controller.Timer.prototype.toggleActivateTimer = function () {
  * retrieve TimerAdapter
  * @returns {VDRest.Api.TimerAdapter}
  */
-Gui.Window.Controller.Timer.prototype.getAdapter = function () {
+Gui.Timer.Controller.Window.Timer.prototype.getAdapter = function () {
 
     return new VDRest.Api.TimerAdapter(this);
 };
@@ -318,7 +318,7 @@ Gui.Window.Controller.Timer.prototype.getAdapter = function () {
 /**
  * toggle timer active
  */
-Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
+Gui.Timer.Controller.Window.Timer.prototype.timerActiveAction = function () {
 
     this.view.handleTimerActive(this.data.resource.data.is_active);
 };
@@ -326,7 +326,7 @@ Gui.Window.Controller.Timer.prototype.timerActiveAction = function () {
 /**
  * destroy timer
  */
-Gui.Window.Controller.Timer.prototype.destroyTimer = function () {
+Gui.Timer.Controller.Window.Timer.prototype.destroyTimer = function () {
 
     // delete list entry
     if (!this.data.dontDeleteListItem) {
@@ -340,7 +340,7 @@ Gui.Window.Controller.Timer.prototype.destroyTimer = function () {
 /**
  * trigger image animation
  */
-Gui.Window.Controller.Timer.prototype.animateImageAction = function () {
+Gui.Timer.Controller.Window.Timer.prototype.animateImageAction = function () {
 
     this.vibrate();
 
@@ -350,7 +350,7 @@ Gui.Window.Controller.Timer.prototype.animateImageAction = function () {
 /**
  * Destroy
  */
-Gui.Window.Controller.Timer.prototype.destructView = function () {
+Gui.Timer.Controller.Window.Timer.prototype.destructView = function () {
 
     var me = this;
 

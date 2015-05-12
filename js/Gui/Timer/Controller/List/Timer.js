@@ -116,7 +116,8 @@ Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "Timer",
+            "type" : "Window.Timer",
+            "module" : this.module,
             "data" : {
                 "id" : this.dataModel.data.id,
                 "resource": this.dataModel
