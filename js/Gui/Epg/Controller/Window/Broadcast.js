@@ -2,36 +2,36 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.Broadcast = function () {};
+Gui.Epg.Controller.Window.Broadcast = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.Controller.Broadcast.prototype = new Gui.Window.Controller.Abstract();
+Gui.Epg.Controller.Window.Broadcast.prototype = new Gui.Window.Controller.Abstract();
 
 /**
  * cache key
  * @type {string}
  */
-Gui.Window.Controller.Broadcast.prototype.cacheKey = 'channel/id';
+Gui.Epg.Controller.Window.Broadcast.prototype.cacheKey = 'channel/id';
 
 /**
  * initialize view and view model
  */
-Gui.Window.Controller.Broadcast.prototype.init = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.init = function () {
 
     this.eventNameSpace = this.module.namespace + '-' + this.module.name;
 
     this.eventPrefix = 'window.broadcast.' + this.data.channel + '/' + this.data.id;
 
-    this.view = this.module.getView('Broadcast', {
+    this.view = this.module.getView('Window.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 
-    this.module.getViewModel('Broadcast', {
+    this.module.getViewModel('Window.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel,
         "view" : this.view,
@@ -43,7 +43,7 @@ Gui.Window.Controller.Broadcast.prototype.init = function () {
 /**
  * dispatch
  */
-Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -55,7 +55,7 @@ Gui.Window.Controller.Broadcast.prototype.dispatchView = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.addObserver = function () {
 
     if (this.view.image) {
 
@@ -73,7 +73,7 @@ Gui.Window.Controller.Broadcast.prototype.addObserver = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.removeObserver = function () {
 
     if (this.view.image) {
 
@@ -88,7 +88,7 @@ Gui.Window.Controller.Broadcast.prototype.removeObserver = function () {
 /**
  * trigger image animation
  */
-Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.animateImageAction = function () {
 
     this.vibrate();
 
@@ -98,7 +98,7 @@ Gui.Window.Controller.Broadcast.prototype.animateImageAction = function () {
 /**
  * handle timer
  */
-Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.handleTimerAction = function () {
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);
@@ -107,7 +107,7 @@ Gui.Window.Controller.Broadcast.prototype.handleTimerAction = function () {
 /**
  * edit timer
  */
-Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.editTimerAction = function () {
 
     this.vibrate();
 
@@ -135,7 +135,7 @@ Gui.Window.Controller.Broadcast.prototype.editTimerAction = function () {
 /**
  * toggle timer for broadcast
  */
-Gui.Window.Controller.Broadcast.prototype.toggleTimerAction = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.toggleTimerAction = function () {
 
     var timer = new VDRest.Api.TimerAdapter(
         VDRest.app.getModule('VDRest.Epg').getModel(
@@ -159,7 +159,7 @@ Gui.Window.Controller.Broadcast.prototype.toggleTimerAction = function () {
 /**
  * Destroy
  */
-Gui.Window.Controller.Broadcast.prototype.destructView = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.destructView = function () {
 
     var me = this;
     // apply animation

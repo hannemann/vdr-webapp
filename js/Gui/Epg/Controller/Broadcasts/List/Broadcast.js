@@ -28,6 +28,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.epgController = this.module.getController('Epg');
 
+    this.windowModule = this.module;
+
     this.view = this.module.getView('Broadcasts.List.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel,
@@ -107,7 +109,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleClick = function ()
     $.event.trigger({
         "type" : 'window.request',
         "payload" : {
-            "type" : "Broadcast",
+            "module" : this.windowModule,
+            "type" : "Window.Broadcast",
             "data" : this.data
         }
     })

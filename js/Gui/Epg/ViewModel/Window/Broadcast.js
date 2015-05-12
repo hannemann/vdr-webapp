@@ -2,18 +2,18 @@
  * @class
  * @constructor
  */
-Gui.Window.ViewModel.Broadcast = function () {};
+Gui.Epg.ViewModel.Window.Broadcast = function () {};
 
 /**
  * @type {VDRest.Lib.Cache.store.ViewModel}
  */
-Gui.Window.ViewModel.Broadcast.prototype = new VDRest.Abstract.ViewModel();
+Gui.Epg.ViewModel.Window.Broadcast.prototype = new VDRest.Abstract.ViewModel();
 
 /**
  * cache key
  * @type {string}
  */
-Gui.Window.ViewModel.Broadcast.prototype.cacheKey = 'channel/id';
+Gui.Epg.ViewModel.Window.Broadcast.prototype.cacheKey = 'channel/id';
 
 /**
  * map strings to images
@@ -21,7 +21,7 @@ Gui.Window.ViewModel.Broadcast.prototype.cacheKey = 'channel/id';
  * @property {string} 16:9
  * @property {string} stereo
  */
-Gui.Window.ViewModel.Broadcast.prototype.componentsMap = {
+Gui.Epg.ViewModel.Window.Broadcast.prototype.componentsMap = {
     "16:9":'<img src="' + VDRest.image.getComponent('16:9') + '" alt="">',
     "stereo":'<img src="' + VDRest.image.getComponent('stereo') + '" alt="">'
 };
@@ -29,7 +29,7 @@ Gui.Window.ViewModel.Broadcast.prototype.componentsMap = {
 /**
  * init view methods
  */
-Gui.Window.ViewModel.Broadcast.prototype.init = function () {
+Gui.Epg.ViewModel.Window.Broadcast.prototype.init = function () {
 
     var me = this;
 
@@ -71,7 +71,7 @@ Gui.Window.ViewModel.Broadcast.prototype.init = function () {
  * map components to images
  * @returns {Array}
  */
-Gui.Window.ViewModel.Broadcast.prototype.getComponents = function () {
+Gui.Epg.ViewModel.Window.Broadcast.prototype.getComponents = function () {
 
     var i = 0, l = this.resource.components.length, components, component;
 
@@ -96,7 +96,7 @@ Gui.Window.ViewModel.Broadcast.prototype.getComponents = function () {
  * retrieve epg image
  * @returns {String|Boolean}
  */
-Gui.Window.ViewModel.Broadcast.prototype.getEpgImage = function () {
+Gui.Epg.ViewModel.Window.Broadcast.prototype.getEpgImage = function () {
 
     var images = this.data.resource.getData('images');
 
@@ -112,7 +112,7 @@ Gui.Window.ViewModel.Broadcast.prototype.getEpgImage = function () {
  * @param {Number} width
  * @returns {String|Boolean}
  */
-Gui.Window.ViewModel.Broadcast.prototype.getFanart = function (width) {
+Gui.Epg.ViewModel.Window.Broadcast.prototype.getFanart = function (width) {
 
     /**
      * @type {additionalMediaEpisode|additionalMediaMovie}
@@ -146,7 +146,7 @@ Gui.Window.ViewModel.Broadcast.prototype.getFanart = function (width) {
  * @param {Number} width
  * @returns {String|Boolean}
  */
-Gui.Window.ViewModel.Broadcast.prototype.getEpisodeImage = function (width) {
+Gui.Epg.ViewModel.Window.Broadcast.prototype.getEpisodeImage = function (width) {
 
     /**
      * @type {additionalMediaEpisode|additionalMediaMovie}

@@ -4,43 +4,43 @@
  * @method {boolean} hasImages
  * @method {Array} getImages
  */
-Gui.Window.View.Broadcast = function () {};
+Gui.Epg.View.Window.Broadcast = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.Broadcast.prototype = new Gui.Window.View.Abstract();
+Gui.Epg.View.Window.Broadcast.prototype = new Gui.Window.View.Abstract();
 
 /**
  * cache key
  * @type {string}
  */
-Gui.Window.View.Broadcast.prototype.cacheKey = 'channel/id';
+Gui.Epg.View.Window.Broadcast.prototype.cacheKey = 'channel/id';
 
 /**
  * @type {string}
  */
-Gui.Window.View.Broadcast.prototype.hasHeader = true;
+Gui.Epg.View.Window.Broadcast.prototype.hasHeader = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Broadcast.prototype.isModal = true;
+Gui.Epg.View.Window.Broadcast.prototype.isModal = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Broadcast.prototype.hasDesktopCloseButton = true;
+Gui.Epg.View.Window.Broadcast.prototype.hasDesktopCloseButton = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Broadcast.prototype.isModalTransparent = true;
+Gui.Epg.View.Window.Broadcast.prototype.isModalTransparent = true;
 
 /**
  * add components, call render method
  */
-Gui.Window.View.Broadcast.prototype.render = function () {
+Gui.Epg.View.Window.Broadcast.prototype.render = function () {
 
     this.addTitle();
 
@@ -64,9 +64,9 @@ Gui.Window.View.Broadcast.prototype.render = function () {
 
 /**
  * add class names
- * @returns {Gui.Window.View.Broadcast}
+ * @returns {Gui.Epg.View.Window.Broadcast}
  */
-Gui.Window.View.Broadcast.prototype.addClasses = function () {
+Gui.Epg.View.Window.Broadcast.prototype.addClasses = function () {
 
     var classNames = ['broadcast'];
 
@@ -86,7 +86,7 @@ Gui.Window.View.Broadcast.prototype.addClasses = function () {
  * retrieve tabs configuration
  * @type {Object}
  */
-Gui.Window.View.Broadcast.prototype.getTabConfig = function () {
+Gui.Epg.View.Window.Broadcast.prototype.getTabConfig = function () {
 
     this.body.addClass('has-tabs');
 
@@ -127,7 +127,7 @@ Gui.Window.View.Broadcast.prototype.getTabConfig = function () {
  * retrieve tools tab configuration
  * @returns {{record: {dom: "dom", callback: "callback"}}}
  */
-Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
+Gui.Epg.View.Window.Broadcast.prototype.getToolsConfig = function () {
 
     return {
         "record":{
@@ -161,7 +161,7 @@ Gui.Window.View.Broadcast.prototype.getToolsConfig = function () {
  * retrieve web tab configuration
  * @returns {{imdb: {dom: "dom", callback: "callback"}}}
  */
-Gui.Window.View.Broadcast.prototype.getWebConfig = function () {
+Gui.Epg.View.Window.Broadcast.prototype.getWebConfig = function () {
 
     return {
         "imdb":{
@@ -186,7 +186,7 @@ Gui.Window.View.Broadcast.prototype.getWebConfig = function () {
  * render contents of tool tab
  * return {jQuery}
  */
-Gui.Window.View.Broadcast.prototype.renderToolsTab = function () {
+Gui.Epg.View.Window.Broadcast.prototype.renderToolsTab = function () {
 
     var i, dom, button, config = this.getToolsConfig();
 
@@ -213,7 +213,7 @@ Gui.Window.View.Broadcast.prototype.renderToolsTab = function () {
  * render contents of web tab
  * @returns {jQuery}
  */
-Gui.Window.View.Broadcast.prototype.renderWebTab = function () {
+Gui.Epg.View.Window.Broadcast.prototype.renderWebTab = function () {
 
     var i, dom, button, config = this.getWebConfig();
 
@@ -232,9 +232,9 @@ Gui.Window.View.Broadcast.prototype.renderWebTab = function () {
 };
 
 /**
- * @returns {Gui.Window.View.Broadcast}
+ * @returns {Gui.Epg.View.Window.Broadcast}
  */
-Gui.Window.View.Broadcast.prototype.addTitle = function () {
+Gui.Epg.View.Window.Broadcast.prototype.addTitle = function () {
 
     this.title = $('<h2 class="window-title left">')
         .text(this.getTitle())
@@ -245,9 +245,9 @@ Gui.Window.View.Broadcast.prototype.addTitle = function () {
 
 /**
  * add epg image to header
- * @returns {Gui.Window.View.Broadcast}
+ * @returns {Gui.Epg.View.Window.Broadcast}
  */
-Gui.Window.View.Broadcast.prototype.addMainImage = function () {
+Gui.Epg.View.Window.Broadcast.prototype.addMainImage = function () {
 
     var src = this.getEpisodeImage(320) || this.getEpgImage() || this.getFanart(320);
 
@@ -261,9 +261,9 @@ Gui.Window.View.Broadcast.prototype.addMainImage = function () {
 
 /**
  * animate epg image on click
- * @returns {Gui.Window.View.Broadcast}
+ * @returns {Gui.Epg.View.Window.Broadcast}
  */
-Gui.Window.View.Broadcast.prototype.animateImage = function () {
+Gui.Epg.View.Window.Broadcast.prototype.animateImage = function () {
 
     this.node.toggleClass('image-expanded');
 
@@ -282,9 +282,9 @@ Gui.Window.View.Broadcast.prototype.animateImage = function () {
 
 /**
  * add details list to header
- * @returns {Gui.Window.View.Broadcast}
+ * @returns {Gui.Epg.View.Window.Broadcast}
  */
-Gui.Window.View.Broadcast.prototype.addDetails = function () {
+Gui.Epg.View.Window.Broadcast.prototype.addDetails = function () {
 
     this.details = $('<ul class="window-header-details">');
 
@@ -314,9 +314,9 @@ Gui.Window.View.Broadcast.prototype.addDetails = function () {
 
 /**
  * add components
- * @returns {Gui.Window.View.Broadcast}
+ * @returns {Gui.Epg.View.Window.Broadcast}
  */
-Gui.Window.View.Broadcast.prototype.addComponents = function () {
+Gui.Epg.View.Window.Broadcast.prototype.addComponents = function () {
 
     this.header
         .append(
@@ -332,7 +332,7 @@ Gui.Window.View.Broadcast.prototype.addComponents = function () {
  * handle timer exists
  * @param {bool} exists
  */
-Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
+Gui.Epg.View.Window.Broadcast.prototype.handleTimerExists = function (exists) {
 
     if (exists) {
 
@@ -351,7 +351,7 @@ Gui.Window.View.Broadcast.prototype.handleTimerExists = function (exists) {
  * handle timer active
  * @param {bool} active
  */
-Gui.Window.View.Broadcast.prototype.handleTimerActive = function (active) {
+Gui.Epg.View.Window.Broadcast.prototype.handleTimerActive = function (active) {
 
     if (active) {
 
