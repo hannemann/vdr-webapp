@@ -2,22 +2,22 @@
  * @class
  * @constructor
  */
-Gui.Window.View.Directory = function () {};
+Gui.Recordings.View.Window.Directory = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.Directory.prototype = new Gui.Window.View.Abstract();
+Gui.Recordings.View.Window.Directory.prototype = new Gui.Window.View.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.View.Directory.prototype.cacheKey = 'id';
+Gui.Recordings.View.Window.Directory.prototype.cacheKey = 'id';
 
 /**
  * decorate and render
  */
-Gui.Window.View.Directory.prototype.render = function () {
+Gui.Recordings.View.Window.Directory.prototype.render = function () {
 
     this.addClasses();
 
@@ -30,9 +30,9 @@ Gui.Window.View.Directory.prototype.render = function () {
 
 /**
  * add classes
- * @returns {Gui.Window.View.Directory}
+ * @returns {Gui.Recordings.View.Window.Directory}
  */
-Gui.Window.View.Directory.prototype.addClasses = function () {
+Gui.Recordings.View.Window.Directory.prototype.addClasses = function () {
 
     var classNames = ['recordings', 'viewport-fullsize', 'collapsed'];
 
@@ -45,7 +45,7 @@ Gui.Window.View.Directory.prototype.addClasses = function () {
 /**
  * destroy window
  */
-Gui.Window.View.Directory.prototype.destruct = function () {
+Gui.Recordings.View.Window.Directory.prototype.destruct = function () {
 
     var me = this;
     // apply animation

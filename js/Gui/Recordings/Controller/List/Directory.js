@@ -100,7 +100,8 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
         "type" : "window.request",
         "payload" : {
             "hashSuffix" : '~' + this.data.path,
-            "type" : "Directory",
+            "type" : "Window.Directory",
+            "module" : this.module,
             "data" : {
                 "listItem" : this.view,
                 "dispatch": this.view.renderItems.bind(this.view),

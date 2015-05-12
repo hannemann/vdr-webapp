@@ -2,48 +2,48 @@
  * @class
  * @constructor
  */
-Gui.Window.View.Recording = function () {};
+Gui.Recordings.View.Window.Recording = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.Recording.prototype = new Gui.Window.View.Abstract();
+Gui.Recordings.View.Window.Recording.prototype = new Gui.Window.View.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.View.Recording.prototype.cacheKey = 'id';
+Gui.Recordings.View.Window.Recording.prototype.cacheKey = 'id';
 
 /**
  * @type {string}
  */
-Gui.Window.View.Recording.prototype.scraperImageUrl =
+Gui.Recordings.View.Window.Recording.prototype.scraperImageUrl =
     '//' + VDRest.config.getItem('host') + ':' + VDRest.config.getItem('port') + '/scraper/image/';
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Recording.prototype.isModal = true;
+Gui.Recordings.View.Window.Recording.prototype.isModal = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Recording.prototype.isModalTransparent = true;
+Gui.Recordings.View.Window.Recording.prototype.isModalTransparent = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Recording.prototype.hasHeader = true;
+Gui.Recordings.View.Window.Recording.prototype.hasHeader = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Recording.prototype.hasDesktopCloseButton = true;
+Gui.Recordings.View.Window.Recording.prototype.hasDesktopCloseButton = true;
 
 /**
  * render
  */
-Gui.Window.View.Recording.prototype.render = function () {
+Gui.Recordings.View.Window.Recording.prototype.render = function () {
 
     this.addClasses().decorateHeader();
 
@@ -56,9 +56,9 @@ Gui.Window.View.Recording.prototype.render = function () {
 
 /**
  * add class names
- * @returns {Gui.Window.View.Recording}
+ * @returns {Gui.Recordings.View.Window.Recording}
  */
-Gui.Window.View.Recording.prototype.addClasses = function () {
+Gui.Recordings.View.Window.Recording.prototype.addClasses = function () {
 
     this.node.addClass('window-recording clearer');
 
@@ -67,9 +67,9 @@ Gui.Window.View.Recording.prototype.addClasses = function () {
 
 /**
  * add title and details
- * @returns {Gui.Window.View.Recording}
+ * @returns {Gui.Recordings.View.Window.Recording}
  */
-Gui.Window.View.Recording.prototype.decorateHeader = function () {
+Gui.Recordings.View.Window.Recording.prototype.decorateHeader = function () {
 
     this.headerContentWrapper = $('<div class="wrapper left">').appendTo(this.header);
     this.addTitle().addDetails().addFanart();
@@ -79,9 +79,9 @@ Gui.Window.View.Recording.prototype.decorateHeader = function () {
 
 /**
  * add Title
- * @returns {Gui.Window.View.Recording}
+ * @returns {Gui.Recordings.View.Window.Recording}
  */
-Gui.Window.View.Recording.prototype.addTitle = function () {
+Gui.Recordings.View.Window.Recording.prototype.addTitle = function () {
 
     this.title = $('<h2 class="window-title left">')
         .text(this.getEventTitle())
@@ -92,9 +92,9 @@ Gui.Window.View.Recording.prototype.addTitle = function () {
 
 /**
  * add details
- * @returns {Gui.Window.View.Recording}
+ * @returns {Gui.Recordings.View.Window.Recording}
  */
-Gui.Window.View.Recording.prototype.addDetails = function () {
+Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
 
     this.details = $('<ul class="window-header-details">')
         .appendTo(this.headerContentWrapper);
@@ -120,7 +120,7 @@ Gui.Window.View.Recording.prototype.addDetails = function () {
 /**
  * add fanart if available
  */
-Gui.Window.View.Recording.prototype.addFanart = function () {
+Gui.Recordings.View.Window.Recording.prototype.addFanart = function () {
 
     var fanartUrl, media = this.getAdditionalMedia();
 
@@ -148,7 +148,7 @@ Gui.Window.View.Recording.prototype.addFanart = function () {
 /**
  * @type {Object}
  */
-Gui.Window.View.Recording.prototype.getTabConfig = function () {
+Gui.Recordings.View.Window.Recording.prototype.getTabConfig = function () {
 
     this.body.addClass('has-tabs');
 
@@ -188,7 +188,7 @@ Gui.Window.View.Recording.prototype.getTabConfig = function () {
  * render contents of tool tab
  * return {jQuery}
  */
-Gui.Window.View.Recording.prototype.renderEditTab = function () {
+Gui.Recordings.View.Window.Recording.prototype.renderEditTab = function () {
 
     var i, dom, buttonList, button, config = this.getEditConfig();
 
@@ -240,9 +240,9 @@ Gui.Window.View.Recording.prototype.renderEditTab = function () {
  * get web tab configuration
  * @returns {*|{imdb: {dom: string, callback: string}}}
  */
-Gui.Window.View.Recording.prototype.getWebConfig = function () {
+Gui.Recordings.View.Window.Recording.prototype.getWebConfig = function () {
 
-    var webConfig = Gui.Window.View.Broadcast.prototype.getWebConfig.apply(this);
+    var webConfig = Gui.Epg.View.Window.Broadcast.prototype.getWebConfig.apply(this);
 
     webConfig.imdb.callback = function () {
 
@@ -255,16 +255,16 @@ Gui.Window.View.Recording.prototype.getWebConfig = function () {
  * render contents of web tab
  * return {jQuery}
  */
-Gui.Window.View.Recording.prototype.renderWebTab = function () {
+Gui.Recordings.View.Window.Recording.prototype.renderWebTab = function () {
 
-    return Gui.Window.View.Broadcast.prototype.renderWebTab.apply(this);
+    return Gui.Epg.View.Window.Broadcast.prototype.renderWebTab.apply(this);
 };
 
 /**
  * retrieve tool tab configuration
  * @returns {object}
  */
-Gui.Window.View.Recording.prototype.getEditConfig = function () {
+Gui.Recordings.View.Window.Recording.prototype.getEditConfig = function () {
 
     var me = this, editConfig = {};
 
@@ -331,7 +331,7 @@ Gui.Window.View.Recording.prototype.getEditConfig = function () {
 /**
  * generate filename from title and subtitle of broadcast
  */
-Gui.Window.View.Recording.prototype.subToFilename = function () {
+Gui.Recordings.View.Window.Recording.prototype.subToFilename = function () {
 
     VDRest.Abstract.Controller.prototype.vibrate();
 

@@ -2,32 +2,32 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.Recording = function () {};
+Gui.Recordings.Controller.Window.Recording = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.Controller.Recording.prototype = new Gui.Window.Controller.Abstract();
+Gui.Recordings.Controller.Window.Recording.prototype = new Gui.Window.Controller.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.Controller.Recording.prototype.cacheKey = 'id';
+Gui.Recordings.Controller.Window.Recording.prototype.cacheKey = 'id';
 
 /**
  * initialize view and viewModel
  */
-Gui.Window.Controller.Recording.prototype.init = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.init = function () {
 
     var recording = this.getData('recording').dataModel;
 
     this.eventPrefix = 'window.recording' + this.keyInCache;
 
-    this.view = this.module.getView('Recording', {
+    this.view = this.module.getView('Window.Recording', {
         "id": this.keyInCache
     });
 
-    this.module.getViewModel('Recording', {
+    this.module.getViewModel('Window.Recording', {
         "id": this.keyInCache,
         "view" : this.view,
         "resource": recording
@@ -39,7 +39,7 @@ Gui.Window.Controller.Recording.prototype.init = function () {
 /**
  * dispatch
  */
-Gui.Window.Controller.Recording.prototype.dispatchView = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -49,7 +49,7 @@ Gui.Window.Controller.Recording.prototype.dispatchView = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.Recording.prototype.addObserver = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.addObserver = function () {
 
     this.view.subToFilenameButton.on('click', this.view.subToFilename.bind(this.view));
 
@@ -66,7 +66,7 @@ Gui.Window.Controller.Recording.prototype.addObserver = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.Recording.prototype.removeObserver = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.removeObserver = function () {
 
     this.view.subToFilenameButton.off('click');
 
@@ -84,7 +84,7 @@ Gui.Window.Controller.Recording.prototype.removeObserver = function () {
 /**
  * trigger update of recording
  */
-Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
+Gui.Recordings.Controller.Window.Recording.prototype.updateRecordingAction = function (e) {
 
     this.vibrate();
 
@@ -115,7 +115,7 @@ Gui.Window.Controller.Recording.prototype.updateRecordingAction = function (e) {
 /**
  * trigger deletion of recording
  */
-Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.deleteRecordingAction = function () {
 
     this.vibrate();
 
@@ -127,7 +127,7 @@ Gui.Window.Controller.Recording.prototype.deleteRecordingAction = function () {
 /**
  * watch recording
  */
-Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.watchRecordingAction = function () {
 
     this.vibrate();
 
@@ -141,7 +141,7 @@ Gui.Window.Controller.Recording.prototype.watchRecordingAction = function () {
 /**
  * handle delete
  */
-Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.afterDeleteAction = function () {
 
     var model = VDRest.app.getModule('VDRest.Recordings').getModel(
             'List.Recording',
@@ -173,7 +173,7 @@ Gui.Window.Controller.Recording.prototype.afterDeleteAction = function () {
 /**
  * Destroy
  */
-Gui.Window.Controller.Recording.prototype.destructView = function () {
+Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () {
 
     var me = this;
     // remove on animation end

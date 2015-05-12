@@ -203,7 +203,8 @@ Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = functio
         "type" : "window.request",
         "payload" : {
             "hashSuffix": '~' + this.keyInCache.toCacheKey(),
-            "type" : "Recording",
+            "type" : "Window.Recording",
+            "module" : this.module,
             "data" : {
                 "node" : this.view,
                 "id": this.keyInCache.toCacheKey(),
