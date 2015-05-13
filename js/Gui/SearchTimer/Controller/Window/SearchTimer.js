@@ -2,30 +2,30 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.SearchTimer = function () {};
+Gui.SearchTimer.Controller.Window.SearchTimer = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.Controller.SearchTimer.prototype = new Gui.Window.Controller.Abstract();
+Gui.SearchTimer.Controller.Window.SearchTimer.prototype = new Gui.Window.Controller.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.Controller.SearchTimer.prototype.cacheKey = 'id';
+Gui.SearchTimer.Controller.Window.SearchTimer.prototype.cacheKey = 'id';
 
 /**
  * init view and view model
  */
-Gui.Window.Controller.SearchTimer.prototype.init = function () {
+Gui.SearchTimer.Controller.Window.SearchTimer.prototype.init = function () {
 
     this.eventPrefix = 'window.searchtimer-' + this.data.id;
 
     this.eventNameSpace = this.module.namespace + '-' + this.module.name;
 
-    this.view = this.module.getView('SearchTimer', this.data);
+    this.view = this.module.getView('Window.SearchTimer', this.data);
 
-    this.module.getViewModel('SearchTimer', {
+    this.module.getViewModel('Window.SearchTimer', {
         "id" : this.data.id,
         "view" : this.view,
         "resource": this.data.resource
@@ -36,7 +36,7 @@ Gui.Window.Controller.SearchTimer.prototype.init = function () {
     VDRest.helper.log(this);
 };
 
-Gui.Window.Controller.SearchTimer.prototype.dispatchView = function () {
+Gui.SearchTimer.Controller.Window.SearchTimer.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -47,7 +47,7 @@ Gui.Window.Controller.SearchTimer.prototype.dispatchView = function () {
 /**
  * trigger search form
  */
-Gui.Window.Controller.SearchTimer.prototype.requestSearchForm = function () {
+Gui.SearchTimer.Controller.Window.SearchTimer.prototype.requestSearchForm = function () {
 
     var config = this.view.getSearchFormData();
 
@@ -74,7 +74,7 @@ Gui.Window.Controller.SearchTimer.prototype.requestSearchForm = function () {
 /**
  * Destroy
  */
-Gui.Window.Controller.SearchTimer.prototype.destructView = function () {
+Gui.SearchTimer.Controller.Window.SearchTimer.prototype.destructView = function () {
 
     var me = this;
 

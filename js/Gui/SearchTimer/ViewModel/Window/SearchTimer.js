@@ -2,22 +2,22 @@
  * @class
  * @constructor
  */
-Gui.Window.ViewModel.SearchTimer = function () {};
+Gui.SearchTimer.ViewModel.Window.SearchTimer = function () {};
 
 /**
  * @type {VDRest.Abstract.ViewModel}
  */
-Gui.Window.ViewModel.SearchTimer.prototype = new Gui.SearchTimer.ViewModel.List.SearchTimer();
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype = new Gui.SearchTimer.ViewModel.List.SearchTimer();
 
 /**
  * @type {string}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.cacheKey = 'id';
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.cacheKey = 'id';
 
 /**
  * @type {string}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.weekDays = {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.weekDays = {
 
     "sunday": 0x0001,
     "monday": 0x0002,
@@ -31,7 +31,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.weekDays = {
 /**
  * add magic methods
  */
-Gui.Window.ViewModel.SearchTimer.prototype.initViewMethods = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.initViewMethods = function () {
 
     VDRest.Abstract.ViewModel.prototype.initViewMethods.call(this);
 
@@ -45,7 +45,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.initViewMethods = function () {
  * @property {searchTimerFormFields} fields
  * @return {searchTimerFormConfig}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormData = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormData = function () {
 
     return {
         "categories": this.getSearchFormCategories(),
@@ -60,7 +60,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormData = function () {
  * @property {{timer: String}} timer
  * @return {searchTimerFormCategories}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormCategories = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormCategories = function () {
 
     return {
         "search": {"label": 'Search'},
@@ -124,7 +124,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormCategories = function ()
  * @property {searchTimerCommonField} del_after_days_of_first_rec
  * @return {searchTimerFormFields}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormFields = function () {
 
     this.searchFormFields = {};
 
@@ -349,7 +349,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchFormFields = function () {
  * @param {*} [depends]
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getBooleanField = function (category, label, checked, depends) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBooleanField = function (category, label, checked, depends) {
 
     var field = {
         "category": category,
@@ -372,7 +372,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBooleanField = function (category,
  * @param {*} [depends]
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getStringField = function (category, label, value, depends) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStringField = function (category, label, value, depends) {
 
     var field = {
         "category": category,
@@ -395,7 +395,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStringField = function (category, 
  * @param {*} [depends]
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getNumberField = function (category, label, value, depends) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getNumberField = function (category, label, value, depends) {
 
     var field = {
         "category": category,
@@ -414,7 +414,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getNumberField = function (category, 
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getEnumField = function (category, label, values, depends, multiselect) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getEnumField = function (category, label, values, depends, multiselect) {
 
     var field = {
         "category": category,
@@ -443,7 +443,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getEnumField = function (category, la
  *
  * @return {Object.<searchTimerSearchMode>}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchModeValues = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchModeValues = function () {
 
     return {
         "phrase": {
@@ -482,7 +482,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchModeValues = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchInValues = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchInValues = function () {
 
     return {
         "use_title": {
@@ -509,7 +509,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchInValues = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoFields = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getExtEpgInfoFields = function () {
 
     var e = this.data.resource.data.ext_epg_info,
         collection = VDRest.app.getModule('VDRest.SearchTimer').getModel('ExtEPGInfoList').getCollection(),
@@ -545,7 +545,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoFields = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoComboField = function (def, value, values) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getExtEpgInfoComboField = function (def, value, values) {
 
     var field = {
         "category": "parameter",
@@ -576,7 +576,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getExtEpgInfoComboField = function (d
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getStartTimeField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStartTimeField = function () {
 
     return {
         "category": "parameter",
@@ -592,7 +592,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStartTimeField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getStopTimeField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStopTimeField = function () {
 
     return {
         "category": "parameter",
@@ -608,7 +608,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getStopTimeField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getMinDurationField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getMinDurationField = function () {
 
     return {
         "category": "parameter",
@@ -624,7 +624,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getMinDurationField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getMaxDurationField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getMaxDurationField = function () {
 
     return {
         "category": "parameter",
@@ -640,7 +640,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getMaxDurationField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getUseChannelValues = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getUseChannelValues = function () {
 
     return {
         "no": {
@@ -669,7 +669,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseChannelValues = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getChannelMinField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelMinField = function () {
 
     return {
         "category": "parameter",
@@ -686,7 +686,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getChannelMinField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getChannelMaxField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelMaxField = function () {
 
     return {
         "category": "parameter",
@@ -748,7 +748,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getChannelMaxField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getDayOfWeekField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDayOfWeekField = function () {
 
     return {
         "category": "parameter",
@@ -800,7 +800,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDayOfWeekField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistModeField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistModeField = function () {
 
     return {
         "category": "parameter",
@@ -834,7 +834,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistModeField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistSelectorField = function () {
 
     var collection = VDRest.app.getModule('VDRest.SearchTimer').getModel('Blacklists').getCollection(),
         blacklists = {};
@@ -863,7 +863,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function 
  * not available in osd edit menu
  * @return {searchTimerCommonField}
  */
-//Gui.Window.ViewModel.SearchTimer.prototype.getUseInFavoritesField = function () {
+//Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getUseInFavoritesField = function () {
 //
 //    return {
 //        "category": "parameter",
@@ -876,7 +876,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getBlacklistSelectorField = function 
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getUseAsSearchTimerField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getUseAsSearchTimerField = function () {
 
     return {
         "category": "searchtimer",
@@ -905,7 +905,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseAsSearchTimerField = function (
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerFromField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchTimerFromField = function () {
 
     return {
         "category": "searchtimer",
@@ -934,7 +934,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerFromField = function ()
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerTilField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchTimerTilField = function () {
 
     return {
         "category": "searchtimer",
@@ -962,7 +962,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerTilField = function () 
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerActionField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchTimerActionField = function () {
 
     return {
         "category": "searchtimer",
@@ -1002,7 +1002,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSearchTimerActionField = function 
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getSwitchMinBeforeField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSwitchMinBeforeField = function () {
 
     return {
         "category": "searchtimer",
@@ -1018,7 +1018,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getSwitchMinBeforeField = function ()
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getUseSeriesRecordingField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getUseSeriesRecordingField = function () {
 
     return {
         "category": "searchtimer",
@@ -1035,7 +1035,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getUseSeriesRecordingField = function
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getDirectoryField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDirectoryField = function () {
 
     var field = {
             "category": "searchtimer",
@@ -1069,7 +1069,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDirectoryField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getDelRecsAfterDaysField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDelRecsAfterDaysField = function () {
 
     return {
         "category": "searchtimer",
@@ -1086,7 +1086,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDelRecsAfterDaysField = function (
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getKeepRecsField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getKeepRecsField = function () {
 
     return {
         "category": "searchtimer",
@@ -1103,7 +1103,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getKeepRecsField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getPauseOnRecsField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getPauseOnRecsField = function () {
 
     return {
         "category": "searchtimer",
@@ -1120,7 +1120,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getPauseOnRecsField = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getCompareSubtitleValues = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getCompareSubtitleValues = function () {
 
     return {
         "no": {
@@ -1139,7 +1139,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareSubtitleValues = function (
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getCompareTimeValues = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getCompareTimeValues = function () {
 
     return {
         "no": {
@@ -1168,7 +1168,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareTimeValues = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getDelModeValues = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDelModeValues = function () {
 
     return {
         "no": {
@@ -1192,7 +1192,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getDelModeValues = function () {
 /**
  * @return {searchTimerCommonField}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getCompareCategoriesField = function () {
 
     var collection = VDRest.app.getModule('VDRest.SearchTimer').getModel('ExtEPGInfoList').getCollection(),
         value = 1;
@@ -1220,7 +1220,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function 
  * @typedef {{data:{name:string,id:string,is_group:boolean}}} descr
  * @return {{}}
  */
-//Gui.Window.ViewModel.SearchTimer.prototype.getContentDescriptorValues = function () {
+//Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getContentDescriptorValues = function () {
 //
 //    var collection = VDRest.app.getModule('VDRest.Epg').getModel('ContentDescriptors').getCollection(),
 //        values = {}, selection = this.data.resource.data.content_descriptors.match(/.{1,2}/g) || [];
@@ -1246,7 +1246,7 @@ Gui.Window.ViewModel.SearchTimer.prototype.getCompareCategoriesField = function 
  * retrieve channelgroups
  * @return {Gui.SearchTimer.Controller.List.channelgroups}
  */
-Gui.Window.ViewModel.SearchTimer.prototype.getChannelGroupFieldValues = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelGroupFieldValues = function () {
 
     /**
      * @type {Gui.SearchTimer.Controller.List.channelgroups}

@@ -89,8 +89,8 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
     this.timerList.each(function () {
 
         if (
-            !this.searchTimerId ||
-            (this.searchTimerId && arguments[1].dataModel.isCreatedBySearchTimer(this.searchTimerId))
+            "undefined" === typeof this.searchTimerId ||
+            (!isNaN(this.searchTimerId) && arguments[1].dataModel.isCreatedBySearchTimer(this.searchTimerId))
         ) {
             arguments[1].dispatchView();
         }

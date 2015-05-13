@@ -154,7 +154,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.requestWindowAction = func
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "SearchTimer",
+            "type" : "Window.SearchTimer",
+            "module" : this.module,
             "data" : {
                 "id": this.data.dataModel.data.id,
                 "resource": this.data.dataModel,
