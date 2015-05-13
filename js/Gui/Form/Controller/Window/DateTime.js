@@ -2,18 +2,18 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.DateTime = function () {
+Gui.Form.Controller.Window.DateTime = function () {
 };
 
 /**
  * @type {Gui.Window.ViewModel.Input}
  */
-Gui.Window.Controller.DateTime.prototype = new Gui.Window.Controller.Input();
+Gui.Form.Controller.Window.DateTime.prototype = new Gui.Form.Controller.Window.Input();
 
 /**
  * supported date types
  */
-Gui.Window.Controller.DateTime.prototype.supported = {
+Gui.Form.Controller.Window.DateTime.prototype.supported = {
     "all": "YFmdHi",
     "Y": {
         "reg": new RegExp("[0-9]{4}"),
@@ -44,11 +44,11 @@ Gui.Window.Controller.DateTime.prototype.supported = {
 /**
  * initialize view
  */
-Gui.Window.Controller.DateTime.prototype.init = function () {
+Gui.Form.Controller.Window.DateTime.prototype.init = function () {
 
     this.eventPrefix = 'window.datetime';
 
-    this.view = this.module.getView('DateTime', this.data);
+    this.view = this.module.getView('Window.DateTime', this.data);
 
     this.view.supported = this.supported;
 
@@ -58,7 +58,7 @@ Gui.Window.Controller.DateTime.prototype.init = function () {
 /**
  * dispatch
  */
-Gui.Window.Controller.DateTime.prototype.dispatchView = function () {
+Gui.Form.Controller.Window.DateTime.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 

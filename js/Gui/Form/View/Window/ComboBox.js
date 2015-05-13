@@ -1,21 +1,21 @@
 /**
  * @constructor
  */
-Gui.Window.View.ComboBox = function () {
+Gui.Form.View.Window.ComboBox = function () {
 };
 
 /**
  * @type {Gui.Window.Controller.Select}
  */
-Gui.Window.View.ComboBox.prototype = new Gui.Window.View.Select();
+Gui.Form.View.Window.ComboBox.prototype = new Gui.Form.View.Window.Select();
 
 /**
  * add header text and input field
- * @returns {Gui.Window.View.ComboBox}
+ * @returns {Gui.Form.View.Window.ComboBox}
  */
-Gui.Window.View.ComboBox.prototype.setHeader = function () {
+Gui.Form.View.Window.ComboBox.prototype.setHeader = function () {
 
-    Gui.Window.View.Select.prototype.setHeader.call(this);
+    Gui.Form.View.Window.Select.prototype.setHeader.call(this);
 
     this.header.append(this.getInputField());
 
@@ -26,7 +26,7 @@ Gui.Window.View.ComboBox.prototype.setHeader = function () {
  * build input field
  * @return {jQuery}
  */
-Gui.Window.View.ComboBox.prototype.getInputField = function () {
+Gui.Form.View.Window.ComboBox.prototype.getInputField = function () {
 
     var l = $('<label>'), id = this.data.gui.attr('name') + '_text';
 

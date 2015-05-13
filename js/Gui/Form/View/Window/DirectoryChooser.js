@@ -2,28 +2,28 @@
  * @class
  * @constructor
  */
-Gui.Window.View.DirectoryChooser = function () {};
+Gui.Form.View.Window.DirectoryChooser = function () {};
 
 /**
- * @type {Gui.Window.Controller.Select}
+ * @type {Gui.Form.View.Window.Select}
  */
-Gui.Window.View.DirectoryChooser.prototype = new Gui.Window.View.Select();
+Gui.Form.View.Window.DirectoryChooser.prototype = new Gui.Form.View.Window.Select();
 
 /**
  * decorate and render
  */
-Gui.Window.View.DirectoryChooser.prototype.render = function () {
+Gui.Form.View.Window.DirectoryChooser.prototype.render = function () {
 
-    Gui.Window.View.Select.prototype.render.call(this);
+    Gui.Form.View.Window.Select.prototype.render.call(this);
 
     this.node.addClass('directory-chooser');
 };
 
 /**
  * add selectable values
- * @returns {Gui.Window.View.DirectoryChooser}
+ * @returns {Gui.Form.View.Window.DirectoryChooser}
  */
-Gui.Window.View.DirectoryChooser.prototype.addValues = function () {
+Gui.Form.View.Window.DirectoryChooser.prototype.addValues = function () {
 
     var i, values = VDRest.app.getModule('VDRest.Recordings').getHelper().getDirTree(), root = {
         "hasChildren" : true
@@ -50,7 +50,7 @@ Gui.Window.View.DirectoryChooser.prototype.addValues = function () {
  * @param {{}} directory
  * @param {jQuery} parentNode
  */
-Gui.Window.View.DirectoryChooser.prototype.addRecursive = function (label, directory, parentNode) {
+Gui.Form.View.Window.DirectoryChooser.prototype.addRecursive = function (label, directory, parentNode) {
 
     var i;
 
@@ -81,7 +81,7 @@ Gui.Window.View.DirectoryChooser.prototype.addRecursive = function (label, direc
  * @param label
  * @param value
  */
-Gui.Window.View.DirectoryChooser.prototype.prepareValue = function (label, value) {
+Gui.Form.View.Window.DirectoryChooser.prototype.prepareValue = function (label, value) {
 
     var name = this.data.gui.attr('name');
 

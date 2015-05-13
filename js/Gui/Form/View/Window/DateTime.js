@@ -3,23 +3,23 @@
  * @constructor
  * @property {{}|Function} values
  */
-Gui.Window.View.DateTime = function () {
+Gui.Form.View.Window.DateTime = function () {
 };
 
 /**
- * @type {Gui.Window.View.Input}
+ * @type {Gui.Form.View.Window.Input}
  */
-Gui.Window.View.DateTime.prototype = new Gui.Window.View.Input();
+Gui.Form.View.Window.DateTime.prototype = new Gui.Form.View.Window.Input();
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.DateTime.prototype.isModal = true;
+Gui.Form.View.Window.DateTime.prototype.isModal = true;
 
 /**
  * decorate and render
  */
-Gui.Window.View.DateTime.prototype.render = function () {
+Gui.Form.View.Window.DateTime.prototype.render = function () {
 
     this.header = $('<div class="header">').appendTo(this.body);
 
@@ -34,9 +34,9 @@ Gui.Window.View.DateTime.prototype.render = function () {
 
 /**
  * add header text
- * @returns {Gui.Window.View.DateTime}
+ * @returns {Gui.Form.View.Window.DateTime}
  */
-Gui.Window.View.DateTime.prototype.setHeader = function () {
+Gui.Form.View.Window.DateTime.prototype.setHeader = function () {
 
     this.header.text(VDRest.app.translate(this.data.label));
 
@@ -45,9 +45,9 @@ Gui.Window.View.DateTime.prototype.setHeader = function () {
 
 /**
  * add selects
- * @returns {Gui.Window.View.DateTime}
+ * @returns {Gui.Form.View.Window.DateTime}
  */
-Gui.Window.View.DateTime.prototype.addSelects = function () {
+Gui.Form.View.Window.DateTime.prototype.addSelects = function () {
 
     var format = this.parseFormat(),
         template = this.data.format,
@@ -126,7 +126,7 @@ Gui.Window.View.DateTime.prototype.addSelects = function () {
  * parse format
  * @return {[]}
  */
-Gui.Window.View.DateTime.prototype.parseFormat = function () {
+Gui.Form.View.Window.DateTime.prototype.parseFormat = function () {
 
     var reg = new RegExp('%[' + this.supported.all + ']', 'g');
 
@@ -137,7 +137,7 @@ Gui.Window.View.DateTime.prototype.parseFormat = function () {
  * retrieve year select
  * @return {jQuery}
  */
-Gui.Window.View.DateTime.prototype.getYearSelect = function (selected) {
+Gui.Form.View.Window.DateTime.prototype.getYearSelect = function (selected) {
 
     var d = new Date(), y = d.getFullYear(), x = 0, dom = $('<div>'), o;
 
@@ -166,7 +166,7 @@ Gui.Window.View.DateTime.prototype.getYearSelect = function (selected) {
  * retrieve month select
  * @return {jQuery}
  */
-Gui.Window.View.DateTime.prototype.getFullMonthSelect = function (selected) {
+Gui.Form.View.Window.DateTime.prototype.getFullMonthSelect = function (selected) {
 
     var y = 0, dom = $('<div>'), o,
         monthNames = VDRest.helper.monthNames();
@@ -195,7 +195,7 @@ Gui.Window.View.DateTime.prototype.getFullMonthSelect = function (selected) {
  * retrieve month select
  * @return {jQuery}
  */
-Gui.Window.View.DateTime.prototype.getMonthSelect = function (selected) {
+Gui.Form.View.Window.DateTime.prototype.getMonthSelect = function (selected) {
 
     var y = 0, dom = $('<div>'), o;
 
@@ -223,7 +223,7 @@ Gui.Window.View.DateTime.prototype.getMonthSelect = function (selected) {
  * retrieve day select
  * @return {jQuery}
  */
-Gui.Window.View.DateTime.prototype.getDaySelect = function (selected) {
+Gui.Form.View.Window.DateTime.prototype.getDaySelect = function (selected) {
 
     var y = 1, dom = $('<div>'), o;
 
@@ -251,7 +251,7 @@ Gui.Window.View.DateTime.prototype.getDaySelect = function (selected) {
  * retrieve hour select
  * @return {jQuery}
  */
-Gui.Window.View.DateTime.prototype.getHourSelect = function (selected) {
+Gui.Form.View.Window.DateTime.prototype.getHourSelect = function (selected) {
 
     var y = 0, dom = $('<div>'), o;
 
@@ -279,7 +279,7 @@ Gui.Window.View.DateTime.prototype.getHourSelect = function (selected) {
  * retrieve minute select
  * @return {jQuery}
  */
-Gui.Window.View.DateTime.prototype.getMinuteSelect = function (selected) {
+Gui.Form.View.Window.DateTime.prototype.getMinuteSelect = function (selected) {
 
     var y = 0, dom = $('<div>'), o;
 

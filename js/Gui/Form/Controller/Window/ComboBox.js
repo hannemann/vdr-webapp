@@ -1,16 +1,16 @@
-Gui.Window.Controller.ComboBox = function () {
+Gui.Form.Controller.Window.ComboBox = function () {
 };
 
-Gui.Window.Controller.ComboBox.prototype = new Gui.Window.Controller.Select();
+Gui.Form.Controller.Window.ComboBox.prototype = new Gui.Form.Controller.Window.Select();
 
 /**
  * initialize view
  */
-Gui.Window.Controller.ComboBox.prototype.init = function () {
+Gui.Form.Controller.Window.ComboBox.prototype.init = function () {
 
     this.eventPrefix = 'window.combobox';
 
-    this.view = this.module.getView('ComboBox', this.data);
+    this.view = this.module.getView('Window.ComboBox', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
@@ -18,11 +18,11 @@ Gui.Window.Controller.ComboBox.prototype.init = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.ComboBox.prototype.addObserver = function () {
+Gui.Form.Controller.Window.ComboBox.prototype.addObserver = function () {
 
     var i, values = this.view.data.values;
 
-    Gui.Window.Controller.Select.prototype.addObserver.call(this);
+    Gui.Form.Controller.Window.Select.prototype.addObserver.call(this);
 
     for (i in values) {
         if (values.hasOwnProperty(i)) {
@@ -36,7 +36,7 @@ Gui.Window.Controller.ComboBox.prototype.addObserver = function () {
  * wrap updater
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.ComboBox.prototype.checkedHandler = function (e) {
+Gui.Form.Controller.Window.ComboBox.prototype.checkedHandler = function (e) {
 
     this.updateText(e.target.value, e.target.checked);
 };
@@ -46,7 +46,7 @@ Gui.Window.Controller.ComboBox.prototype.checkedHandler = function (e) {
  * @param {String} value
  * @param {Boolean} add
  */
-Gui.Window.Controller.ComboBox.prototype.updateText = function (value, add) {
+Gui.Form.Controller.Window.ComboBox.prototype.updateText = function (value, add) {
 
     var textField = this.data.text,
         textValues = textField.val(),

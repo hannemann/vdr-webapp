@@ -252,7 +252,7 @@ Gui.Form.Controller.Abstract.prototype.getDateTimeValue = function () {
 
     var value = this.value.toString(),
         template = this.format,
-        regs = Gui.Window.Controller.DateTime.prototype.supported,
+        regs = Gui.Form.Controller.Window.DateTime.prototype.supported,
         parts = this.form_order.split(''),
         reg = '', match;
 
@@ -445,13 +445,13 @@ Gui.Form.Controller.Abstract.prototype.requestInput = function (field, type) {
     if (false === field.disabled) {
 
         payload = {
-            "type": type,
+            "type": 'Window.' + type,
             "data": field
         };
 
-        if (field.module) {
-            payload.module = field.module;
-        }
+        payload.module = field.module
+            ? field.module
+            : this.windowModule ? this.windowModule : this.module;
 
         $.event.trigger({
             "type" : "window.request",

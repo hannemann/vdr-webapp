@@ -3,22 +3,22 @@
  * @constructor
  * @property {{}|Function} values
  */
-Gui.Window.View.Select = function () {};
+Gui.Form.View.Window.Select = function () {};
 
 /**
- * @type {Gui.Window.View.Input}
+ * @type {Gui.Form.View.Window.Input}
  */
-Gui.Window.View.Select.prototype = new Gui.Window.View.Input();
+Gui.Form.View.Window.Select.prototype = new Gui.Form.View.Window.Input();
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Select.prototype.isModal = true;
+Gui.Form.View.Window.Select.prototype.isModal = true;
 
 /**
  * decorate and render
  */
-Gui.Window.View.Select.prototype.render = function () {
+Gui.Form.View.Window.Select.prototype.render = function () {
 
     this.header = $('<div class="header">').appendTo(this.body);
 
@@ -33,9 +33,9 @@ Gui.Window.View.Select.prototype.render = function () {
 
 /**
  * add header text
- * @returns {Gui.Window.View.Select}
+ * @returns {Gui.Form.View.Window.Select}
  */
-Gui.Window.View.Select.prototype.setHeader = function () {
+Gui.Form.View.Window.Select.prototype.setHeader = function () {
 
     this.header.text(VDRest.app.translate(this.data.label));
 
@@ -44,9 +44,9 @@ Gui.Window.View.Select.prototype.setHeader = function () {
 
 /**
  * add selectable values
- * @returns {Gui.Window.View.Select}
+ * @returns {Gui.Form.View.Window.Select}
  */
-Gui.Window.View.Select.prototype.addValues = function () {
+Gui.Form.View.Window.Select.prototype.addValues = function () {
 
     var i;
     this.values = this.data.values;
@@ -73,7 +73,7 @@ Gui.Window.View.Select.prototype.addValues = function () {
  * prepare value object
  * @param value
  */
-Gui.Window.View.Select.prototype.prepareValue = function (value) {
+Gui.Form.View.Window.Select.prototype.prepareValue = function (value) {
 
     var name = this.data.gui.attr('name'), html = '', type;
 
@@ -124,7 +124,7 @@ Gui.Window.View.Select.prototype.prepareValue = function (value) {
 /**
  * destruct
  */
-Gui.Window.View.Select.prototype.destruct = function () {
+Gui.Form.View.Window.Select.prototype.destruct = function () {
 
     var i;
 

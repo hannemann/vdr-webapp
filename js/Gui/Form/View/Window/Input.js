@@ -2,20 +2,20 @@
  * @class
  * @constructor
  */
-Gui.Window.View.Input = function () {};
+Gui.Form.View.Window.Input = function () {};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.Input.prototype = new Gui.Window.View.Abstract();
+Gui.Form.View.Window.Input.prototype = new Gui.Window.View.Abstract();
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.Input.prototype.isModal = true;
+Gui.Form.View.Window.Input.prototype.isModal = true;
 
 
-Gui.Window.View.Input.prototype.getNode = function () {
+Gui.Form.View.Window.Input.prototype.getNode = function () {
 
     return $('<form class="window">');
 };
@@ -23,7 +23,7 @@ Gui.Window.View.Input.prototype.getNode = function () {
 /**
  * decorate and render
  */
-Gui.Window.View.Input.prototype.render = function () {
+Gui.Form.View.Window.Input.prototype.render = function () {
 
     var type = this.data.type;
 
@@ -39,9 +39,9 @@ Gui.Window.View.Input.prototype.render = function () {
 
 /**
  * add classes
- * @returns {Gui.Window.View.Input}
+ * @returns {Gui.Form.View.Window.Input}
  */
-Gui.Window.View.Input.prototype.addClasses = function () {
+Gui.Form.View.Window.Input.prototype.addClasses = function () {
 
     this.node.addClass('window-input clearer');
 
@@ -54,9 +54,9 @@ Gui.Window.View.Input.prototype.addClasses = function () {
 
 /**
  * add form field
- * @returns {Gui.Window.View.Input}
+ * @returns {Gui.Form.View.Window.Input}
  */
-Gui.Window.View.Input.prototype.addInput = function () {
+Gui.Form.View.Window.Input.prototype.addInput = function () {
 
     this.input = this.data.dom.clone();
 
@@ -73,9 +73,9 @@ Gui.Window.View.Input.prototype.addInput = function () {
 
 /**
  * add buttons
- * @returns {Gui.Window.View.Input}
+ * @returns {Gui.Form.View.Window.Input}
  */
-Gui.Window.View.Input.prototype.addButtons = function () {
+Gui.Form.View.Window.Input.prototype.addButtons = function () {
 
     this.cancel = $('<div class="button button-cancel">').text(VDRest.app.translate('Cancel')).appendTo(this.node);
 

@@ -2,21 +2,21 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.DirectoryChooser = function () {};
+Gui.Form.Controller.Window.DirectoryChooser = function () {};
 
 /**
- * @type {Gui.Window.Controller.Select}
+ * @type {Gui.Form.Controller.Window.Select}
  */
-Gui.Window.Controller.DirectoryChooser.prototype = new Gui.Window.Controller.Select();
+Gui.Form.Controller.Window.DirectoryChooser.prototype = new Gui.Form.Controller.Window.Select();
 
 /**
  * initialize view
  */
-Gui.Window.Controller.DirectoryChooser.prototype.init = function () {
+Gui.Form.Controller.Window.DirectoryChooser.prototype.init = function () {
 
     this.eventPrefix = 'window.directorychooser';
 
-    this.view = this.module.getView('DirectoryChooser', this.data);
+    this.view = this.module.getView('Window.DirectoryChooser', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
@@ -24,11 +24,11 @@ Gui.Window.Controller.DirectoryChooser.prototype.init = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.DirectoryChooser.prototype.addObserver = function () {
+Gui.Form.Controller.Window.DirectoryChooser.prototype.addObserver = function () {
 
     var me = this;
 
-    Gui.Window.Controller.Select.prototype.addObserver.call(this);
+    Gui.Form.Controller.Window.Select.prototype.addObserver.call(this);
 
     this.view.node.find('label').each (function () {
 
@@ -54,9 +54,9 @@ Gui.Window.Controller.DirectoryChooser.prototype.addObserver = function () {
 /**
  * remove event listeners
  */
-Gui.Window.Controller.DirectoryChooser.prototype.removeObserver = function () {
+Gui.Form.Controller.Window.DirectoryChooser.prototype.removeObserver = function () {
 
-    Gui.Window.Controller.Select.prototype.removeObserver.call(this);
+    Gui.Form.Controller.Window.Select.prototype.removeObserver.call(this);
 
     this.view.node.find('label').each(function () {
 

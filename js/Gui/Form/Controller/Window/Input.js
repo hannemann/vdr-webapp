@@ -2,21 +2,21 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.Input = function () {};
+Gui.Form.Controller.Window.Input = function () {};
 
 /**
- * @type {Gui.Window.Controller.Abstract}
+ * @type {Gui.Form.Controller.Window.Abstract}
  */
-Gui.Window.Controller.Input.prototype = new Gui.Window.Controller.Abstract();
+Gui.Form.Controller.Window.Input.prototype = new Gui.Window.Controller.Abstract();
 
 /**
  * init view
  */
-Gui.Window.Controller.Input.prototype.init = function () {
+Gui.Form.Controller.Window.Input.prototype.init = function () {
 
     this.eventPrefix = 'window.input';
 
-    this.view = this.module.getView('Input', this.data);
+    this.view = this.module.getView('Window.Input', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
@@ -24,7 +24,7 @@ Gui.Window.Controller.Input.prototype.init = function () {
 /**
  * dispatch
  */
-Gui.Window.Controller.Input.prototype.dispatchView = function () {
+Gui.Form.Controller.Window.Input.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -35,7 +35,7 @@ Gui.Window.Controller.Input.prototype.dispatchView = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.Input.prototype.addObserver = function () {
+Gui.Form.Controller.Window.Input.prototype.addObserver = function () {
 
 
     if ("number" === this.data.type) {
@@ -62,7 +62,7 @@ Gui.Window.Controller.Input.prototype.addObserver = function () {
 /**
  * remove event listeners
  */
-Gui.Window.Controller.Input.prototype.removeObserver = function () {
+Gui.Form.Controller.Window.Input.prototype.removeObserver = function () {
 
     if ("number" === this.data.type) {
 
@@ -79,7 +79,7 @@ Gui.Window.Controller.Input.prototype.removeObserver = function () {
 /**
  * handle confirm
  */
-Gui.Window.Controller.Input.prototype.okAction = function (e) {
+Gui.Form.Controller.Window.Input.prototype.okAction = function (e) {
 
     this.vibrate();
 
@@ -118,7 +118,7 @@ Gui.Window.Controller.Input.prototype.okAction = function (e) {
 /**
  * copy strings to target
  */
-Gui.Window.Controller.Input.prototype.setStringLike = function () {
+Gui.Form.Controller.Window.Input.prototype.setStringLike = function () {
 
     var value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]').val();
 
@@ -130,7 +130,7 @@ Gui.Window.Controller.Input.prototype.setStringLike = function () {
 /**
  * copy strings to target
  */
-Gui.Window.Controller.Input.prototype.setComboBox = function () {
+Gui.Form.Controller.Window.Input.prototype.setComboBox = function () {
 
     var value = this.view.header.find('input[name="' + this.data.gui.attr('name') + '_text"]').val(),
         i, values = this.data.values;
@@ -158,7 +158,7 @@ Gui.Window.Controller.Input.prototype.setComboBox = function () {
 /**
  * copy strings to target
  */
-Gui.Window.Controller.Input.prototype.setDateTime = function () {
+Gui.Form.Controller.Window.Input.prototype.setDateTime = function () {
 
     var value = this.data.format,
         output = this.data.form_order,
@@ -197,7 +197,7 @@ Gui.Window.Controller.Input.prototype.setDateTime = function () {
 /**
  * copy enum
  */
-Gui.Window.Controller.Input.prototype.setEnum = function () {
+Gui.Form.Controller.Window.Input.prototype.setEnum = function () {
 
     var i, value = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked'), values = [];
 
@@ -253,7 +253,7 @@ Gui.Window.Controller.Input.prototype.setEnum = function () {
 /**
  * copy directory
  */
-Gui.Window.Controller.Input.prototype.setDirectory = function () {
+Gui.Form.Controller.Window.Input.prototype.setDirectory = function () {
 
     var i, value,
         checked = this.view.body.find('input[name="' + this.data.gui.attr('name') + '"]:checked'),
@@ -285,7 +285,7 @@ Gui.Window.Controller.Input.prototype.setDirectory = function () {
 /**
  * cancel action
  */
-Gui.Window.Controller.Input.prototype.cancel = function () {
+Gui.Form.Controller.Window.Input.prototype.cancel = function () {
 
     this.vibrate();
 
@@ -296,7 +296,7 @@ Gui.Window.Controller.Input.prototype.cancel = function () {
  * destroy, trigger change
  * @param {boolean} trigger
  */
-Gui.Window.Controller.Input.prototype.goBack = function (trigger) {
+Gui.Form.Controller.Window.Input.prototype.goBack = function (trigger) {
 
     $window.one(this.animationEndEvents, function () {
 

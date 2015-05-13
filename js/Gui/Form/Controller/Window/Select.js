@@ -2,21 +2,21 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.Select = function () {};
+Gui.Form.Controller.Window.Select = function () {};
 
 /**
  * @type {Gui.Window.ViewModel.Input}
  */
-Gui.Window.Controller.Select.prototype = new Gui.Window.Controller.Input();
+Gui.Form.Controller.Window.Select.prototype = new Gui.Form.Controller.Window.Input();
 
 /**
  * initialize view
  */
-Gui.Window.Controller.Select.prototype.init = function () {
+Gui.Form.Controller.Window.Select.prototype.init = function () {
 
     this.eventPrefix = 'window.select';
 
-    this.view = this.module.getView('Select', this.data);
+    this.view = this.module.getView('Window.Select', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 };
@@ -24,7 +24,7 @@ Gui.Window.Controller.Select.prototype.init = function () {
 /**
  * dispatch
  */
-Gui.Window.Controller.Select.prototype.dispatchView = function () {
+Gui.Form.Controller.Window.Select.prototype.dispatchView = function () {
 
     if ("function" === typeof this.data.renderBefore) {
         this.data.renderBefore();
