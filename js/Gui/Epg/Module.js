@@ -141,7 +141,8 @@ Gui.Epg.prototype.contextMenu = {
             $.event.trigger({
                 "type" : "window.request",
                 "payload" : {
-                    "type": "DateTime",
+                    "module" : VDRest.app.getModule('Gui.Form'),
+                    "type": "Window.DateTime",
                     "data" : data
                 }
             });

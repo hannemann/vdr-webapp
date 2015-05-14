@@ -255,7 +255,8 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.saveAsTemplateAction = fun
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "Input",
+            "module" : VDRest.app.getModule('Gui.Form'),
+            "type" : "Window.Input",
             "data" : data
         }
     });

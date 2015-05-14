@@ -196,7 +196,8 @@ Gui.SearchTimer.prototype.getTemplateSelect = function () {
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "Select",
+            "type" : "Window.Select",
+            "module" : VDRest.app.getModule('Gui.Form'),
             "data" : data
         }
     });
@@ -214,7 +215,8 @@ Gui.SearchTimer.prototype.requestForm = function (e) {
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "SearchTimer",
+            "type" : "Window.SearchTimer",
+            "module" : this,
             "data" : {
                 "id": -1,
                 "resource": sTimer,
@@ -235,7 +237,8 @@ Gui.SearchTimer.prototype.selectDeleteTemplates = function () {
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "Select",
+            "module" : VDRest.app.getModule('Gui.Form'),
+            "type" : "Window.Select",
             "data" : data
         }
     });
