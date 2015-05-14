@@ -14,7 +14,7 @@ VDRest.Api.TimerAdapter.Timer.prototype = new VDRest.Api.TimerAdapter.Abstract()
  */
 VDRest.Api.TimerAdapter.Timer.prototype.setData = function (client) {
 
-    this.timer = client.data.resource;
+    this.timer = client.data.resource.data;
     this.broadcast = client.broadcast.data;
 
     return this;
@@ -42,7 +42,7 @@ VDRest.Api.TimerAdapter.Timer.prototype.normalize = function () {
 
     this.flags = this.getFlags();
 
-    this.aux = this.broadcast.channel && this.broadcast.channel + '/' + this.broadcast.id + ':' || '';
+    this.aux = this.getAux(this.timer);
 
     return this;
 };

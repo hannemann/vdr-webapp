@@ -23,7 +23,8 @@ VDRest.Timer.Model.List.Timer.Resource.prototype._class = 'VDRest.Timer.Model.Li
 VDRest.Timer.Model.List.Timer.Resource.prototype.urls = {
 
     "delete" : "timers",
-    "timerList" : "timers.json"
+    "timerList": "timers.json",
+    "bulkDelete": "timers/bulkdelete.json"
 };
 
 /**
@@ -113,6 +114,49 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.deleteTimer = function (adapter
 };
 
 /**
+ * bulk delete timer with given ids
+ * @param {[]} ids
+ */
+VDRest.Timer.Model.List.Timer.Resource.prototype.bulkDelete = function (ids) {
+
+    var url, request = {}, me = this;
+
+    url = this.getBaseUrl() + this.urls.bulkDelete;
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "Confirm",
+            "data": {
+                "message": VDRest.app.translate("Delete %d Timer?", ids.length),
+                "id": 'bulkdelete.timer'
+            }
+        }
+    });
+
+    $document.one('window.confirm.confirm', function () {
+
+        request.url = url;
+        request.method = 'DELETE';
+        request.data = {
+            "timers": ids
+        };
+
+        setTimeout(function () {
+
+            me.fetchAsync(request, function (result) {
+
+                $.event.trigger({
+                    "type": "vdrest-api-actions.timer-bulkdeleted",
+                    "payload": result
+                });
+            });
+
+        }, 100);
+    });
+};
+
+/**
  * set url needed to retrieve specific timer
  * @param id
  * @returns {VDRest.Timer.Model.List.Timer.Resource}
@@ -122,4 +166,10 @@ VDRest.Timer.Model.List.Timer.Resource.prototype.setIdUrl = function (id) {
     this.urls.byId = 'timers/' + id + '.json';
 
     return this;
+};
+
+VDRest.Timer.Model.List.Timer.Resource.prototype.onError = function (e) {
+
+    $window.off("vdrest-api-actions.timer-bulkdeleted");
+    VDRest.Api.Resource.prototype.onError.call(this, e);
 };

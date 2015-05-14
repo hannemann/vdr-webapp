@@ -68,6 +68,36 @@ Gui.Window.Controller.Abstract.prototype.addObserver = function () {
 };
 
 /**
+ * remove event listeners
+ */
+Gui.Window.Controller.Abstract.prototype.removeObserver = function () {
+
+    if (this.view.closeButton) {
+
+        this.view.closeButton.off('click');
+    }
+};
+
+/**
+ * adjust position in case keyboard pops up
+ */
+Gui.Window.Controller.Abstract.prototype.setPosition = function () {
+
+    var winHeight = $window.height(), height = this.view.node.height(), top;
+
+    if ("Input" === this.keyInCache) {
+        top = '25%';
+    } else {
+        top = parseInt((winHeight - height) / 2, 10) + 'px';
+    }
+
+    this.view.node.css({
+        "transition": "top .2s",
+        "top": top
+    });
+};
+
+/**
  * destroy
  */
 Gui.Window.Controller.Abstract.prototype.destructView = function () {

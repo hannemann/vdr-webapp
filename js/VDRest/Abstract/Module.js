@@ -34,6 +34,14 @@ VDRest.Abstract.Module.prototype.init = function () {
 
     window[this.namespace][this.name].Helper = function () {};
 
+    window[this.namespace][this.name].Controller.Window = function () {};
+
+    window[this.namespace][this.name].View.Window = function () {};
+
+    window[this.namespace][this.name].ViewModel.Window = function () {};
+
+    window[this.namespace][this.name].Helper.Window = function () {};
+
     this.cache = new VDRest.Lib.Cache();
 
     this.cache.module = this;
@@ -295,7 +303,7 @@ VDRest.Abstract.Module.prototype.getInitData = function (id, cacheKey) {
 
     var data = {},
         keys = cacheKey.split(this.cache.cacheKeySeparator),
-        ids = id.split(this.cache.cacheKeySeparator),
+        ids = id.toString().split(this.cache.cacheKeySeparator),
         i = 0, l = keys.length;
 
     if (l > 1 && l != ids.length) {

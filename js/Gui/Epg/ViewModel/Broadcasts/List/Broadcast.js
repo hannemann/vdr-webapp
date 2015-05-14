@@ -25,13 +25,11 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.pixelPerSecond = VDRest.co
  */
 Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.init = function () {
 
-    this.resource = this.data.resource.data;
-
     this.baseUrl = VDRest.Api.Resource.prototype.getBaseUrl();
 
     this.calculateMetrics();
 
-    VDRest.Helper.prototype.parseDescription.call(this, this.resource.description);
+    VDRest.Helper.prototype.parseDescription.call(this, this.data.resource.data.description);
 
     this.initViewMethods();
 };
@@ -84,13 +82,13 @@ Gui.Epg.ViewModel.Broadcasts.List.Broadcast.prototype.calculateMetrics = functio
         from = this.module.getFromDate(),
         width, left, right, me = this;
 
-    if (this.resource.start_date < from) {
+    if (this.data.resource.data.start_date < from) {
 
-        duration = Math.round((this.resource.end_date.getTime() / 1000 - from.getTime() / 1000));
+        duration = Math.round((this.data.resource.data.end_date.getTime() / 1000 - from.getTime() / 1000));
         left = 0;
     } else {
-        duration = this.resource.duration;
-        left = Math.round((this.resource.start_date.getTime() / 1000 - from.getTime() / 1000) * this.pixelPerSecond)
+        duration = this.data.resource.data.duration;
+        left = Math.round((this.data.resource.data.start_date.getTime() / 1000 - from.getTime() / 1000) * this.pixelPerSecond)
     }
 
     width = Math.round(duration * this.pixelPerSecond);

@@ -37,3 +37,53 @@ VDRest.Timer.Model.List.Timer.prototype.flags = {
  * @type {string}
  */
 VDRest.Timer.Model.List.Timer.prototype.cacheKey = 'id';
+
+/**
+ * determine if timer is created by search timer with given id
+ * @param {number} id
+ * @return {boolean}
+ */
+VDRest.Timer.Model.List.Timer.prototype.isCreatedBySearchTimer = function (id) {
+
+    var p = new DOMParser(),
+        x = p.parseFromString(this.data.aux, "text/xml"),
+        node = x.getElementsByTagName('s-id')[0],
+        textNode,
+        sId = false;
+
+    if (node) {
+        textNode = node.childNodes[0];
+        if (textNode) {
+            sId = parseInt(textNode.nodeValue, 10)
+        }
+    }
+
+    return sId === id;
+};
+
+/**
+ * delete Timer
+ */
+VDRest.Timer.Model.List.Timer.prototype.deleteTimer = function () {
+
+    $window.one('vdrest-api-actions.timer-deleted', this.handleDelete.bind(this));
+
+    this.module.getResource('List.Timer').deleteSearchTimer(this.data);
+};
+
+/**
+ * handle delete of Timer
+ */
+VDRest.Timer.Model.List.Timer.prototype.handleDelete = function () {
+
+    var collection = this.module.getModel('List').collection;
+    delete this.module.cache.store.Model['List.Timer'][this.data.id];
+    collection.splice(collection.indexOf(this), 1);
+
+    $.event.trigger({
+        "type": "gui-timer.deleted",
+        "payload": this.keyInCache
+    });
+
+    delete this;
+};

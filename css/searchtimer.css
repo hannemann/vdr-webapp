@@ -1,0 +1,38 @@
+.timer.searchtimer.list-item {
+    min-height: 50px;
+}
+
+.timer.searchtimer.list-item .search {
+    font-size: 16px;
+}
+
+.timer.searchtimer.list-item .search:after {
+    content: '✓';
+    background: rgb(80,80,80);
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    bottom: 12px;
+    right: 0;
+    text-align: center;
+    font-family: sans-serif;
+    line-height: 16px;
+    font-size: 14px;
+    position:absolute;
+}
+
+.timer.searchtimer.list-item.active .search:after {
+    background: green;
+}
+
+.timer.searchtimer.list-item .times,
+.timer.searchtimer.list-item .channels {
+    font-size: 12px;
+    max-width: calc(100% - 20px);
+}
+
+.epg-search-view.searchtimer-test {
+    position: absolute;
+    top: 0;
+    background: #696969;
+}

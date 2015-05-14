@@ -5,9 +5,9 @@
 Gui.Window.View.Alert = function () {};
 
 /**
- * @type {Gui.Window.View.Input}
+ * @type {Gui.Form.View.Window.Input}
  */
-Gui.Window.View.Alert.prototype = new Gui.Window.View.Input();
+Gui.Window.View.Alert.prototype = new Gui.Form.View.Window.Input();
 
 /**
  * @type {boolean}

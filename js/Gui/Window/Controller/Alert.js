@@ -5,9 +5,9 @@
 Gui.Window.Controller.Alert = function () {};
 
 /**
- * @type {Gui.Window.Controller.Input}
+ * @type {Gui.Form.Controller.Window.Input}
  */
-Gui.Window.Controller.Alert.prototype = new Gui.Window.Controller.Input();
+Gui.Window.Controller.Alert.prototype = new Gui.Form.Controller.Window.Input();
 
 /**
  * @type {boolean}
@@ -48,6 +48,8 @@ Gui.Window.Controller.Alert.prototype.removeObserver = function () {
     this.view.ok.off('click');
 
     $window.off("resize");
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**

@@ -207,6 +207,35 @@
     box-shadow: 0 0 40px 0 rgb(255, 163, 0), 0 0 30px #FFFFFF inset;
 }
 
+/** Notification */
+.window-notification {
+    position: absolute;
+    right: 0;
+    bottom: 10%;
+    left: 0;
+    margin: auto;
+    width: 90%;
+    color: white;
+    font-weight: bold;
+    background-color: rgba(10, 40, 10, 0.50);
+    transition: opacity .7s linear;
+    text-align: center;
+    border-radius: 20px;
+    opacity: 0;
+    line-height: 16px;
+    font-size: 16px;
+    height: 16px;
+    padding: 10px 0;
+}
+
+.window-notification.show {
+    opacity: 1;
+}
+
+.window-notification.error {
+    background-color: rgba(255, 0, 0, 0.50);
+}
+
 /* Inpput Popup */
 .window-input {
     top: auto;
@@ -222,6 +251,17 @@
 .window-input .window-body {
     padding: 0 20px;
 }
+
+.window-form {
+    border-bottom: none;
+}
+
+.window-form form {
+    overflow: auto;
+    height: 100%;
+}
+
+.window-form .button,
 .window-input .button {
     float: left;
     border: none;
@@ -232,9 +272,13 @@
     text-align: center;
     margin: 10px 0 0 0;
 }
+
+.window-form .button:active,
 .window-input .button:active {
     background-color: rgba(255,255,255,0.5);
 }
+
+.window-form .button-confirm,
 .window-input .button-confirm {
     margin: 10px 0 0 0;
     width: calc(50% - 1px);
@@ -264,6 +308,8 @@ div.window.confirm li:first-child {
     border-right: 1px solid white;
 }
 
+
+/** context/item menu */
 .context-menu {
     position: absolute;
     right: 10px;
@@ -276,8 +322,38 @@ div.window.confirm li:first-child {
     border-top: 1px solid rgb(150, 150,150);
     padding: 10px;
 }
+
+.window-item-menu {
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    padding: 0;
+    width: 80%;
+    border-bottom: none;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.window-item-menu .header {
+    border-bottom: 1px solid white;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.window-item-menu .button {
+    width: calc(100% - 20px);
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 10px;
+}
+.window-item-menu .button:last-child {
+    border-style: none;
+}
 .context-menu div.menu-button.active,
-.context-menu div:active {
+.context-menu div:active,
+.window-item-menu .button:active {
     background-color: rgba(255,255,255,0.5);
     color: black;
 }

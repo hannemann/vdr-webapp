@@ -146,6 +146,23 @@ VDRest.Helper.prototype.weekDays = [
     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 ];
 
+VDRest.Helper.prototype.monthNames = function () {
+    return [
+        VDRest.app.translate("January"),
+        VDRest.app.translate("February"),
+        VDRest.app.translate("March"),
+        VDRest.app.translate("April"),
+        VDRest.app.translate("May"),
+        VDRest.app.translate("June"),
+        VDRest.app.translate("July"),
+        VDRest.app.translate("August"),
+        VDRest.app.translate("September"),
+        VDRest.app.translate("October"),
+        VDRest.app.translate("November"),
+        VDRest.app.translate("December")
+    ]
+};
+
 /**
  * log to console in debug mode
  */
@@ -154,6 +171,17 @@ VDRest.Helper.prototype.log = function () {
     if (VDRest.config.getItem('debug')) {
 
         console.log.apply(console, arguments);
+    }
+};
+
+/**
+ * log to console in debug mode
+ */
+VDRest.Helper.prototype.error = function () {
+
+    if (VDRest.config.getItem('debug')) {
+
+        console.error.apply(console, arguments);
     }
 };
 

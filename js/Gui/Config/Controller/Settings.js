@@ -16,6 +16,8 @@ Gui.Config.Controller.Settings.prototype.init = function () {
 
     var me = this;
 
+    this.windowModule = VDRest.app.getModule('Gui.Form');
+
     VDRest.app.getModule('Gui.Viewport').getView('Default').node.addClass(this.module.name.toLowerCase());
 
     this.view = this.module.getView('Settings');

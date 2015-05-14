@@ -51,7 +51,7 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
     this.module.getViewModel('List.Recording', {
         "file_name": this.data.file_name,
         "view" : this.view,
-        "resource" : this.dataModel.data
+        "resource": this.dataModel
     });
 
     $document.on("vdrest-api-actions.recording-updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
@@ -203,7 +203,8 @@ Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = functio
         "type" : "window.request",
         "payload" : {
             "hashSuffix": '~' + this.keyInCache.toCacheKey(),
-            "type" : "Recording",
+            "type" : "Window.Recording",
+            "module" : this.module,
             "data" : {
                 "node" : this.view,
                 "id": this.keyInCache.toCacheKey(),

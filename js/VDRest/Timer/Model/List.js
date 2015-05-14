@@ -72,3 +72,29 @@ VDRest.Timer.Model.List.prototype.sortByTime = function (a, b) {
 
     return a - b;
 };
+
+/**
+ * @param {Array.<Number>}ids
+ */
+VDRest.Timer.Model.List.prototype.bulkDelete = function (ids) {
+
+    $window.one("vdrest-api-actions.timer-bulkdeleted", this.handleBulkDeleted.bind(this));
+
+    this.module.getResource('List.Timer').bulkDelete(ids)
+};
+
+/**
+ * @param {{payload:{timers:Array.<{id:string,deleted:boolean}>}}} result
+ */
+VDRest.Timer.Model.List.prototype.handleBulkDeleted = function (result) {
+
+    result.payload.timers.forEach(function (timer) {
+        if (timer.deleted) {
+
+            $.event.trigger({
+                "type": "vdrest-api-actions.timer-deleted",
+                "payload": timer.id
+            });
+        }
+    }.bind(this))
+};

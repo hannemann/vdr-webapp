@@ -14,9 +14,7 @@ Gui.EpgSearch.ViewModel.Broadcast.prototype = new Gui.Epg.ViewModel.Broadcasts.L
  */
 Gui.EpgSearch.ViewModel.Broadcast.prototype.init = function () {
 
-    this.resource = this.data.resource.data;
-
-    VDRest.Helper.prototype.parseDescription.call(this, this.resource.description);
+    VDRest.Helper.prototype.parseDescription.call(this, this.data.resource.data.description);
 
     this.initViewMethods();
 };

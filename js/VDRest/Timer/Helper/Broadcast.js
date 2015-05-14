@@ -30,9 +30,9 @@ VDRest.Timer.Helper.Broadcast.prototype.match = function (timer, broadcast) {
  */
 VDRest.Timer.Helper.Broadcast.prototype.matchByAux = function (timer, broadcast) {
 
-    var broadcastCacheId = timer.aux.split('/');
+    var broadcastCacheId = this.getAux(timer).split('/');
 
-    return (broadcastCacheId[0] === broadcast.channel && broadcastCacheId[0] === broadcast.id);
+    return (broadcastCacheId[0] === broadcast.channel && parseInt(broadcastCacheId[1], 10) === broadcast.id);
 
 };
 
@@ -83,4 +83,22 @@ VDRest.Timer.Helper.Broadcast.prototype.matchByName = function (timer, broadcast
 
     return (filename === broadcast.title || filename === broadcast.short_text);
 
+};
+
+/**
+ * @param {{}} timer
+ * @returns {string}
+ */
+VDRest.Timer.Helper.Broadcast.prototype.getAux = function (timer) {
+
+    var p = new DOMParser(),
+        x = p.parseFromString(timer.aux, "text/xml"),
+        channelId = x.getElementsByTagName('channel_id')[0],
+        eventid = x.getElementsByTagName('eventid')[0];
+
+    if (channelId && eventid && channelId.childNodes[0] && eventid.childNodes[0]) {
+        return channelId.childNodes[0].textContent + '/' + eventid.childNodes[0].textContent;
+    } else {
+        return timer.aux
+    }
 };

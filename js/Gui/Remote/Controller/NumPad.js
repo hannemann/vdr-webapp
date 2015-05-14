@@ -87,7 +87,8 @@ Gui.Remote.Controller.NumPad.prototype.requestKbd = function () {
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "Input",
+            "module" : VDRest.app.getModule('Gui.Form'),
+            "type" : "Window.Input",
             "data" : data
         }
     });

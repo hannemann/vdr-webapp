@@ -22,7 +22,7 @@ VDRest.Api.TimerAdapter.prototype.getTypeInstance = function () {
 
         type = new VDRest.Api.TimerAdapter.EpgBroadcast();
 
-    } else if (this.client instanceof Gui.Window.Controller.Timer) {
+    } else if (this.client instanceof Gui.Timer.Controller.Window.Timer) {
 
         type = new VDRest.Api.TimerAdapter.Timer();
 

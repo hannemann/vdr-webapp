@@ -48,7 +48,7 @@ Gui.Recordings.Controller.List.Directory.prototype.init = function () {
     this.module.getViewModel('List.Directory', {
         "path" : this.data.path,
         "view" : this.view,
-        "resource" : this.data
+        "resource": {"data": this.data}
     });
 };
 
@@ -100,7 +100,8 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
         "type" : "window.request",
         "payload" : {
             "hashSuffix" : '~' + this.data.path,
-            "type" : "Directory",
+            "type" : "Window.Directory",
+            "module" : this.module,
             "data" : {
                 "listItem" : this.view,
                 "dispatch": this.view.renderItems.bind(this.view),

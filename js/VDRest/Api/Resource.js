@@ -1,20 +1,5 @@
 VDRest.Api.Resource = function () {
 
-    /**
-     * @type {Object}
-     */
-    this.responseCache = {};
-
-    /**
-     * @type {Boolean}
-     */
-    this.cacheResponse = false;
-
-    /**
-     * @type {Boolean}
-     */
-    this.refreshCache = false;
-
     $.xhrPool = [];
     $.xhrPool.abortAll = function () {
         $(this).each(function (i, jqXHR) {   //  cycle through list of recorded connection
@@ -98,24 +83,14 @@ VDRest.Api.Resource.prototype.load = function (options) {
         callback = this.onSuccess;
     }
 
-    if (!this.refreshCache && this.cacheResponse && "undefined" !== typeof this.responseCache[url]) {
+    request.url = this.getBaseUrl() + url;
+    request.method = method;
 
-        callback(this.responseCache[url]);
-        this.onComplete();
-
-    } else {
-
-        this.refreshCache = false;
-
-        request.url = this.getBaseUrl() + url;
-        request.method = method;
-
-        if (options.data) {
-            request.data = options.data;
-        }
-
-        this.fetchAsync(request, callback);
+    if (options.data) {
+        request.data = options.data;
     }
+
+    this.fetchAsync(request, callback);
 };
 
 /**
@@ -139,8 +114,7 @@ VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
     )
         .done(function (result) {
 
-            me.responseCache[request.url] = result;
-            callback(result);
+            callback(result, arguments[2]);
 
         }).fail(function () {
 
@@ -162,6 +136,14 @@ VDRest.Api.Resource.prototype.onSuccess = function () {};
  */
 VDRest.Api.Resource.prototype.onError = function (e) {
 
+    var alertStatus = [
+        502,
+        403,
+        406,
+        407,
+        408
+    ];
+
     VDRest.helper.log(e);
 
     if (0 === e.readyState && 0 === e.status && e.statusText !== 'abort') {
@@ -179,7 +161,7 @@ VDRest.Api.Resource.prototype.onError = function (e) {
         });
     }
 
-    if (4 === e.readyState && ( 502 === e.status || 403 === e.status )) {
+    if (4 === e.readyState && alertStatus.indexOf(e.status) > -1) {
 
         $.event.trigger({
             "type": "window.request",

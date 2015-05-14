@@ -25,11 +25,11 @@ VDRest.Abstract.ViewModel.prototype.initViewMethods = function (resource, prefix
 
     var i, fragment, name;
 
-    resource = resource || this.resource;
+    resource = resource || this.data.resource;
 
-    for (i in resource) {
+    for (i in resource.data) {
 
-        if (resource.hasOwnProperty(i)) {
+        if (resource.data.hasOwnProperty(i)) {
 
             if (prefix) {
 
@@ -46,7 +46,7 @@ VDRest.Abstract.ViewModel.prototype.initViewMethods = function (resource, prefix
 
                 return function () {
 
-                    return resource[x];
+                    return resource.data[x];
                 }
             }(i);
 
@@ -54,7 +54,7 @@ VDRest.Abstract.ViewModel.prototype.initViewMethods = function (resource, prefix
 
                 return function (value) {
 
-                    resource[x] = value;
+                    resource.data[x] = value;
 
                     return this;
                 }
@@ -64,7 +64,7 @@ VDRest.Abstract.ViewModel.prototype.initViewMethods = function (resource, prefix
 
                 return function () {
 
-                    return !! resource[x];
+                    return !!resource.data[x];
                 }
             }(i);
         }

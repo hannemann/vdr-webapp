@@ -5,9 +5,9 @@
 Gui.Window.View.Confirm = function () {};
 
 /**
- * @type {Gui.Window.View.Input}
+ * @type {Gui.Form.View.Window.Input}
  */
-Gui.Window.View.Confirm.prototype = new Gui.Window.View.Input();
+Gui.Window.View.Confirm.prototype = new Gui.Form.View.Window.Input();
 
 /**
  * @type {boolean}

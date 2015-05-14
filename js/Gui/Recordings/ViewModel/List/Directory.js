@@ -19,7 +19,5 @@ Gui.Recordings.ViewModel.List.Directory.prototype.cacheKey = 'path';
  */
 Gui.Recordings.ViewModel.List.Directory.prototype.init = function () {
 
-    this.resource = this.data.resource;
-
     this.initViewMethods();
 };

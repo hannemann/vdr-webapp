@@ -36,7 +36,7 @@ Gui.Timer.Controller.List.Timer.prototype.init = function () {
     this.module.getViewModel('List.Timer', {
         "id" : this.data.id,
         "view" : this.view,
-        "resource" : this.dataModel.data
+        "resource": this.dataModel
     });
 };
 
@@ -93,7 +93,7 @@ Gui.Timer.Controller.List.Timer.prototype.update = function (e) {
     this.module.getViewModel('List.Timer', {
         "id" : this.data.id,
         "view" : this.view,
-        "resource" : this.dataModel.data
+        "resource": this.dataModel
     });
 
     this.removeObserver();
@@ -116,10 +116,11 @@ Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
     $.event.trigger({
         "type" : "window.request",
         "payload" : {
-            "type" : "Timer",
+            "type" : "Window.Timer",
+            "module" : this.module,
             "data" : {
                 "id" : this.dataModel.data.id,
-                "resource" : this.dataModel.data
+                "resource": this.dataModel
             }
         }
     })

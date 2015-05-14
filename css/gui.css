@@ -108,6 +108,7 @@ ul#menubar #refresh {
 }
 .recordings-list .recordings-path:active,
 .recordings-list .recording:active,
-#timer-list .list-item:active {
+#timer-list .list-item:active,
+#searchtimer-list .list-item:active {
     background-color: rgba(255,255,255,0.5);
 }

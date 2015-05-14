@@ -5,9 +5,9 @@
 Gui.Window.Controller.Confirm = function () {};
 
 /**
- * @type {Gui.Window.Controller.Input}
+ * @type {Gui.Form.Controller.Window.Input}
  */
-Gui.Window.Controller.Confirm.prototype = new Gui.Window.Controller.Input();
+Gui.Window.Controller.Confirm.prototype = new Gui.Form.Controller.Window.Input();
 
 /**
  * @type {string}
@@ -48,6 +48,8 @@ Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
     this.view.cancel.off('click');
 
     $window.off("resize");
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**

@@ -110,29 +110,43 @@ Gui.Epg.prototype.contextMenu = {
         "scope" : 'Gui.Epg',
         "fn" : function () {
 
-            var data = {
-                "type": "string",
+            var data, d = new Date(), v;
+
+            v = d.getFullYear().toString() +
+            VDRest.helper.pad((d.getMonth() + 1).toString(), 2) +
+            VDRest.helper.pad(d.getDate().toString(), 2) +
+            VDRest.helper.pad(d.getHours().toString(), 2) +
+            VDRest.helper.pad(d.getMinutes().toString(), 2);
+
+            data = {
+                "type": "datetime",
                 "dom": $('<label class="clearer text">'),
-                "showInfo" : true
+                "showInfo": true,
+                "format": "%Y.%m.%d %H:%i",
+                "form_order": "YmdHi",
+                "value": v
             };
 
             $('<span>').text(VDRest.app.translate('Custom Time')).appendTo(data.dom);
             $('<span class="info">')
-                .html(VDRest.app.translate('Please enter desired date (optional) and/or time in format [[yyyy]mmdd] [h]hmm<br>(<strong>20141224 2015</strong> for <strong>2014.12.24 20:15</strong> o\'clock)'))
+                .html(VDRest.app.translate('YYYY.mm.dd hh:mm'))
                 .appendTo(data.dom);
 
             data.gui = $('<input type="text" name="custom-time">')
                 .appendTo(data.dom);
+            data.gui.val(data.value);
 
             data.gui.on('change', this.setCustomTime.bind(this));
 
             $.event.trigger({
                 "type" : "window.request",
                 "payload" : {
-                    "type" : "Input",
+                    "module" : VDRest.app.getModule('Gui.Form'),
+                    "type": "Window.DateTime",
                     "data" : data
                 }
             });
+            this.contextMenu.Primetime.state = 'on';
         }
     }
 };
@@ -186,7 +200,7 @@ Gui.Epg.prototype.getFromDate = function () {
 Gui.Epg.prototype.setCustomTime = function (e) {
 
     var custom,
-        timeReg = new RegExp('([0-9]{1,2})([0-9]{2})'),
+        timeReg = new RegExp('([0-9]{1,2}):([0-9]{2})'),
         value = e.target.value, values = value.split(' '),
         date, time,
         d = new Date();
@@ -200,7 +214,7 @@ Gui.Epg.prototype.setCustomTime = function (e) {
 
     if (date) {
         if (date.length === 4) {
-            if (/([0-9]{2})([0-9]{2})/.test(date)) {
+            if (/([0-9]{2}).([0-9]{2})/.test(date)) {
                 date = new Date(
                     d.getFullYear(),
                     RegExp.$1 - 1,
@@ -208,7 +222,7 @@ Gui.Epg.prototype.setCustomTime = function (e) {
                 );
             }
         } else {
-            if (/([0-9]{4})([0-9]{2})([0-9]{2})/.test(date)) {
+            if (/([0-9]{4}).([0-9]{2}).([0-9]{2})/.test(date)) {
                 date = new Date(
                     RegExp.$1,
                     RegExp.$2 - 1,

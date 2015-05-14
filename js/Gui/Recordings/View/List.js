@@ -84,7 +84,12 @@ Gui.Recordings.View.List.prototype.renderDirectories = function () {
 
     interval = setInterval(function () {
 
-        index = this.renderChunk(index, 'List.Directory', this.tree.data.directories);
+        try {
+            index = this.renderChunk(index, 'List.Directory', this.tree.data.directories);
+        } catch (e) {
+            VDRest.helper.error(e.message);
+            clearInterval(interval);
+        }
 
         if (index >= length) {
             clearInterval(interval);
@@ -109,7 +114,12 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
 
     interval = setInterval(function () {
 
-        index = this.renderChunk(index, 'List.Recording', this.tree.data.files);
+        try {
+            index = this.renderChunk(index, 'List.Recording', this.tree.data.files);
+        } catch (e) {
+            VDRest.helper.error(e.message);
+            clearInterval(interval);
+        }
 
         if (index >= length) {
             clearInterval(interval);
@@ -123,11 +133,15 @@ Gui.Recordings.View.List.prototype.renderChunk = function (index, controller, tr
 
     var limit, chunkSize = 20;
 
-    if (index + chunkSize > tree.length) {
-        chunkSize -= (index + chunkSize) % tree.length;
+    if (chunkSize > tree.length) {
+        limit = tree.length;
+    } else {
+        if (index + chunkSize > tree.length) {
+            chunkSize -= (index + chunkSize) % tree.length;
+        }
+        limit = index + chunkSize;
     }
 
-    limit = index + chunkSize;
     for (index; index < limit; index++) {
         this.module.getController(controller, tree[index]).dispatchView();
     }

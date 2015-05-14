@@ -363,18 +363,22 @@ VDRest.App.prototype.getCurrent = function (asModule) {
 /**
  * get localized string if available
  * printf syntax is supported
+ * @returns {String}
  */
 VDRest.App.prototype.translate = function () {
 
     var args = Array.prototype.slice.apply(arguments),
+        /** @type {String} */
         key = args.shift();
 
     if (this[this.language] && this[this.language][key]) {
 
-        return sprintf(this[this.language][key], args);
+        args.unshift(this[this.language][key]);
+        return sprintf.apply(window, args);
     }
 
-    return key;
+    args.unshift(key);
+    return sprintf.apply(window, args);
 };
 
 VDRest.app = new VDRest.App();
