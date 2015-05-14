@@ -40,6 +40,12 @@ Gui.Database.prototype.startPage = true;
 Gui.Database.prototype.headline = 'Your Media';
 
 /**
+ * Module depends on vdr plugin scraper2vdr or tvscraper
+ * @type {string}
+ */
+Gui.Database.prototype.pluginDependency = 'scraper2vdr||tvscraper';
+
+/**
  * context menu definition
  * @type {{}}
  */
