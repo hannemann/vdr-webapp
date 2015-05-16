@@ -102,6 +102,10 @@ VDRest.Api.Resource.prototype.fetchAsync = function (request, callback) {
 
     var me = this;
 
+    $.event.trigger({
+        "type": "block-gui"
+    });
+
     if (!this.noThrobber) {
 
         $.event.trigger({
@@ -179,6 +183,10 @@ VDRest.Api.Resource.prototype.onError = function (e) {
  * method to be called any time an request is complete
  */
 VDRest.Api.Resource.prototype.onComplete = function () {
+
+    $.event.trigger({
+        "type": "unblock-gui"
+    });
 
     if (!this.noThrobber) {
 

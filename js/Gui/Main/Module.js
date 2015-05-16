@@ -36,7 +36,7 @@ Gui.Main.prototype.init = function () {
 
 Gui.Main.prototype.dispatch = function () {
 
-    this.getController('Default');
+    this.getController('Default').dispatchView();
 };
 
 /**

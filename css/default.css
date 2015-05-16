@@ -80,6 +80,18 @@ ul {
 	cursor: default;
 }
 
+.gui-blocker {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background-color: rgba(1, 1, 1, 0.01);
+    z-index: 2;
+    display: none;
+}
+
+.gui-blocker.blocking {
+    display: block;
+}
+
 .list-item {
     position: relative;
 }
