@@ -17,7 +17,7 @@ Gui.Timer.View.Window.Timer.prototype.cacheKey = 'id';
 /**
  * @type {boolean}
  */
-Gui.Timer.View.Window.Timer.prototype.isModal = true;
+Gui.Timer.View.Window.Timer.prototype.isModal = false;
 
 /**
  * @type {boolean}
@@ -54,7 +54,7 @@ Gui.Timer.View.Window.Timer.prototype.render = function () {
 
     this.addClasses().decorateHeader().decorateBody();
 
-    this.node.addClass('collapsed');
+    this.node.addClass('collapsed viewport-fullsize');
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 

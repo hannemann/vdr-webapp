@@ -23,12 +23,12 @@ Gui.Recordings.View.Window.Recording.prototype.scraperImageUrl =
 /**
  * @type {boolean}
  */
-Gui.Recordings.View.Window.Recording.prototype.isModal = true;
+Gui.Recordings.View.Window.Recording.prototype.isModal = false;
 
 /**
  * @type {boolean}
  */
-Gui.Recordings.View.Window.Recording.prototype.isModalTransparent = true;
+Gui.Recordings.View.Window.Recording.prototype.isModalTransparent = false;
 
 /**
  * @type {boolean}
@@ -60,7 +60,7 @@ Gui.Recordings.View.Window.Recording.prototype.render = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.addClasses = function () {
 
-    this.node.addClass('window-recording clearer');
+    this.node.addClass('window-recording clearer viewport-fullsize');
 
     return this;
 };

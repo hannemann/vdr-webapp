@@ -25,7 +25,7 @@ Gui.Epg.View.Window.Broadcast.prototype.hasHeader = true;
 /**
  * @type {boolean}
  */
-Gui.Epg.View.Window.Broadcast.prototype.isModal = true;
+Gui.Epg.View.Window.Broadcast.prototype.isModal = false;
 
 /**
  * @type {boolean}
@@ -53,7 +53,7 @@ Gui.Epg.View.Window.Broadcast.prototype.render = function () {
         this.addComponents()
     }
 
-    this.node.addClass('collapsed');
+    this.node.addClass('collapsed viewport-fullsize');
 
     Gui.Window.View.Abstract.prototype.render.call(this);
 

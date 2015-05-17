@@ -107,6 +107,9 @@ Gui.Window.Controller.Abstract.prototype.destructView = function () {
     $.event.trigger({
         "type" : "destruct.window-" + this.keyInCache
     });
+    $.event.trigger({
+        "type" : "window.close"
+    });
 
     $document.off("destruct.window-" + this.keyInCache);
 };

@@ -54,7 +54,7 @@ Gui.Menubar.Controller.Default.prototype.dispatchView = function () {
 Gui.Menubar.Controller.Default.prototype.showThrobber = function () {
 
     if (this.throbberCalls === 0) {
-        this.view.settingsButton.hide();
+        this.view.settingsButton.css({"display" : "none"});
         this.view.throbber.toggleClass('show', true);
     }
     this.throbberCalls++;
@@ -70,7 +70,7 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (e) {
     this.throbberCalls--;
     if (this.throbberCalls <= 0 || e.force) {
         this.view.throbber.toggleClass('show', false);
-        this.view.settingsButton.show();
+        this.view.settingsButton.css({"display" : ""});
         this.throbberCalls = 0;
     }
 };
@@ -87,11 +87,16 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
     this.view.titleWrapper.on('click', this.onIconClick.bind(this));
 
     $document.on('dispatch.after', this.handlePostDispatch.bind(this));
+    $document.on('window.request window.close', this.handlePostDispatch.bind(this));
 
     this.view.settingsButton.on('click', this.requestContextMenu.bind(this));
 
     $document.on('showThrobber', this.showThrobber.bind(this));
     $document.on('hideThrobber', this.hideThrobber.bind(this));
+
+    $document.on('showContextMenu', this.showContextMenu.bind(this));
+    $document.on('hideContextMenu', this.hideContextMenu.bind(this));
+
     this.view.throbber.on('click', $.xhrPool.abortAll.bind($.xhrPool));
 };
 
@@ -143,6 +148,12 @@ Gui.Menubar.Controller.Default.prototype.requestContextMenu = function (e) {
         });
     }
 };
+Gui.Menubar.Controller.Default.prototype.hideContextMenu = function () {
+    this.view.settingsButton.addClass('inactive');
+};
+Gui.Menubar.Controller.Default.prototype.showContextMenu = function () {
+    this.view.settingsButton.removeClass('inactive');
+};
 
 /**
  * determine if current dispatched page matches configured start page
@@ -150,7 +161,10 @@ Gui.Menubar.Controller.Default.prototype.requestContextMenu = function (e) {
  */
 Gui.Menubar.Controller.Default.prototype.isStartPage = function () {
 
-    return ( VDRest.config.getItem('start') === VDRest.app.getCurrent() ) || "undefined" !== typeof this.initial
+    return (
+            VDRest.config.getItem('start') === VDRest.app.getCurrent()
+            && document.querySelectorAll('.window').length === 0
+        ) || "undefined" !== typeof this.initial
 };
 
 /**

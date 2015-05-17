@@ -87,6 +87,9 @@
 #button-settings:active {
     background-color: rgba(255,255,255,0.5);
 }
+#button-settings.inactive {
+    display: none;
+}
 @media (min-width: 800px), (min-height: 800px) {
     #menubar {
         font-size: 16px;

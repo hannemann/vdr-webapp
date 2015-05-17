@@ -34,12 +34,20 @@ Gui.Recordings.Controller.Window.Recording.prototype.init = function () {
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
+
+    this.view.setParentView(
+        VDRest.app.getModule('Gui.Viewport').getView('Default')
+    );
 };
 
 /**
  * dispatch
  */
 Gui.Recordings.Controller.Window.Recording.prototype.dispatchView = function () {
+
+    $.event.trigger({
+        "type" : "hideContextMenu"
+    });
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -180,6 +188,10 @@ Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () 
     this.view.node.one(this.animationEndEvents, function () {
 
         Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+
+        $.event.trigger({
+            "type" : "showContextMenu"
+        });
     });
     // apply animation
     this.view.node.toggleClass('collapse expand');

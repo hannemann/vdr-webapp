@@ -26,6 +26,10 @@ Gui.Timer.Controller.Window.Timer.prototype.init = function () {
     this.view = this.module.getView('Window.Timer', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
+
+    this.view.setParentView(
+        VDRest.app.getModule('Gui.Viewport').getView('Default')
+    );
 };
 
 /**
@@ -110,6 +114,10 @@ Gui.Timer.Controller.Window.Timer.prototype.dispatchView = function () {
             "view": this.view,
             "resource": this.data.resource,
             "broadcast": this.broadcast
+        });
+
+        $.event.trigger({
+            "type" : "hideContextMenu"
         });
 
         Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
@@ -360,5 +368,9 @@ Gui.Timer.Controller.Window.Timer.prototype.destructView = function () {
     this.view.node.one(this.animationEndEvents, function () {
 
         Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+
+        $.event.trigger({
+            "type" : "showContextMenu"
+        });
     });
 };

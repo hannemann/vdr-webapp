@@ -38,12 +38,19 @@ Gui.Epg.Controller.Window.Broadcast.prototype.init = function () {
         "resource" : this.data.dataModel
     });
 
+    this.view.setParentView(
+        VDRest.app.getModule('Gui.Viewport').getView('Default')
+    );
 };
 
 /**
  * dispatch
  */
 Gui.Epg.Controller.Window.Broadcast.prototype.dispatchView = function () {
+
+    $.event.trigger({
+        "type" : "hideContextMenu"
+    });
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -168,5 +175,9 @@ Gui.Epg.Controller.Window.Broadcast.prototype.destructView = function () {
     this.view.node.one(this.animationEndEvents, function () {
 
         Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+
+        $.event.trigger({
+            "type" : "showContextMenu"
+        });
     });
 };
