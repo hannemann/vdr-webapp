@@ -274,11 +274,15 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.performSearchAction = func
 
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = function () {
 
-    var controller = VDRest.app.getModule('Gui.Timer').getController('List'),
+    var module = VDRest.app.getModule('Gui.Timer'),
+        controller,
         callback = function () {
             controller.destructView();
             this.module.dispatch();
         }.bind(this);
+
+    module.flush();
+    controller = module.getController('List');
 
     VDRest.app.saveHistoryState(
         'SearchTimer.ShowTimers.hashChanged',

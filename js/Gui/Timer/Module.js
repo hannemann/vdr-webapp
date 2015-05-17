@@ -89,14 +89,21 @@ Gui.Timer.prototype.destruct = function () {
  */
 Gui.Timer.prototype.refresh = function () {
 
+    this.flush().dispatch();
+};
+
+Gui.Timer.prototype.flush = function () {
+
     this.getView('List').node.empty();
+    this.getController('List').timerList.initData();
 
     this.getStore().getModel('List').flushCollection();
     delete this.store.cache.store.Model['List.Timer'];
     delete this.cache.store.Controller['List.Timer'];
     delete this.cache.store.View['List.Timer'];
     delete this.cache.store.ViewModel['List.Timer'];
-    this.dispatch();
+
+    return this;
 };
 
 /**
