@@ -100,7 +100,13 @@ Gui.Window.prototype.dispatch = function (payload) {
 
             VDRest.app.saveHistoryState(
                 controller.eventPrefix + '.hashChanged',
-                controller.destructView.bind(controller),
+                function () {
+                    this.popRegister();
+                    $.event.trigger({
+                        "type" : "window.close"
+                    });
+                    controller.destructView();
+                }.bind(this),
                 this.name + '-' + suffix
             );
         }
@@ -119,6 +125,11 @@ Gui.Window.prototype.register = function (controller) {
 Gui.Window.prototype.popRegister = function () {
 
     this.windows.pop();
+};
+
+Gui.Window.prototype.getLastRegister = function () {
+
+    return this.windows[this.windows.length - 1];
 };
 
 Gui.Window.prototype.count = function () {

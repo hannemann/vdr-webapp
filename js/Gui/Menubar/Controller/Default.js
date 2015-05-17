@@ -132,6 +132,10 @@ Gui.Menubar.Controller.Default.prototype.requestContextMenu = function (e) {
 
     e.stopPropagation();
 
+    if (this.view.settingsButton.hasClass('inactive')) {
+        return;
+    }
+
     if (this.drawerDispatched) {
 
         history.back()
@@ -162,7 +166,11 @@ Gui.Menubar.Controller.Default.prototype.showContextMenu = function () {
  */
 Gui.Menubar.Controller.Default.prototype.isStartPage = function () {
 
-    var w = VDRest.app.getModule('Gui.Window');
+    var w = VDRest.app.getModule('Gui.Window'), c = w.getLastRegister();
+
+    if (c instanceof Gui.Window.Controller.Drawer) {
+        return true;
+    }
 
     return ( VDRest.config.getItem('start') === VDRest.app.getCurrent() && w.count() === 0 ) || "undefined" !== typeof this.initial
 };

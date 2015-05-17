@@ -13,20 +13,20 @@
 
 #menubar .drawer-indicator {
     position: absolute;
-    top: 18px;
+    top: 16px;
     left: 0;
     height: 18px;
-    width: 11px;
-    background: linear-gradient(0deg, transparent 50%, rgba(255,255,255,0.5) 50%) repeat-y center top;
+    width: 12px;
+    background: linear-gradient(0deg, transparent 50%, rgba(255,255,255,0.5) 50%) repeat-y center 2px;
     background-size: 100% 6px;
     color: transparent;
+    transition: color .6s linear, background-position .6s linear, width .6s;
+    font-weight: bold;
+    text-align: right;
 }
 #menubar .drawer-indicator.back {
-    background: none;
+    background-position: -100px 2px;
     color: rgba(255,255,255,0.5);
-    top: 16px;
-    padding-left: 3px;
-    font-weight: bold;
 }
 
 #menubar .title-wrapper {
@@ -83,12 +83,16 @@
     color: rgba(255, 255, 255, .7);
     cursor: default;
     font-weight: bold;
+    transition: opacity .6s ease-in;
+    -webkit-transition: opacity .6s ease-in;
 }
 #button-settings:active {
     background-color: rgba(255,255,255,0.5);
 }
 #button-settings.inactive {
-    display: none;
+    opacity: 0;
+    transition-timing-function: ease-out;
+    -webkit-transition-timing-function: ease-out;
 }
 @media (min-width: 800px), (min-height: 800px) {
     #menubar {
