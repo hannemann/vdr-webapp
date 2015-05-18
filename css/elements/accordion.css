@@ -1,0 +1,37 @@
+.accordion .accordion-header {
+    font-weight: bold;
+    padding: 5px 3px;
+    position: relative;
+}
+.accordion .accordion-header:after {
+    font-family: VDR-web, sans-serif;
+    content: 'S';
+    position: absolute;
+    right: 3px;
+    transform: rotate(90deg);
+    transition: transform .2s ease-out;
+    font-size: 12px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 12px;
+}
+.accordion .accordion-header.active:after,
+.accordion .accordion-header.initially-open:after {
+    transform: rotate(180deg);
+}
+.accordion .accordion-content {
+    overflow: hidden;
+    transition: max-height .2s ease-out;
+    background: rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0 3px;
+}
+.accordion .accordion-content.initially-open,
+.accordion .accordion-header.initially-open:after {
+    transition-duration: 0s;
+}
+
+.accordion .accordion-content.closed {
+    max-height: 0 !important;
+}
