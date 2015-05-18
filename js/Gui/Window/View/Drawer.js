@@ -112,8 +112,9 @@ Gui.Window.View.Drawer.prototype.addFavourite = function (channel) {
  */
 Gui.Window.View.Drawer.prototype.addInfo = function () {
 
-    var info = VDRest.app.getModule('VDRest.Info').getModel('Info'),
-        channel, onAir = $('<div class="onAir clearer">');
+    var /** @type {VDRest.Info.Model.Info} @name info */
+        info = VDRest.app.getModule('VDRest.Info').getModel('Info'),
+        channel, onAir = $('<div class="onAir clearer">'), infoButton;
 
     this.info = $('<div class="info"><div class="header">Info</div></div>');
 
@@ -144,7 +145,13 @@ Gui.Window.View.Drawer.prototype.addInfo = function () {
 
     onAir.appendTo(this.info);
 
-    $('<div class="info-item">').text(info.getData('diskusage').description_localized).appendTo(this.info);
+    infoButton =
+        $('<div class="info-item" data-module="Gui.Info">')
+            .text(info.data.diskusage.description_localized)
+            .appendTo(this.info);
+    $('<span class="vdr-web-symbol">').html('\x69').appendTo(infoButton);
+
+    this.buttons.push(infoButton);
 
     this.info.appendTo(this.body);
 

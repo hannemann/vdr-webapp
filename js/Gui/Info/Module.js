@@ -25,7 +25,7 @@ Gui.Info.prototype.name = 'Info';
  * show up in drawer
  * @type {string}
  */
-Gui.Info.prototype.inDrawer = true;
+//Gui.Info.prototype.inDrawer = true;
 
 /**
  * start page capable
@@ -37,7 +37,7 @@ Gui.Info.prototype.startPage = true;
  * headline in menu bar
  * @type {string}
  */
-Gui.Info.prototype.headline = 'Info';
+//Gui.Info.prototype.headline = 'Info';
 
 /**
  * dispatch default view

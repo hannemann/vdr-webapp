@@ -60,8 +60,10 @@ ul#menubar #refresh {
 	padding: 5px 10px;
 	font-size: 20px;
     border-bottom: 1px solid rgb(95, 95, 95);
+    position: relative;
 }
-.window-drawer .navi-button:active {
+.window-drawer .navi-button:active,
+.window-drawer .info .info-item[data-module]:active {
     background-color: rgba(255,255,255,0.5);
 }
 .window-drawer .onAir {
@@ -91,6 +93,16 @@ ul#menubar #refresh {
     margin: 5px 0 5px 10px;
     float: left;
     background: white;
+}
+.window-drawer .info-item span.vdr-web-symbol {
+    position: absolute;
+    font-size: 20px;
+    line-height: 25px;
+    display: block;
+    padding: 5px 10px;
+    height: 25px;
+    top: 0;
+    right: 0;
 }
 
 /* simple list */
