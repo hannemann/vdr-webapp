@@ -1,6 +1,65 @@
 /**
+ * @typedef {{}} infoDiskUsage
+ * @property {string} description_localized
+ * @property {number} free_mb
+ * @property {number} free_minutes
+ * @property {number} used_percent
+ */
+
+/**
+ * @typedef {{}} infoService
+ * @property {string} name
+ * @property {number} version
+ */
+
+/**
+ * @typedef {{}} infoPlugin
+ * @property {string} name
+ * @property {string} version
+ */
+
+/**
+ * @typedef {{}} infoDevice
+ * @property {number} adapter
+ * @property {boolean} atsc
+ * @property {string} channel_id
+ * @property {string} channel_name
+ * @property {number} channel_nr
+ * @property {boolean} dvb_c
+ * @property {boolean} dvb_s
+ * @property {boolean} dvb_t
+ * @property {number} frontend
+ * @property {boolean} has_ci
+ * @property {boolean} has_decoder
+ * @property {boolean} live
+ * @property {string} name
+ * @property {number} number
+ * @property {boolean} primary
+ * @property {number} signal_quality
+ * @property {number} signal_strength
+ * @property {string} type
+ */
+
+/**
+ * @typedef {{}} infoVDR
+ * @property {infoPlugin[]} plugins
+ * @property {infoDevice[]} devices
+ */
+
+/**
+ * @typedef {{}} infoData
+ * @property {infoDiskUsage} diskusage
+ * @property {infoService[]} services
+ * @property {number} time
+ * @property {infoVDR} vdr
+ * @property {string} version
+ *
+ */
+
+/**
  * @class
  * @constructor
+ * @property {infoData} data
  */
 VDRest.Info.Model.Info = function () {};
 
@@ -43,7 +102,7 @@ VDRest.Info.Model.Info.prototype.canRemuxRecordings = function () {
 };
 
 /**
- * @returns {Object}
+ * @returns {infoPlugin|boolean}
  */
 VDRest.Info.Model.Info.prototype.getStreamer = function () {
 
@@ -78,7 +137,8 @@ VDRest.Info.Model.Info.prototype.load = function () {
 
 /**
  * retrieve info about plugin
- * @returns {Object}
+ * @param {string} name
+ * @returns {infoPlugin|boolean}
  */
 VDRest.Info.Model.Info.prototype.getPlugin = function (name) {
 
@@ -107,7 +167,7 @@ VDRest.Info.Model.Info.prototype.hasPlugin = function (name) {
 /**
  * normalize version number
  * Version * 10000 + Major * 100 + Minor
- * @param {Object} plugin
+ * @param {infoPlugin} plugin
  * @returns {number}
  */
 VDRest.Info.Model.Info.prototype.getPluginVersnum = function (plugin) {

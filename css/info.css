@@ -1,0 +1,32 @@
+#viewport #info {
+    padding: 10px;
+    overflow: auto;
+    height: calc(100% - 20px);
+}
+#viewport #info .info-item {
+    margin-bottom: 15px;
+}
+
+#viewport #info .diskusage-wrapper {
+    height: 30px;
+    border: 1px solid white;
+    border-radius: 15px;
+}
+
+#viewport #info .diskusage-wrapper div {
+    height: 28px;
+    border-radius: 14px;
+    background: green;
+    margin: 1px;
+}
+
+#viewport #info .diskusage-wrapper div div {
+    background: red;
+    height: 16px;
+    border-radius: 14px;
+    line-height: 16px;
+    font-size: 16px;
+    padding: 6px;
+    font-weight: bold;
+    text-align: right;
+}
