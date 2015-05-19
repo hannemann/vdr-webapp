@@ -127,6 +127,7 @@ VDRest.App.prototype.run = function () {
         $document.one('infoupdate', function () {
 
             VDRest.info = this.getModule('VDRest.Info').getModel('Info');
+            this.startup = true;
             this.dispatch(start);
 
         }.bind(this));
@@ -154,7 +155,13 @@ VDRest.App.prototype.getLocationHash = function () {
  */
 VDRest.App.prototype.setLocationHash = function (hash) {
 
-    window.location.hash = '#' + hash;
+    if (this.replaceLocation) {
+        this.replaceLocation = undefined;
+        window.location.replace(window.location.href.replace(/(#.*$|$)/, '#' + hash));
+    } else {
+        window.location.hash = '#' + hash;
+    }
+
     return this;
 };
 
@@ -310,8 +317,14 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 
         if (moduleName !== this.getLocationHash()) {
 
+            if (this.startup) {
+                this.startup = false;
+                this.replaceLocation = true;
+            }
             this.setLocationHash(moduleName);
         }
+        this.startup = false;
+        this.replaceLocation = false;
 		this.modules[moduleName].dispatch(callback);
 		this.current = moduleName;
 
