@@ -358,7 +358,8 @@ div.window.confirm li:first-child {
     color: black;
 }
 
-div.window.viewport-fullsize {
+div.window.viewport-fullsize,
+form.window.viewport-fullsize {
     box-shadow: none;
     top: 0;
     left: 0;

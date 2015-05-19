@@ -153,7 +153,7 @@ Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
     $document.one('searchtimersloaded', this.iterateTimers.bind(this));
     $document.one('channelgroupsloaded', this.storeChannelGroups.bind(this));
     $document.on('gui-searchtimer.created', this.dispatchNew.bind(this));
-    $document.on('gui-searchtimer.deleted', this.delete.bind(this));
+    $document.on('gui-searchtimer.deleted', this.deleteSearchTimer.bind(this));
     $document.on('gui-searchtimer.perform', this.dispatchSearchResult.bind(this));
 };
 
@@ -184,7 +184,7 @@ Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collect
  * delete search timer from list
  * @param e
  */
-Gui.SearchTimer.Controller.List.prototype.delete = function (e) {
+Gui.SearchTimer.Controller.List.prototype.deleteSearchTimer = function (e) {
 
     this.timerList.getData(e.payload).destructView();
     this.timerList.unsData(e.payload);
@@ -195,10 +195,15 @@ Gui.SearchTimer.Controller.List.prototype.delete = function (e) {
  */
 Gui.SearchTimer.Controller.List.prototype.destructView = function () {
 
-    this.timerList.each(function () {
+    this.view.node.one(this.animationEndEvents, function () {
 
-        arguments[1].destructView();
-    });
+        this.timerList.each(function () {
 
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
+            arguments[1].destructView();
+        });
+
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
 };

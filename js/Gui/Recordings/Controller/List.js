@@ -38,8 +38,10 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
         this.isHidden = false;
         this.view.node.show();
+        this.view.show();
     } else {
 
+        this.view.show();
         if (this.dataModel.hasCollection) {
 
             this.iterateRecordings();
@@ -150,6 +152,13 @@ Gui.Recordings.Controller.List.prototype.removeIfEmpty = function (path) {
  */
 Gui.Recordings.Controller.List.prototype.destructView = function () {
 
-    this.isHidden = true;
-    this.view.node.hide();
+    this.view.node.one(this.animationEndEvents, function () {
+
+        this.isHidden = true;
+        this.view.node.hide();
+
+        this.view.node.toggleClass('collapse collapsed');
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
 };

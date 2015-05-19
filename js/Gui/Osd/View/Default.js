@@ -14,7 +14,7 @@ Gui.Osd.View.Default.prototype = new VDRest.Abstract.View();
  */
 Gui.Osd.View.Default.prototype.init = function () {
 
-    this.node = $('<div id="osd">');
+    this.node = $('<div id="osd">').addClass('window collapsed viewport-fullsize');
     this.osdWrapper = $('<div id="osd-items-wrapper">').appendTo(this.node);
     this.osd = $('<table id="osd-items">');
     this.colorButtons = $('<div id="osd-buttons">');
@@ -43,6 +43,8 @@ Gui.Osd.View.Default.prototype.render = function () {
     this.node.css({
         "background-image": 'url(' + poster + ')'
     });
+
+    this.node.toggleClass('collapsed expand');
 };
 
 /**

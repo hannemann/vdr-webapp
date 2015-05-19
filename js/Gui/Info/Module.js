@@ -31,7 +31,7 @@ Gui.Info.prototype.name = 'Info';
  * start page capable
  * @type {string}
  */
-Gui.Info.prototype.startPage = true;
+//Gui.Info.prototype.startPage = true;
 
 /**
  * headline in menu bar
@@ -61,6 +61,7 @@ Gui.Info.prototype.getStore = function () {
 Gui.Info.prototype.destruct = function () {
 
     this.getController('Default').destructView();
+    this.cache.flush();
 };
 
 /**

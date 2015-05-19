@@ -14,7 +14,7 @@ Gui.EpgSearch.View.Search.prototype = new VDRest.Abstract.View();
  */
 Gui.EpgSearch.View.Search.prototype.init = function () {
 
-    this.node = $('<div class="epg-search-view">');
+    this.node = $('<div class="epg-search-view window">');
 };
 
 /**
@@ -22,11 +22,11 @@ Gui.EpgSearch.View.Search.prototype.init = function () {
  */
 Gui.EpgSearch.View.Search.prototype.render = function () {
 
+    this.node.addClass('viewport-fullsize collapsed');
+
     VDRest.Abstract.View.prototype.render.call(this);
 
     this.requestForm();
-
-    this.node.addClass('viewport-fullsize collapsed');
 
     this.node.toggleClass('collapsed expand');
 };

@@ -64,7 +64,7 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
 
     if (this.isHidden) {
 
-        this.view.node.show();
+        //this.view.node.show();
         this.isHidden = false;
         this.module.unMute();
 
@@ -270,7 +270,7 @@ Gui.Epg.Controller.Epg.prototype.destructView = function (hideOnly) {
 
     if (hideOnly) {
 
-        this.view.node.hide();
+        //this.view.node.hide();
         this.isHidden = true;
         this.module.mute();
 

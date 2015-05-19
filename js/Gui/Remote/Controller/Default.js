@@ -51,3 +51,16 @@ Gui.Remote.Controller.Default.prototype.sendKey = function (key, e) {
     this.vibrate();
     this.module.backend.send(key);
 };
+
+/**
+ * destroy
+ */
+Gui.Remote.Controller.Default.prototype.destructView = function () {
+
+    this.view.node.one(this.animationEndEvents, function () {
+
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
+};

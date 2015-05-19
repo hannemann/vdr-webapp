@@ -15,7 +15,7 @@ Gui.Info.View.Default.prototype = new VDRest.Abstract.View();
  */
 Gui.Info.View.Default.prototype.init = function () {
 
-    this.node = $('<div id="info"></div>');
+    this.node = $('<div id="info">').addClass('window collapsed viewport-fullsize');
     this.time = $('<div class="vdr-time info-item">');
     this.diskUsage = $('<div class="vdr-diskusage info-item">');
     this.plugins = $('<div class="vdr-plugins info-item">');
@@ -31,8 +31,9 @@ Gui.Info.View.Default.prototype.render = function () {
     this.diskUsage.appendTo(this.node);
     this.devices.appendTo(this.node);
     this.plugins.appendTo(this.node);
-    this.node.appendTo(this.parentView.node);
+    VDRest.Abstract.View.prototype.render.call(this);
     this.setItems();
+    this.node.toggleClass('collapsed expand');
 };
 
 /**

@@ -15,5 +15,9 @@ Gui.Config.View.Settings.prototype.render = function () {
 
     this.renderCategories();
 
+    this.node.addClass('window collapsed viewport-fullsize');
+
     VDRest.Abstract.View.prototype.render.call(this);
+
+    this.node.toggleClass('collapsed expand');
 };

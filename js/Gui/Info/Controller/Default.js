@@ -56,3 +56,16 @@ Gui.Info.Controller.Default.prototype.update = function () {
     console.log(new Date(this.data.dataModel.getData('time') * 1000));
     this.view.setItems();
 };
+
+/**
+ * destroy
+ */
+Gui.Info.Controller.Default.prototype.destructView = function () {
+
+    this.view.node.one(this.animationEndEvents, function () {
+
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
+};

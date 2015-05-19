@@ -166,6 +166,7 @@ Gui.SearchTimer.prototype.getStore = function () {
 Gui.SearchTimer.prototype.destruct = function () {
 
     this.getController('List').destructView(true);
+    this.cache.flush();
 };
 
 /**

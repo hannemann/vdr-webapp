@@ -35,8 +35,13 @@ Gui.Recordings.View.List.prototype.init = function () {
     if (node.get(0)) {
         this.node = node;
     } else {
-        this.node = $('<div class="recordings-list simple-list clearer">');
+        this.node = $('<div class="recordings-list simple-list clearer window collapsed viewport-fullsize">');
     }
+};
+
+Gui.Recordings.View.List.prototype.show = function () {
+
+    this.node.toggleClass('collapsed expand');
 };
 
 /**

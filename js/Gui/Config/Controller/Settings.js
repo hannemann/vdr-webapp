@@ -98,3 +98,16 @@ Gui.Config.Controller.Settings.prototype.persist = function () {
         }
     }
 };
+
+/**
+ * destroy
+ */
+Gui.Config.Controller.Settings.prototype.destructView = function () {
+
+    this.view.node.one(this.animationEndEvents, function () {
+
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
+};

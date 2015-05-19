@@ -66,6 +66,7 @@
 
 .osd-view #remote {
     height: 215px;
+    top: calc(100% - 215px);
 }
 
 @media (orientation: landscape) {
@@ -78,6 +79,8 @@
     }
     .osd-view #remote {
         height: 100%;
+        left: auto;
+        top: 0;
     }
     .osd-view #remote-buttons {
         width: calc(100% - 20px);

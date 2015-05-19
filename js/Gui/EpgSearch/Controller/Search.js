@@ -81,16 +81,21 @@ Gui.EpgSearch.Controller.Search.prototype.initResults = function (resultCollecti
  */
 Gui.EpgSearch.Controller.Search.prototype.destructView = function () {
 
-    var i = 0, l = this.broadcastList.length;
+    this.view.node.one(this.animationEndEvents, function () {
 
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
+        var i = 0, l = this.broadcastList.length;
 
-    for (i;i<l;i++) {
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
 
-        this.broadcastList[i].destructView();
-    }
+        for (i;i<l;i++) {
 
-    $.event.trigger({
-        "type" : "destruct.form-Search"
-    });
+            this.broadcastList[i].destructView();
+        }
+
+        $.event.trigger({
+            "type" : "destruct.form-Search"
+        });
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
 };

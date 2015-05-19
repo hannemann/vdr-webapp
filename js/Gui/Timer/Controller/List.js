@@ -134,10 +134,15 @@ Gui.Timer.Controller.List.prototype.removeObserver = function () {};
  */
 Gui.Timer.Controller.List.prototype.destructView = function () {
 
-    this.timerList.each(function () {
+    this.view.node.one(this.animationEndEvents, function () {
 
-        arguments[1].destructView();
-    });
+        this.timerList.each(function () {
 
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
+            arguments[1].destructView();
+        });
+
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
 };

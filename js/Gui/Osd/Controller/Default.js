@@ -276,11 +276,16 @@ Gui.Osd.Controller.Default.prototype.sendSeq = function (seq) {
  */
 Gui.Osd.Controller.Default.prototype.destructView = function () {
 
-    this.view.unmuteScreen();
-
-    this.stopRefreshInterval();
-
     VDRest.app.getModule('Gui.Remote').destruct();
 
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
+    this.view.node.one(this.animationEndEvents, function () {
+
+        this.view.unmuteScreen();
+
+        this.stopRefreshInterval();
+
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+    }.bind(this));
+
+    this.view.node.toggleClass('collapse expand');
 };
