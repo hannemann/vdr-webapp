@@ -160,6 +160,9 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
+/**
+ * remove buttons observer
+ */
 Gui.Window.Controller.Drawer.prototype.removeButtonObserver = function () {
 
     var i = 0, l = this.view.buttons.length;
