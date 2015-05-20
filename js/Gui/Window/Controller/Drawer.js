@@ -44,6 +44,8 @@ Gui.Window.Controller.Drawer.prototype.init = function () {
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
+
+    this.stateChangedHandler = this.handleStateChanged.bind(this);
 };
 
 /**
@@ -125,19 +127,19 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
 
         if (!this.view.buttons[i].hasClass('current')) {
 
-            this.view.buttons[i].one('click', this.handleStateChanged);
+            this.view.buttons[i].one('click', this.stateChangedHandler);
         }
     }
 
     $document.one('drawer.statechanged', function () {
 
-        $document.one('click', me.handleStateChanged);
+        $document.one('click', me.stateChangedHandler);
     });
 
     if (this.view.favourites) {
         this.view.favourites.find('img')
-            .on('mousedown', this.handleFavDown.bind(this))
-            .on('click', this.handleFavClick.bind(this));
+            .one('mousedown', this.handleFavDown.bind(this))
+            .one('click', this.handleFavClick.bind(this));
     }
 
     this.view.node.on(this.transitionEndEvents, this.animationCallback.bind(this));
@@ -147,6 +149,18 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
  * remove event listeners
  */
 Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
+
+    this.removeButtonObserver();
+
+    $document.off('drawer.statechanged', this.stateChangedHandler);
+
+    this.view.node
+        .off(this.transitionEndEvents);
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
+};
+
+Gui.Window.Controller.Drawer.prototype.removeButtonObserver = function () {
 
     var i = 0, l = this.view.buttons.length;
 
@@ -158,19 +172,41 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
         }
     }
 
-    $document.off('drawer.statechanged', this.handleStateChanged);
-    $document.off('click', this.handleStateChanged);
-
-    this.view.node
-        .off(this.transitionEndEvents)
-        .off('touchmove.drawer')
-        .off('touchend');
-
     if (this.view.favourites) {
         this.view.favourites.find('img').off('click mousedown');
     }
 
-    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
+    $document.off('click', this.stateChangedHandler);
+
+    this.view.node
+        .off('touchmove.drawer touchend');
+};
+
+/**
+ * button provides data-module attribute
+ * containing module name to be dispatched
+ * close drawer only if not found
+ * @param {jQuery.Event} e
+ */
+Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
+
+    var request = $(e.currentTarget).attr('data-module');
+
+    this.removeButtonObserver();
+
+    VDRest.Abstract.Controller.prototype.vibrate();
+
+    e.stopPropagation();
+
+    history.back();
+
+    $document.one('drawer.statechanged', function () {
+
+        if (request) {
+
+            VDRest.app.dispatch(request);
+        }
+    });
 };
 
 /**
@@ -385,31 +421,6 @@ Gui.Window.Controller.Drawer.prototype.getRemainDuration = function () {
 };
 
 /**
- * button provides data-module attribute
- * containing module name to be dispatched
- * close drawer only if not found
- * @param {jQuery.Event} e
- */
-Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
-
-    var request = $(this).attr('data-module');
-
-    VDRest.Abstract.Controller.prototype.vibrate();
-
-    e.stopPropagation();
-
-    history.back();
-
-    $document.one('drawer.statechanged', function () {
-
-        if (request) {
-
-            VDRest.app.dispatch(request);
-        }
-    });
-};
-
-/**
  * animation callback on destruction
  */
 Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
@@ -461,7 +472,7 @@ Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
 
         slider.translate(delta);
 
-        this.handleStateChanged(e);
+        this.stateChangedHandler(e);
 
         channel.addClass('attention');
 
@@ -485,7 +496,7 @@ Gui.Window.Controller.Drawer.prototype.handleFavDown = function (e) {
             this.view.node.one(this.transitionEndEvents, this.playFavourite.bind(this, e));
             this.vibrate(100);
             this.preventClick = true;
-            this.handleStateChanged(e);
+            this.stateChangedHandler(e);
 
         }.bind(this), 500);
     }
