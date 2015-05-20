@@ -230,6 +230,14 @@
 
             var channel, left, width, broadcast;
 
+            document.oncontextmenu = function () {
+                return false;
+            };
+
+            document.onselectstart = function () {
+                return false;
+            };
+
             for (var i=0;i<100;i++) {
 
                 width = 0;

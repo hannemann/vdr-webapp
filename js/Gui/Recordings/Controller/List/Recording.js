@@ -118,9 +118,7 @@ Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
             this.requestWindowAction(e)
         }
     }
-    document.onselectstart = function () {
-        return true
-    };
+    this.unpreventLongPress();
 };
 
 /**
@@ -138,11 +136,11 @@ Gui.Recordings.Controller.List.Recording.prototype.handleMove = function () {
 /**
  * handle mousedown
  */
-Gui.Recordings.Controller.List.Recording.prototype.handleDown = function () {
+Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
 
-    document.onselectstart = function () {
-        return false
-    };
+    this.preventLongPress();
+
+    activeAnimate.applyAnimation(e, this.view.node[0]);
 
     this.preventClick = undefined;
     if (VDRest.info.getStreamer()) {
@@ -152,9 +150,13 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function () {
 
             this.preventClick = true;
 
-            this.startStream();
+            $document.one('touchend', function () {
+                if (!this.canCancel) {
+                    this.startStream()
+                }
+            }.bind(this));
 
-        }.bind(this), 500);
+        }.bind(this), 1000);
     }
 };
 

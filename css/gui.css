@@ -118,9 +118,9 @@ ul#menubar #refresh {
     margin: 0 10px;
     font-size: 1em;
 }
-.recordings-list .recordings-path:active,
-.recordings-list .recording:active,
-#timer-list .list-item:active,
-#searchtimer-list .list-item:active {
+body[class*="is-not-touch"] .recordings-list .recordings-path:active,
+body[class*="is-not-touch"] .recordings-list .recording:active,
+body[class*="is-not-touch"] #timer-list .list-item:active,
+body[class*="is-not-touch"] #searchtimer-list .list-item:active {
     background-color: rgba(255,255,255,0.5);
 }

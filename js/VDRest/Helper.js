@@ -6,9 +6,7 @@ VDRest.Helper = function () {
 
     this.touchMoveCapable = this.isTouchDevice && !this.isFirefox;
 
-    if (this.isTouchDevice) {
-        document.body.classList.add('is-touch');
-    }
+    document.body.classList.add('is' + (this.isTouchDevice ? '' : '-not') + '-touch');
 
     if (this.isFirefox) {
         document.body.classList.add('is-firefox');
