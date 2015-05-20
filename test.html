@@ -124,6 +124,11 @@
             position: absolute;
             top: 0;
             height: 40px;
+            z-index: 0;
+        }
+        #events .broadcast .content {
+            position: relative;
+            z-index: 1;
         }
 
         #testwindow {
@@ -210,7 +215,11 @@
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Scroll.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Slider.js"></script>
     <script type="text/javascript" src="js/VDRest/Lib/TouchMove/Tiles.js"></script>
+    <script type="text/javascript" src="js/VDRest/Lib/ActiveAnimate.js"></script>
     <script type="text/javascript">
+
+
+
 
         $(function () {
             var timeline = $('#timeline'),
@@ -219,7 +228,7 @@
             var channels = $('#channels');
             var events = $('#events');
 
-            var channel, left, width;
+            var channel, left, width, broadcast;
 
             for (var i=0;i<100;i++) {
 
@@ -237,7 +246,7 @@
                     '<div class="content">' +
                     '<div class="title">Bla</div>' +
                     '</div>' +
-                    '</div>')
+                    '</div>').on('touchstart', activeAnimate.applyAnimation.bind(activeAnimate))
                             .css({
                                 left: left + 'px',
                                 width: width + 'px'
