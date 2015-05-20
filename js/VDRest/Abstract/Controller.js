@@ -61,6 +61,34 @@ VDRest.Abstract.Controller.prototype.vibrate = function (sequence) {
 };
 
 /**
+ * prevent selection and context menu
+ */
+VDRest.Abstract.Controller.prototype.preventLongPress = function () {
+
+    document.onselectstart = function () {
+        return false
+    };
+
+    document.oncontextmenu = function () {
+        return false;
+    };
+};
+
+/**
+ * reattach selection and context menu
+ */
+VDRest.Abstract.Controller.prototype.unpreventLongPress = function () {
+
+    document.onselectstart = function () {
+        return true
+    };
+
+    document.oncontextmenu = function () {
+        return true;
+    };
+};
+
+/**
  * destruct view
  */
 VDRest.Abstract.Controller.prototype.destructView = function () {
