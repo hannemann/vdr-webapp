@@ -43,13 +43,6 @@ VDRest.Abstract.Controller.prototype.dispatchView = function () {
         this.view.node[0].addEventListener(event, this.logDebugHandler);
     }
 
-    if (VDRest.helper.isTouchDevice) {
-        this.touchStartHandler = this.getTouchStart.bind(this);
-        this.touchMoveHandler = this.cancelMove.bind(this);
-        this.view.node[0].addEventListener('touchstart', this.touchStartHandler);
-        this.view.node[0].addEventListener('touchmove', this.touchMoveHandler);
-    }
-
     this.view.render();
 };
 
@@ -102,33 +95,6 @@ VDRest.Abstract.Controller.prototype.unpreventLongPress = function () {
 };
 
 /**
- * get touch start position
- * @param e
- */
-VDRest.Abstract.Controller.prototype.getTouchStart = function (e) {
-
-    this.canCancel = false;
-
-    this.touchStartPosition = {
-        "x" : e.changedTouches[0].pageX,
-        "y" : e.changedTouches[0].pageY
-    };
-};
-
-/**
- * determine if touch event is cancelable
- * @param e
- */
-VDRest.Abstract.Controller.prototype.cancelMove = function (e) {
-
-    if (Math.abs(e.changedTouches[0].pageX - this.touchStartPosition.x) > 5 ||
-        Math.abs(e.changedTouches[0].pageY - this.touchStartPosition.y) > 5) {
-
-        this.canCancel = true;
-    }
-};
-
-/**
  * destruct view
  */
 VDRest.Abstract.Controller.prototype.destructView = function () {
@@ -143,11 +109,6 @@ VDRest.Abstract.Controller.prototype.destructView = function () {
             event = 'click';
         }
         this.view.node[0].removeEventListener(event, this.logDebugHandler);
-    }
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node[0].removeEventListener('touchstart', this.touchStartHandler);
-        this.view.node[0].removeEventListener('touchmove', this.touchMoveHandler);
     }
 
     if ("function" === typeof this.removeObserver) {

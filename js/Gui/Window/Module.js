@@ -109,11 +109,11 @@ Gui.Window.prototype.dispatch = function (payload) {
                 }.bind(this),
                 this.name + '-' + suffix
             );
+
+            this.register(controller);
         }
 
         controller.dispatchView();
-
-        this.register(controller);
     }
 };
 

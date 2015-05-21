@@ -72,7 +72,17 @@ Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function (posi
  */
 Gui.Recordings.Controller.List.Directory.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.requestWindow.bind(this));
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node
+            .on('touchend', this.requestWindow.bind(this))
+            .on('touchstart', handlePointerActive)
+        ;
+    } else {
+        this.view.node
+            .on('mouseup', this.requestWindow.bind(this))
+            .on('mousedown', handlePointerActive)
+        ;
+    }
 };
 
 /**
@@ -80,7 +90,7 @@ Gui.Recordings.Controller.List.Directory.prototype.addObserver = function () {
  */
 Gui.Recordings.Controller.List.Directory.prototype.removeObserver = function () {
 
-    this.view.node.off('click');
+    this.view.node.off('mousedown mouseup touchend touchstart');
 };
 
 /**
@@ -88,6 +98,9 @@ Gui.Recordings.Controller.List.Directory.prototype.removeObserver = function () 
  */
 Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) {
 
+    if (VDRest.helper.canCancelEvent) {
+        return;
+    }
     this.vibrate();
     e.preventDefault();
     e.stopPropagation();

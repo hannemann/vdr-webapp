@@ -11,6 +11,76 @@ VDRest.Helper = function () {
     if (this.isFirefox) {
         document.body.classList.add('is-firefox');
     }
+
+    if (this.isTouchDevice) {
+        this.touchStartHandler = this.getTouchStart.bind(this);
+        this.touchMoveHandler = this.cancelTouchMove.bind(this);
+        document.addEventListener('touchstart', this.touchStartHandler);
+        document.addEventListener('touchmove', this.touchMoveHandler);
+    } else {
+        this.mouseStartHandler = this.getPointerStart.bind(this);
+        this.mouseMoveHandler = this.cancelMouseMove.bind(this);
+        document.addEventListener('mousedown', this.mouseStartHandler);
+        document.addEventListener('mousemove', this.mouseMoveHandler);
+    }
+};
+
+/**
+ * get touch start position
+ * @param e
+ */
+VDRest.Helper.prototype.getTouchStart = function (e) {
+
+    this.canCancelEvent = false;
+
+    this.touchStartPosition = {
+        "x" : e.changedTouches[0].pageX,
+        "y" : e.changedTouches[0].pageY
+    };
+};
+
+/**
+ * determine if touch event is cancelable
+ * @param e
+ */
+VDRest.Helper.prototype.cancelTouchMove = function (e) {
+
+    if ("undefined" !== typeof this.touchStartPosition &&
+        (Math.abs(e.changedTouches[0].pageX - this.touchStartPosition.x) > 5 ||
+        Math.abs(e.changedTouches[0].pageY - this.touchStartPosition.y) > 5)
+    ) {
+
+        this.canCancelEvent = true;
+    }
+};
+
+/**
+ * get pointer start position
+ * @param e
+ */
+VDRest.Helper.prototype.getPointerStart = function (e) {
+
+    this.canCancelEvent = false;
+
+    this.mouseStartPosition = {
+        "x" : e.pageX,
+        "y" : e.pageY
+    };
+};
+
+/**
+ * determine if mouse event is cancelable
+ * @param e
+ */
+VDRest.Helper.prototype.cancelMouseMove = function (e) {
+
+    if ("undefined" !== typeof this.mouseStartPosition &&
+        (Math.abs(e.pageX - this.mouseStartPosition.x) > 5 ||
+        Math.abs(e.pageY - this.mouseStartPosition.y) > 5)
+    ) {
+
+        this.canCancelEvent = true;
+    }
 };
 
 /**

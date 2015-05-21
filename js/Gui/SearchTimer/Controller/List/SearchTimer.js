@@ -51,8 +51,6 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.dispatchView = function ()
  */
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.requestWindowAction.bind(this));
-
     if (VDRest.helper.isTouchDevice) {
         this.view.node
             .on('touchend', this.handleUp.bind(this))
@@ -102,12 +100,11 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleUp = function (e) {
             if ("undefined" !== typeof this.clickTimeout) {
                 window.clearTimeout(this.clickTimeout);
             }
-            this.requestWindowAction(e)
+            if (!VDRest.helper.canCancelEvent) {
+                this.requestWindowAction(e);
+            }
         }
     }
-    document.onselectstart = function () {
-        return true
-    };
 };
 
 /**
@@ -125,11 +122,9 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleMove = function () {
 /**
  * handle mousedown
  */
-Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleDown = function () {
+Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleDown = function (e) {
 
-    document.onselectstart = function () {
-        return false
-    };
+    activeAnimate.applyAnimation(e, this.view.node[0]);
 
     this.preventClick = undefined;
 
@@ -137,9 +132,14 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.handleDown = function () {
         if (!this.module.isMuted) {
             this.vibrate(100);
             this.preventClick = true;
-            this.requestMenuAction();
+
+            $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
+                if (!VDRest.helper.canCancelEvent) {
+                    this.requestMenuAction();
+                }
+            }.bind(this));
         }
-    }.bind(this), 500);
+    }.bind(this), 1000);
 };
 
 /**

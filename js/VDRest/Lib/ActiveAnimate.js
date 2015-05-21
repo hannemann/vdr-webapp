@@ -5,9 +5,11 @@
  */
 var ActiveAnimate = function () {
     this.finishHandler = this.finishAnimation.bind(this);
+    this.cancelHandler = this.cancelAnimation.bind(this);
+    this.preventDefaultHandler = this.preventDefault.bind(this);
+    this.attachDefaultsHandler = this.attachDefaults.bind(this);
     this.clickAnimationHandler = this.animateClickGradient.bind(this);
     this.pressAnimationHandler = this.animatePressGradient.bind(this);
-    this.cancelHandler = this.cancelAnimation.bind(this);
     this.getGradientElement();
 };
 
@@ -18,19 +20,23 @@ var ActiveAnimate = function () {
  */
 ActiveAnimate.prototype.applyAnimation = function (e, node) {
 
+    this.preventDefaults();
+
     this.getTouch(e);
 
     this.target = node || this.event.target;
+
+    this.addListener('end', 'attachDefaults');
 
     this.getStartPosition();
 
     if (this.target !== this.gradientElement && !this.gradientElement.parentNode) {
 
-        this.target.addEventListener('touchmove', this.cancelHandler);
-        this.target.addEventListener('touchend', this.cancelHandler);
+        this.addListener('move', 'cancel');
+        this.addListener('end', 'cancel');
         this.animationTimeout = setTimeout(function () {
 
-            this.target.addEventListener('touchmove', this.finishHandler);
+            this.addListener('move', 'finish');
             this.init()
                 .injectElement()
                 .initClickGradient()
@@ -63,7 +69,7 @@ ActiveAnimate.prototype.init = function () {
     this.bgOpacity = 0;
     this.onReadyRemove = false;
     this.animateOpacity = false;
-    this.target.addEventListener('touchend', this.finishHandler);
+    this.addListener('end', 'finish');
     this.currentAnimation = 'click';
 
     return this;
@@ -235,10 +241,10 @@ ActiveAnimate.prototype.removeGradientElement = function () {
  */
 ActiveAnimate.prototype.detach = function () {
 
-    this.target.removeEventListener('touchend', this.finishHandler);
-    this.target.removeEventListener('touchmove', this.finishHandler);
-    this.target.removeEventListener('touchend', this.cancelHandler);
-    this.target.removeEventListener('touchmove', this.cancelHandler);
+    this.removeListener('end', 'finish');
+    this.removeListener('move', 'finish');
+    this.removeListener('end', 'cancel');
+    this.removeListener('move', 'cancel');
     return this;
 };
 
@@ -248,11 +254,19 @@ ActiveAnimate.prototype.detach = function () {
  */
 ActiveAnimate.prototype.getTouch = function (e) {
 
+    var event;
+
     if (e instanceof jQuery.Event) {
-        this.event = e.originalEvent.changedTouches[0];
+        event = e.originalEvent;
     } else {
-        this.event = e.changedTouches[0];
+        event = e;
     }
+
+    if (event instanceof TouchEvent) {
+        event = event.changedTouches[0];
+    }
+
+    this.event = event;
 
     return this;
 };
@@ -285,8 +299,105 @@ ActiveAnimate.prototype.getGradientElement = function () {
  */
 ActiveAnimate.prototype.moveCancel = function (e) {
 
-    return Math.abs(e.changedTouches[0].pageX - this.startPosition.x) > 5 ||
-        Math.abs(e.changedTouches[0].pageY - this.startPosition.y) > 5;
+    var event;
+
+    if (e instanceof TouchEvent) {
+        event = e.changedTouches[0]
+    } else {
+        event = e;
+    }
+
+    return Math.abs(event.pageX - this.startPosition.x) > 5 ||
+        Math.abs(event.pageY - this.startPosition.y) > 5;
 };
 
-var activeAnimate = new ActiveAnimate();
+/**
+ * add listener to target
+ * @param {string} type
+ * @param {string} handler
+ */
+ActiveAnimate.prototype.addListener = function (type, handler) {
+
+    this.target.addEventListener(this.getPointer(type), this.getHandler(handler));
+};
+
+/**
+ * remove listener from target
+ * @param {string} type
+ * @param {string} handler
+ */
+ActiveAnimate.prototype.removeListener = function (type, handler) {
+
+    this.target.removeEventListener(this.getPointer(type), this.getHandler(handler));
+};
+
+/**
+ * retrieve pointer type
+ * @param {string} type
+ * @returns {string}
+ */
+ActiveAnimate.prototype.getPointer = function (type) {
+
+    var pointer = 'touch';
+
+    if (this.event instanceof MouseEvent) {
+        if ('start' === type) {
+            type = 'down';
+        } else if ('end' === type) {
+            type = 'up';
+        }
+        pointer = 'mouse'
+    }
+
+    return pointer + type;
+};
+
+/**
+ * retrieve event handler
+ * @param {string} type
+ * @returns {function}
+ */
+ActiveAnimate.prototype.getHandler = function (type) {
+
+    var handler;
+
+    if ('cancel' === type) {
+        handler = this.cancelHandler;
+    } else if ('finish' === type) {
+        handler = this.finishHandler;
+    } else if ('attachDefaults' === type) {
+        handler = this.attachDefaultsHandler;
+    }
+
+    return handler;
+};
+
+/**
+ * prevent selection and context menu
+ */
+ActiveAnimate.prototype.preventDefaults = function () {
+
+    document.addEventListener('selectstart', this.preventDefaultHandler);
+    document.addEventListener('contextmenu', this.preventDefaultHandler);
+};
+
+/**
+ * reattach selection and context menu
+ */
+ActiveAnimate.prototype.attachDefaults = function () {
+
+    document.removeEventListener('selectstart', this.preventDefaultHandler);
+    document.removeEventListener('contextmenu', this.preventDefaultHandler);
+    this.removeListener('end', 'attachDefaults');
+};
+
+/**
+ * prevent default
+ * @param {Event} e
+ */
+ActiveAnimate.prototype.preventDefault = function (e) {
+    e.preventDefault();
+};
+
+var activeAnimate = new ActiveAnimate(),
+    handlePointerActive = activeAnimate.applyAnimation.bind(activeAnimate);

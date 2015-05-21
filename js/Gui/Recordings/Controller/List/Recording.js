@@ -74,8 +74,6 @@ Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (posi
  */
 Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.requestWindowAction.bind(this));
-
     if (VDRest.helper.isTouchDevice) {
         this.view.node
             .on('touchend', this.handleUp.bind(this))
@@ -115,10 +113,11 @@ Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
             if ("undefined" !== typeof this.clickTimeout) {
                 window.clearTimeout(this.clickTimeout);
             }
-            this.requestWindowAction(e)
+            if (!VDRest.helper.canCancelEvent) {
+                this.requestWindowAction(e);
+            }
         }
     }
-    this.unpreventLongPress();
 };
 
 /**
@@ -138,8 +137,6 @@ Gui.Recordings.Controller.List.Recording.prototype.handleMove = function () {
  */
 Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
 
-    this.preventLongPress();
-
     activeAnimate.applyAnimation(e, this.view.node[0]);
 
     this.preventClick = undefined;
@@ -150,8 +147,8 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
 
             this.preventClick = true;
 
-            $document.one('touchend', function () {
-                if (!this.canCancel) {
+            $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
+                if (!VDRest.helper.canCancelEvent) {
                     this.startStream()
                 }
             }.bind(this));

@@ -121,25 +121,31 @@ Gui.Window.Controller.Drawer.prototype.triggerStateChanged = function () {
  */
 Gui.Window.Controller.Drawer.prototype.addObserver = function () {
 
-    var i = 0, l = this.view.buttons.length, me = this;
+    var i = 0, l = this.view.buttons.length;
 
     for (i; i<l; i++) {
 
         if (!this.view.buttons[i].hasClass('current')) {
 
-            this.view.buttons[i].one('click', this.stateChangedHandler);
+            if (VDRest.helper.isTouchDevice) {
+                this.view.buttons[i].on('touchstart', handlePointerActive);
+                this.view.buttons[i].on('touchend', this.stateChangedHandler);
+            } else {
+                this.view.buttons[i].on('mousedown', handlePointerActive);
+                this.view.buttons[i].on('mouseup', this.stateChangedHandler);
+            }
         }
     }
 
     $document.one('drawer.statechanged', function () {
 
-        $document.one('click', me.stateChangedHandler);
-    });
+        $document.on('click', this.stateChangedHandler);
+    }.bind(this));
 
     if (this.view.favourites) {
         this.view.favourites.find('img')
-            .one('mousedown', this.handleFavDown.bind(this))
-            .one('click', this.handleFavClick.bind(this));
+            .on('mousedown', this.handleFavDown.bind(this))
+            .on('click', this.handleFavClick.bind(this));
     }
 
     this.view.node.on(this.transitionEndEvents, this.animationCallback.bind(this));
@@ -150,12 +156,13 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
  */
 Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
 
-    this.removeButtonObserver();
+    this.removeBackObserver();
 
     $document.off('drawer.statechanged', this.stateChangedHandler);
 
-    this.view.node
-        .off(this.transitionEndEvents);
+    this.view.node.off(this.transitionEndEvents);
+
+    this.view.node.off('touchmove.drawer touchend');
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
@@ -163,7 +170,7 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
 /**
  * remove buttons observer
  */
-Gui.Window.Controller.Drawer.prototype.removeButtonObserver = function () {
+Gui.Window.Controller.Drawer.prototype.removeBackObserver = function () {
 
     var i = 0, l = this.view.buttons.length;
 
@@ -171,7 +178,11 @@ Gui.Window.Controller.Drawer.prototype.removeButtonObserver = function () {
 
         if (!this.view.buttons[i].hasClass('current')) {
 
-            this.view.buttons[i].off('click');
+            if (VDRest.helper.isTouchDevice) {
+                this.view.buttons[i].off('touchstart touchend');
+            } else {
+                this.view.buttons[i].off('mousedown mouseup');
+            }
         }
     }
 
@@ -180,9 +191,6 @@ Gui.Window.Controller.Drawer.prototype.removeButtonObserver = function () {
     }
 
     $document.off('click', this.stateChangedHandler);
-
-    this.view.node
-        .off('touchmove.drawer touchend');
 };
 
 /**
@@ -195,7 +203,11 @@ Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 
     var request = $(e.currentTarget).attr('data-module');
 
-    this.removeButtonObserver();
+    if (VDRest.helper.canCancelEvent) {
+        return;
+    }
+
+    this.removeBackObserver();
 
     VDRest.Abstract.Controller.prototype.vibrate();
 

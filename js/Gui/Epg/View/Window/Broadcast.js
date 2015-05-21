@@ -30,11 +30,6 @@ Gui.Epg.View.Window.Broadcast.prototype.isModal = false;
 /**
  * @type {boolean}
  */
-Gui.Epg.View.Window.Broadcast.prototype.hasDesktopCloseButton = true;
-
-/**
- * @type {boolean}
- */
 Gui.Epg.View.Window.Broadcast.prototype.isModalTransparent = true;
 
 /**

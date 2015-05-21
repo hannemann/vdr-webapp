@@ -35,11 +35,6 @@ Gui.Timer.View.Window.Timer.prototype.hasHeader = true;
 Gui.Timer.View.Window.Timer.prototype.hasBroadcast = false;
 
 /**
- * @type {boolean}
- */
-Gui.Timer.View.Window.Timer.prototype.hasDesktopCloseButton = true;
-
-/**
  * @type {Gui.Window.Controller.Abstract}
  */
 Gui.Timer.View.Window.Timer.prototype.init = function () {

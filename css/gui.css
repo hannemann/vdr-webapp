@@ -61,10 +61,7 @@ ul#menubar #refresh {
 	font-size: 20px;
     border-bottom: 1px solid rgb(95, 95, 95);
     position: relative;
-}
-.window-drawer .navi-button:active,
-.window-drawer .info .info-item[data-module]:active {
-    background-color: rgba(255,255,255,0.5);
+    cursor: default;
 }
 .window-drawer .onAir {
     border-bottom: 1px solid rgb(95, 95, 95);
@@ -118,9 +115,9 @@ ul#menubar #refresh {
     margin: 0 10px;
     font-size: 1em;
 }
-body[class*="is-not-touch"] .recordings-list .recordings-path:active,
-body[class*="is-not-touch"] .recordings-list .recording:active,
-body[class*="is-not-touch"] #timer-list .list-item:active,
-body[class*="is-not-touch"] #searchtimer-list .list-item:active {
-    background-color: rgba(255,255,255,0.5);
+.recordings-list .recordings-path,
+.recordings-list .recording,
+#timer-list .list-item,
+#searchtimer-list .list-item {
+    cursor: default;
 }
