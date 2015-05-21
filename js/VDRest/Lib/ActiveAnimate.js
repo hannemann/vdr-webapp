@@ -7,6 +7,7 @@ var ActiveAnimate = function () {
     this.finishHandler = this.finishAnimation.bind(this);
     this.clickAnimationHandler = this.animateClickGradient.bind(this);
     this.pressAnimationHandler = this.animatePressGradient.bind(this);
+    this.cancelHandler = this.cancelAnimation.bind(this);
     this.getGradientElement();
 };
 
@@ -25,11 +26,27 @@ ActiveAnimate.prototype.applyAnimation = function (e, node) {
 
     if (this.target !== this.gradientElement && !this.gradientElement.parentNode) {
 
-        this.target.addEventListener('touchmove', this.finishHandler);
-        this.init()
-            .injectElement()
-            .initClickGradient()
-            .animateClickGradient();
+        this.target.addEventListener('touchmove', this.cancelHandler);
+        this.target.addEventListener('touchend', this.cancelHandler);
+        this.animationTimeout = setTimeout(function () {
+
+            this.target.addEventListener('touchmove', this.finishHandler);
+            this.init()
+                .injectElement()
+                .initClickGradient()
+                .animateClickGradient();
+
+        }.bind(this), 50);
+    }
+};
+
+/**
+ * cancel animation before timeout exceeded
+ */
+ActiveAnimate.prototype.cancelAnimation = function (e) {
+
+    if ('touchend' === e.type || this.moveCancel(e)) {
+        clearTimeout(this.animationTimeout);
     }
 };
 
@@ -39,11 +56,11 @@ ActiveAnimate.prototype.applyAnimation = function (e, node) {
  */
 ActiveAnimate.prototype.init = function () {
 
-    this.step = 20;
-    this.increment = 16;
-    this.fgOpacity = 0.2;
-    this.bgOpacity = 0;
+    this.step = 0.04;
     this.max = this.target.getBoundingClientRect().width;
+    this.increment = this.max;
+    this.fgOpacity = 0;
+    this.bgOpacity = 0;
     this.onReadyRemove = false;
     this.animateOpacity = false;
     this.target.addEventListener('touchend', this.finishHandler);
@@ -84,9 +101,9 @@ ActiveAnimate.prototype.initClickGradient = function () {
  */
 ActiveAnimate.prototype.animateClickGradient = function () {
 
-    this.increment += this.step;
+    this.fgOpacity += this.step;
 
-    if (this.increment > this.max) {
+    if (this.fgOpacity >= 0.2) {
 
         if (this.onReadyRemove) {
             this.removeGradientElement();
@@ -101,7 +118,7 @@ ActiveAnimate.prototype.animateClickGradient = function () {
 };
 
 /**
- * reset gradient style
+ * init press gradient animation
  * @returns {ActiveAnimate}
  */
 ActiveAnimate.prototype.initPressGradient = function () {
@@ -220,6 +237,8 @@ ActiveAnimate.prototype.detach = function () {
 
     this.target.removeEventListener('touchend', this.finishHandler);
     this.target.removeEventListener('touchmove', this.finishHandler);
+    this.target.removeEventListener('touchend', this.cancelHandler);
+    this.target.removeEventListener('touchmove', this.cancelHandler);
     return this;
 };
 
