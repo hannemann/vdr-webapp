@@ -6,6 +6,7 @@
 var ActiveAnimate = function () {
     this.finishHandler = this.finishAnimation.bind(this);
     this.cancelHandler = this.cancelAnimation.bind(this);
+    this.removeHandler = this.removeGradientElement.bind(this);
     this.preventDefaultHandler = this.preventDefault.bind(this);
     this.attachDefaultsHandler = this.attachDefaults.bind(this);
     this.clickAnimationHandler = this.animateClickGradient.bind(this);
@@ -27,10 +28,11 @@ ActiveAnimate.prototype.applyAnimation = function (e, node) {
     this.target = node || this.event.target;
 
     this.addListener('end', 'attachDefaults');
+    this.addListener('end', 'remove');
 
-    this.getStartPosition();
+    this.getStartPosition().removeGradientElement();
 
-    if (this.target !== this.gradientElement && !this.gradientElement.parentNode) {
+    if (this.target !== this.gradientElement) {
 
         this.addListener('move', 'cancel');
         this.addListener('end', 'cancel');
@@ -48,6 +50,7 @@ ActiveAnimate.prototype.applyAnimation = function (e, node) {
 
 /**
  * cancel animation before timeout exceeded
+ * @param {Event} e
  */
 ActiveAnimate.prototype.cancelAnimation = function (e) {
 
@@ -109,7 +112,7 @@ ActiveAnimate.prototype.animateClickGradient = function () {
 
     this.fgOpacity += this.step;
 
-    if (this.fgOpacity >= 0.2) {
+    if (this.fgOpacity >= 0.2 || this.fgOpacity < 0) {
 
         if (this.onReadyRemove) {
             this.removeGradientElement();
@@ -170,7 +173,7 @@ ActiveAnimate.prototype.animatePressGradient = function () {
 
 /**
  * apply animation to gradient element
- * @param handler
+ * @param {function} handler
  */
 ActiveAnimate.prototype.animate = function (handler) {
 
@@ -198,6 +201,7 @@ ActiveAnimate.prototype.getGradient = function () {
 
 /**
  * finish animation
+ * @param {Event} e
  */
 ActiveAnimate.prototype.finishAnimation = function (e) {
 
@@ -217,10 +221,12 @@ ActiveAnimate.prototype.finishAnimation = function (e) {
     if (force || this.increment < this.max) {
         if ('press' === this.currentAnimation) {
             this.step = 5;
+            delta = this.max - this.increment;
+            this.opacityDecrement = this.fgOpacity / (delta/this.step);
+            this.animateOpacity = true;
+        } else {
+            this.step = -0.04;
         }
-        this.animateOpacity = true;
-        delta = this.max - this.increment;
-        this.opacityDecrement = this.fgOpacity / (delta/this.step);
         this.onReadyRemove = true;
     } else {
         this.removeGradientElement();
@@ -229,10 +235,17 @@ ActiveAnimate.prototype.finishAnimation = function (e) {
 
 /**
  * remove injected element
+ * @param {Event} [e]
  */
-ActiveAnimate.prototype.removeGradientElement = function () {
+ActiveAnimate.prototype.removeGradientElement = function (e) {
 
-    this.gradientElement.parentNode.removeChild(this.gradientElement);
+    if ("undefined" !== typeof e) {
+        this.removeListener('end', 'remove');
+    }
+
+    if (this.gradientElement.parentNode) {
+        this.gradientElement.parentNode.removeChild(this.gradientElement);
+    }
     return this;
 };
 
@@ -294,7 +307,7 @@ ActiveAnimate.prototype.getGradientElement = function () {
 
 /**
  * determine if movement exceeds threshold
- * @param e
+ * @param {Event} e
  * @returns {boolean}
  */
 ActiveAnimate.prototype.moveCancel = function (e) {
@@ -367,6 +380,8 @@ ActiveAnimate.prototype.getHandler = function (type) {
         handler = this.finishHandler;
     } else if ('attachDefaults' === type) {
         handler = this.attachDefaultsHandler;
+    } else if ('remove' === type) {
+        handler = this.removeHandler;
     }
 
     return handler;
