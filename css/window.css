@@ -347,13 +347,13 @@ div.window.confirm li:first-child {
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     padding: 10px;
+    position: relative;
 }
 .window-item-menu .button:last-child {
     border-style: none;
 }
 .context-menu div.menu-button.active,
-.context-menu div:active,
-.window-item-menu .button:active {
+.context-menu div:active {
     background-color: rgba(255,255,255,0.5);
     color: black;
 }

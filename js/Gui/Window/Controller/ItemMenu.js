@@ -32,8 +32,8 @@ Gui.Window.Controller.ItemMenu.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    this.addObserver();
     this.setPosition();
+    this.addObserver();
 };
 
 /**
@@ -44,9 +44,19 @@ Gui.Window.Controller.ItemMenu.prototype.addObserver = function () {
     var buttons = this.data.config.buttons, i;
 
     for (i in buttons) {
-        if (buttons.hasOwnProperty(i)) {
-            if ("function" === typeof buttons[i].fn) {
-                this.view[i + 'Button'].on('click', this.handleButtonClick.bind(this, buttons[i].fn));
+        if (buttons.hasOwnProperty(i) && "function" === typeof buttons[i].fn) {
+
+            if (VDRest.helper.isTouchDevice) {
+                this.view[i + 'Button']
+                    .on('touchend', this.handleUp.bind(this, buttons[i].fn))
+                    .on('touchmove', this.handleMove.bind(this))
+                    .on('touchstart', this.handleDown.bind(this))
+                ;
+            } else {
+                this.view[i + 'Button']
+                    .on('mouseup', this.handleUp.bind(this, buttons[i].fn))
+                    .on('mousedown', this.handleDown.bind(this))
+                ;
             }
         }
     }
@@ -70,26 +80,80 @@ Gui.Window.Controller.ItemMenu.prototype.removeObserver = function () {
     for (i in buttons) {
         if (buttons.hasOwnProperty(i)) {
             if ("function" === typeof buttons[i].fn) {
-                this.view[i + 'Button'].off('click');
+                this.view[i + 'Button'].off('mousedown mouseup mousemove');
             }
         }
     }
     this.view.modalOverlay.off('click');
 };
 
+
 /**
- * call method defined as callback
+ * handle mouseup
+ * @param {function} callback
+ * @param {jQuery.Event} e
  */
-Gui.Window.Controller.ItemMenu.prototype.handleButtonClick = function (callback) {
+Gui.Window.Controller.ItemMenu.prototype.handleUp = function (callback, e) {
 
-    this.vibrate();
+    if (e.cancelable) {
+        e.preventDefault();
+    }
 
-    this.skipBack = true;
+    if (!this.module.isMuted) {
 
-    history.back();
+        if ("undefined" === typeof this.preventClick) {
 
-    $document.one(this.animationEndEvents, function () {
+            this.vibrate();
 
-        callback();
-    });
+            if ("undefined" !== typeof this.clickTimeout) {
+                window.clearTimeout(this.clickTimeout);
+            }
+
+            this.skipBack = true;
+
+            history.back();
+
+            if (!VDRest.helper.canCancelEvent) {
+                $document.one(this.animationEndEvents, function () {
+
+                    callback();
+                });
+            }
+        }
+    }
+};
+
+/**
+ * prevent click on move
+ */
+Gui.Window.Controller.ItemMenu.prototype.handleMove = function () {
+
+    this.preventClick = true;
+
+    if ("undefined" !== typeof this.clickTimeout) {
+        window.clearTimeout(this.clickTimeout);
+    }
+};
+
+/**
+ * handle mousedown
+ */
+Gui.Window.Controller.ItemMenu.prototype.handleDown = function (e) {
+
+    activeAnimate.applyAnimation(e);
+
+    this.preventClick = undefined;
+
+    //this.clickTimeout = window.setTimeout(function () {
+    //    if (!this.module.isMuted) {
+    //        this.vibrate(100);
+    //        this.preventClick = true;
+    //
+    //        $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
+    //            if (!VDRest.helper.canCancelEvent) {
+    //                this.requestMenuAction();
+    //            }
+    //        }.bind(this));
+    //    }
+    //}.bind(this), 1000);
 };
