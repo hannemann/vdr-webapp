@@ -122,12 +122,20 @@ Gui.Timer.Controller.List.prototype.getSearchTimerId = function (timer) {
 Gui.Timer.Controller.List.prototype.addObserver = function () {
 
     $document.one('timersloaded', this.iterateTimers.bind(this));
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
 };
 
 /**
  * remove event listeners
  */
-Gui.Timer.Controller.List.prototype.removeObserver = function () {};
+Gui.Timer.Controller.List.prototype.removeObserver = function () {
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
+};
 
 /**
  * destroy

@@ -67,6 +67,40 @@ VDRest.Abstract.Controller.prototype.vibrate = function (sequence) {
 };
 
 /**
+ * prevent page reload on scroll
+ */
+VDRest.Abstract.Controller.prototype.preventScrollReload = function () {
+
+    var args = Array.prototype.slice.apply(arguments),
+        event = undefined,
+        node = undefined;
+
+    args.forEach(function (arg) {
+        if (arg instanceof Event) {
+            event = arg;
+        } else if (arg instanceof HTMLElement) {
+            node = arg;
+        } else if (arg instanceof jQuery.Event) {
+            event = arg.originalEvent;
+        } else if (arg instanceof jQuery) {
+            node = arg[0];
+        }
+    });
+
+    node = node || this.view.node[0];
+
+    console.log(event, node);
+
+    if (
+        event && node &&
+        0 === node.scrollTop &&
+        event.changedTouches[0].pageY > VDRest.helper.touchStartPosition.y
+    ) {
+        event.preventDefault();
+    }
+};
+
+/**
  * prevent selection and context menu
  */
 VDRest.Abstract.Controller.prototype.preventLongPress = function () {
