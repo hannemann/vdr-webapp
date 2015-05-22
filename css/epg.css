@@ -140,7 +140,7 @@
     background-size: 5px 5px;
 }
 #broadcasts .broadcasts-list .broadcast:active {
-    background: rgb(168, 168, 168);
+    /*background: rgb(168, 168, 168);*/
 }
 
 
