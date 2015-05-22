@@ -36,6 +36,31 @@ Gui.Recordings.Controller.Window.Directory.prototype.init = function () {
     );
 };
 
+Gui.Recordings.Controller.Window.Directory.prototype.dispatchView = function () {
+
+    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+    this.addObserver();
+};
+
+Gui.Recordings.Controller.Window.Directory.prototype.addObserver = function () {
+
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this, this.view.body);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
+
+    Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
+};
+
+Gui.Recordings.Controller.Window.Directory.prototype.removeObserver = function () {
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
+};
+
 /**
  * destroy
  */

@@ -54,7 +54,28 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
         }
     }
 
+    this.addObserver();
+
     $.event.trigger('recordingslist.dispatched');
+};
+
+Gui.Recordings.Controller.List.prototype.addObserver = function () {
+
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
+
+    Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
+};
+
+Gui.Recordings.Controller.List.prototype.removeObserver = function () {
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 Gui.Recordings.Controller.List.prototype.reRender = function () {
