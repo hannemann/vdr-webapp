@@ -38,7 +38,16 @@ Gui.Window.Controller.ContextMenu.prototype.dispatchView = function () {
 Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
 
     var i,
-        config = VDRest.app.getModule('Gui.Config');
+        config = VDRest.app.getModule('Gui.Config'),
+        configButton = this.view.node.find('.config-button'),
+        reloadButton = this.view.node.find('.reload-button'),
+        resizeButton = this.view.node.find('.resize-button'),
+        upEvent = 'touchend', downEvent = 'touchstart';
+
+    if (!VDRest.helper.isTouchDevice) {
+        upEvent = 'mouseup';
+        downEvent = 'mousedown';
+    }
 
     for (i in this.data) {
 
@@ -48,31 +57,32 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
             //    this.data[i].highlight.call(VDRest.app.getModule(this.data[i].scope), this.data[i]);
             //}
 
-            this.data[i].button.one(
-                'mousedown',
-                this.handleButtonClick.bind(
-                    this,
-                    this.data[i].fn,
-                    VDRest.app.getModule(this.data[i].scope)
-                )
-            )
+            if (VDRest.helper.isTouchDevice) {
+                this.data[i].button
+                    .on(upEvent, this.handleUp.bind(this, this.data[i].fn, VDRest.app.getModule(this.data[i].scope)))
+                    .on(downEvent, this.handleDown.bind(this, this.data[i].button[0]))
+                ;
+            }
         }
     }
 
     if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
 
-        this.view.node.find('.config-button')
-            .one('mousedown', this.handleConfig.bind(this));
+        configButton
+            .on(upEvent, this.handleUp.bind(this, this.configAction, this))
+            .on(downEvent, this.handleDown.bind(this, configButton[0]))
+        ;
     }
+
+    reloadButton
+        .on(upEvent, this.handleUp.bind(this, this.reloadAction, this))
+        .on(downEvent, this.handleDown.bind(this, reloadButton[0]));
+    resizeButton
+        .on(upEvent, this.handleUp.bind(this, this.resizeAction, this))
+        .on(downEvent, this.handleDown.bind(this, resizeButton[0]));
 
     //this.view.node.find('.fullscreen-button')
     //    .one('mousedown', this.handleFullscreen.bind(this));
-
-    this.view.node.find('.reload-button')
-        .one('mousedown', this.handleReload.bind(this));
-
-    this.view.node.find('.resize-button')
-        .one('mousedown', this.handleResize.bind(this));
 
     this.view.modalOverlay.one('click', function () {
 
@@ -95,20 +105,20 @@ Gui.Window.Controller.ContextMenu.prototype.removeObserver = function () {
 
         if (this.data.hasOwnProperty(i) && i !== 'isDispatched') {
 
-            this.data[i].button.off('mousedown')
+            this.data[i].button.off('mousedown mouseup touchstart touchend')
         }
     }
 
     if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
 
-        this.view.node.find('.config-button').off('mousedown');
+        this.view.node.find('.config-button').off('mousedown mouseup touchstart touchend');
     }
 
     //this.view.node.find('.fullscreen-button').off('mousedown');
 
-    this.view.node.find('.reload-button').off('mousedown');
+    this.view.node.find('.reload-button').off('mousedown mouseup touchstart touchend');
 
-    this.view.node.find('.resize-button').off('mousedown');
+    this.view.node.find('.resize-button').off('mousedown mouseup touchstart touchend');
 
     this.view.modalOverlay.off('click');
 };
@@ -116,7 +126,11 @@ Gui.Window.Controller.ContextMenu.prototype.removeObserver = function () {
 /**
  * call method defined as callback
  */
-Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callback, scope) {
+Gui.Window.Controller.ContextMenu.prototype.handleUp = function (callback, scope) {
+
+    if (VDRest.helper.canCancelEvent) {
+        return;
+    }
 
     this.vibrate();
 
@@ -131,53 +145,35 @@ Gui.Window.Controller.ContextMenu.prototype.handleButtonClick = function (callba
 };
 
 /**
+ * handle mousedown
+ */
+Gui.Window.Controller.ContextMenu.prototype.handleDown = function (node, e) {
+
+    activeAnimate.applyAnimation(e, node);
+};
+
+/**
  * request configuration page
  */
-Gui.Window.Controller.ContextMenu.prototype.handleConfig = function () {
+Gui.Window.Controller.ContextMenu.prototype.configAction = function () {
 
-    this.vibrate();
-
-    this.skipBack = true;
-
-    history.back();
-
-    $document.one(this.animationEndEvents, function () {
-
-        VDRest.app.dispatch('Gui.Config');
-    });
+    VDRest.app.dispatch('Gui.Config');
 };
 
 /**
  * reload page
  */
-Gui.Window.Controller.ContextMenu.prototype.handleReload = function () {
+Gui.Window.Controller.ContextMenu.prototype.reloadAction = function () {
 
-    this.vibrate();
-
-    $document.one(this.animationEndEvents, function () {
-
-        location.reload();
-    });
+    location.reload();
 };
 
-Gui.Window.Controller.ContextMenu.prototype.handleResize = function () {
+Gui.Window.Controller.ContextMenu.prototype.resizeAction = function () {
 
     var height = window.innerWidth / 16 * 9;
     window.resizeTo(window.innerWidth, height);
 };
 
-/**
- * reload page
- */
-Gui.Window.Controller.ContextMenu.prototype.handleFullscreen = function () {
-
-    this.vibrate();
-
-    $document.one(this.animationEndEvents, function () {
-
-        location.reload();
-    });
-};
 Gui.Window.Controller.ContextMenu.prototype.handleFullscreen = function () {
 
     this[VDRest.helper.getIsFullscreen() ? 'cancelFullscreen' : 'requestFullscreen']();

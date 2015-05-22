@@ -321,6 +321,7 @@ div.window.confirm li:first-child {
 .context-menu div {
     border-top: 1px solid rgb(150, 150,150);
     padding: 10px;
+    position: relative;
 }
 
 .window-item-menu {
@@ -352,8 +353,8 @@ div.window.confirm li:first-child {
 .window-item-menu .button:last-child {
     border-style: none;
 }
-.context-menu div.menu-button.active,
-.context-menu div:active {
+.context-menu div.menu-button.active/*,
+.context-menu div:active*/ {
     background-color: rgba(255,255,255,0.5);
     color: black;
 }
