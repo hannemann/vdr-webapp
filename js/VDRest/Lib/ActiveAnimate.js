@@ -209,7 +209,7 @@ ActiveAnimate.prototype.finishAnimation = function (e) {
 
     this.detach();
 
-    if (e instanceof TouchEvent && 'touchmove' === e.type) {
+    if ("undefined" !== typeof TouchEvent && e instanceof TouchEvent && 'touchmove' === e.type) {
 
         if (this.moveCancel(e)) {
             force = true;
@@ -275,7 +275,7 @@ ActiveAnimate.prototype.getTouch = function (e) {
         event = e;
     }
 
-    if (event instanceof TouchEvent) {
+    if ("undefined" !== typeof TouchEvent && event instanceof TouchEvent) {
         event = event.changedTouches[0];
     }
 
@@ -314,7 +314,7 @@ ActiveAnimate.prototype.moveCancel = function (e) {
 
     var event;
 
-    if (e instanceof TouchEvent) {
+    if ("undefined" !== typeof TouchEvent && e instanceof TouchEvent) {
         event = e.changedTouches[0]
     } else {
         event = e;
