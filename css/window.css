@@ -47,8 +47,12 @@
 .window-header {
     background: white;
     color: black;
-    padding: 70px 20px 20px;
+    padding: 20px;
     overflow: hidden;
+}
+
+.window.document-fullsize .window-header {
+    padding: 70px 20px 20px;
 }
 
 .window-header * {
