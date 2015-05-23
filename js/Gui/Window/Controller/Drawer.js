@@ -149,6 +149,11 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
     }
 
     this.view.node.on(this.transitionEndEvents, this.animationCallback.bind(this));
+
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
 };
 
 /**
@@ -163,6 +168,10 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
     this.view.node.off(this.transitionEndEvents);
 
     this.view.node.off('touchmove.drawer touchend');
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
@@ -299,7 +308,7 @@ Gui.Window.Controller.Drawer.prototype.touchEnd = function (e) {
     this.touchend = e.originalEvent.changedTouches[0].clientX;
     document.body.classList.remove('pull');
     $('body').off('touchmove.drawer');
-    this.view.node.off('touchmove touchend');
+    this.view.node.off('touchmove.drawer touchend');
 
     remainDuration = this.getRemainDuration();
     this.view.node[0].style.transition = this.vendor.prefix + 'transform ' + remainDuration + 's linear';
