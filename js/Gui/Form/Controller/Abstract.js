@@ -165,7 +165,7 @@ Gui.Form.Controller.Abstract.prototype.getWindowType = function (field) {
             type = 'DateTime';
             break;
         case 'info':
-            type = 'e.data.field.window';
+            type = field.window;
             break;
         case 'combobox':
             type = 'ComboBox';

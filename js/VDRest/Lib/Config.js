@@ -527,7 +527,7 @@ VDRest.Lib.Config.prototype.fields = {
     "firstTime": {
         "category": "misc",
         "type": "info",
-        "window": "Window.FirstTime",
+        "window": "FirstTime",
         "label": "Show first time installation guide"
     },
     "debug"             :   {
