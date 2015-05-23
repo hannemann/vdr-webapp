@@ -17,11 +17,17 @@ VDRest.Helper = function () {
         this.touchMoveHandler = this.cancelTouchMove.bind(this);
         document.addEventListener('touchstart', this.touchStartHandler);
         document.addEventListener('touchmove', this.touchMoveHandler);
+        this.pointerStart = 'touchstart';
+        this.pointerMove = 'touchmove';
+        this.pointerEnd = 'touchend';
     } else {
         this.mouseStartHandler = this.getPointerStart.bind(this);
         this.mouseMoveHandler = this.cancelMouseMove.bind(this);
         document.addEventListener('mousedown', this.mouseStartHandler);
         document.addEventListener('mousemove', this.mouseMoveHandler);
+        this.pointerStart = 'mousedown';
+        this.pointerMove = 'mousemove';
+        this.pointerEnd = 'mouseup';
     }
 };
 
@@ -32,6 +38,11 @@ VDRest.Helper = function () {
 VDRest.Helper.prototype.getTouchStart = function (e) {
 
     this.canCancelEvent = false;
+
+    this.pointerDelta = {
+        "x": 0,
+        "y": 0
+    };
 
     this.touchStartPosition = {
         "x" : e.changedTouches[0].pageX,
@@ -45,13 +56,27 @@ VDRest.Helper.prototype.getTouchStart = function (e) {
  */
 VDRest.Helper.prototype.cancelTouchMove = function (e) {
 
+    this.getPointerDelta(e);
+
     if ("undefined" !== typeof this.touchStartPosition &&
-        (Math.abs(e.changedTouches[0].pageX - this.touchStartPosition.x) > 5 ||
-        Math.abs(e.changedTouches[0].pageY - this.touchStartPosition.y) > 5)
+        (Math.abs(this.pointerDelta.x) > 5 ||
+        Math.abs(this.pointerDelta.y) > 5)
     ) {
 
         this.canCancelEvent = true;
     }
+};
+
+/**
+ * determine if touch event is cancelable
+ * @param e
+ */
+VDRest.Helper.prototype.getPointerDelta = function (e) {
+
+    this.pointerDelta = {
+        "x": this.touchStartPosition.x - e.changedTouches[0].pageX,
+        "y": this.touchStartPosition.y - e.changedTouches[0].pageY
+    };
 };
 
 /**

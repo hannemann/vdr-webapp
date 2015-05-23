@@ -51,6 +51,16 @@ Gui.Recordings.Controller.Window.Recording.prototype.dispatchView = function () 
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
+    if (this.view.canAnimateScroll()) {
+
+        this.touchScroll = new TouchMove.Scroll({
+            "wrapper": this.view.parentView.node[0],
+            "onmove": this.onscrollAction.bind(this),
+            "allowedDirections": ['y'],
+            "sliderClassName": "window-recording"
+        })
+    }
+
     this.addObserver();
 };
 
@@ -69,6 +79,11 @@ Gui.Recordings.Controller.Window.Recording.prototype.addObserver = function () {
 
     $document.on('persistrecordingschange-' + this.keyInCache, this.updateRecordingAction.bind(this));
 
+    if (this.view.fanart && !VDRest.helper.touchMoveCapable) {
+        this.scrollHandler = this.onscrollAction.bind(this);
+        this.view.node.on('scroll', this.scrollHandler);
+    }
+
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
 /**
@@ -85,6 +100,10 @@ Gui.Recordings.Controller.Window.Recording.prototype.removeObserver = function (
     }
 
     $document.off('persistrecordingschange-' + this.keyInCache);
+
+    if (this.view.hasFanart && !VDRest.helper.isTouchDevice) {
+        this.view.node.off('scroll', this.scrollHandler);
+    }
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
@@ -178,6 +197,29 @@ Gui.Recordings.Controller.Window.Recording.prototype.afterDeleteAction = functio
     history.back();
 };
 
+Gui.Recordings.Controller.Window.Recording.prototype.onscrollAction = function (e) {
+
+    var delta = 0, style;
+
+    if (e instanceof jQuery.Event) {
+        delta = this.view.node[0].scrollTop;
+    } else {
+        delta = -e.y;
+    }
+
+    style = "translateY(" + (delta / 2).toString() + "px)";
+
+    this.view.headerContentWrapper.css({
+        "transform": style
+    });
+
+    if (this.view.fanart) {
+        this.view.fanart.css({
+            "transform": style
+        });
+    }
+};
+
 /**
  * Destroy
  */
@@ -186,6 +228,8 @@ Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () 
     var me = this;
     // remove on animation end
     this.view.node.one(this.animationEndEvents, function () {
+
+        delete me.touchScroll;
 
         Gui.Window.Controller.Abstract.prototype.destructView.call(me);
 

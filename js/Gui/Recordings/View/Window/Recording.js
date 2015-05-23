@@ -47,6 +47,18 @@ Gui.Recordings.View.Window.Recording.prototype.render = function () {
     Gui.Window.View.Abstract.prototype.render.call(this);
 
     this.node.toggleClass('collapsed expand');
+
+    if (this.canAnimateScroll()) {
+        this.node.addClass('touchscroll');
+    }
+};
+
+/**
+ * @return {boolean}
+ */
+Gui.Recordings.View.Window.Recording.prototype.canAnimateScroll = function () {
+
+    return this.node[0].scrollHeight > this.parentView.node[0].offsetHeight && VDRest.helper.touchMoveCapable;
 };
 
 /**
@@ -133,7 +145,7 @@ Gui.Recordings.View.Window.Recording.prototype.addFanart = function () {
         }
         if (fanartUrl) {
 
-            $('<img>').addClass('fanart').attr('src', fanartUrl).appendTo(this.header);
+            this.fanart = $('<img>').addClass('fanart').attr('src', fanartUrl).appendTo(this.header);
 
             this.header.addClass('has-fanart');
         }

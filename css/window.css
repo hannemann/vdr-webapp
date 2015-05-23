@@ -58,12 +58,8 @@
     position: relative;
     z-index: 0;
     color: white;
-    padding-bottom: 0;
-}
-.window-header.has-fanart:before {
-    content: "";
-    display: block;
-    padding-top: 56.25%;
+    padding: 56.25% 0 0;
+    overflow: hidden;
 }
 .window-header.has-fanart .wrapper {
     position: absolute;
@@ -71,6 +67,8 @@
     left: 20px;
     z-index: 1;
     width: calc(100% - 40px);
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 .window-header.has-fanart h2,
 .window-header.has-fanart ul {
@@ -83,6 +81,8 @@
     top: 0; left: 0;
     z-index: 0;
     max-width: 100%;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 .window-body {
@@ -366,6 +366,12 @@ form.window.viewport-fullsize {
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+div.window.viewport-fullsize.touchscroll,
+form.window.viewport-fullsize.touchscroll {
+    bottom: auto;
+    overflow: visible;
 }
 
 .alert-info {
