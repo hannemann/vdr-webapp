@@ -404,6 +404,8 @@ div.window.touchscroll,
 form.window.touchscroll {
     bottom: auto;
     overflow: visible;
+    min-height: calc(100% - 20px);
+    min-height: -webkit-calc(100% - 20px);
 }
 
 .alert-info {

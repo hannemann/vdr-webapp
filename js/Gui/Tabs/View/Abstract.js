@@ -41,7 +41,7 @@ Gui.Tabs.View.Abstract.prototype.render = function () {
  */
 Gui.Tabs.View.Abstract.prototype.addTabs = function () {
 
-    var i, tab, content, n=0;
+    var i, tab, content, n = 0, tabHeight = 0, contentHeight = 0;
 
     for (i in this.data.tabs) {
 
@@ -69,11 +69,30 @@ Gui.Tabs.View.Abstract.prototype.addTabs = function () {
 
             }
 
+            content.css({
+                "display": "block",
+                "white-space": "pre-wrap",
+                "position": "absolute",
+                "width": window.innerWidth - 40 + "px",
+                "left": "-99999px"
+            }).appendTo(document.body);
+            tabHeight = content[0].offsetHeight;
+            content.remove().css({
+                "display": "",
+                "white-space": "",
+                "position": "",
+                "width": "",
+                "left": ""
+            });
+
+            contentHeight = tabHeight > contentHeight ? tabHeight : contentHeight;
+
             this.tabs.append(tab);
             this.tabContents.append(content);
             n++;
         }
     }
+    this.tabContents.height(contentHeight);
 };
 
 /**
