@@ -35,9 +35,8 @@ Gui.Recordings.Controller.Window.Recording.prototype.init = function () {
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 
-    this.view.setParentView(
-        VDRest.app.getModule('Gui.Viewport').getView('Default')
-    );
+    this.menubar = VDRest.app.getModule('Gui.Menubar').getView('Default').node[0];
+    this.menubarHidden = true;
 };
 
 /**
@@ -51,17 +50,29 @@ Gui.Recordings.Controller.Window.Recording.prototype.dispatchView = function () 
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
+    if (this.view.fanart) {
+        $.event.trigger({
+            "type": "opaqueMenubar",
+            "payload": true
+        });
+    }
+
     if (this.view.canAnimateScroll()) {
 
         this.touchScroll = new TouchMove.Scroll({
-            "wrapper": this.view.parentView.node[0],
+            "wrapper": document.body,
             "onmove": this.onscrollAction.bind(this),
             "allowedDirections": ['y'],
             "sliderClassName": "window-recording"
-        })
+        });
+        document.body.style.overflow = 'hidden';
     }
 
     this.addObserver();
+
+    this.header = VDRest.app.getModule('Gui.Menubar').getView('Default').getHeader();
+    this.oldHeader = this.header.text();
+    this.header.text(this.data.recording.data.name);
 };
 
 /**
@@ -197,9 +208,13 @@ Gui.Recordings.Controller.Window.Recording.prototype.afterDeleteAction = functio
     history.back();
 };
 
+/**
+ * shift header contents on scroll
+ * @param {{x:number,y:number}|jQuery.Event} e
+ */
 Gui.Recordings.Controller.Window.Recording.prototype.onscrollAction = function (e) {
 
-    var delta = 0, style;
+    var delta, style, n;
 
     if (e instanceof jQuery.Event) {
         delta = this.view.node[0].scrollTop;
@@ -214,6 +229,25 @@ Gui.Recordings.Controller.Window.Recording.prototype.onscrollAction = function (
     });
 
     if (this.view.fanart) {
+
+        n = this.view.header[0].offsetHeight - delta;
+
+        if (n < this.menubar.offsetHeight && this.menubarHidden) {
+
+            $.event.trigger({
+                "type": "opaqueMenubar",
+                "payload": false
+            });
+            this.menubarHidden = false;
+        } else if (n >= this.menubar.offsetHeight && !this.menubarHidden) {
+
+            $.event.trigger({
+                "type": "opaqueMenubar",
+                "payload": true
+            });
+            this.menubarHidden = true;
+        }
+
         this.view.fanart.css({
             "transform": style
         });
@@ -230,6 +264,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () 
     this.view.node.one(this.animationEndEvents, function () {
 
         delete me.touchScroll;
+        document.body.style.overflow = '';
 
         Gui.Window.Controller.Abstract.prototype.destructView.call(me);
 
@@ -239,4 +274,10 @@ Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () 
     });
     // apply animation
     this.view.node.toggleClass('collapse expand');
+
+    me.header.text(me.oldHeader);
+    $.event.trigger({
+        "type": "opaqueMenubar",
+        "payload": false
+    });
 };

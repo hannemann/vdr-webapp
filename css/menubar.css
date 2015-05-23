@@ -1,4 +1,8 @@
 
+body.has-menubar {
+    background-color: rgba(99, 138, 195, 1);
+}
+
 #menubar {
     position: fixed;
     top: 0;
@@ -7,8 +11,17 @@
     padding: 5px 5px 5px 12px;
     width: calc(100% - 17px);
     height: 38px;
-    background-color: #638AC3;
-    border-bottom: 2px solid rgb(0,128,20);
+    background-color: rgba(99, 138, 195, 1);
+    border-bottom: 2px solid rgba(0, 128, 20, 1);
+    transition: background-color 1s linear, border-color 1s linear;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.opaque-menubar #menubar {
+    background-color: rgba(99, 138, 195, 0);
+    border-color: rgba(0, 128, 20, 0);
+    box-shadow: none;
 }
 
 #menubar .drawer-indicator {
@@ -20,13 +33,27 @@
     background: linear-gradient(0deg, transparent 50%, rgba(255,255,255,0.5) 50%) repeat-y center 2px;
     background-size: 100% 6px;
     color: transparent;
-    transition: color .6s linear, background-position .6s linear, width .6s;
+    transition: color .6s linear, background-position .6s linear, width .6s linear;
     font-weight: bold;
     text-align: right;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 #menubar .drawer-indicator.back {
     background-position: -100px 2px;
     color: rgba(255,255,255,0.5);
+}
+
+#menubar .drawer-indicator.text-shadow {
+    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.25) /* lt */,
+    0 -3px 10px rgba(0, 0, 0, 0.25) /* t */,
+    3px -3px 10px rgba(0, 0, 0, 0.25) /* rt */,
+    3px 0 10px rgba(0, 0, 0, 0.25) /* r */,
+    3px 3px 10px rgba(0, 0, 0, 0.25) /* rb */,
+    0 3px 10px rgba(0, 0, 0, 0.25) /* b */,
+    -3px 3px 10px rgba(0, 0, 0, 0.25) /* lb */,
+    -3px 0 10px rgba(0, 0, 0, 0.25) /* l */,
+    0 0 10px rgba(0, 0, 0, 0.25) /* c */;
 }
 
 #menubar .title-wrapper {
@@ -71,6 +98,14 @@
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
+    transition: opacity .2s linear;
+    opacity: 1;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.opaque-menubar #header {
+    opacity: 0;
 }
 #button-settings {
     width: 32px;
@@ -85,6 +120,8 @@
     font-weight: bold;
     transition: opacity .6s ease-in;
     -webkit-transition: opacity .6s ease-in;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 #button-settings:active {
     background-color: rgba(255,255,255,0.5);

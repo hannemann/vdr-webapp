@@ -47,7 +47,8 @@
 .window-header {
     background: white;
     color: black;
-    padding: 20px;
+    padding: 70px 20px 20px;
+    overflow: hidden;
 }
 
 .window-header * {
@@ -59,7 +60,7 @@
     z-index: 0;
     color: white;
     padding: 56.25% 0 0;
-    overflow: hidden;
+    background: #696969;
 }
 .window-header.has-fanart .wrapper {
     position: absolute;
@@ -69,6 +70,11 @@
     width: calc(100% - 40px);
     backface-visibility: hidden;
     perspective: 1000px;
+}
+
+.document-fullsize .window-header.has-fanart .wrapper {
+    top: 12px;
+    left: 8px;
 }
 .window-header.has-fanart h2,
 .window-header.has-fanart ul {
@@ -83,6 +89,15 @@
     -3px 3px 10px rgba(0, 0, 0, 0.75) /* lb */,
     -3px 0 10px rgba(0, 0, 0, 0.75) /* l */,
     0 0 10px rgba(0, 0, 0, 0.75) /* c */;
+}
+
+.document-fullsize .window-header.has-fanart h2 {
+    left: 48px;
+    margin-bottom: 4px;
+}
+
+.document-fullsize .window-header.has-fanart ul {
+    left: 0;
 }
 .window-header.has-fanart .fanart {
     position: absolute;
@@ -376,8 +391,17 @@ form.window.viewport-fullsize {
     bottom: 0;
 }
 
-div.window.viewport-fullsize.touchscroll,
-form.window.viewport-fullsize.touchscroll {
+div.window.document-fullsize,
+form.window.document-fullsize {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+div.window.touchscroll,
+form.window.touchscroll {
     bottom: auto;
     overflow: visible;
 }

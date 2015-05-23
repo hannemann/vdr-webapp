@@ -45,6 +45,8 @@ Gui.Menubar.Controller.Default.prototype.dispatchView = function () {
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
     this.addObserver();
+
+    document.body.classList.add('has-menubar');
 };
 
 /**
@@ -99,6 +101,8 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
     $document.on('hideContextMenu', this.hideContextMenu.bind(this));
 
     this.view.throbber.on('click', $.xhrPool.abortAll.bind($.xhrPool));
+
+    $document.on('opaqueMenubar', this.setOpaque.bind(this));
 };
 
 /**
@@ -234,5 +238,16 @@ Gui.Menubar.Controller.Default.prototype.onIconClick = function (e) {
 
             }
         }
+    }
+};
+
+Gui.Menubar.Controller.Default.prototype.setOpaque = function (e) {
+
+    if (e.payload) {
+        document.body.classList.add('opaque-menubar');
+        this.view.drawerIndicator[0].classList.add('text-shadow');
+    } else if (!e.payload) {
+        document.body.classList.remove('opaque-menubar');
+        this.view.drawerIndicator[0].classList.remove('text-shadow');
     }
 };

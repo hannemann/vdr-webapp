@@ -67,7 +67,7 @@ Gui.Recordings.View.Window.Recording.prototype.canAnimateScroll = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.addClasses = function () {
 
-    this.node.addClass('window-recording clearer viewport-fullsize');
+    this.node.addClass('window-recording clearer document-fullsize');
 
     return this;
 };

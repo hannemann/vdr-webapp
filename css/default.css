@@ -40,6 +40,18 @@ ul {
     box-shadow: 0 3px 15px rgba(0,0,0,0.5);
 }
 
+.text-shadow {
+    text-shadow: -3px -3px 10px rgba(0, 0, 0, 0.75) /* lt */,
+    0 -3px 10px rgba(0, 0, 0, 0.75) /* t */,
+    3px -3px 10px rgba(0, 0, 0, 0.75) /* rt */,
+    3px 0 10px rgba(0, 0, 0, 0.75) /* r */,
+    3px 3px 10px rgba(0, 0, 0, 0.75) /* rb */,
+    0 3px 10px rgba(0, 0, 0, 0.75) /* b */,
+    -3px 3px 10px rgba(0, 0, 0, 0.75) /* lb */,
+    -3px 0 10px rgba(0, 0, 0, 0.75) /* l */,
+    0 0 10px rgba(0, 0, 0, 0.75) /* c */;
+}
+
 .clearer:before,
 .clearer:after {
     content:"";
