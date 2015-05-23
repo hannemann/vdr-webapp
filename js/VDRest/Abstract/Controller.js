@@ -16,6 +16,10 @@ VDRest.Abstract.Controller.prototype = new VDRest.Lib.Object();
  */
 VDRest.Abstract.Controller.prototype.animationEndEvents = function () {
 
+    if ("object" == typeof navigator.mozApps) {
+        return 'animationend';
+    }
+
     if ('onanimationend' in window) {
         return 'animationend';
     }
@@ -40,9 +44,13 @@ VDRest.Abstract.Controller.prototype.animationEndEvents = function () {
 
 /**
  * transitionEnd event names
- * @type {string[]}
+ * @type {string}
  */
 VDRest.Abstract.Controller.prototype.transitionEndEvents = function () {
+
+    if ("object" == typeof navigator.mozApps) {
+        return 'transitionend';
+    }
 
     if ('ontransitionend' in window) {
         return 'transitionend';
