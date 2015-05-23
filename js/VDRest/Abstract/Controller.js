@@ -14,15 +14,57 @@ VDRest.Abstract.Controller.prototype = new VDRest.Lib.Object();
  * animationEnd event names
  * @type {string[]}
  */
-VDRest.Abstract.Controller.prototype.animationEndEvents =
-    "webkitAnimationEnd MSAnimationEnd oanimationend animationend";
+VDRest.Abstract.Controller.prototype.animationEndEvents = function () {
+
+    if ('onanimationend' in window) {
+        return 'animationend';
+    }
+
+    if ('onwebkitanimationend' in window) {
+        return 'webkitAnimationEnd';
+    }
+
+    if ('onmozanimationend' in window) {
+        return 'mozanimationend';
+    }
+
+    if ('onotransitionend' in window) {
+        return 'otransitionend'
+    }
+
+    if ('onmsnimationend' in window) {
+        return 'MSAnimationEnd'
+    }
+
+}();
 
 /**
  * transitionEnd event names
  * @type {string[]}
  */
-VDRest.Abstract.Controller.prototype.transitionEndEvents =
-    "webkitTransitionEnd MSTransitionEnd otransitionend transitionend";
+VDRest.Abstract.Controller.prototype.transitionEndEvents = function () {
+
+    if ('ontransitionend' in window) {
+        return 'transitionend';
+    }
+
+    if ('onwebkittransitionend' in window) {
+        return 'webkittransitionend';
+    }
+
+    if ('onmoztransitionend' in window) {
+        return 'moztransitionend';
+    }
+
+    if ('onotransitionend' in window) {
+        return 'otransitionend'
+    }
+
+    if ('onmstransitionend' in window) {
+        return 'mstransitionend'
+    }
+
+}();
 
 /**
  * render view
@@ -88,8 +130,6 @@ VDRest.Abstract.Controller.prototype.preventScrollReload = function () {
     });
 
     node = node || this.view.node[0];
-
-    console.log(event, node);
 
     if (
         event && node &&
