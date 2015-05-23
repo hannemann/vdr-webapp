@@ -47,6 +47,9 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
     if (!VDRest.helper.isTouchDevice) {
         upEvent = 'mouseup';
         downEvent = 'mousedown';
+    } else {
+        this.preventReloadHandler = this.preventScrollReload.bind(this, this.view.body);
+        this.view.node.on('touchmove', this.preventReloadHandler);
     }
 
     for (i in this.data) {
@@ -98,6 +101,10 @@ Gui.Window.Controller.ContextMenu.prototype.removeObserver = function () {
 
     var i,
         config = VDRest.app.getModule('Gui.Config');
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
 
     for (i in this.data) {
 
