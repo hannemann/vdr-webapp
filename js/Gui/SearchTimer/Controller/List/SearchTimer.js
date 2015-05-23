@@ -277,7 +277,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = functio
     var module = VDRest.app.getModule('Gui.Timer'),
         controller,
         callback = function () {
-            controller.destructView();
+            module.destruct();
             this.module.dispatch();
         }.bind(this);
 
