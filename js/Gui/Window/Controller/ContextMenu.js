@@ -57,12 +57,10 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
             //    this.data[i].highlight.call(VDRest.app.getModule(this.data[i].scope), this.data[i]);
             //}
 
-            if (VDRest.helper.isTouchDevice) {
-                this.data[i].button
-                    .on(upEvent, this.handleUp.bind(this, this.data[i].fn, VDRest.app.getModule(this.data[i].scope)))
-                    .on(downEvent, this.handleDown.bind(this, this.data[i].button[0]))
-                ;
-            }
+            this.data[i].button
+                .on(upEvent, this.handleUp.bind(this, this.data[i].fn, VDRest.app.getModule(this.data[i].scope)))
+                .on(downEvent, this.handleDown.bind(this, this.data[i].button[0]))
+            ;
         }
     }
 
