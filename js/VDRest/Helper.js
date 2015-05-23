@@ -311,7 +311,7 @@ VDRest.Helper.prototype.sortAlpha = function (a, b) {
 };
 
 
-VDRest.Helper.prototype.ratingRegex = new RegExp('(((?:[Ww]ertung: *)([0-9])/[0-9])|([*]{1,}))', 'm');
+VDRest.Helper.prototype.ratingRegex = new RegExp('(((?:[Ww]ertung: *)([0-9])/[0-9])|([*]{1,}\n))', 'm');
 
 
 VDRest.Helper.prototype.tippRegex = new RegExp('\\[Tipp\\]', 'm');
