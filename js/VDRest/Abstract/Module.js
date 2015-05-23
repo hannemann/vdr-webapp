@@ -73,10 +73,14 @@ VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey, callback)
             .load({
                 "callback": function (response) {
 
-                    model = this.getModel(
-                        type,
-                        response[constructor.prototype.resultJSON][0]
-                    );
+                    if (response[constructor.prototype.resultJSON][0]) {
+
+                        model = this.getModel(
+                            type,
+                            response[constructor.prototype.resultJSON][0]
+                        );
+
+                    }
 
                     callback(model);
                 }.bind(this),
