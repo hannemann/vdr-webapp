@@ -41,7 +41,7 @@ Gui.Tabs.View.Abstract.prototype.render = function () {
  */
 Gui.Tabs.View.Abstract.prototype.addTabs = function () {
 
-    var i, tab, content, n = 0, tabHeight = 0, contentHeight = 0;
+    var i, tab, content, n = 0, tabHeight = 0, contentHeight = 0, clone;
 
     for (i in this.data.tabs) {
 
@@ -69,15 +69,16 @@ Gui.Tabs.View.Abstract.prototype.addTabs = function () {
 
             }
 
-            content.css({
+            clone = content.clone();
+            clone.css({
                 "display": "block",
                 "white-space": "pre-wrap",
                 "position": "absolute",
                 "width": window.innerWidth - 40 + "px",
                 "left": "-99999px"
             }).appendTo(document.body);
-            tabHeight = content[0].offsetHeight;
-            content.remove().css({
+            tabHeight = clone[0].offsetHeight;
+            clone.remove().css({
                 "display": "",
                 "white-space": "",
                 "position": "",
