@@ -41,7 +41,9 @@ Gui.Recordings.View.List.prototype.init = function () {
 
 Gui.Recordings.View.List.prototype.show = function () {
 
-    this.node.toggleClass('collapsed expand');
+    if (this.node.hasClass('collapsed')) {
+        this.node.toggleClass('collapsed expand');
+    }
 };
 
 /**

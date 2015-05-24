@@ -128,6 +128,7 @@ Gui.Recordings.prototype.contextMenu = {
  */
 Gui.Recordings.prototype.dispatch = function () {
 
+    VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = false;
     this.store = VDRest.app.getModule('VDRest.Recordings');
     this.getController('List').dispatchView();
 };
@@ -137,6 +138,7 @@ Gui.Recordings.prototype.dispatch = function () {
  */
 Gui.Recordings.prototype.destruct = function () {
 
+    VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
     this.getController('List').destructView();
 };
 
@@ -145,7 +147,7 @@ Gui.Recordings.prototype.destruct = function () {
  */
 Gui.Recordings.prototype.refresh = function () {
 
-    var windows = $('.window.recordings');
+    var windows = $('.window.recordings'), winModule = VDRest.app.getModule('Gui.Window');
 
     this.getView('List').node.empty();
     VDRest.app.getModule('Gui.Window').cache.invalidateClasses('Directory');
@@ -154,25 +156,25 @@ Gui.Recordings.prototype.refresh = function () {
         $(this).remove();
         VDRest.app.destroyer.pop();
         VDRest.app.observeHash.pop();
+        winModule.popRegister();
     });
 
     if (windows.length > 0) {
         history.go(-windows.length);
     }
 
-    this.store.getModel('List').flushCollection();
-    this.store.cache.flush();
-    this.cache.flush();
-    VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = false;
-    this.store.getModel('List').initList();
-    VDRest.app.getModule('Gui.Menubar')
-        .getView('Default')
-        .getHeader()
-        .text(VDRest.app.translate('Recordings'));
-    this.dispatch();
-    $document.one('recordingslist.dispatched', function () {
-        VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
-    });
+    setTimeout(function () {
+
+        this.store.getModel('List').flushCollection();
+        this.store.cache.flush();
+        this.cache.flush();
+        this.store.getModel('List').initList();
+        VDRest.app.getModule('Gui.Menubar')
+            .getView('Default')
+            .getHeader()
+            .text(VDRest.app.translate('Recordings'));
+        this.dispatch();
+    }.bind(this), 100);
 };
 
 /**

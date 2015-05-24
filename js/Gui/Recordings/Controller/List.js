@@ -32,7 +32,9 @@ Gui.Recordings.Controller.List.prototype.init = function () {
  */
 Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
-    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    if (0 === this.view.node.parent().length) {
+        VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    }
 
     if (this.isHidden) {
 
