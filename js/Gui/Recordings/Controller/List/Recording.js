@@ -221,7 +221,6 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
     var oldParent = this.data.parent,
         path = ['root'].concat(this.view.getName().split('~').slice(0,-1)).join('~'),
         parentView,
-        winModule = VDRest.app.getModule('Gui.Window'),
         dirToRender;
 
     this.data.name = this.view.getName().split('~').pop();
@@ -248,9 +247,9 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
 
         parentView = this.module.getView('List.Directory', path);
 
-    } else if (winModule.cache.store.View.Directory && winModule.cache.store.View.Directory[path.toCacheKey()]) {
+    } else if (this.module.cache.store.View['Window.Directory'] && this.module.cache.store.View['Window.Directory'][path.toCacheKey()]) {
 
-        parentView = {"node": winModule.cache.store.View.Directory[path.toCacheKey()].body};
+        parentView = {"node": this.module.cache.store.View['Window.Directory'][path.toCacheKey()].body};
     }
 
     if (parentView) {
