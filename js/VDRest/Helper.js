@@ -340,7 +340,7 @@ VDRest.Helper.prototype.parseDescription = function (description) {
         var rating;
 
         VDRest.Helper.prototype.ratingRegex.test(description);
-        rating = RegExp.$1 == RegExp.$4 ? RegExp.$1.length : RegExp.$2 ? parseInt(RegExp.$3, 10) : undefined;
+        rating = RegExp.$1 == RegExp.$4 ? RegExp.$1.length - 1 : RegExp.$2 ? parseInt(RegExp.$3, 10) : undefined;
 
         return isNaN(rating) ? 0 : rating;
     };
