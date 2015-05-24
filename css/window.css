@@ -55,6 +55,10 @@
     padding: 70px 20px 20px;
 }
 
+.window.document-fullsize .window-header.has-fanart {
+    padding: 56.25% 0 0;
+}
+
 .window-header * {
     color: inherit;
 }
