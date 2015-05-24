@@ -233,9 +233,6 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.toggleActiveAction = funct
 
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.saveAsTemplateAction = function () {
 
-
-
-
     var data = {
         "type": "string",
         "dom": $('<label class="clearer text">'),
@@ -276,9 +273,11 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = functio
 
     var module = VDRest.app.getModule('Gui.Timer'),
         controller,
+        state = this.module.getView('List').node[0].scrollTop,
         callback = function () {
             module.destruct();
             this.module.dispatch();
+            this.module.getView('List').node[0].scrollTop = state;
         }.bind(this);
 
     module.flush();
@@ -309,7 +308,7 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.showRecordingssAction = fu
         });
     } else {
 
-        $window.one('timersloaded', this.dispatchRecordings.bind(this));
+        $window.one('recordingsloaded', this.dispatchRecordings.bind(this));
 
         dataModel.initList();
     }

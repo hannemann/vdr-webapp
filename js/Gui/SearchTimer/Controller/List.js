@@ -107,9 +107,11 @@ Gui.SearchTimer.Controller.List.prototype.dispatchNew = function (e) {
 Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
 
     var controller = this.module.getController('Search'),
+        state = this.module.getView('List').node[0].scrollTop,
         callback = function () {
             controller.destructView();
             this.module.dispatch();
+            this.module.getView('List').node[0].scrollTop = state;
         }.bind(this);
 
     VDRest.app.saveHistoryState(
@@ -129,9 +131,11 @@ Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
 Gui.SearchTimer.Controller.List.prototype.dispatchRecordings = function (e) {
 
     var controller = this.module.getController('Recordings'),
+        state = this.module.getView('List').node[0].scrollTop,
         callback = function () {
             controller.destructView();
             this.module.dispatch();
+            this.module.getView('List').node[0].scrollTop = state;
         }.bind(this);
 
     VDRest.app.saveHistoryState(
