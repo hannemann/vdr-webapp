@@ -180,14 +180,13 @@ Gui.Epg.prototype.destruct = function () {
  */
 Gui.Epg.prototype.refresh = function (time, custom) {
 
-    var me = this;
     setTimeout(function () {
-        me.getController('Epg').destructView();
-        me.cache.flush();
+        this.getController('Epg').destructView();
+        this.cache.flush();
         VDRest.app.getModule('VDRest.Epg').initTimes(custom).cache.flush();
         VDRest.config.setItem('lastEpg', time);
-        me.dispatch();
-    }, 150);
+        this.dispatch();
+    }.bind(this), 150);
 };
 
 /**

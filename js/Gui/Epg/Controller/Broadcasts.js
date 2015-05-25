@@ -25,6 +25,7 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.timeLineController = this.module.getController('TimeLine');
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.handleScrollBroadcasts = this.fnHandleScrollBroadcasts.bind(this);
+    this.lastEpg = VDRest.config.getItem('lastEpg');
 
     if (VDRest.helper.touchMoveCapable) {
         this.touchScroll = new TouchMove.Scroll({
@@ -55,7 +56,9 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
     this.epgController = this.module.getController('Epg');
 
     this.setScrollData();
-    this.startUpdateInterval();
+    if ('now' === this.lastEpg) {
+        this.startUpdateInterval();
+    }
 };
 
 /**
@@ -69,9 +72,10 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
         this.view.wrapper.get(0).onscroll = this.handleScroll.bind(this);
     }
 
-    $document.on('mousedown.broadcasts touchstart.broadcasts', this.toggleUpdate.bind(this));
-
-    $document.on('visibilitychange.broadcasts', this.toggleUpdate.bind(this, true));
+    if ('now' === this.lastEpg) {
+        $document.on(VDRest.helper.pointerStart + '.broadcasts', this.toggleUpdate.bind(this));
+        $document.on('visibilitychange.broadcasts', this.toggleUpdate.bind(this, true));
+    }
 };
 
 /**
@@ -83,7 +87,10 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
         $(this.view.wrapper).off('scroll', this.handleScroll);
     }
 
-    $document.off('visibilitychange.broadcasts');
+    if ('now' === this.lastEpg) {
+        $document.off(VDRest.helper.pointerStart + '.broadcasts');
+        $document.off('visibilitychange.broadcasts');
+    }
 };
 
 /**
@@ -141,6 +148,10 @@ Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
         clearInterval(this.updateInterval);
         this.updateInterval = undefined;
     }
+    if (this.updateTimeout) {
+        clearTimeout(this.updateTimeout);
+        this.updateTimeout = undefined;
+    }
     return this;
 };
 
@@ -149,7 +160,7 @@ Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.update = function () {
 
-    if ('now' === VDRest.config.getItem('lastEpg')) {
+    if ('now' === this.lastEpg) {
 
         this.module.store.updateNow();
         this.setScrollData()
