@@ -55,20 +55,10 @@ Gui.Timer.Controller.List.Timer.prototype.dispatchView = function () {
  */
 Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
 
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node
-            .on('touchend', this.handleUp.bind(this))
-            .on('touchmove', this.handleMove.bind(this))
-            .on('touchstart', this.handleDown.bind(this))
-        ;
-        //this.view.menuButton.on('touchstart', this.requestMenuAction.bind(this));
-    } else {
-        this.view.node
-            .on('mouseup', this.handleUp.bind(this))
-            .on('mousedown', this.handleDown.bind(this))
-        ;
-        //this.view.menuButton.on('mousedown', this.requestMenuAction.bind(this));
-    }
+    this.view.node
+        .on(VDRest.helper.pointerStart, this.handleDown.bind(this))
+        .on(VDRest.helper.pointerMove, this.handleMove.bind(this))
+        .on(VDRest.helper.pointerEnd, this.handleUp.bind(this));
 
     $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
 };
@@ -78,7 +68,11 @@ Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
  */
 Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
 
-    this.view.node.off('click touchend touchstart touchmove mouseup mousedown');
+    this.view.node.off([
+        VDRest.helper.pointerStart,
+        VDRest.helper.pointerMove,
+        VDRest.helper.pointerEnd
+    ].join(' '));
 
     $document.off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 };

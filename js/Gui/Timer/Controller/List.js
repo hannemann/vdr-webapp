@@ -98,6 +98,11 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
     this.searchTimerId = undefined;
 };
 
+/**
+ * retrieve searchtimer id
+ * @param timer
+ * @return {number|boolean}
+ */
 Gui.Timer.Controller.List.prototype.getSearchTimerId = function (timer) {
 
     var p = new DOMParser(),
@@ -121,7 +126,7 @@ Gui.Timer.Controller.List.prototype.getSearchTimerId = function (timer) {
  */
 Gui.Timer.Controller.List.prototype.addObserver = function () {
 
-    $document.one('timersloaded', this.iterateTimers.bind(this));
+    $document.one('timersloaded.guitimerlist', this.iterateTimers.bind(this));
     if (VDRest.helper.isTouchDevice) {
         this.preventReloadHandler = this.preventScrollReload.bind(this);
         this.view.node.on('touchmove', this.preventReloadHandler);
@@ -130,11 +135,30 @@ Gui.Timer.Controller.List.prototype.addObserver = function () {
 
 /**
  * remove event listeners
+ * @return {Gui.Timer.Controller.List}
  */
 Gui.Timer.Controller.List.prototype.removeObserver = function () {
+
+    $document.off('timersloaded.guitimerlist');
     if (VDRest.helper.isTouchDevice) {
         this.view.node.off('touchmove', this.preventReloadHandler);
     }
+
+    return this;
+};
+
+/**
+ * destroy timer nodes
+ * @return {Gui.Timer.Controller.List}
+ */
+Gui.Timer.Controller.List.prototype.destroyTimers = function () {
+
+    this.timerList.each(function () {
+
+        arguments[1].destructView();
+    });
+
+    return this;
 };
 
 /**
@@ -144,10 +168,7 @@ Gui.Timer.Controller.List.prototype.destructView = function () {
 
     this.view.node.one(this.animationEndEvents, function () {
 
-        this.timerList.each(function () {
-
-            arguments[1].destructView();
-        });
+        this.destroyTimers();
 
         VDRest.Abstract.Controller.prototype.destructView.call(this);
     }.bind(this));

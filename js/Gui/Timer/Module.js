@@ -94,8 +94,10 @@ Gui.Timer.prototype.refresh = function () {
 
 Gui.Timer.prototype.flush = function () {
 
-    this.getView('List').node.empty();
-    this.getController('List').timerList.initData();
+    this.getController('List')
+        .destroyTimers()
+        .removeObserver()
+        .timerList.initData();
 
     this.getStore().getModel('List').flushCollection();
     delete this.store.cache.store.Model['List.Timer'];
