@@ -39,7 +39,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.imageInEpgView = VDRest.config.
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
 
-    this.node = $('<div class="broadcast" data-pos="' + this.data.position + '"></div>');
+    this.node = $('<div class="broadcast" data-pos="' + this.data.position + '" data-key="' + this.keyInCache + '"></div>');
 
     this.info = $('<div class="content">').appendTo(this.node);
 };

@@ -68,6 +68,10 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $document.one('channelsloaded', this.iterateChannels.bind(this));
 
+    this.view.node[0].addEventListener(VDRest.helper.pointerStart, this.handleDown.bind(this));
+    this.view.node[0].addEventListener(VDRest.helper.pointerMove, this.handleMove.bind(this));
+    this.view.node[0].addEventListener(VDRest.helper.pointerEnd, this.handleUp.bind(this));
+
     if (!VDRest.helper.touchMoveCapable) {
         this.view.wrapper.get(0).onscroll = this.handleScroll.bind(this);
     }
@@ -91,6 +95,84 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
         $document.off(VDRest.helper.pointerStart + '.broadcasts');
         $document.off('visibilitychange.broadcasts');
     }
+};
+
+/**
+ * handle mousedown
+ */
+Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
+
+    var broadcast = this.getBroadcastFromEvent(e);
+
+    if (!broadcast) {
+        return;
+    }
+
+    this.requestedBroadcast = this.module.getController('Broadcasts.List.Broadcast', broadcast.dataset.key);
+
+    activeAnimate.applyAnimation(e, broadcast);
+
+    this.preventClick = undefined;
+};
+
+/**
+ * prevent click on move
+ */
+Gui.Epg.Controller.Broadcasts.prototype.handleMove = function () {
+
+    this.preventClick = true;
+
+    if ("undefined" !== typeof this.clickTimeout) {
+        window.clearTimeout(this.clickTimeout);
+    }
+};
+
+
+/**
+ * handle mouseup
+ * @param {jQuery.Event} e
+ */
+Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
+
+    if (e.cancelable) {
+        e.preventDefault();
+    }
+
+    if (!this.module.isMuted) {
+
+        if ("undefined" === typeof this.preventClick) {
+
+            this.vibrate();
+
+            if ("undefined" !== typeof this.clickTimeout) {
+                window.clearTimeout(this.clickTimeout);
+            }
+            if (!VDRest.helper.canCancelEvent) {
+                this.requestedBroadcast.requestWindowAction();
+            }
+            this.requestedBroadcast = undefined;
+        }
+    }
+};
+
+/**
+ * retrieve broadcast node from event
+ * @param {Event} e
+ * @return {null|HTMLDivElement}
+ */
+Gui.Epg.Controller.Broadcasts.prototype.getBroadcastFromEvent = function (e) {
+
+    var broadcast = null, node = e.target;
+
+    while (node != document.body) {
+        if ("undefined" !== typeof node.classList && node.classList.contains('broadcast')) {
+            broadcast = node;
+            break;
+        }
+        node = node.parentNode;
+    }
+
+    return broadcast;
 };
 
 /**
