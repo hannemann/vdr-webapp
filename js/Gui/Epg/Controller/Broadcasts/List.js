@@ -117,8 +117,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.initList = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
 
-    $document.on('broadcastsloaded-' + this.data.channel_id, this.iterateBroadcasts.bind(this));
-
     $window.on('orientationchange.' + this.data.channel_id, this.handleResize.bind(this));
 
     $window.on('resize.' + this.data.channel_id, this.handleResize.bind(this));
@@ -128,8 +126,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.addObserver = function () {
  * remove event listeners
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.removeObserver = function () {
-
-    $document.off('broadcastsloaded-' + this.data.channel_id);
 
     $window.off('orientationchange.' + this.data.channel_id);
 

@@ -68,6 +68,8 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
     $document.one('channelsloaded', this.iterateChannels.bind(this));
 
+    $document.on('broadcastsloaded', this.delegateBroadcastsLoaded.bind(this));
+
     this.view.node[0].addEventListener(VDRest.helper.pointerStart, this.handleDown.bind(this));
     this.view.node[0].addEventListener(VDRest.helper.pointerMove, this.handleMove.bind(this));
     this.view.node[0].addEventListener(VDRest.helper.pointerEnd, this.handleUp.bind(this));
@@ -177,6 +179,15 @@ Gui.Epg.Controller.Broadcasts.prototype.handleTimer = function (e) {
     } catch (e) {
     }
 
+};
+
+/**
+ * delegate broadcasts loaded events to according controller
+ * @param {jQuery.Event} e
+ */
+Gui.Epg.Controller.Broadcasts.prototype.delegateBroadcastsLoaded = function (e) {
+
+    this.cache['Broadcasts.List'][e.payload].iterateBroadcasts(e);
 };
 
 /**

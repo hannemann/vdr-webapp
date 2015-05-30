@@ -88,7 +88,10 @@ VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
     this.getFromDate();
     this.events = {
         // event to be triggered when collection is loaded
-        "collectionloaded" : 'broadcastsloaded-' + channelId
+        "collectionloaded": {
+            "type": "broadcastsloaded",
+            "payload": channelId
+        }
     };
 
     this.baseUrl = this.module.getResource('Channels.Channel').getBaseUrl();

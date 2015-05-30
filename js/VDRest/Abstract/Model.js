@@ -93,12 +93,22 @@ VDRest.Abstract.Model.prototype.processCollection = function (result) {
  */
 VDRest.Abstract.Model.prototype.triggerCollectionLoaded = function () {
 
-    $.event.trigger({
-        "type"          : this.events.collectionloaded,
-        "collection"    : this.currentResult,
-        "_class"        : this._class,
-        "iterate": this.resultIterator.bind(this)
-    });
+    var evt = {};
+
+    if (this.events.collectionloaded instanceof Object) {
+        evt.type = this.events.collectionloaded.type;
+        if ("undefined" !== typeof this.events.collectionloaded.payload) {
+            evt.payload = this.events.collectionloaded.payload;
+        }
+    } else {
+        evt.type = this.events.collectionloaded;
+    }
+
+    evt.collection = this.currentResult;
+    evt._class = this._class;
+    evt.iterate = this.resultIterator.bind(this);
+
+    $.event.trigger(evt);
 };
 
 /**
