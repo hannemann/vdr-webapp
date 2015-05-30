@@ -54,7 +54,7 @@ Gui.Epg.Controller.Window.Broadcast.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    this.handleTimerAction();
+    this.handleTimer();
 
     this.addObserver();
 };
@@ -69,9 +69,6 @@ Gui.Epg.Controller.Window.Broadcast.prototype.addObserver = function () {
         this.view.image.on('click', this.animateImageAction.bind(this));
     }
 
-    $document.on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
-    $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
-    $document.on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimerAction.bind(this));
     this.view.recordButton.on('click', this.toggleTimerAction.bind(this));
     this.view.editButton.on('click', this.editTimerAction.bind(this));
 
@@ -87,7 +84,7 @@ Gui.Epg.Controller.Window.Broadcast.prototype.removeObserver = function () {
         this.view.image.off('click');
     }
     this.view.recordButton.off('click');
-    $document.off('gui-timer.' + this.eventNameSpace);
+    this.view.editButton.off('click');
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
@@ -105,7 +102,7 @@ Gui.Epg.Controller.Window.Broadcast.prototype.animateImageAction = function () {
 /**
  * handle timer
  */
-Gui.Epg.Controller.Window.Broadcast.prototype.handleTimerAction = function () {
+Gui.Epg.Controller.Window.Broadcast.prototype.handleTimer = function () {
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);
@@ -169,8 +166,6 @@ Gui.Epg.Controller.Window.Broadcast.prototype.toggleTimerAction = function () {
 Gui.Epg.Controller.Window.Broadcast.prototype.destructView = function () {
 
     var me = this;
-    // apply animation
-    this.view.node.toggleClass('collapse expand');
     // remove on animation end
     this.view.node.one(this.animationEndEvents, function () {
 
@@ -180,4 +175,6 @@ Gui.Epg.Controller.Window.Broadcast.prototype.destructView = function () {
             "type" : "showContextMenu"
         });
     });
+    // apply animation
+    this.view.node.toggleClass('collapse expand');
 };

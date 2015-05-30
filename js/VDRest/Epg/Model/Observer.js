@@ -56,8 +56,10 @@ VDRest.Epg.Model.Observer.prototype.handleTimerDeleted = function (e) {
             model.data.timer_id = '';
 
             $.event.trigger({
-                "type" : 'gui-timer.deleted.' + model.keyInCache,
-                "payload" : model
+                "type": 'gui-timer.deleted.epg',
+                "payload": {
+                    "event": model.keyInCache
+                }
             });
         }
     }
@@ -85,8 +87,10 @@ VDRest.Epg.Model.Observer.prototype.handleTimerUpdated = function (e) {
             this.timers[e.payload.timer.id] = model.keyInCache;
 
             $.event.trigger({
-                "type" : 'gui-timer.updated.' + model.keyInCache,
-                "payload" : model
+                "type": 'gui-timer.updated.epg',
+                "payload": {
+                    "event": model.keyInCache
+                }
             });
         }
     }
@@ -107,6 +111,13 @@ VDRest.Epg.Model.Observer.prototype.handleTimerCreated = function (e) {
         model.data.timer_id = e.payload.timer.id;
 
         this.timers[e.payload.timer.id] = model.keyInCache;
+
+        $.event.trigger({
+            "type": 'gui-timer.created',
+            "payload": {
+                "event": e.payload.callerId
+            }
+        });
     }
 };
 

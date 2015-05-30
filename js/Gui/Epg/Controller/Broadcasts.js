@@ -72,6 +72,10 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
     this.view.node[0].addEventListener(VDRest.helper.pointerMove, this.handleMove.bind(this));
     this.view.node[0].addEventListener(VDRest.helper.pointerEnd, this.handleUp.bind(this));
 
+    $document.on('gui-timer.created', this.handleTimer.bind(this));
+    $document.on('gui-timer.updated.epg', this.handleTimer.bind(this));
+    $document.on('gui-timer.deleted.epg', this.handleTimer.bind(this));
+
     if (!VDRest.helper.touchMoveCapable) {
         this.view.wrapper.get(0).onscroll = this.handleScroll.bind(this);
     }
@@ -153,6 +157,26 @@ Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
             this.requestedBroadcast = undefined;
         }
     }
+};
+
+/**
+ * delegate timer event to epg broadcast and window
+ * @param {jQuery.Event} e
+ */
+Gui.Epg.Controller.Broadcasts.prototype.handleTimer = function (e) {
+
+    try {
+
+        if (this.cache['Broadcasts.List.Broadcast'][e.payload.event]) {
+            this.cache['Broadcasts.List.Broadcast'][e.payload.event].handleTimer();
+        }
+
+        if (this.cache['Window.Broadcast'][e.payload.event]) {
+            this.cache['Window.Broadcast'][e.payload.event].handleTimer();
+        }
+    } catch (e) {
+    }
+
 };
 
 /**

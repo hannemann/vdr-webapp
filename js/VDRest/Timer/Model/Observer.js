@@ -38,11 +38,6 @@ VDRest.Timer.Model.Observer.prototype.addTimer = function (e) {
         collection.push(this.module.getModel('List.Timer', timer));
         collection.sort(VDRest.Timer.Model.List.prototype.sortByTime);
     }
-
-    $.event.trigger({
-        "type" : 'gui-timer.created.' + e.payload.callerId,
-        "payload" : timer
-    });
 };
 
 /**

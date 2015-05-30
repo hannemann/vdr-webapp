@@ -30,6 +30,10 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.windowModule = this.module;
 
+    if (this.data.dataModel.data.timer_exists) {
+        this.module.store.getModel('Observer').registerTimer(this.data.dataModel);
+    }
+
     this.view = this.module.getView('Broadcasts.List.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel,
@@ -46,8 +50,6 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
     });
 
     this.view.decorate();
-
-    this.addObserver();
 };
 
 /**
@@ -73,37 +75,6 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.updateMetrics = function 
 };
 
 /**
- * add event listeners
- */
-Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addObserver = function () {
-
-    $document.on('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
-    $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.handleTimer.bind(this));
-
-    if (this.data.dataModel.data.timer_id) {
-
-        $document.one('gui-timer.deleted.'
-            + [this.keyInCache, this.data.dataModel.data.timer_id, this.eventNameSpace].join('.'),
-            this.handleTimer.bind(this)
-        );
-    }
-};
-
-/**
- * remove event listeners
- */
-Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.removeObserver = function () {
-
-    $document.off('gui-timer.created.' + this.keyInCache + '.' + this.eventNameSpace);
-    $document.off('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace);
-    $document.off('gui-timer.deleted.' + [
-        this.keyInCache,
-        this.data.dataModel.data.timer_id,
-        this.eventNameSpace
-    ].join('.'));
-};
-
-/**
  * request window
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestWindowAction = function () {
@@ -122,14 +93,6 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestWindowAction = fun
  * handle click on timer add/delete button
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.handleTimer = function () {
-
-    if (this.data.dataModel.data.timer_exists) {
-
-        $document.one(
-            'gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace,
-            this.handleTimer.bind(this)
-        );
-    }
 
     this.view.handleTimerExists(this.data.dataModel.data.timer_exists);
     this.view.handleTimerActive(this.data.dataModel.data.timer_active);
