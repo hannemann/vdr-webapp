@@ -15,8 +15,7 @@ Gui.Recordings.View.List.prototype = new VDRest.Abstract.View();
 Gui.Recordings.View.List.prototype.init = function () {
 
     var i, cMenu = VDRest.app.getModule('Gui.Recordings').contextMenu,
-        currentSorting = VDRest.config.getItem('currentSorting'), sortState,
-        node = $('.recordings-list');
+        currentSorting = VDRest.config.getItem('currentSorting'), sortState;
 
     if (!currentSorting) {
         currentSorting = VDRest.config.getItem('defaultSorting');
@@ -32,18 +31,14 @@ Gui.Recordings.View.List.prototype.init = function () {
         }
     }
 
-    if (node.get(0)) {
-        this.node = node;
-    } else {
-        this.node = $('<div class="recordings-list simple-list clearer window collapsed viewport-fullsize">');
-    }
+    this.node = $('<div class="recordings-list simple-list clearer window collapsed viewport-fullsize">');
 };
 
-Gui.Recordings.View.List.prototype.show = function () {
+Gui.Recordings.View.List.prototype.render = function () {
 
-    if (this.node.hasClass('collapsed')) {
-        this.node.toggleClass('collapsed expand');
-    }
+    VDRest.Abstract.View.prototype.render.call(this);
+
+    this.node.toggleClass('collapsed expand');
 };
 
 /**

@@ -140,6 +140,7 @@ Gui.Recordings.prototype.destruct = function () {
 
     VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
     this.getController('List').destructView();
+    this.cache.flush();
 };
 
 /**

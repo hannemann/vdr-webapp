@@ -32,28 +32,17 @@ Gui.Recordings.Controller.List.prototype.init = function () {
  */
 Gui.Recordings.Controller.List.prototype.dispatchView = function () {
 
-    if (0 === this.view.node.parent().length) {
-        VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-    }
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    if (this.isHidden) {
+    if (this.dataModel.hasCollection) {
 
-        this.isHidden = false;
-        this.view.node.show();
-        this.view.show();
+        this.iterateRecordings();
     } else {
 
-        this.view.show();
-        if (this.dataModel.hasCollection) {
+        $document.one(this.dataModel.events.collectionloaded, function () {
 
             this.iterateRecordings();
-        } else {
-
-            $document.one(this.dataModel.events.collectionloaded, function () {
-
-                this.iterateRecordings();
-            }.bind(this))
-        }
+        }.bind(this))
     }
 
     this.addObserver();
@@ -200,10 +189,6 @@ Gui.Recordings.Controller.List.prototype.destructView = function () {
 
     this.view.node.one(this.animationEndEvents, function () {
 
-        //this.isHidden = true;
-        //this.view.node.hide();
-
-        //this.view.node.toggleClass('collapse collapsed');
         VDRest.Abstract.Controller.prototype.destructView.call(this);
     }.bind(this));
 
