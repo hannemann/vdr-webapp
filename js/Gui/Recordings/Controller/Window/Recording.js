@@ -7,7 +7,7 @@ Gui.Recordings.Controller.Window.Recording = function () {};
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Recordings.Controller.Window.Recording.prototype = new Gui.Window.Controller.Abstract();
+Gui.Recordings.Controller.Window.Recording.prototype = new Gui.Window.Controller.ScrollAnimateHeader();
 
 /**
  * @type {string}
@@ -46,25 +46,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.dispatchView = function () 
         "type" : "hideContextMenu"
     });
 
-    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
-
-    if (this.view.fanart) {
-        $.event.trigger({
-            "type": "opaqueMenubar",
-            "payload": true
-        });
-    }
-
-    if (this.view.canAnimateScroll()) {
-
-        this.touchScroll = new TouchMove.Scroll({
-            "wrapper": document.body,
-            "onmove": this.onscrollAction.bind(this),
-            "allowedDirections": ['y'],
-            "sliderClassName": "window-recording"
-        });
-        document.body.style.overflow = 'hidden';
-    }
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView.call(this);
 
     this.addObserver();
 
@@ -110,7 +92,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.removeObserver = function (
 
     $document.off('persistrecordingschange-' + this.keyInCache);
 
-    if (this.view.hasFanart && !VDRest.helper.isTouchDevice) {
+    if (this.view.fanart && !VDRest.helper.isTouchDevice) {
         this.view.node.off('scroll', this.scrollHandler);
     }
 
@@ -244,52 +226,6 @@ Gui.Recordings.Controller.Window.Recording.prototype.afterDeleteAction = functio
 };
 
 /**
- * shift header contents on scroll
- * @param {{x:number,y:number}|jQuery.Event} e
- */
-Gui.Recordings.Controller.Window.Recording.prototype.onscrollAction = function (e) {
-
-    var delta, style, n;
-
-    if (e instanceof jQuery.Event) {
-        delta = this.view.node[0].scrollTop;
-    } else {
-        delta = -e.y;
-    }
-
-    style = "translateY(" + (delta / 2).toString() + "px)";
-
-    this.view.headerContentWrapper.css({
-        "transform": style
-    });
-
-    if (this.view.fanart) {
-
-        n = this.view.header[0].offsetHeight - delta;
-
-        if (n < this.menubar.offsetHeight && this.menubarHidden) {
-
-            $.event.trigger({
-                "type": "opaqueMenubar",
-                "payload": false
-            });
-            this.menubarHidden = false;
-        } else if (n >= this.menubar.offsetHeight && !this.menubarHidden) {
-
-            $.event.trigger({
-                "type": "opaqueMenubar",
-                "payload": true
-            });
-            this.menubarHidden = true;
-        }
-
-        this.view.fanart.css({
-            "transform": style
-        });
-    }
-};
-
-/**
  * Destroy
  */
 Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () {
@@ -298,10 +234,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () 
     // remove on animation end
     this.view.node.one(this.animationEndEvents, function () {
 
-        delete me.touchScroll;
-        document.body.style.overflow = '';
-
-        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+        Gui.Window.Controller.ScrollAnimateHeader.prototype.destructView.call(me);
 
         $.event.trigger({
             "type" : "showContextMenu"
@@ -311,8 +244,4 @@ Gui.Recordings.Controller.Window.Recording.prototype.destructView = function () 
     this.view.node.toggleClass('collapse expand');
 
     me.header.text(me.oldHeader);
-    $.event.trigger({
-        "type": "opaqueMenubar",
-        "payload": false
-    });
 };

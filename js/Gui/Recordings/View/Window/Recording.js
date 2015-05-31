@@ -7,7 +7,7 @@ Gui.Recordings.View.Window.Recording = function () {};
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Recordings.View.Window.Recording.prototype = new Gui.Window.View.Abstract();
+Gui.Recordings.View.Window.Recording.prototype = new Gui.Window.View.ScrollAnimateHeader();
 
 /**
  * @type {string}
@@ -40,11 +40,11 @@ Gui.Recordings.View.Window.Recording.prototype.hasHeader = true;
  */
 Gui.Recordings.View.Window.Recording.prototype.render = function () {
 
-    this.addClasses().decorateHeader();
-
     this.node.addClass('collapsed');
 
-    Gui.Window.View.Abstract.prototype.render.call(this);
+    Gui.Window.View.ScrollAnimateHeader.prototype.render.call(this);
+
+    this.addClasses().decorateHeader();
 
     this.node.toggleClass('collapsed expand');
 
@@ -59,21 +59,13 @@ Gui.Recordings.View.Window.Recording.prototype.render = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.update = function () {
 
-    this.header.empty();
+    this.scrollShiftWrapper.empty();
     this.header.removeClass('has-fanart');
     delete this.title;
     delete this.details;
     delete this.fanart;
     delete this.headerContentWrapper;
     this.decorateHeader();
-};
-
-/**
- * @return {boolean}
- */
-Gui.Recordings.View.Window.Recording.prototype.canAnimateScroll = function () {
-
-    return this.node[0].scrollHeight > this.parentView.node[0].offsetHeight && VDRest.helper.touchMoveCapable;
 };
 
 /**
@@ -93,7 +85,7 @@ Gui.Recordings.View.Window.Recording.prototype.addClasses = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.decorateHeader = function () {
 
-    this.headerContentWrapper = $('<div class="wrapper left">').appendTo(this.header);
+    this.headerContentWrapper = $('<div class="wrapper left">').appendTo(this.scrollShiftWrapper);
     this.addTitle().addDetails().addFanart();
 
     return this;
@@ -160,7 +152,7 @@ Gui.Recordings.View.Window.Recording.prototype.addFanart = function () {
         }
         if (fanartUrl) {
 
-            this.fanart = $('<img>').addClass('fanart').attr('src', fanartUrl).appendTo(this.header);
+            this.fanart = $('<img>').addClass('fanart').attr('src', fanartUrl).appendTo(this.scrollShiftWrapper);
 
             this.header.addClass('has-fanart');
         }
