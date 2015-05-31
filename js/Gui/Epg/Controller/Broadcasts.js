@@ -66,17 +66,23 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
-    $document.one('channelsloaded', this.iterateChannels.bind(this));
+    this.channelIterator = this.iterateChannels.bind(this);
+    $document.one('channelsloaded', this.channelIterator);
 
-    $document.on('broadcastsloaded', this.delegateBroadcastsLoaded.bind(this));
+    this.broadcastsLoadedHandler = this.delegateBroadcastsLoaded.bind(this);
+    $document.on('broadcastsloaded', this.broadcastsLoadedHandler);
 
-    this.view.node[0].addEventListener(VDRest.helper.pointerStart, this.handleDown.bind(this));
-    this.view.node[0].addEventListener(VDRest.helper.pointerMove, this.handleMove.bind(this));
-    this.view.node[0].addEventListener(VDRest.helper.pointerEnd, this.handleUp.bind(this));
+    this.pointerStartHandler = this.handleDown.bind(this);
+    this.pointerMoveHandler = this.handleMove.bind(this);
+    this.pointerEndHandler = this.handleUp.bind(this);
+    this.view.node[0].addEventListener(VDRest.helper.pointerStart, this.pointerStartHandler);
+    this.view.node[0].addEventListener(VDRest.helper.pointerMove, this.pointerMoveHandler);
+    this.view.node[0].addEventListener(VDRest.helper.pointerEnd, this.pointerEndHandler);
 
-    $document.on('gui-timer.created', this.handleTimer.bind(this));
-    $document.on('gui-timer.updated.epg', this.handleTimer.bind(this));
-    $document.on('gui-timer.deleted.epg', this.handleTimer.bind(this));
+    this.timerHandler = this.handleTimer.bind(this);
+    $document.on('gui-timer.created', this.timerHandler);
+    $document.on('gui-timer.updated.epg', this.timerHandler);
+    $document.on('gui-timer.deleted.epg', this.timerHandler);
 
     if (!VDRest.helper.touchMoveCapable) {
         this.view.wrapper.get(0).onscroll = this.handleScroll.bind(this);
@@ -92,6 +98,18 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
  * remove event listeners
  */
 Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
+
+    $document.off('channelsloaded', this.channelIterator);
+
+    $document.off('broadcastsloaded', this.broadcastsLoadedHandler);
+
+    this.view.node[0].removeEventListener(VDRest.helper.pointerStart, this.pointerStartHandler);
+    this.view.node[0].removeEventListener(VDRest.helper.pointerMove, this.pointerMoveHandler);
+    this.view.node[0].removeEventListener(VDRest.helper.pointerEnd, this.pointerEndHandler);
+
+    $document.on('gui-timer.created', this.timerHandler);
+    $document.on('gui-timer.updated.epg', this.timerHandler);
+    $document.on('gui-timer.deleted.epg', this.timerHandler);
 
     if (!VDRest.helper.touchMoveCapable) {
         $(this.view.wrapper).off('scroll', this.handleScroll);
