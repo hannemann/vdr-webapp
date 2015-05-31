@@ -235,7 +235,7 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
 
     if (!dirToRender.view.isRendered) {
 
-        dirToRender.data.parent.data.directories.sort(Gui.Recordings.View.List.prototype.sortAlpha);
+        dirToRender.data.parent.data.directories.sort(this.module.getController('List').view.sortCallback);
         dirToRender.view.setParentView(
             "root" === dirToRender.data.parent.keyInCache
             ? dirToRender.data.parent.view
@@ -253,19 +253,17 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
         parentView = {"node": this.module.cache.store.View['Window.Directory'][path.toCacheKey()].body};
     }
 
+    this.module.getController('List').removeIfEmpty(oldParent.view.getPath());
+    if (this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()]) {
+        this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()].updateAction();
+    }
+    this.module.cache.updateKeys(this, this.dataModel.keyInCache);
+
     if (parentView) {
 
         this.view.setParentView(parentView);
         this.dispatchView(this.getPosition());
     }
-
-    this.module.getController('List').removeIfEmpty(oldParent.view.getPath());
-    if (this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()]) {
-        this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()].updateAction();
-    }
-    this.removeObserver();
-    this.module.cache.updateKeys(this, this.dataModel.keyInCache);
-    this.addObserver();
 };
 
 /**
@@ -309,14 +307,18 @@ Gui.Recordings.Controller.List.Recording.prototype.addToParentDir = function () 
 
     if ("undefined" === typeof this.module.cache.store.Controller['List.Directory'][path]) {
 
-        this.module.getController('List').createFolderFromFile({
-            "file_name": this.keyInCache,
-            "name" : this.view.getName()
-        });
+        dir = this.module.getController(
+            'List.Directory',
+            this.module.getController('List').createFolderFromFile({
+                "file_name": this.dataModel.data.file_name,
+                "name": this.dataModel.data.name
+            })
+        );
         add = false;
-    }
+    } else {
 
-    dir = this.module.getController('List.Directory', path);
+        dir = this.module.getController('List.Directory', path);
+    }
 
     for (i; i < l; i++) {
 
