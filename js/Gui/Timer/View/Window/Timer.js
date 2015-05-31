@@ -269,7 +269,6 @@ Gui.Timer.View.Window.Timer.prototype.getTabConfig = function () {
         tabs.edit.default = true;
     }
 
-    tabConfig["keyInCache"] = this.keyInCache;
     tabConfig["parentView"] = this.body;
     tabConfig["cacheKey"] = this.cacheKey;
     tabConfig["id"] = this.getId();
@@ -403,7 +402,6 @@ Gui.Timer.View.Window.Timer.prototype.renderEditTab = function () {
             "owner" : this,
             "reference" : "editForm",
             "cacheKey" : this.cacheKey,
-            "keyInCache" : this.keyInCache,
             "id" : this.getId(),
             "catConfig" : config.editForm.categories,
             "fields" : config.editForm.fields,

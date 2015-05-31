@@ -88,7 +88,8 @@ Gui.Epg.View.Window.Broadcast.prototype.getTabConfig = function () {
     var me = this;
 
     return {
-        "keyInCache": this.keyInCache,
+        "channel": this.data.channel,
+        "id": this.data.id,
         "parentView" : this.body,
         "cacheKey" : this.cacheKey,
         "tabs" : {
