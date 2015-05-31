@@ -112,6 +112,25 @@ VDRest.Lib.Cache.prototype.invalidateClasses = function (_class) {
     }
 };
 
+VDRest.Lib.Cache.prototype.updateKeys = function (obj, newkey) {
+
+    var i, _class = obj._class, key = obj.keyInCache, instance;
+
+    for (i in this.store) {
+
+        if (this.store.hasOwnProperty(i)) {
+
+            if (this.store[i].hasOwnProperty(_class) && this.store[i][_class].hasOwnProperty(key)) {
+
+                instance = this.store[i][_class][key];
+                instance.keyInCache = newkey;
+                delete this.store[i][_class][key];
+                this.store[i][_class][newkey] = instance;
+            }
+        }
+    }
+};
+
 /**
  * string that separates composed cache keys
  * @type {string}

@@ -153,6 +153,29 @@ Gui.Recordings.Controller.Window.Recording.prototype.updateRecordingAction = fun
  */
 Gui.Recordings.Controller.Window.Recording.prototype.updateAction = function () {
 
+    var newKey = this.data.recording.dataModel.keyInCache.toCacheKey();
+
+    // update tabs
+    $.event.trigger({
+        "type": "gui.tabs.update-" + this.keyInCache,
+        "payload": {
+            "method": "updateCacheKey",
+            "args": [newKey]
+        }
+    });
+
+    // update form
+    $.event.trigger({
+        "type": "gui.form.update-" + this.keyInCache,
+        "payload": {
+            "method": "updateCacheKey",
+            "args": [newKey]
+        }
+    });
+
+    this.removeObserver();
+    this.module.cache.updateKeys(this, newKey);
+    this.addObserver();
     this.header.text(this.data.recording.dataModel.data.name.split('~').pop());
     this.view.update();
 

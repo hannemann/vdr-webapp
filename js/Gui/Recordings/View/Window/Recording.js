@@ -177,7 +177,7 @@ Gui.Recordings.View.Window.Recording.prototype.getTabConfig = function () {
     var me = this;
 
     return {
-        "keyInCache": this.keyInCache,
+        "id": this.keyInCache,
         "parentView" : this.body,
         "cacheKey" : this.cacheKey,
         "tabs" : {

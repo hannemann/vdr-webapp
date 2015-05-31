@@ -34,7 +34,7 @@ VDRest.Recordings.Model.List.Recording.prototype.init = function () {
  */
 VDRest.Recordings.Model.List.Recording.prototype.addObserver = function () {
 
-    $document.on('vdrest-api-actions.recording-updated.' + this.keyInCache.toCacheKey(), this.update.bind(this));
+    $document.one('vdrest-api-actions.recording-updated.' + this.keyInCache.toCacheKey(), this.update.bind(this));
 };
 
 /**
@@ -43,7 +43,7 @@ VDRest.Recordings.Model.List.Recording.prototype.addObserver = function () {
  */
 VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
 
-    var i;
+    var i, eventKey = this.keyInCache.toCacheKey();
 
     for (i in e.payload.data.recordings[0]) {
 
@@ -52,9 +52,11 @@ VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
             this.data[i] = e.payload.data.recordings[0][i];
         }
     }
+    this.module.cache.updateKeys(this, this.data.file_name);
     $.event.trigger({
-        "type": "gui-recording.updated." + this.keyInCache.toCacheKey()
+        "type": "gui-recording.updated." + eventKey
     });
+    this.addObserver();
 };
 
 /**

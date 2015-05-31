@@ -263,6 +263,9 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
     if (this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()]) {
         this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()].updateAction();
     }
+    this.removeObserver();
+    this.module.cache.updateKeys(this, this.dataModel.keyInCache);
+    this.addObserver();
 };
 
 /**

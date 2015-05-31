@@ -42,14 +42,9 @@ Gui.Form.Controller.Abstract.prototype.dispatchView = function () {
  */
 Gui.Form.Controller.Abstract.prototype.addObserver = function () {
 
-    var me = this, i;
+    var i;
 
-    $document.on("destruct.form-" + this.keyInCache + " destruct.window-" + this.keyInCache, function () {
-
-        me.view.destruct();
-        me.module.cache.flushByClassKey(me);
-        me.removeObserver();
-    });
+    $document.on("destruct.form-" + this.keyInCache + " destruct.window-" + this.keyInCache, this.destruct.bind(this));
 
     if ("function" === typeof this.data.onsubmit) {
         this.view.cancel.on('click', function () {
@@ -107,6 +102,8 @@ Gui.Form.Controller.Abstract.prototype.removeObserver = function () {
     }
 
     $document.off('gui.form.update-' + this.keyInCache);
+
+    $document.off("destruct.form-" + this.keyInCache + " destruct.window-" + this.keyInCache, this.destruct.bind(this));
 };
 
 Gui.Form.Controller.Abstract.prototype.submit = function () {
@@ -478,23 +475,17 @@ Gui.Form.Controller.Abstract.prototype.update = function (e) {
  */
 Gui.Form.Controller.Abstract.prototype.updateCacheKey = function (keyInCache) {
 
-    var keys = this.data.cacheKey.split('/'), values = keyInCache.split('/'), i = 0, l = keys.length;
-
-    this.module.cache.flushByClassKey(this);
-
-    this.keyInCache = keyInCache;
-    this.data.keyInCache = keyInCache;
-
-    for (i;i<l;i++) {
-
-        this.data[keys[i]] = values[i];
-    }
-
-    this.view.keyInCache = keyInCache;
-
     this.removeObserver();
+    this.module.cache.updateKeys(this, keyInCache);
     this.addObserver();
+};
 
-    this.module.cache.store.Controller[this._class][keyInCache] = this;
-    this.module.cache.store.View[this._class][keyInCache] = this.view;
+/**
+ * call update method
+ */
+Gui.Form.Controller.Abstract.prototype.destruct = function () {
+
+    this.view.destruct();
+    this.module.cache.flushByClassKey(this);
+    this.removeObserver();
 };
