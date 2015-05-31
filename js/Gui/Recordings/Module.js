@@ -150,8 +150,6 @@ Gui.Recordings.prototype.refresh = function () {
 
     var windows = $('.window.recordings'), winModule = VDRest.app.getModule('Gui.Window');
 
-    this.getController('List').removeItems().recordingsList.initData();
-
     windows.each(function () {
         $(this).remove();
         VDRest.app.destroyer.pop();
@@ -162,6 +160,8 @@ Gui.Recordings.prototype.refresh = function () {
     if (windows.length > 0) {
         history.go(-windows.length);
     }
+
+    this.getController('List').removeItems().recordingsList.initData();
 
     setTimeout(function () {
         delete this.cache.store.ViewModel.List.tree;

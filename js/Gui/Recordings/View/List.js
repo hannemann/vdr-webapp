@@ -36,9 +36,11 @@ Gui.Recordings.View.List.prototype.init = function () {
 
 Gui.Recordings.View.List.prototype.render = function () {
 
-    VDRest.Abstract.View.prototype.render.call(this);
+    if (!this.isRendered) {
 
-    this.node.toggleClass('collapsed expand');
+        VDRest.Abstract.View.prototype.render.call(this);
+        this.node.toggleClass('collapsed expand');
+    }
 };
 
 /**

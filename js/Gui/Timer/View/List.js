@@ -22,9 +22,10 @@ Gui.Timer.View.List.prototype.init = function () {
  */
 Gui.Timer.View.List.prototype.render = function () {
 
-    this.node.addClass('window collapsed viewport-fullsize');
+    if (!this.isRendered) {
 
-    VDRest.Abstract.View.prototype.render.call(this);
-
-    this.node.toggleClass('collapsed expand');
+        this.node.addClass('window collapsed viewport-fullsize');
+        VDRest.Abstract.View.prototype.render.call(this);
+        this.node.toggleClass('collapsed expand');
+    }
 };
