@@ -137,6 +137,8 @@ Gui.Recordings.Controller.List.prototype.createFolderFromFile = function (file) 
     viewModel.current = file;
 
     viewModel.addToTree(viewModel.current.name, viewModel.tree);
+
+    return viewModel.directories[['root'].concat(file.name.split('~').slice(0, -1)).join('~')];
 };
 
 /**
@@ -170,6 +172,27 @@ Gui.Recordings.Controller.List.prototype.removeIfEmpty = function (path) {
     } while (path.length > 0);
 };
 
+Gui.Recordings.Controller.List.prototype.removeItems = function () {
+
+    var i,
+        directories = this.cache['List.Directory'],
+        recordings = this.cache['List.Recording'];
+
+    for (i in directories) {
+        if (directories.hasOwnProperty(i)) {
+            directories[i].destructView();
+        }
+    }
+
+    for (i in recordings) {
+        if (recordings.hasOwnProperty(i)) {
+            recordings[i].destructView();
+        }
+    }
+
+    return this;
+};
+
 /**
  * Destroy
  */
@@ -177,10 +200,11 @@ Gui.Recordings.Controller.List.prototype.destructView = function () {
 
     this.view.node.one(this.animationEndEvents, function () {
 
-        this.isHidden = true;
-        this.view.node.hide();
+        //this.isHidden = true;
+        //this.view.node.hide();
 
-        this.view.node.toggleClass('collapse collapsed');
+        //this.view.node.toggleClass('collapse collapsed');
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
     }.bind(this));
 
     this.view.node.toggleClass('collapse expand');

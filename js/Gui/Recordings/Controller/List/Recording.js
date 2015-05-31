@@ -53,8 +53,6 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
         "view" : this.view,
         "resource": this.dataModel
     });
-
-    $document.on("vdrest-api-actions.recording-updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
 };
 
 /**
@@ -73,6 +71,8 @@ Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (posi
  * dispatch view, init event handling
  */
 Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
+
+    $document.on("gui-recording.updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
 
     if (VDRest.helper.isTouchDevice) {
         this.view.node
@@ -94,6 +94,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () {
 
     this.view.node.off('click touchend touchstart touchmove mouseup mousedown ');
+    $document.off("gui-recording.updated." + this.keyInCache.toCacheKey());
 };
 
 /**
@@ -234,11 +235,11 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
 
     if (!dirToRender.view.isRendered) {
 
-        dirToRender.data.parent.data.directories.sort(this.helper().sortAlpha);
+        dirToRender.data.parent.data.directories.sort(Gui.Recordings.View.List.prototype.sortAlpha);
         dirToRender.view.setParentView(
             "root" === dirToRender.data.parent.keyInCache
             ? dirToRender.data.parent.view
-            : {"node" : dirToRender.data.parent.view.parentView.body}
+                : {"node": this.module.getController('Window.Directory', dirToRender.data.parent.keyInCache.toCacheKey()).view.body}
         );
         dirToRender.dispatchView(dirToRender.getPosition());
     }
@@ -259,6 +260,9 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
     }
 
     this.module.getController('List').removeIfEmpty(oldParent.view.getPath());
+    if (this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()]) {
+        this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()].updateAction();
+    }
 };
 
 /**

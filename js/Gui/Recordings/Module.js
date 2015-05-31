@@ -149,8 +149,7 @@ Gui.Recordings.prototype.refresh = function () {
 
     var windows = $('.window.recordings'), winModule = VDRest.app.getModule('Gui.Window');
 
-    this.getView('List').node.empty();
-    VDRest.app.getModule('Gui.Window').cache.invalidateClasses('Directory');
+    this.getController('List').removeItems().recordingsList.initData();
 
     windows.each(function () {
         $(this).remove();
@@ -164,10 +163,14 @@ Gui.Recordings.prototype.refresh = function () {
     }
 
     setTimeout(function () {
-
+        delete this.cache.store.ViewModel.List.tree;
+        delete this.cache.store.ViewModel.List.resource;
+        delete this.cache.store.ViewModel.List;
+        this.cache.invalidateClasses('List.Directory');
+        this.cache.invalidateClasses('List.Recording');
+        this.cache.invalidateClasses('Window.Directory');
+        this.cache.invalidateClasses('Window.Recording');
         this.store.getModel('List').flushCollection();
-        this.store.cache.flush();
-        this.cache.flush();
         this.store.getModel('List').initList();
         VDRest.app.getModule('Gui.Menubar')
             .getView('Default')

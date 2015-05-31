@@ -19,8 +19,6 @@ Gui.Recordings.Controller.Window.Recording.prototype.cacheKey = 'id';
  */
 Gui.Recordings.Controller.Window.Recording.prototype.init = function () {
 
-    var recording = this.getData('recording').dataModel;
-
     this.eventPrefix = 'window.recording' + this.keyInCache;
 
     this.view = this.module.getView('Window.Recording', {
@@ -30,7 +28,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.init = function () {
     this.module.getViewModel('Window.Recording', {
         "id": this.keyInCache,
         "view" : this.view,
-        "resource": recording
+        "resource": this.getData('recording').dataModel
     });
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
@@ -72,7 +70,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.dispatchView = function () 
 
     this.header = VDRest.app.getModule('Gui.Menubar').getView('Default').getHeader();
     this.oldHeader = this.header.text();
-    this.header.text(this.data.recording.data.name);
+    this.header.text(this.data.recording.dataModel.data.name.split('~').pop());
 };
 
 /**
@@ -148,6 +146,20 @@ Gui.Recordings.Controller.Window.Recording.prototype.updateRecordingAction = fun
             "target" : target,
             "eventSuffix": this.keyInCache
         });
+};
+
+/**
+ * trigger update of window
+ */
+Gui.Recordings.Controller.Window.Recording.prototype.updateAction = function () {
+
+    this.header.text(this.data.recording.dataModel.data.name.split('~').pop());
+    this.view.update();
+
+    $.event.trigger({
+        "type": "opaqueMenubar",
+        "payload": !!this.view.fanart
+    });
 };
 
 /**

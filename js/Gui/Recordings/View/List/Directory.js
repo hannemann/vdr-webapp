@@ -116,3 +116,12 @@ Gui.Recordings.View.List.Directory.prototype.renderItems = function (parentView,
         files[i].dispatchView(undefined, omitObserver);
     }
 };
+
+Gui.Recordings.View.List.Directory.prototype.destruct = function () {
+
+    this.name.remove();
+    delete this.name;
+    VDRest.Abstract.View.prototype.destruct.call(this);
+    delete this.node;
+    delete this.data;
+};

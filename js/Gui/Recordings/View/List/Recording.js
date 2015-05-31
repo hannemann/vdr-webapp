@@ -169,3 +169,24 @@ Gui.Recordings.View.List.Recording.prototype.update = function () {
 
     return this;
 };
+
+Gui.Recordings.View.List.Recording.prototype.destruct = function () {
+
+    this.name.remove();
+    delete this.name;
+    if (this.path) {
+        this.path.remove();
+        delete this.path;
+    }
+    if (this.shortText) {
+        this.shortText.remove();
+        delete this.shortText;
+    }
+    this.date.remove();
+    delete this.date;
+    this.duration.remove();
+    delete this.duration;
+    VDRest.Abstract.View.prototype.destruct.call(this);
+    delete this.node;
+    delete this.data;
+};

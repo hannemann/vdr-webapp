@@ -46,6 +46,8 @@ Gui.Recordings.ViewModel.List.prototype.init = function () {
 
     this.tree = null;
 
+    this.initial = true;
+
     this.directories = {
         "root": {
             "path": "root",
@@ -95,7 +97,8 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
 
         this.tree = this.module.getController('List.Directory', this.directories.root);
 
-        delete this.directories;
+        //delete this.directories;
+        this.initial = false;
     }
 };
 
@@ -106,7 +109,13 @@ Gui.Recordings.ViewModel.List.prototype.getTree = function () {
  */
 Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDir) {
 
-    var paths = filename.split('~'), name, childNode;
+    var paths = filename.split('~'),
+        name,
+        childNode;
+
+    if (parentDir instanceof Gui.Recordings.Controller.List.Directory) {
+        parentDir = parentDir.data;
+    }
 
     name = paths.shift();
 
@@ -124,7 +133,11 @@ Gui.Recordings.ViewModel.List.prototype.addToTree = function (filename, parentDi
         // directory not set yet
         if (!this.hasChild(name, parentDir.directories)) {
 
-            parentDir.directories.push(childNode);
+            if (this.initial) {
+                parentDir.directories.push(childNode);
+            } else {
+                parentDir.directories.push(this.module.getController('List.Directory', childNode));
+            }
         }
 
         this.addToTree(filename, childNode);
@@ -205,10 +218,15 @@ Gui.Recordings.ViewModel.List.prototype.getFile = function (path, parent, name) 
  */
 Gui.Recordings.ViewModel.List.prototype.hasChild = function (n, h) {
 
-    var i= 0, l = h.length;
+    var i = 0, l = h.length, name;
 
     for (i;i<l;i++) {
-        if (n === h[i].name) {
+        if (h[i] instanceof Gui.Recordings.Controller.List.Directory) {
+            name = h[i].data.name;
+        } else {
+            name = h[i].name;
+        }
+        if (n === name) {
             return true;
         }
     }

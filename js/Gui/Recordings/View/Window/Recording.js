@@ -54,6 +54,21 @@ Gui.Recordings.View.Window.Recording.prototype.render = function () {
 };
 
 /**
+ * update
+ * @returns {Gui.Recordings.View.Window.Recording}
+ */
+Gui.Recordings.View.Window.Recording.prototype.update = function () {
+
+    this.header.empty();
+    this.header.removeClass('has-fanart');
+    delete this.title;
+    delete this.details;
+    delete this.fanart;
+    delete this.headerContentWrapper;
+    this.decorateHeader();
+};
+
+/**
  * @return {boolean}
  */
 Gui.Recordings.View.Window.Recording.prototype.canAnimateScroll = function () {

@@ -68,3 +68,12 @@ VDRest.Recordings.Model.List.prototype.initList = function () {
         "callback": this.processCollection.bind(this)
     });
 };
+
+/**
+ * flush collection
+ */
+VDRest.Recordings.Model.List.prototype.flushCollection = function () {
+
+    this.hasCollection = false;
+    VDRest.Abstract.Model.prototype.flushCollection.call(this);
+};
