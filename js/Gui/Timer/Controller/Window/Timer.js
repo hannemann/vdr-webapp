@@ -56,9 +56,13 @@ Gui.Timer.Controller.Window.Timer.prototype.getBroadcast = function (callback) {
 
     } else {
 
-        $document.one('broadcastsloaded-' + this.data.resource.data.channel, function (e) {
+        $document.one('broadcastsloaded', function (e) {
 
             var duration = 0, candidate = null;
+
+            if (e.payload !== this.data.resource.data.channel) {
+                return;
+            }
 
             e.iterate(function (broadcast) {
 
