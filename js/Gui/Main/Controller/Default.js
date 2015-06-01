@@ -28,8 +28,8 @@ Gui.Main.Controller.Default.prototype.addObserver = function () {
         this.view.blocker.on('touchstart', function (e) {e.preventDefault(); });
     }
 
-    $window.on('block-gui', this.blockGui.bind(this));
-    $window.on('unblock-gui', this.unblockGui.bind(this));
+    //$window.on('block-gui', this.blockGui.bind(this));
+    //$window.on('unblock-gui', this.unblockGui.bind(this));
 };
 
 Gui.Main.Controller.Default.prototype.getMenubarController = function () {
