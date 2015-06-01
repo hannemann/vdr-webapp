@@ -33,6 +33,4 @@ Gui.EpgSearch.Controller.Broadcast.prototype.init = function () {
     });
 
     this.view.decorate();
-
-    this.addObserver();
 };

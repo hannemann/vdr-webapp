@@ -13,6 +13,11 @@ Gui.Epg.Controller.Broadcasts = function () {};
 Gui.Epg.Controller.Broadcasts.prototype = new VDRest.Abstract.Controller();
 
 /**
+ * @type {string}
+ */
+Gui.Epg.Controller.Broadcasts.prototype.itemController = 'Broadcasts.List.Broadcast';
+
+/**
  * initialize view and datamodel
  */
 Gui.Epg.Controller.Broadcasts.prototype.init = function () {
@@ -132,7 +137,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
         return;
     }
 
-    this.requestedBroadcast = this.module.getController('Broadcasts.List.Broadcast', broadcast.dataset.key);
+    this.requestedBroadcast = this.module.getController(this.itemController, broadcast.dataset.key);
 
     activeAnimate.applyAnimation(e, broadcast);
 
@@ -171,7 +176,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
             if ("undefined" !== typeof this.clickTimeout) {
                 window.clearTimeout(this.clickTimeout);
             }
-            if (!VDRest.helper.canCancelEvent) {
+            if (!VDRest.helper.canCancelEvent && "undefined" !== typeof this.requestedBroadcast) {
                 this.requestedBroadcast.requestWindowAction();
             }
             this.requestedBroadcast = undefined;

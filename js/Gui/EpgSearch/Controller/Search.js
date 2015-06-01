@@ -5,10 +5,14 @@
 Gui.EpgSearch.Controller.Search = function () {};
 
 /**
- *
- * @type {VDRest.Abstract.Controller}
+ * @type {Gui.Epg.Controller.Broadcasts}
  */
-Gui.EpgSearch.Controller.Search.prototype = new VDRest.Abstract.Controller();
+Gui.EpgSearch.Controller.Search.prototype = new Gui.Epg.Controller.Broadcasts();
+
+/**
+ * @type {string}
+ */
+Gui.EpgSearch.Controller.Search.prototype.itemController = 'Broadcast';
 
 /**
  * initialize list
@@ -40,6 +44,13 @@ Gui.EpgSearch.Controller.Search.prototype.dispatchView = function () {
 Gui.EpgSearch.Controller.Search.prototype.addObserver = function () {
 
     $document.on('epgsearchcomplete', this.initResults.bind(this));
+
+    this.pointerStartHandler = this.handleDown.bind(this);
+    this.pointerMoveHandler = this.handleMove.bind(this);
+    this.pointerEndHandler = this.handleUp.bind(this);
+    this.view.node[0].addEventListener(VDRest.helper.pointerStart, this.pointerStartHandler);
+    this.view.node[0].addEventListener(VDRest.helper.pointerMove, this.pointerMoveHandler);
+    this.view.node[0].addEventListener(VDRest.helper.pointerEnd, this.pointerEndHandler);
 };
 
 /**
@@ -48,6 +59,22 @@ Gui.EpgSearch.Controller.Search.prototype.addObserver = function () {
 Gui.EpgSearch.Controller.Search.prototype.removeObserver = function () {
 
     $document.off('epgsearchcomplete');
+
+    this.view.node[0].removeEventListener(VDRest.helper.pointerStart, this.pointerStartHandler);
+    this.view.node[0].removeEventListener(VDRest.helper.pointerMove, this.pointerMoveHandler);
+    this.view.node[0].removeEventListener(VDRest.helper.pointerEnd, this.pointerEndHandler);
+};
+
+
+/**
+ * handle mouseup
+ * @param {jQuery.Event} e
+ */
+Gui.EpgSearch.Controller.Search.prototype.handleUp = function (e) {
+
+    if (!(e.target instanceof HTMLInputElement)) {
+        Gui.Epg.Controller.Broadcasts.prototype.handleUp.call(this, e);
+    }
 };
 
 /**
@@ -63,9 +90,11 @@ Gui.EpgSearch.Controller.Search.prototype.initResults = function (resultCollecti
         this.broadcastList[i].destructView();
     }
 
+    this.broadcastList = [];
+
     resultCollection.iterate(function (dataModel) {
 
-        this.broadcastList.push(this.module.getController('Broadcast', {
+        this.broadcastList.push(this.module.getController(this.itemController, {
             'channel' : dataModel.data.channel,
             'id' : dataModel.data.id,
             "parent" : this,

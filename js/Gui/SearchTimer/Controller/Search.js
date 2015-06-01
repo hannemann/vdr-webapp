@@ -6,54 +6,14 @@ Gui.SearchTimer.Controller.Search = function () {
 };
 
 /**
- *
- * @type {VDRest.Abstract.Controller}
+ * @type {Gui.EpgSearch.Controller.Search}
  */
-Gui.SearchTimer.Controller.Search.prototype = new VDRest.Abstract.Controller();
+Gui.SearchTimer.Controller.Search.prototype = new Gui.EpgSearch.Controller.Search();
 
 /**
- * initialize list
+ * @type {string}
  */
-Gui.SearchTimer.Controller.Search.prototype.init = function () {
-
-    this.broadcastList = [];
-
-    this.eventPrefix = 'SearchTimerTest';
-
-    this.view = this.module.getView('Search');
-
-    this.view.setParentView(
-        VDRest.app.getModule('Gui.Viewport').getView('Default')
-    );
-};
-
-/**
- * iterate resultCollection, dispatch results
- * @param resultCollection
- */
-Gui.SearchTimer.Controller.Search.prototype.initResults = function (resultCollection) {
-
-    var i = 0, l = this.broadcastList.length;
-
-    for (i; i < l; i++) {
-
-        this.broadcastList[i].destructView();
-    }
-
-    this.broadcastList = [];
-
-    resultCollection.iterate(function (dataModel) {
-
-        this.broadcastList.push(this.module.getController('Broadcast', {
-            'channel': dataModel.data.channel,
-            'id': dataModel.data.id,
-            "parent": this,
-            "dataModel": dataModel
-        }));
-
-        this.broadcastList[this.broadcastList.length - 1].dispatchView();
-    }.bind(this));
-};
+Gui.SearchTimer.Controller.Search.prototype.eventPrefix = 'SearchTimerTest';
 
 /**
  * destruct view
