@@ -3,6 +3,17 @@ Gui.Window.Controller.ScrollAnimateHeader = function () {
 
 Gui.Window.Controller.ScrollAnimateHeader.prototype = new Gui.Window.Controller.Abstract();
 
+/**
+ * initialize
+ */
+Gui.Window.Controller.ScrollAnimateHeader.prototype.init = function () {
+
+    Gui.Window.Controller.Abstract.prototype.init.call(this);
+
+    this.menubar = VDRest.app.getModule('Gui.Menubar').getView('Default').node[0];
+    this.menubarHidden = true;
+};
+
 
 Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
 
@@ -25,6 +36,31 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
         });
         document.body.style.overflow = 'hidden';
     }
+};
+
+/**
+ * add event listeners
+ */
+Gui.Window.Controller.ScrollAnimateHeader.prototype.addObserver = function () {
+
+    if (this.view.fanart && !VDRest.helper.touchMoveCapable) {
+        this.scrollHandler = this.onscrollAction.bind(this);
+        this.view.node.on('scroll', this.scrollHandler);
+    }
+
+    Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
+};
+
+/**
+ * remove event listeners
+ */
+Gui.Window.Controller.ScrollAnimateHeader.prototype.removeObserver = function () {
+
+    if (this.view.fanart && !VDRest.helper.isTouchDevice) {
+        this.view.node.off('scroll', this.scrollHandler);
+    }
+
+    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
 
 /**
@@ -58,6 +94,7 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.onscrollAction = function (e
                 "payload": false
             });
             this.menubarHidden = false;
+
         } else if (n >= this.menubar.offsetHeight && !this.menubarHidden) {
 
             $.event.trigger({

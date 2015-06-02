@@ -31,10 +31,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.init = function () {
         "resource": this.getData('recording').dataModel
     });
 
-    Gui.Window.Controller.Abstract.prototype.init.call(this);
-
-    this.menubar = VDRest.app.getModule('Gui.Menubar').getView('Default').node[0];
-    this.menubarHidden = true;
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.init.call(this);
 };
 
 /**
@@ -70,12 +67,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.addObserver = function () {
 
     $document.on('persistrecordingschange-' + this.keyInCache, this.updateRecordingAction.bind(this));
 
-    if (this.view.fanart && !VDRest.helper.touchMoveCapable) {
-        this.scrollHandler = this.onscrollAction.bind(this);
-        this.view.node.on('scroll', this.scrollHandler);
-    }
-
-    Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.addObserver.call(this);
 };
 /**
  * add event listeners
@@ -92,11 +84,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.removeObserver = function (
 
     $document.off('persistrecordingschange-' + this.keyInCache);
 
-    if (this.view.fanart && !VDRest.helper.isTouchDevice) {
-        this.view.node.off('scroll', this.scrollHandler);
-    }
-
-    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.removeObserver.call(this);
 };
 
 /**

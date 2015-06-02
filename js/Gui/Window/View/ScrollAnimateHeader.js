@@ -13,6 +13,8 @@ Gui.Window.View.ScrollAnimateHeader.prototype.render = function () {
     Gui.Window.View.Abstract.prototype.render.call(this);
 
     this.scrollShiftWrapper = $('<div class="scroll-shift">').appendTo(this.header);
+
+    this.scrollShiftShadow = $('<div class="scroll-shift-shadow">').appendTo(this.scrollShiftWrapper);
 };
 
 Gui.Window.View.ScrollAnimateHeader.prototype.canAnimateScroll = function () {

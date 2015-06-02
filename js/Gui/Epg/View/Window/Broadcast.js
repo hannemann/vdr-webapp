@@ -9,7 +9,7 @@ Gui.Epg.View.Window.Broadcast = function () {};
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Epg.View.Window.Broadcast.prototype = new Gui.Window.View.Abstract();
+Gui.Epg.View.Window.Broadcast.prototype = new Gui.Window.View.ScrollAnimateHeader();
 
 /**
  * cache key
@@ -37,6 +37,12 @@ Gui.Epg.View.Window.Broadcast.prototype.isModalTransparent = true;
  */
 Gui.Epg.View.Window.Broadcast.prototype.render = function () {
 
+    this.node.addClass('collapsed document-fullsize');
+
+    this.fanart = this.getEpisodeImage(window.innerWidth) || this.getFanart(window.innerWidth);
+
+    Gui.Window.View.ScrollAnimateHeader.prototype.render.call(this);
+
     this.addTitle();
 
     this.addMainImage();
@@ -48,13 +54,13 @@ Gui.Epg.View.Window.Broadcast.prototype.render = function () {
         this.addComponents()
     }
 
-    this.node.addClass('collapsed viewport-fullsize');
-
-    Gui.Window.View.Abstract.prototype.render.call(this);
-
     this.addClasses();
 
     this.node.toggleClass('collapsed expand');
+
+    if (this.canAnimateScroll()) {
+        this.node.addClass('touchscroll');
+    }
 };
 
 /**
@@ -63,7 +69,7 @@ Gui.Epg.View.Window.Broadcast.prototype.render = function () {
  */
 Gui.Epg.View.Window.Broadcast.prototype.addClasses = function () {
 
-    var classNames = ['broadcast'];
+    var classNames = ['broadcast', 'scroll-animate-header'];
 
     if (this.getTimerExists()) {
         this.handleTimerExists(true);
@@ -98,6 +104,7 @@ Gui.Epg.View.Window.Broadcast.prototype.getTabConfig = function () {
                 "content": function (content) {
 
                     $(content).append(me.getDescription());
+                    me.detailsTab = content;
                 },
                 "default": true
             },
@@ -232,9 +239,9 @@ Gui.Epg.View.Window.Broadcast.prototype.renderWebTab = function () {
  */
 Gui.Epg.View.Window.Broadcast.prototype.addTitle = function () {
 
-    this.title = $('<h2 class="window-title left">')
+    this.title = $('<h2 class="window-title">')
         .text(this.getTitle())
-        .appendTo(this.header);
+        .appendTo(this.scrollShiftWrapper);
 
     return this;
 };
@@ -245,11 +252,16 @@ Gui.Epg.View.Window.Broadcast.prototype.addTitle = function () {
  */
 Gui.Epg.View.Window.Broadcast.prototype.addMainImage = function () {
 
-    var src = this.getEpisodeImage(320) || this.getEpgImage() || this.getFanart(320);
+    var src = this.fanart || this.getEpgImage();
 
     if (src) {
         this.image = $('<img class="window-header-image right" src="' + src + '">')
-            .appendTo(this.header);
+            .appendTo(this.scrollShiftWrapper);
+    }
+
+    if (this.fanart) {
+        this.header.addClass('has-fanart');
+        this.image.addClass('fanart');
     }
 
     return this;
@@ -282,7 +294,7 @@ Gui.Epg.View.Window.Broadcast.prototype.animateImage = function () {
  */
 Gui.Epg.View.Window.Broadcast.prototype.addDetails = function () {
 
-    this.details = $('<ul class="window-header-details">');
+    this.details = $('<ul>');
 
     if (this.hasShortText()) {
 
@@ -290,7 +302,6 @@ Gui.Epg.View.Window.Broadcast.prototype.addDetails = function () {
             .text(this.getShortText())
             .appendTo(this.details);
     }
-
 
     if (this.hasContents()) {
 
@@ -302,8 +313,10 @@ Gui.Epg.View.Window.Broadcast.prototype.addDetails = function () {
             +this.getStartTime()
             +'&nbsp;-&nbsp'
             +this.getEndTime()+'</li>'
-        )
-        .appendTo(this.header);
+    );
+
+    this.details.addClass('window-' + (this.fanart ? 'body' : 'header') + '-details');
+    this.details[(this.fanart ? 'prependTo' : 'appendTo')]((this.fanart ? this.detailsTab : this.scrollShiftWrapper));
 
     return this;
 };
@@ -314,12 +327,15 @@ Gui.Epg.View.Window.Broadcast.prototype.addDetails = function () {
  */
 Gui.Epg.View.Window.Broadcast.prototype.addComponents = function () {
 
-    this.header
-        .append(
-            '<ul class="window-header-components clearer right"><li class="left">'
-            +this.getComponents().join('</li><li class="left">')
-            +'</li></ul>'
-        );
+    this.components = $(
+        '<ul class="window-header-components clearer right"><li class="left">'
+        + this.getComponents().join('</li><li class="left">')
+        + '</li></ul>'
+    ).appendTo(this.scrollShiftWrapper);
+
+    if (this.fanart) {
+        this.components.addClass('bottom');
+    }
 
     return this;
 };

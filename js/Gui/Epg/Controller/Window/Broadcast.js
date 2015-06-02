@@ -7,7 +7,7 @@ Gui.Epg.Controller.Window.Broadcast = function () {};
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Epg.Controller.Window.Broadcast.prototype = new Gui.Window.Controller.Abstract();
+Gui.Epg.Controller.Window.Broadcast.prototype = new Gui.Window.Controller.ScrollAnimateHeader();
 
 /**
  * cache key
@@ -29,8 +29,6 @@ Gui.Epg.Controller.Window.Broadcast.prototype.init = function () {
         "channel" : this.data.channel
     });
 
-    Gui.Window.Controller.Abstract.prototype.init.call(this);
-
     this.module.getViewModel('Window.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel,
@@ -41,6 +39,8 @@ Gui.Epg.Controller.Window.Broadcast.prototype.init = function () {
     this.view.setParentView(
         VDRest.app.getModule('Gui.Viewport').getView('Default')
     );
+
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.init.call(this);
 };
 
 /**
@@ -52,11 +52,15 @@ Gui.Epg.Controller.Window.Broadcast.prototype.dispatchView = function () {
         "type" : "hideContextMenu"
     });
 
-    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView.call(this);
 
     this.handleTimer();
 
     this.addObserver();
+
+    this.header = VDRest.app.getModule('Gui.Menubar').getView('Default').getHeader();
+    this.oldHeader = this.header.text();
+    this.header.text(this.data.dataModel.data.title);
 };
 
 /**
@@ -72,7 +76,12 @@ Gui.Epg.Controller.Window.Broadcast.prototype.addObserver = function () {
     this.view.recordButton.on('click', this.toggleTimerAction.bind(this));
     this.view.editButton.on('click', this.editTimerAction.bind(this));
 
-    Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
+    if (this.view.fanart && !VDRest.helper.touchMoveCapable) {
+        this.scrollHandler = this.onscrollAction.bind(this);
+        this.view.node.on('scroll', this.scrollHandler);
+    }
+
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.addObserver.call(this);
 };
 /**
  * add event listeners
@@ -86,7 +95,7 @@ Gui.Epg.Controller.Window.Broadcast.prototype.removeObserver = function () {
     this.view.recordButton.off('click');
     this.view.editButton.off('click');
 
-    Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.removeObserver.call(this);
 };
 
 /**
@@ -169,7 +178,7 @@ Gui.Epg.Controller.Window.Broadcast.prototype.destructView = function () {
     // remove on animation end
     this.view.node.one(this.animationEndEvents, function () {
 
-        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+        Gui.Window.Controller.ScrollAnimateHeader.prototype.destructView.call(me);
 
         $.event.trigger({
             "type" : "showContextMenu"
@@ -177,4 +186,6 @@ Gui.Epg.Controller.Window.Broadcast.prototype.destructView = function () {
     });
     // apply animation
     this.view.node.toggleClass('collapse expand');
+
+    this.header.text(this.oldHeader);
 };

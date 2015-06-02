@@ -219,6 +219,13 @@ div#time-line .ql.hour {
     display: block;
 }
 
+.window.broadcast .window-header-image {
+    margin-left: 8px;
+}
+
+.window.broadcast .window-header-image.expand {
+    margin-left: 0;
+}
 
 #epg *:after,
 #epg *:before {

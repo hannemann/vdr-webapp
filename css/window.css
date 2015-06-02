@@ -93,10 +93,6 @@
     bottom: 0;
 }
 
-.document-fullsize .window-header.has-fanart .wrapper {
-    top: 12px;
-    left: 8px;
-}
 .window-header.has-fanart h2,
 .window-header.has-fanart ul {
     position: relative;
@@ -113,12 +109,29 @@
 }
 
 .document-fullsize .window-header.has-fanart h2 {
-    left: 48px;
-    margin-bottom: 4px;
+    position: absolute;
+    bottom: 4px;
+    left: 8px;
+    width: calc(100% - 60px);
+    width: -webkit-calc(100% - 60px);
+    text-shadow: none;
 }
 
 .document-fullsize .window-header.has-fanart ul {
-    left: 0;
+    top: 12px;
+    left: 12px;
+    font-weight: bold;
+}
+
+.document-fullsize .window-header.has-fanart ul.right {
+    left: auto;
+    right: 12px;
+}
+
+.document-fullsize .window-header.has-fanart ul.bottom {
+    top: auto;
+    bottom: 12px;
+    position: absolute;
 }
 .window-header.has-fanart .fanart {
     position: absolute;
@@ -127,10 +140,30 @@
     max-width: 100%;
     backface-visibility: hidden;
     perspective: 1000px;
+    margin: 0;
+}
+
+.scroll-shift-shadow {
+    display: none;
+}
+
+.window-header.has-fanart .scroll-shift-shadow {
+    display: block;
+    position: absolute;
+    box-shadow: inset 0 -60px 120px rgba(0, 0, 0, 0.9);
+    bottom: 0;
+    left: -50px;
+    right: -50px;
+    height: 200%;
+    z-index: 1;
 }
 
 .window-body {
     white-space: pre-wrap;
+}
+
+.window-header.has-fanart ~ .window-body .window-body-details {
+    margin-bottom: 8px;
 }
 
 /* Broadcast window related styles */

@@ -167,7 +167,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTitle = function () {
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
 
     var img,
-        src = this.getEpisodeImage(100) || this.getEpgImage() || this.getFanart(100);
+        src = this.getEpisodeImage(100) || this.getFanart(100) || this.getEpgImage();
 
     if (src) {
 

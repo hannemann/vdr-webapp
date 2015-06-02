@@ -44,7 +44,7 @@ Gui.Recordings.View.Window.Recording.prototype.render = function () {
 
     Gui.Window.View.ScrollAnimateHeader.prototype.render.call(this);
 
-    this.addClasses().decorateHeader();
+    this.addClasses().decorateHeader().addDetails();
 
     this.node.toggleClass('collapsed expand');
 
@@ -64,8 +64,7 @@ Gui.Recordings.View.Window.Recording.prototype.update = function () {
     delete this.title;
     delete this.details;
     delete this.fanart;
-    delete this.headerContentWrapper;
-    this.decorateHeader();
+    this.decorateHeader().addDetails();
 };
 
 /**
@@ -85,8 +84,7 @@ Gui.Recordings.View.Window.Recording.prototype.addClasses = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.decorateHeader = function () {
 
-    this.headerContentWrapper = $('<div class="wrapper left">').appendTo(this.scrollShiftWrapper);
-    this.addTitle().addDetails().addFanart();
+    this.addTitle().addFanart();
 
     return this;
 };
@@ -99,7 +97,7 @@ Gui.Recordings.View.Window.Recording.prototype.addTitle = function () {
 
     this.title = $('<h2 class="window-title left">')
         .text(this.getEventTitle())
-        .appendTo(this.headerContentWrapper);
+        .appendTo(this.scrollShiftWrapper);
 
     return this;
 };
@@ -110,8 +108,7 @@ Gui.Recordings.View.Window.Recording.prototype.addTitle = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
 
-    this.details = $('<ul class="window-header-details">')
-        .appendTo(this.headerContentWrapper);
+    this.details = $('<ul>');
 
     if (this.hasEventShortText()) {
 
@@ -127,6 +124,9 @@ Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
     $('<li>')
         .text(this.getDurationString())
         .appendTo(this.details);
+
+    this.details.addClass('window-' + (this.fanart ? 'body' : 'header') + '-details');
+    this.details[(this.fanart ? 'prependTo' : 'appendTo')]((this.fanart ? this.detailsTab : this.scrollShiftWrapper));
 
     return this;
 };
@@ -178,6 +178,7 @@ Gui.Recordings.View.Window.Recording.prototype.getTabConfig = function () {
                 "content": function (content) {
 
                     $(content).append(me.getEventDescription());
+                    me.detailsTab = content;
                 },
                 "default": true
             },
