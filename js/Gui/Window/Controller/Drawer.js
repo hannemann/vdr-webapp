@@ -55,9 +55,9 @@ Gui.Window.Controller.Drawer.prototype.dispatchView = function () {
 
     if (!this.isDispatched) {
 
-        document.body.classList.add('drawer');
-
         Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+
+        this.view.modalOverlay[0].classList.add('drawer');
 
         this.addObserver();
 
@@ -78,14 +78,14 @@ Gui.Window.Controller.Drawer.prototype.triggerAnimation = function () {
 
     if (!this.isDispatched) {
 
-        document.body.classList.add('show');
+        this.view.modalOverlay[0].classList.add('show');
         this.isDispatched = true;
         this.addNodeObserver();
 
     } else {
 
         this.removeShowClasses();
-        document.body.classList.add('hide');
+        this.view.modalOverlay[0].classList.add('hide');
         this.view.node.one(this.transitionEndEvents, this.resetTransition.bind(this));
         this.resetTransform();
         this.isDispatched = false;
@@ -239,7 +239,7 @@ Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 Gui.Window.Controller.Drawer.prototype.triggerPullStart = function () {
 
     this.data.deltaTouch = 0;
-    document.body.classList.add('pull');
+    this.view.modalOverlay[0].classList.add('pull');
     $('body').on('touchmove.drawer', this.touchMove.bind(this))
         .one('touchend', this.touchEnd.bind(this));
     this.hasTouchEndObserver = true;
@@ -306,7 +306,7 @@ Gui.Window.Controller.Drawer.prototype.touchEnd = function (e) {
         remainDuration;
 
     this.touchend = e.originalEvent.changedTouches[0].clientX;
-    document.body.classList.remove('pull');
+    this.view.modalOverlay[0].classList.remove('pull');
     $('body').off('touchmove.drawer');
     this.view.node.off('touchmove.drawer touchend');
 
@@ -341,7 +341,7 @@ Gui.Window.Controller.Drawer.prototype.exposeDrawer = function () {
         this.view.node.one(this.transitionEndEvents, this.addNodeObserver.bind(this));
         this.view.node.one(this.transitionEndEvents, this.resetTransition.bind(this));
     }
-    document.body.classList.add('show');
+    this.view.modalOverlay[0].classList.add('show');
     this.resetTransform();
     this.hasTouchEndObserver = false;
 };
@@ -373,8 +373,8 @@ Gui.Window.Controller.Drawer.prototype.resetTransition = function () {
  * @returns {Gui.Window.Controller.Drawer}
  */
 Gui.Window.Controller.Drawer.prototype.removeShowClasses = function () {
-    document.body.classList.remove('pull');
-    document.body.classList.remove('show');
+    this.view.modalOverlay[0].classList.remove('pull');
+    this.view.modalOverlay[0].classList.remove('show');
     return this;
 };
 
@@ -451,10 +451,10 @@ Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
 
-    document.body.classList.remove('hide');
+    this.view.modalOverlay[0].classList.remove('hide');
     this.removeShowClasses();
 
-    document.body.classList.remove('drawer');
+    this.view.modalOverlay[0].classList.remove('drawer');
     this.nextPos = -this.getMaxWidth();
 
     $.event.trigger({

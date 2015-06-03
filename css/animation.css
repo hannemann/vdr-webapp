@@ -111,12 +111,14 @@
 .drawer.show #menubar .drawer-indicator {
     width: 5px;
 }
-.drawer.show #viewport .modal-overlay {
+
+#viewport .drawer.show.modal-overlay {
     transition: background .6s ease-out;
     -webkit-transition: background .6s ease-out;
     background: rgba(0,0,0,0.5);
 }
-.drawer.hide #viewport .modal-overlay {
+
+#viewport .drawer.hide.modal-overlay {
     transition: background .6s ease-out;
     -webkit-transition: background .6s ease-out;
     background: rgba(0,0,0,0);
