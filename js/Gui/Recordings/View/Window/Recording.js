@@ -136,24 +136,27 @@ Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.addFanart = function () {
 
-    var fanartUrl, media = this.getAdditionalMedia();
+    var media = this.getAdditionalMedia(),
+        width = window.innerWidth;
 
     if (media) {
 
         if (media.series_id) {
 
-            if (media.fanarts && media.fanarts[0] && media.fanarts[0].path)
+            if (media.fanarts && media.fanarts[0] && media.fanarts[0].path) {
 
-            fanartUrl = this.scraperImageUrl + media.fanarts[0].path;
+                this.fanart = this.scraperImageUrl + 'width/' + width + '/' + media.fanarts[0].path;
+            }
 
         } else if (media.fanart) {
 
-            fanartUrl = this.scraperImageUrl + media.fanart;
+            this.fanart = this.scraperImageUrl + 'width/' + width + '/' + media.fanart;
         }
-        if (fanartUrl) {
+        if (this.fanart) {
 
-            this.fanart = $('<img>').addClass('fanart').attr('src', fanartUrl).appendTo(this.scrollShiftWrapper);
-
+            this.scrollShiftWrapper.css({
+                "background-image": 'url(' + this.fanart + ')'
+            });
             this.header.addClass('has-fanart');
         }
     }

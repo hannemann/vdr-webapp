@@ -254,14 +254,16 @@ Gui.Epg.View.Window.Broadcast.prototype.addMainImage = function () {
 
     var src = this.fanart || this.getEpgImage();
 
-    if (src) {
+    if (!this.fanart && src) {
         this.image = $('<img class="window-header-image right" src="' + src + '">')
             .appendTo(this.scrollShiftWrapper);
     }
 
     if (this.fanart) {
+        this.scrollShiftWrapper.css({
+            "background-image": 'url(' + this.fanart + ')'
+        });
         this.header.addClass('has-fanart');
-        this.image.addClass('fanart');
     }
 
     return this;
