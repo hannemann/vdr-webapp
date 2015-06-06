@@ -222,7 +222,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "osdDelay"              :   100,
     "osdLoadInterval"       :   2000,
     "showImageInEpgView": "true",
-    "firstTime": "true"
+    "firstTime": "true",
+    "indicateChannelHD": "false"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -328,6 +329,11 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "gui",
         "type" : "boolean",
         "label" : "Show images in EPG view"
+    },
+    "indicateChannelHD": {
+        "category": "gui",
+        "type": "boolean",
+        "label": "Indicate HD Channels"
     },
     "language" : {
         "category" : "gui",

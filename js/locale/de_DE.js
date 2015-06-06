@@ -21,6 +21,7 @@ VDRest.app.de_DE = {
     "Toggle active state": "Aktivieren / Deaktivieren",
     "Activate": "Aktivieren",
     "Deactivate": "Deaktivieren",
+    "Indicate HD Channels": "HD Kanäle markieren",
     "Configuration" : "Konfiguration",
     "Reload App" : "Neu Laden",
     "EPG Search" : "EPG Suche",

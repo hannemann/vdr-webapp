@@ -234,6 +234,19 @@ div#time-line .ql.hour {
     border-radius: 5px;
 }
 
+#epg .channel[data-hd="true"]:before {
+    content: 'HD';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: rgb(115, 115, 115);
+    font-weight: bold;
+    font-size: 9px;
+    background-color: rgba(255, 255, 255, .5);
+    padding: 0 1px;
+    border-radius: 11px;
+}
+
 /* Channel view, EPG Searchresults */
 
 .epg-search-view {

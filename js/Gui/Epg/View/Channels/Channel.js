@@ -33,7 +33,7 @@ Gui.Epg.View.Channels.Channel.prototype.setAttributes = function () {
 
 Gui.Epg.View.Channels.Channel.prototype.addLogo = function () {
 
-    var image = this.getImage();
+    var image = this.getImage(), name = this.getName();
 
     if (image) {
 
@@ -43,8 +43,12 @@ Gui.Epg.View.Channels.Channel.prototype.addLogo = function () {
             "background-image" : "url(" + image + ")"
         });
 
+        if (VDRest.config.getItem('indicateChannelHD') && name.match(/HD$/)) {
+            this.node[0].dataset['hd'] = "true";
+        }
+
     } else {
-        this.node.text(this.getName());
+        this.node.text(name);
     }
 
     image.preload = undefined;
