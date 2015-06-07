@@ -170,13 +170,19 @@ Gui.Menubar.Controller.Default.prototype.showContextMenu = function () {
  */
 Gui.Menubar.Controller.Default.prototype.isStartPage = function () {
 
-    var w = VDRest.app.getModule('Gui.Window'), c = w.getLastRegister();
+    var w = VDRest.app.getModule('Gui.Window'),
+        c = w.getLastRegister(),
+        count = w.count();
 
     if (c instanceof Gui.Window.Controller.Drawer) {
         return true;
     }
 
-    return ( VDRest.config.getItem('start') === VDRest.app.getCurrent() && w.count() === 0 ) || "undefined" !== typeof this.initial
+    if (c instanceof Gui.Video.Controller.Player) {
+        count--;
+    }
+
+    return ( VDRest.config.getItem('start') === VDRest.app.getCurrent() && count === 0 ) || "undefined" !== typeof this.initial
 };
 
 /**

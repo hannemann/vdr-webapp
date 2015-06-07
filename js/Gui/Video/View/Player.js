@@ -137,15 +137,9 @@ Gui.Video.View.Player.prototype.bitrates = [
 Gui.Video.View.Player.prototype.init = function () {
 
     this.node = $('<div class="video-player-wrapper">');
-    this.player = $('<video preload="none" class="normal-size">');
-    this.video = this.player.get(0);
     this.controls = $('<div class="html5-player-controls show">');
     this.controls.attr('data-animate', 'opacity');
     this.defaultTitle = $('title').text();
-
-    if (location.host != VDRest.config.getItem('host')) {
-        this.player.prop('crossOrigin', 'anonymous');
-    }
 
     $('body').addClass('has-video-player');
 };
@@ -162,7 +156,6 @@ Gui.Video.View.Player.prototype.render = function () {
     this.addClasses();
 
     this.node.toggleClass('collapsed expand');
-    this.setDefaultPoster();
 
     this.sizeList.css({
         "top": - this.sizeList.find('.item.selected').position().top + 'px'
@@ -178,21 +171,9 @@ Gui.Video.View.Player.prototype.render = function () {
  */
 Gui.Video.View.Player.prototype.initPlayer = function () {
 
-    this.player.appendTo(this.node);
     this.initControls().initOsd();
 
     return this;
-};
-
-/**
- * set poster with icon
- */
-Gui.Video.View.Player.prototype.setDefaultPoster = function () {
-
-    this.player.attr(
-        'poster',
-        this.module.getHelper('Player').defaultPoster(this.video)
-    );
 };
 
 /**
@@ -375,7 +356,7 @@ Gui.Video.View.Player.prototype.addVolumeControl = function () {
 Gui.Video.View.Player.prototype.setInitialVolume = function () {
 
     var volume = VDRest.config.getItem('html5VideoPlayerVol') || 1;
-    this.video.volume = parseFloat(volume);
+    this.module.getController('Player.Video').setVolume(parseFloat(volume));
     this.updateVolumeIndicator(this.getVolumePercentage());
 
     return this;
@@ -450,7 +431,7 @@ Gui.Video.View.Player.prototype.getVolumeSliderHeight = function () {
  */
 Gui.Video.View.Player.prototype.getVolumePercentage = function () {
 
-    return parseInt(this.player.get(0).volume * 100, 10);
+    return parseInt(this.module.getController('Player.Video').getVolume() * 100, 10);
 };
 
 /**
@@ -569,7 +550,7 @@ Gui.Video.View.Player.prototype.getTimelinePercentage = function () {
     if (this.data.isVideo) {
         percentage = 100 - (
             100 * (
-                this.getData('startTime') + this.video.currentTime
+                this.getData('startTime') + this.module.getController('Player.Video').getCurrentTime()
             ) / this.data.sourceModel.getData('duration')
         );
     } else if (this.data.isTv) {
@@ -684,7 +665,7 @@ Gui.Video.View.Player.prototype.updateProgress = function (time) {
 
     if (isNaN(time)) {
         if (this.data.isVideo) {
-            time = this.getData('startTime') + this.video.currentTime;
+            time = this.getData('startTime') + this.module.getController('Player.Video').getCurrentTime();
         } else {
             now = parseInt(new Date().getTime() / 1000, 10);
             broadcast = this.getData('current_broadcast');
@@ -937,7 +918,7 @@ Gui.Video.View.Player.prototype.addClasses = function () {
  */
 Gui.Video.View.Player.prototype.destruct = function () {
 
-    var me = this, player = this.player.get(0);
+    var me = this;
 
     if ("undefined" != typeof this.changeTitleTimeout) {
         clearTimeout(this.changeTitleTimeout);
@@ -952,9 +933,6 @@ Gui.Video.View.Player.prototype.destruct = function () {
         clearTimeout(this.infoAreaScrollTimeout);
         this.infoAreaScrollTimeout = undefined;
     }
-
-    player.pause();
-    this.player.prop('src', false);
 
     Gui.Window.View.Abstract.prototype.destruct.call(me);
     $('body').removeClass('has-video-player');

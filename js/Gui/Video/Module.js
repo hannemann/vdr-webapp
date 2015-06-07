@@ -39,7 +39,7 @@ Gui.Video.prototype.hasVideoPlayer = function () {
 
 /**
  * store instance of video player
- * @param {Gui.Window.Controller.Player} controller
+ * @param {Gui.Video.Controller.Player} controller
  */
 Gui.Video.prototype.setVideoPlayer = function (controller) {
 

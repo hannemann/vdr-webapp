@@ -132,6 +132,10 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
     document.onselectstart = function () {
         return true
     };
+
+    document.oncontextmenu = function () {
+        return true
+    };
 };
 
 /**
@@ -141,6 +145,10 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
 Gui.Epg.Controller.Channels.Channel.prototype.handleDown = function (e) {
 
     document.onselectstart = function () {
+        return false
+    };
+
+    document.oncontextmenu = function () {
         return false
     };
 
