@@ -26,6 +26,22 @@ Gui.Video.View.Player.Video.prototype.init = function () {
 Gui.Video.View.Player.Video.prototype.render = function () {
 
     this.node.prependTo(this.parentView.node);
+    this.addThrobber();
+};
+
+/**
+ * add throbber
+ */
+Gui.Video.View.Player.Video.prototype.addThrobber = function () {
+
+    this.throbber = $(
+        '<div style="background-image: url('
+        + VDRest.image.getThrobber()
+        + ')" class="throbber">'
+    );
+    this.throbber.appendTo(this.data.player.view.node);
+
+    return this;
 };
 
 /**

@@ -18,7 +18,9 @@ Gui.Video.Controller.Player.Video.prototype.noTimeUpdateWorkaround = true;
  */
 Gui.Video.Controller.Player.Video.prototype.init = function () {
 
-    this.view = this.module.getView('Player.Video', this.data);
+    this.view = this.module.getView('Player.Video', {
+        "player" : this.data.parent
+    });
 };
 
 /**
@@ -26,9 +28,7 @@ Gui.Video.Controller.Player.Video.prototype.init = function () {
  */
 Gui.Video.Controller.Player.Video.prototype.dispatchView = function () {
 
-    this.view.setParentView({
-        "node" : this.module.getVideoPlayer().view.node
-    });
+    this.view.setParentView(this.data.parent.view);
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.setDefaultPoster();
@@ -127,6 +127,15 @@ Gui.Video.Controller.Player.Video.prototype.pause = function () {
 
     this.view.node[0].pause();
     this.setSrc(false);
+    return this;
+};
+
+/**
+ * toggle throbber
+ */
+Gui.Video.Controller.Player.Video.prototype.toggleThrobber = function () {
+
+    this.view.throbber.toggleClass('show');
     return this;
 };
 

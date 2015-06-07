@@ -37,7 +37,8 @@ Gui.Video.Controller.Player.prototype.init = function () {
 
     this.view = this.module.getView('Player', this.data);
 
-    this.video = this.module.getController('Player.Video', this.data);
+    this.video = this.module.getController('Player.Video', {"parent" : this});
+    this.controls = this.module.getController('Player.Controls', {"parent" : this});
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 
@@ -57,6 +58,7 @@ Gui.Video.Controller.Player.prototype.dispatchView = function () {
 
         Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
         this.video.dispatchView();
+        this.controls.dispatchView();
 
         this.addObserver();
 
@@ -86,12 +88,6 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
     this.view.volumeWrapper.on('click', VDRest.helper.stopPropagation);
     this.view.sizeSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
     this.view.bitrateSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
-    this.view.controls.on('click.' + this.keyInCache, this.toggleControls.bind(this));
-    this.view.ctrlQuality.on('click.' + this.keyInCache, this.toggleQuality.bind(this));
-    this.view.ctrlStop.on('click.' + this.keyInCache, this.stopPlayback.bind(this));
-    this.view.ctrlPlay.on('click.' + this.keyInCache, this.togglePlayback.bind(this));
-    this.view.ctrlFullScreen.on('click.' + this.keyInCache, this.toggleFullScreen.bind(this));
-    this.view.ctrlMinimize.on('click.' + this.keyInCache, this.toggleMinimize.bind(this));
 
     if (!this.noTimeUpdateWorkaround) {
         this.video.addTimeUpdateObserver(this.view.updateProgress.bind(this.view));
@@ -100,31 +96,10 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
     this.video.addStalledObserver(this.handleStalled.bind(this));
 
     this.addOsdObserver();
-    this.addDownloadEvent();
 
-    if (this.data.isTv) {
-        this.addZappObserver();
-    } else {
+    if (this.data.isVideo) {
         this.video.addPlayObserver(this.view.updateRecordingStartEndTime.bind(this.view), true);
-        this.addCutObserver();
     }
-};
-
-/**
- * add event listeners for zapping
- */
-Gui.Video.Controller.Player.prototype.addZappObserver = function () {
-
-    this.view.ctrlChannelUp.on('click.' + this.keyInCache, this.changeSrc.bind(this));
-    this.view.ctrlChannelDown.on('click.' + this.keyInCache, this.changeSrc.bind(this));
-};
-
-/**
- * add event listeners for zapping
- */
-Gui.Video.Controller.Player.prototype.addCutObserver = function () {
-
-    this.view.ctrlCut.on('click.' + this.keyInCache, this.startCutting.bind(this));
 };
 
 /**
@@ -137,16 +112,6 @@ Gui.Video.Controller.Player.prototype.addOsdObserver = function () {
 };
 
 /**
- * add download event listener
- */
-Gui.Video.Controller.Player.prototype.addDownloadEvent = function () {
-
-    if ("undefined" !== typeof this.view.ctrlDownload) {
-        this.view.ctrlDownload.on('click', this.startDownload.bind(this));
-    }
-};
-
-/**
  * remove event listeners
  */
 Gui.Video.Controller.Player.prototype.removeObserver = function () {
@@ -156,19 +121,7 @@ Gui.Video.Controller.Player.prototype.removeObserver = function () {
     this.view.ctrlVolume.off('click');
     this.view.sizeSelect.off('mousedown touchstart');
     this.view.bitrateSelect.off('mousedown touchstart');
-    this.view.controls.off('click');
-    this.view.ctrlStop.off('click');
-    this.view.ctrlPlay.off('click');
-    this.view.ctrlFullScreen.off('click');
-    this.view.ctrlQuality.off('click');
-    this.view.ctrlMinimize.off('click');
     this.removeOsdObserver();
-    if (this.data.isTv) {
-        this.removeZappObserver();
-    } else {
-        this.removeDownloadEvent();
-        this.removeCutObserver();
-    }
 };
 
 /**
@@ -221,7 +174,7 @@ Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
         clearTimeout(this.spoolTimeout);
         e.stopPropagation();
         e.preventDefault();
-        this.view.toggleControls();
+        this.controls.toggle();
     }
 
     this.stopToggleControls = undefined;
@@ -233,23 +186,13 @@ Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
  */
 Gui.Video.Controller.Player.prototype.toggleQuality = function (e) {
 
-    if (!this.view.controls.hasClass('show')) return;
+    if (this.controls.isHidden) return;
 
     this.vibrate();
 
     e.stopPropagation();
     e.preventDefault();
     this.view.toggleQuality();
-};
-
-/**
- * remove osd related event listeners
- */
-Gui.Video.Controller.Player.prototype.removeDownloadEvent = function () {
-
-    if ("undefined" !== typeof this.view.ctrlDownload) {
-        this.view.ctrlDownload.off('click');
-    }
 };
 
 /**
@@ -288,7 +231,7 @@ Gui.Video.Controller.Player.prototype.startDownload = function (e) {
             ) + '.' + VDRest.config.getItem('streamdevContainer'),
         src = this.getStreamUrl(['FILENAME=' + filename], 'download');
 
-    if (!this.view.controls.hasClass('show')) {
+    if (this.controls.isHidden) {
         return;
     }
     e.preventDefault();
@@ -308,12 +251,10 @@ Gui.Video.Controller.Player.prototype.handleStalled = function () {
         return;
     }
 
-    var me = this;
-
-    this.view.toggleThrobber();
-    this.video.addTimeUpdateObserver(function () {
-        me.view.toggleThrobber();
-    }, true);
+    this.video.toggleThrobber();
+    this.addTimeUpdateObserver(function () {
+        this.video.toggleThrobber();
+    }.bind(this), true);
 };
 
 /**
@@ -322,17 +263,17 @@ Gui.Video.Controller.Player.prototype.handleStalled = function () {
  */
 Gui.Video.Controller.Player.prototype.qualitySelectDown = function (e) {
 
-    if (!this.view.controls.hasClass('show') || !this.view.qualitySelect.hasClass('show')) {
+    if (this.controls.isHidden || !this.view.qualitySelect.hasClass('show')) {
         return;
     }
     e.preventDefault();
     e.stopPropagation();
-    this.view.stopHideControls();
+    this.controls.stopHide();
     if (this.isPlaying) {
         this.pausePlayback();
     }
     this.settingParams = true;
-    this.view.omitToggleControls = true;
+    this.controls.omitToggleControls = true;
 
     if ($(e.currentTarget).hasClass('size-select')) {
         this.currentQualitySelect = this.view.sizeSelect;
@@ -433,7 +374,7 @@ Gui.Video.Controller.Player.prototype.qualitySelectMove = function (e) {
  */
 Gui.Video.Controller.Player.prototype.volumeDown = function (e) {
 
-    if (!this.view.controls.hasClass('show')) {
+    if (this.controls.isHidden) {
         return;
     }
 
@@ -443,7 +384,7 @@ Gui.Video.Controller.Player.prototype.volumeDown = function (e) {
     e.preventDefault();
     $document.one('mouseup.videoplayer-volume touchend.videoplayer-volume', this.volumeUp.bind(this));
 
-    this.view.stopHideControls();
+    this.controls.stopHide();
     if ('touchstart' === e.type) {
         this.volumeSlidePos = e.originalEvent.changedTouches[0].pageY;
     } else {
@@ -526,7 +467,7 @@ Gui.Video.Controller.Player.prototype.setVolume = function (action) {
  */
 Gui.Video.Controller.Player.prototype.setTimeDown = function (e) {
 
-    if (!this.view.controls.hasClass('show') || this.data.isTv) {
+    if (this.controls.isHidden || this.data.isTv) {
         return;
     }
 
@@ -535,7 +476,7 @@ Gui.Video.Controller.Player.prototype.setTimeDown = function (e) {
 
     this.spoolTimeout = setTimeout(this.spool.bind(this), 2000);
 
-    this.view.stopHideControls();
+    this.controls.stopHide();
     if (this.isPlaying) {
         this.pausePlayback();
     }
@@ -663,7 +604,7 @@ Gui.Video.Controller.Player.prototype.spool = function () {
  */
 Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
 
-    if (!this.view.controls.hasClass('show')) return;
+    if (this.controls.isHidden) return;
 
     this.vibrate();
 
@@ -684,7 +625,7 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
 
     var me = this;
 
-    if (!this.view.controls.hasClass('show') && !this.data.isMinimized) {
+    if (this.controls.isHidden && !this.data.isMinimized) {
         return;
     }
 
@@ -733,9 +674,9 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
     }
 
     this.isPlaying = true;
-    this.view.toggleThrobber();
-    this.view.omitToggleControls = false;
-    this.view.toggleControls();
+    this.video.toggleThrobber();
+    this.controls.omitToggleControls = false;
+    this.controls.toggle();
     this.settingParams = false;
 
     this.video.play(this.getStreamUrl());
@@ -744,7 +685,7 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
 
         var currentTime = 0;
 
-        this.view.toggleThrobber();
+        this.video.toggleThrobber();
         if (this.data.isVideo) {
             this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
             this.view.updateRecordingEndTime(false);
@@ -799,7 +740,7 @@ Gui.Video.Controller.Player.prototype.getStreamUrl = function (streamdevParams, 
  */
 Gui.Video.Controller.Player.prototype.pausePlayback = function () {
 
-    this.view.stopHideControls();
+    this.controls.stopHide();
 
     if (this.data.isVideo) {
 
@@ -826,7 +767,7 @@ Gui.Video.Controller.Player.prototype.pausePlayback = function () {
  */
 Gui.Video.Controller.Player.prototype.stopPlayback = function (e) {
 
-    if (!this.view.controls.hasClass('show')) {
+    if (this.controls.isHidden) {
         return;
     }
 
@@ -859,12 +800,12 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
         e.stopPropagation();
     }
 
-    this.view.stopHideControls();
-    this.removeDownloadEvent();
+    this.controls.stopHide();
+    this.controls.removeDownloadObserver();
 
     if (
         !$('body').hasClass('video-minimized')
-        && !this.view.controls.hasClass('show')
+        && this.controls.isHidden
     ) {
         return;
     }
@@ -901,11 +842,6 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
             if (broadcast) {
                 this.view.setData('current_broadcast', broadcast);
                 this.setIsTv();
-                this.removeDownloadEvent();
-                this.view.removeDownloadButton();
-                this.view.addChannelButtons();
-                this.removeZappObserver();
-                this.addZappObserver();
                 this.data.startTime = parseInt(Date.now() / 1000, 10) - broadcast.getData('start_time');
                 this.view.setData('startTime', this.data.startTime);
                 callback();
@@ -916,10 +852,6 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
         this.setIsVideo();
         this.data.startTime = 0;
         this.view.setData('startTime', this.data.startTime);
-        this.removeZappObserver();
-        this.view.removeChannelButtons();
-        this.view.addDownloadButton();
-        this.addDownloadEvent();
 
         this.video.addPlayObserver(this.view.updateRecordingStartEndTime.bind(this.view), true);
         callback();
@@ -966,6 +898,7 @@ Gui.Video.Controller.Player.prototype.startCutting = function () {
  */
 Gui.Video.Controller.Player.prototype.setIsVideo = function () {
 
+    this.controls.setIsVideo();
     this.data.isTv = false;
     this.data.isVideo = true;
     this.view.data.isTv = this.data.isTv;
@@ -977,6 +910,7 @@ Gui.Video.Controller.Player.prototype.setIsVideo = function () {
  */
 Gui.Video.Controller.Player.prototype.setIsTv = function () {
 
+    this.controls.setIsTv();
     this.data.isTv = true;
     this.data.isVideo = false;
     this.view.data.isTv = this.data.isTv;
@@ -988,7 +922,7 @@ Gui.Video.Controller.Player.prototype.setIsTv = function () {
  */
 Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
 
-    if (!this.view.controls.hasClass('show')) {
+    if (this.controls.isHidden) {
         return;
     }
 
@@ -1031,7 +965,7 @@ Gui.Video.Controller.Player.prototype.requestFullscreen = function () {
         }
     }
 
-    this.view.ctrlFullScreen.html(this.view.symbolExitFullscreen);
+    this.controls.view.ctrlFullScreen.html(this.controls.view.symbolExitFullscreen);
 };
 
 /**
@@ -1046,7 +980,7 @@ Gui.Video.Controller.Player.prototype.cancelFullscreen = function () {
     } else if (document.webkitCancelFullScreen) {
         document.webkitCancelFullScreen();
     }
-    this.view.ctrlFullScreen.html(this.view.symbolFullscreen);
+    this.controls.view.ctrlFullScreen.html(this.controls.view.symbolFullscreen);
 };
 
 /**
@@ -1054,11 +988,14 @@ Gui.Video.Controller.Player.prototype.cancelFullscreen = function () {
  */
 Gui.Video.Controller.Player.prototype.destructView = function () {
 
+    this.controls.destructView();
+    delete this.controls;
     this.video.destructView();
     delete this.video;
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();
+    this.module.cache.flush();
     clearInterval(this.noTimeoutInterval);
 
     VDRest.app.getModule('Gui.Epg').unMute();

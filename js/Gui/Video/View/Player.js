@@ -33,66 +33,6 @@ Gui.Video.View.Player.prototype.cacheKey = 'url';
 /**
  * @type {string}
  */
-Gui.Video.View.Player.prototype.symbolPlay = 'C';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolPause = 'B';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolStop = 'D';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolNext = 'S';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolPrevious = 'T';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolFullscreen = 'Q';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolExitFullscreen = 'R';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolQuality = 'A';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolMinimize = 'O';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolMaximize = 'P';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolDownload = 'X';
-
-/**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.symbolCut = 'Z';
-
-/**
- * @type {string}
- */
 Gui.Video.View.Player.prototype.sizes = {
     "HD1080" : {
         "width" : 1920,
@@ -137,8 +77,6 @@ Gui.Video.View.Player.prototype.bitrates = [
 Gui.Video.View.Player.prototype.init = function () {
 
     this.node = $('<div class="video-player-wrapper">');
-    this.controls = $('<div class="html5-player-controls show">');
-    this.controls.attr('data-animate', 'opacity');
     this.defaultTitle = $('title').text();
 
     $('body').addClass('has-video-player');
@@ -181,10 +119,7 @@ Gui.Video.View.Player.prototype.initPlayer = function () {
  */
 Gui.Video.View.Player.prototype.initControls = function () {
 
-    this.controls.appendTo(this.node);
-    this.addControlButtons()
-        .addThrobber()
-        .addVolumeControl()
+    this.addVolumeControl()
         .setInitialVolume()
         .setVolumeSliderHeight()
         .addQualitySelector();
@@ -202,7 +137,7 @@ Gui.Video.View.Player.prototype.initOsd = function () {
         this.osd.remove();
     }
 
-    this.osd = $('<div class="video-osd">').appendTo(this.controls);
+    this.osd = $('<div class="video-osd">').appendTo(this.module.getView('Player.Controls').node);
     this.addTitle()
         .addTimeLine()
         .addProgress()
@@ -210,66 +145,6 @@ Gui.Video.View.Player.prototype.initOsd = function () {
         .scrollTitle();
 
     return this;
-};
-
-/**
- * add control buttons to overlay
- */
-Gui.Video.View.Player.prototype.addControlButtons = function () {
-
-    this.ctrlPlay = $(
-        '<div class="vdr-web-symbol play">' + this.symbolPlay + '</div>'
-    ).appendTo(this.controls);
-
-    this.ctrlStop = $(
-        '<div class="vdr-web-symbol stop">' + this.symbolStop + '</div>'
-    ).appendTo(this.controls);
-
-    this.ctrlFullScreen = $(
-        '<div class="vdr-web-symbol toggle-fullScreen">' + this.symbolFullscreen + '</div>'
-    ).appendTo(this.controls);
-
-    this.ctrlQuality = $(
-        '<div class="vdr-web-symbol toggle-quality">' + this.symbolQuality + '</div>'
-    ).appendTo(this.controls);
-
-    this.ctrlMinimize = $(
-        '<div class="vdr-web-symbol minimize">' + this.symbolMinimize + '</div>'
-    ).appendTo(this.controls);
-
-    if (this.data.isVideo) {
-        this.ctrlCut = $(
-            '<div class="vdr-web-symbol cut">' + this.symbolCut + '</div>'
-        ).appendTo(this.controls);
-    }
-
-    this.addDownloadButton();
-    this.addChannelButtons();
-
-    return this;
-};
-
-/**
- * add download button
- */
-Gui.Video.View.Player.prototype.addDownloadButton = function () {
-
-    if (VDRest.config.getItem('streamDownload') && this.data.isVideo) {
-        this.ctrlDownload = $(
-            '<div class="vdr-web-symbol download">' + this.symbolDownload + '</div>'
-        ).appendTo(this.controls);
-    }
-};
-
-/**
- * add download button
- */
-Gui.Video.View.Player.prototype.removeDownloadButton = function () {
-
-    if ("undefined" !== typeof this.ctrlDownload) {
-        this.ctrlDownload.remove();
-        this.ctrlDownload = undefined;
-    }
 };
 
 /**
@@ -282,34 +157,6 @@ Gui.Video.View.Player.prototype.addTimeLine = function () {
     this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
 
     return this;
-};
-
-/**
- * add channel buttons
- */
-Gui.Video.View.Player.prototype.addChannelButtons = function () {
-
-    if (this.data.isTv && !this.ctrlChannelUp) {
-        this.ctrlChannelUp = $(
-            '<div class="vdr-web-symbol channel-up">' + this.symbolNext + '</div>'
-        ).appendTo(this.controls);
-        this.ctrlChannelDown = $(
-            '<div class="vdr-web-symbol channel-down">' + this.symbolPrevious + '</div>'
-        ).appendTo(this.controls);
-    }
-};
-
-/**
- * remove channel buttons
- */
-Gui.Video.View.Player.prototype.removeChannelButtons = function () {
-
-    if (this.ctrlChannelUp) {
-        this.ctrlChannelUp.remove();
-        this.ctrlChannelDown.remove();
-        this.ctrlChannelUp = undefined;
-        this.ctrlChannelDown = undefined;
-    }
 };
 
 /**
@@ -334,12 +181,12 @@ Gui.Video.View.Player.prototype.toggleMinimize = function () {
  */
 Gui.Video.View.Player.prototype.addVolumeControl = function () {
 
-    this.volumeWrapper = $('<div class="volume-wrapper">').appendTo(this.controls);
+    this.volumeWrapper = $('<div class="volume-wrapper">').appendTo(this.module.getController('Player.Controls').view.node);
     this.ctrlVolume = $('<div class="slider volume">').appendTo(this.volumeWrapper);
     this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
     this.volumeIndicator = $('<div class="vdr-web-symbol info volume-indicator">');
     this.volumeIndicator.attr('data-animate', 'opacity fast');
-    this.volumeIndicator.appendTo(this.controls);
+    this.volumeIndicator.appendTo(this.module.getController('Player.Controls').view.node);
     this.volumeIndicatorLabel = $('<span class="label">').appendTo(
         this.volumeIndicator
     );
@@ -435,87 +282,12 @@ Gui.Video.View.Player.prototype.getVolumePercentage = function () {
 };
 
 /**
- * show controls overlay
- */
-Gui.Video.View.Player.prototype.toggleControls = function (e) {
-
-    if (this.omitToggleControls) {
-        this.omitToggleControls = undefined;
-        return;
-    }
-
-    if (e instanceof jQuery.Event) {
-        e.stopPropagation();
-    }
-    this.stopHideControls();
-
-    if (this.controls.hasClass('show')) {
-        this.controls.removeClass('show');
-        this.qualitySelect.removeClass('show');
-    } else {
-
-        this.controls.addClass('show');
-        this.scrollTitle();
-        if (!e) {
-            this.deferHideControls();
-        }
-    }
-};
-
-/**
- * defer hiding controls
- */
-Gui.Video.View.Player.prototype.deferHideControls = function () {
-
-    var me = this;
-
-    this.controlsTimeout = setTimeout(function () {
-        me.controls.removeClass('show');
-        me.qualitySelect.removeClass('show');
-    }, 5000);
-};
-
-/**
- * stop hiding controls
- */
-Gui.Video.View.Player.prototype.stopHideControls = function () {
-
-    if ("undefined" !== typeof this.controlsTimeout) {
-        clearTimeout(this.controlsTimeout);
-        this.controlsTimeout = undefined;
-    }
-};
-
-/**
- * add throbber
- */
-Gui.Video.View.Player.prototype.addThrobber = function () {
-
-    this.throbber = $(
-        '<div style="background-image: url('
-        + VDRest.image.getThrobber()
-        + ')" class="throbber">'
-    );
-    this.throbber.appendTo(this.node);
-
-    return this;
-};
-
-/**
- * toggle throbber
- */
-Gui.Video.View.Player.prototype.toggleThrobber = function () {
-
-    this.throbber.toggleClass('show');
-};
-
-/**
  * show quality overlay
  * @param {Boolean} [force]
  */
 Gui.Video.View.Player.prototype.toggleQuality = function (force) {
 
-    this.stopHideControls();
+    this.module.getController('Player.Controls').stopHide();
     this.qualitySelect.toggleClass('show', force);
 };
 
@@ -713,7 +485,7 @@ Gui.Video.View.Player.prototype.addQualitySelector = function () {
         $(item).text(this.bitrates[i]).appendTo(this.bitrateList);
     }
 
-    this.qualitySelect.appendTo(this.controls);
+    this.qualitySelect.appendTo(this.module.getController('Player.Controls').view.node);
 
     return this;
 };
@@ -820,9 +592,10 @@ Gui.Video.View.Player.prototype.scrollTitle = function () {
         clearTimeout(this.infoAreaScrollTimeout);
         this.infoAreaScrollTimeout = undefined;
     }
-    if (this.controls.hasClass('show')) {
+
+    //if (this.controls.hasClass('show')) {
         this.animateInfoArea();
-    }
+    //}
 
 };
 
