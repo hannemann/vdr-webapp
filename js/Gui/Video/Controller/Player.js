@@ -2,30 +2,31 @@
  * @class
  * @constructor
  */
-Gui.Window.Controller.VideoPlayer = function () {};
+Gui.Video.Controller.Player = function () {
+};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.Controller.VideoPlayer.prototype = new Gui.Window.Controller.Abstract();
+Gui.Video.Controller.Player.prototype = new Gui.Window.Controller.Abstract();
 
 /**
  * @type {string}
  */
-Gui.Window.Controller.VideoPlayer.prototype.cacheKey = 'url';
+Gui.Video.Controller.Player.prototype.cacheKey = 'url';
 
 /**
  * @type {string}
  */
-Gui.Window.Controller.VideoPlayer.prototype.noTimeUpdateWorkaround = true;
+Gui.Video.Controller.Player.prototype.noTimeUpdateWorkaround = true;
 
 /**
  * initialize view
  */
-Gui.Window.Controller.VideoPlayer.prototype.init = function () {
+Gui.Video.Controller.Player.prototype.init = function () {
 
     this.module.setVideoPlayer(this);
-    this.eventPrefix = 'window.videoplayer';
+    this.eventPrefix = 'video.player';
     this.data.isTv = false;
     this.data.isVideo = false;
     this.data.isMinimized = false;
@@ -34,7 +35,7 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
     this.settingParams = false;
     this.spooling = false;
 
-    this.view = this.module.getView('VideoPlayer', this.data);
+    this.view = this.module.getView('Player', this.data);
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 
@@ -46,7 +47,7 @@ Gui.Window.Controller.VideoPlayer.prototype.init = function () {
 /**
  * dispatch view
  */
-Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
+Gui.Video.Controller.Player.prototype.dispatchView = function () {
 
     var callback = function () {
 
@@ -56,7 +57,7 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 
         this.addObserver();
 
-        this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
+        this.data.isVideo && this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
     }.bind(this);
 
     if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
@@ -76,7 +77,7 @@ Gui.Window.Controller.VideoPlayer.prototype.dispatchView = function () {
 /**
  * add event listeners
  */
-Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
+Gui.Video.Controller.Player.prototype.addObserver = function () {
 
     var helper = this.helper();
 
@@ -104,22 +105,31 @@ Gui.Window.Controller.VideoPlayer.prototype.addObserver = function () {
             'playing',
             this.view.updateRecordingStartEndTime.bind(this.view)
         );
+        this.addCutObserver();
     }
 };
 
 /**
  * add event listeners for zapping
  */
-Gui.Window.Controller.VideoPlayer.prototype.addZappObserver = function () {
+Gui.Video.Controller.Player.prototype.addZappObserver = function () {
 
     this.view.ctrlChannelUp.on('click.' + this.keyInCache, this.changeSrc.bind(this));
     this.view.ctrlChannelDown.on('click.' + this.keyInCache, this.changeSrc.bind(this));
 };
 
 /**
+ * add event listeners for zapping
+ */
+Gui.Video.Controller.Player.prototype.addCutObserver = function () {
+
+    this.view.ctrlCut.on('click.' + this.keyInCache, this.startCutting.bind(this));
+};
+
+/**
  * add osd related event listeners
  */
-Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
+Gui.Video.Controller.Player.prototype.addOsdObserver = function () {
 
     this.view.osd.on('mouseup touchend', this.toggleControls.bind(this));
     this.view.osd.on('touchstart mousedown', this.setTimeDown.bind(this));
@@ -128,7 +138,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addOsdObserver = function () {
 /**
  * add download event listener
  */
-Gui.Window.Controller.VideoPlayer.prototype.addDownloadEvent = function () {
+Gui.Video.Controller.Player.prototype.addDownloadEvent = function () {
 
     if ("undefined" !== typeof this.view.ctrlDownload) {
         this.view.ctrlDownload.on('click', this.startDownload.bind(this));
@@ -138,7 +148,7 @@ Gui.Window.Controller.VideoPlayer.prototype.addDownloadEvent = function () {
 /**
  * remove event listeners
  */
-Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
+Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
     this.view.ctrlVolume.off('mousedown touchstart');
     this.view.ctrlVolume.off('click');
@@ -159,13 +169,14 @@ Gui.Window.Controller.VideoPlayer.prototype.removeObserver = function () {
         this.removeZappObserver();
     } else {
         this.removeDownloadEvent();
+        this.removeCutObserver();
     }
 };
 
 /**
  * remove event listeners for zapping
  */
-Gui.Window.Controller.VideoPlayer.prototype.removeZappObserver = function () {
+Gui.Video.Controller.Player.prototype.removeZappObserver = function () {
 
     if ("undefined" !== typeof this.view.ctrlChannelUp) {
         this.view.ctrlChannelUp.off('click');
@@ -174,9 +185,19 @@ Gui.Window.Controller.VideoPlayer.prototype.removeZappObserver = function () {
 };
 
 /**
+ * remove event listeners for zapping
+ */
+Gui.Video.Controller.Player.prototype.removeCutObserver = function () {
+
+    if ("undefined" !== typeof this.view.ctrlCut) {
+        this.view.ctrlCut.off('click');
+    }
+};
+
+/**
  * remove osd related event listeners
  */
-Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
+Gui.Video.Controller.Player.prototype.removeOsdObserver = function () {
 
     this.view.osd.off('mouseup touchend');
     this.view.osd.off('mousedown touchstart');
@@ -186,7 +207,7 @@ Gui.Window.Controller.VideoPlayer.prototype.removeOsdObserver = function () {
  * toggle controls
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.toggleControls = function (e) {
+Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
 
     if (this.oldChannelId && this.oldChannelId !== this.data.sourceModel.getData('channel_id')) {
         this.data.sourceModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', this.oldChannelId);
@@ -212,7 +233,7 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleControls = function (e) {
  * toggle quality
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.toggleQuality = function (e) {
+Gui.Video.Controller.Player.prototype.toggleQuality = function (e) {
 
     if (!this.view.controls.hasClass('show')) return;
 
@@ -226,7 +247,7 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleQuality = function (e) {
 /**
  * remove osd related event listeners
  */
-Gui.Window.Controller.VideoPlayer.prototype.removeDownloadEvent = function () {
+Gui.Video.Controller.Player.prototype.removeDownloadEvent = function () {
 
     if ("undefined" !== typeof this.view.ctrlDownload) {
         this.view.ctrlDownload.off('click');
@@ -244,7 +265,7 @@ Gui.Window.Controller.VideoPlayer.prototype.removeDownloadEvent = function () {
  *      startTime: int
  *  }}
  */
-Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
+Gui.Video.Controller.Player.prototype.getPosterOptions = function (time) {
 
     var size = this.view.sizeList.find('.item.selected').text();
     time = time || this.getData('startTime');
@@ -262,7 +283,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getPosterOptions = function (time) {
  * start download of recording
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.startDownload = function (e) {
+Gui.Video.Controller.Player.prototype.startDownload = function (e) {
 
     var filename = encodeURIComponent(
                 this.data.sourceModel.getData('name')
@@ -282,7 +303,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startDownload = function (e) {
 /**
  * try to prevent browser from getting unresponsive in case the video stalls
  */
-Gui.Window.Controller.VideoPlayer.prototype.handleStalled = function () {
+Gui.Video.Controller.Player.prototype.handleStalled = function () {
 
     // baw.
     if (this.noTimeUpdateWorkaround) {
@@ -301,7 +322,7 @@ Gui.Window.Controller.VideoPlayer.prototype.handleStalled = function () {
  * handle quality selector down
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
+Gui.Video.Controller.Player.prototype.qualitySelectDown = function (e) {
 
     if (!this.view.controls.hasClass('show') || !this.view.qualitySelect.hasClass('show')) {
         return;
@@ -337,7 +358,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectDown = function (e) {
  * handle quality selector up
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
+Gui.Video.Controller.Player.prototype.qualitySelectUp = function (e) {
 
     if (e instanceof jQuery.Event) {
         e.preventDefault();
@@ -365,7 +386,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectUp = function (e) {
  * handle quality selector move
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.qualitySelectMove = function (e) {
+Gui.Video.Controller.Player.prototype.qualitySelectMove = function (e) {
 
     var itemList = this.currentQualitySelect.find('.item-list'),
         current = itemList.find('.item.selected'),
@@ -412,7 +433,7 @@ Gui.Window.Controller.VideoPlayer.prototype.qualitySelectMove = function (e) {
  * handle start volume change
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
+Gui.Video.Controller.Player.prototype.volumeDown = function (e) {
 
     if (!this.view.controls.hasClass('show')) {
         return;
@@ -448,7 +469,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeDown = function (e) {
  * handle stop volume change
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.volumeUp = function (e) {
+Gui.Video.Controller.Player.prototype.volumeUp = function (e) {
 
     e.stopPropagation();
     e.preventDefault();
@@ -463,7 +484,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeUp = function (e) {
  * handle volume change
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.volumeMove = function (e) {
+Gui.Video.Controller.Player.prototype.volumeMove = function (e) {
 
     var newPos;
 
@@ -485,7 +506,7 @@ Gui.Window.Controller.VideoPlayer.prototype.volumeMove = function (e) {
  * set actual volume
  * @param {string} action
  */
-Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
+Gui.Video.Controller.Player.prototype.setVolume = function (action) {
 
     var video = this.getVideo(), vol = video.volume, value = 0.01;
 
@@ -504,7 +525,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setVolume = function (action) {
  * handle start startTime change
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
+Gui.Video.Controller.Player.prototype.setTimeDown = function (e) {
 
     if (!this.view.controls.hasClass('show') || this.data.isTv) {
         return;
@@ -537,7 +558,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeDown = function (e) {
  * handle change startTime stop
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
+Gui.Video.Controller.Player.prototype.setTimeUp = function (e) {
 
     clearTimeout(this.spoolTimeout);
     clearInterval(this.spoolInterval);
@@ -549,7 +570,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
     $document.off('touchend.videoplayer-time mouseup.videoplayer-time');
 
     if ("undefined" !== typeof this.fetchPoster) {
-        this.module.getHelper('VideoPlayer')
+        this.module.getHelper('Player')
             .setVideoPoster(this.getPosterOptions());
 
         this.fetchPoster = undefined;
@@ -561,7 +582,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeUp = function (e) {
  * handle move startTime
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.setTimeMove = function (e) {
+Gui.Video.Controller.Player.prototype.setTimeMove = function (e) {
 
     var newPos;
 
@@ -587,7 +608,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTimeMove = function (e) {
  * @param {String} action
  * @param {Number} [value]
  */
-Gui.Window.Controller.VideoPlayer.prototype.setTime = function (action, value) {
+Gui.Video.Controller.Player.prototype.setTime = function (action, value) {
 
     var sourceModel = this.data.sourceModel;
 
@@ -610,7 +631,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setTime = function (action, value) {
 /**
  * handle spooling
  */
-Gui.Window.Controller.VideoPlayer.prototype.spool = function () {
+Gui.Video.Controller.Player.prototype.spool = function () {
 
     var me = this,
         slider = this.view.timelineSlider,
@@ -641,7 +662,7 @@ Gui.Window.Controller.VideoPlayer.prototype.spool = function () {
 /**
  * toggle playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
+Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
 
     if (!this.view.controls.hasClass('show')) return;
 
@@ -660,7 +681,7 @@ Gui.Window.Controller.VideoPlayer.prototype.togglePlayback = function (e) {
 /**
  * toggle minimize
  */
-Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function (e) {
+Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
 
     var me = this;
 
@@ -700,7 +721,7 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleMinimize = function (e) {
 /**
  * start playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
+Gui.Video.Controller.Player.prototype.startPlayback = function () {
 
     var video = this.getVideo(), src = this.getStreamUrl(), me=this;
 
@@ -745,7 +766,7 @@ Gui.Window.Controller.VideoPlayer.prototype.startPlayback = function () {
  * @param {String} [type]
  * @returns {String}
  */
-Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevParams, type) {
+Gui.Video.Controller.Player.prototype.getStreamUrl = function (streamdevParams, type) {
 
     var size = this.view.sizeList.find('.item.selected').text(),
         bitrate = this.view.bitrateList.find('.item.selected').text(),
@@ -778,7 +799,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getStreamUrl = function (streamdevPa
 /**
  * pause playback
  */
-Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
+Gui.Video.Controller.Player.prototype.pausePlayback = function () {
 
     var video = this.getVideo();
 
@@ -790,7 +811,7 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
     }
 
     if (!this.settingParams) {
-        video.poster = this.module.getHelper('VideoPlayer').captureFrame(video);
+        video.poster = this.module.getHelper('Player').captureFrame(video);
     }
     this.isPlaying = false;
     video.pause();
@@ -806,7 +827,7 @@ Gui.Window.Controller.VideoPlayer.prototype.pausePlayback = function () {
  * stop playback
  * @param {jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
+Gui.Video.Controller.Player.prototype.stopPlayback = function (e) {
 
     if (!this.view.controls.hasClass('show')) {
         return;
@@ -823,14 +844,14 @@ Gui.Window.Controller.VideoPlayer.prototype.stopPlayback = function (e) {
  * change video source
  * @param {VDRest.Epg.Model.Channels.Channel|Gui.Window.Controller.Recording|jQuery.Event} e
  */
-Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
+Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
 
     var channels, getter, nextChannel, video = this.getVideo(),
         callback = function () {
 
             this.view.updateRecordingEndTime(false);
 
-            this.data.isVideo && this.module.getHelper('VideoPlayer').setVideoPoster(this.getPosterOptions(2));
+            this.data.isVideo && this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
             this.removeOsdObserver();
             this.view.initOsd();
             this.addOsdObserver();
@@ -911,9 +932,44 @@ Gui.Window.Controller.VideoPlayer.prototype.changeSrc = function (e) {
 };
 
 /**
+ * start set cut markers
+ */
+Gui.Video.Controller.Player.prototype.startCutting = function () {
+
+    $window.one('gui-recording.updated.' + this.data.sourceModel.keyInCache.toCacheKey(), function () {
+
+
+        this.cutter = this.module.getController('Cutter', {
+            "sourceModel": this.data.sourceModel,
+            "parent": this
+        }).dispatchView();
+
+
+        //console.log('VP: ', this.data.sourceModel);
+        //
+        //console.log(this.getVideo().currentTime);
+        //
+        //this.data.sourceModel.data.marks = [
+        //
+        //    '00:40:02.03',
+        //    '00:01:02.03'
+        //];
+        //
+        //this.data.sourceModel.saveCuttingMarks();
+        //
+        //setTimeout(function () {
+        //
+        //    this.data.sourceModel.cut();
+        //}.bind(this), 2000);
+    }.bind(this));
+
+    this.data.sourceModel.getCuttingMarks();
+};
+
+/**
  * indicate that stream is recording
  */
-Gui.Window.Controller.VideoPlayer.prototype.setIsVideo = function () {
+Gui.Video.Controller.Player.prototype.setIsVideo = function () {
 
     this.data.isTv = false;
     this.data.isVideo = true;
@@ -924,7 +980,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setIsVideo = function () {
 /**
  * indicate that stream is live tv
  */
-Gui.Window.Controller.VideoPlayer.prototype.setIsTv = function () {
+Gui.Video.Controller.Player.prototype.setIsTv = function () {
 
     this.data.isTv = true;
     this.data.isVideo = false;
@@ -935,7 +991,7 @@ Gui.Window.Controller.VideoPlayer.prototype.setIsTv = function () {
 /**
  * toggle fullscreen
  */
-Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
+Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
 
     if (!this.view.controls.hasClass('show')) {
         return;
@@ -967,7 +1023,7 @@ Gui.Window.Controller.VideoPlayer.prototype.toggleFullScreen = function (e) {
  * use video tag if one day all the bugs are fixed
  * (no custom controls possible, garbled playback for some time after change)
  */
-Gui.Window.Controller.VideoPlayer.prototype.requestFullscreen = function () {
+Gui.Video.Controller.Player.prototype.requestFullscreen = function () {
 
     if ((document.fullScreenElement && document.fullScreenElement !== null) ||
         (!document.mozFullScreen && !document.webkitIsFullScreen)) {
@@ -986,7 +1042,7 @@ Gui.Window.Controller.VideoPlayer.prototype.requestFullscreen = function () {
 /**
  * leave fullscreen
  */
-Gui.Window.Controller.VideoPlayer.prototype.cancelFullscreen = function () {
+Gui.Video.Controller.Player.prototype.cancelFullscreen = function () {
 
     if (document.cancelFullScreen) {
         document.cancelFullScreen();
@@ -1001,7 +1057,7 @@ Gui.Window.Controller.VideoPlayer.prototype.cancelFullscreen = function () {
 /**
  * retrieve video tag
  */
-Gui.Window.Controller.VideoPlayer.prototype.getVideo = function () {
+Gui.Video.Controller.Player.prototype.getVideo = function () {
 
     return this.view.player.get(0);
 };
@@ -1009,7 +1065,7 @@ Gui.Window.Controller.VideoPlayer.prototype.getVideo = function () {
 /**
  * destroy
  */
-Gui.Window.Controller.VideoPlayer.prototype.destructView = function () {
+Gui.Video.Controller.Player.prototype.destructView = function () {
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);

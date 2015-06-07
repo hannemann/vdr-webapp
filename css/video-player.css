@@ -65,6 +65,7 @@
 .html5-player-controls .toggle-fullScreen,
 .html5-player-controls .toggle-quality,
 .html5-player-controls .minimize,
+.html5-player-controls .cut,
 .html5-player-controls .download {
     top: 10px;
 }
@@ -73,6 +74,7 @@
 .html5-player-controls .toggle-fullScreen:active,
 .html5-player-controls .toggle-quality:active,
 .html5-player-controls .minimize:active,
+.html5-player-controls .cut:active,
 .html5-player-controls .download:active,
 .html5-player-controls .channel-up:active,
 .html5-player-controls .channel-down:active {
@@ -99,8 +101,13 @@
 .html5-player-controls .toggle-quality {
     left: 226px;
 }
-.html5-player-controls .download {
+
+.html5-player-controls .cut {
     left: 280px;
+}
+
+.html5-player-controls .download {
+    left: 334px;
 }
 
 .html5-player-controls .channel-up,
@@ -359,6 +366,7 @@
     }
     .html5-player-controls .channel-up,
     .html5-player-controls .channel-down,
+    .html5-player-controls .cut,
     .html5-player-controls .download {
         bottom: -50px;
         top: auto;
@@ -366,8 +374,21 @@
     .html5-player-controls .channel-down {
         left: 64px;
     }
+
+    .html5-player-controls .cut,
+    .html5-player-controls .download {
+        left: auto;
+    }
+
+    .html5-player-controls .cut {
+        right: 64px;
+    }
+
     .html5-player-controls .download {
         right: 10px;
+    }
+
+    .html5-player-controls .cut {
         left: auto;
     }
     .html5-player-controls .volume-wrapper {

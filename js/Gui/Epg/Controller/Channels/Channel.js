@@ -184,19 +184,20 @@ Gui.Epg.Controller.Channels.Channel.prototype.preventAll = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.startStream = function (channel) {
 
-    var windowModule = VDRest.app.getModule('Gui.Window');
+    var videoModule = VDRest.app.getModule('Gui.Video');
 
     channel = channel || this.data.dataModel;
 
     if (VDRest.info.canUseHtmlPlayer()) {
 
-        if (windowModule.hasVideoPlayer()) {
-            windowModule.getVideoPlayer().changeSrc(channel);
+        if (videoModule.hasVideoPlayer()) {
+            videoModule.getVideoPlayer().changeSrc(channel);
         } else {
             $.event.trigger({
                 "type" : "window.request",
                 "payload" : {
-                    "type" : "VideoPlayer",
+                    "type": "Player",
+                    "module": VDRest.app.getModule('Gui.Video'),
                     "data" : {
                         "sourceModel" : channel
                     }

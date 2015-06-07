@@ -163,18 +163,19 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
  */
 Gui.Recordings.Controller.List.Recording.prototype.startStream = function () {
 
-    var windowModule = VDRest.app.getModule('Gui.Window'),
+    var videoModule = VDRest.app.getModule('Gui.Video'),
         recording = this.dataModel;
 
     if (VDRest.info.canUseHtmlPlayer() && VDRest.info.canRemuxRecordings()) {
 
-        if (windowModule.hasVideoPlayer()) {
-            windowModule.getVideoPlayer().changeSrc(recording);
+        if (videoModule.hasVideoPlayer()) {
+            videoModule.getVideoPlayer().changeSrc(recording);
         } else {
             $.event.trigger({
                 "type": "window.request",
                 "payload": {
-                    "type": "VideoPlayer",
+                    "type": "Player",
+                    "module": VDRest.app.getModule('Gui.Video'),
                     "data": {
                         "sourceModel": recording
                     }

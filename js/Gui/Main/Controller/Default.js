@@ -47,7 +47,7 @@ Gui.Main.Controller.Default.prototype.handleTouchDown = function (e) {
 
     if (
         e.originalEvent.changedTouches[0].clientX <= 10 &&
-        this.getMenubarController().isStartPage() && !VDRest.app.getModule('Gui.Window').hasVideoPlayer()
+        this.getMenubarController().isStartPage() && !VDRest.app.getModule('Gui.Video').hasVideoPlayer()
     ) {
 
         e.stopPropagation();

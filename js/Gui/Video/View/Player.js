@@ -2,92 +2,98 @@
  * @class
  * @constructor
  */
-Gui.Window.View.VideoPlayer = function () {};
+Gui.Video.View.Player = function () {
+};
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.VideoPlayer.prototype = new Gui.Window.View.Abstract();
+Gui.Video.View.Player.prototype = new Gui.Window.View.Abstract();
 
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Window.View.VideoPlayer.prototype.isModal = true;
+Gui.Video.View.Player.prototype.isModal = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.VideoPlayer.prototype.isModalOpaque = true;
+Gui.Video.View.Player.prototype.isModalOpaque = true;
 
 /**
  * @type {boolean}
  */
-Gui.Window.View.VideoPlayer.prototype.modalExtraClasses = "modal-video";
+Gui.Video.View.Player.prototype.modalExtraClasses = "modal-video";
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.cacheKey = 'url';
+Gui.Video.View.Player.prototype.cacheKey = 'url';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolPlay = 'C';
+Gui.Video.View.Player.prototype.symbolPlay = 'C';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolPause = 'B';
+Gui.Video.View.Player.prototype.symbolPause = 'B';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolStop = 'D';
+Gui.Video.View.Player.prototype.symbolStop = 'D';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolNext = 'S';
+Gui.Video.View.Player.prototype.symbolNext = 'S';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolPrevious = 'T';
+Gui.Video.View.Player.prototype.symbolPrevious = 'T';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolFullscreen = 'Q';
+Gui.Video.View.Player.prototype.symbolFullscreen = 'Q';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolExitFullscreen = 'R';
+Gui.Video.View.Player.prototype.symbolExitFullscreen = 'R';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolQuality = 'A';
+Gui.Video.View.Player.prototype.symbolQuality = 'A';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolMinimize = 'O';
+Gui.Video.View.Player.prototype.symbolMinimize = 'O';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolMaximize = 'P';
+Gui.Video.View.Player.prototype.symbolMaximize = 'P';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.symbolDownload = 'X';
+Gui.Video.View.Player.prototype.symbolDownload = 'X';
 
 /**
  * @type {string}
  */
-Gui.Window.View.VideoPlayer.prototype.sizes = {
+Gui.Video.View.Player.prototype.symbolCut = 'Z';
+
+/**
+ * @type {string}
+ */
+Gui.Video.View.Player.prototype.sizes = {
     "HD1080" : {
         "width" : 1920,
         "height" : 1080
@@ -121,14 +127,14 @@ Gui.Window.View.VideoPlayer.prototype.sizes = {
 /**
  * @type {string[]}
  */
-Gui.Window.View.VideoPlayer.prototype.bitrates = [
+Gui.Video.View.Player.prototype.bitrates = [
     '2048K', '1536K', '1024K', '768K', '512K', '256K', '128K', '96K', '64K'
 ];
 
 /**
  * initialize video node
  */
-Gui.Window.View.VideoPlayer.prototype.init = function () {
+Gui.Video.View.Player.prototype.init = function () {
 
     this.node = $('<div class="video-player-wrapper">');
     this.player = $('<video preload="none" class="normal-size">');
@@ -147,7 +153,7 @@ Gui.Window.View.VideoPlayer.prototype.init = function () {
 /**
  * decorate and render
  */
-Gui.Window.View.VideoPlayer.prototype.render = function () {
+Gui.Video.View.Player.prototype.render = function () {
 
     this.initPlayer();
 
@@ -168,9 +174,9 @@ Gui.Window.View.VideoPlayer.prototype.render = function () {
 
 /**
  * initialize player
- * @returns {Gui.Window.View.VideoPlayer}
+ * @returns {Gui.Video.View.Player}
  */
-Gui.Window.View.VideoPlayer.prototype.initPlayer = function () {
+Gui.Video.View.Player.prototype.initPlayer = function () {
 
     this.player.appendTo(this.node);
     this.initControls().initOsd();
@@ -181,18 +187,18 @@ Gui.Window.View.VideoPlayer.prototype.initPlayer = function () {
 /**
  * set poster with icon
  */
-Gui.Window.View.VideoPlayer.prototype.setDefaultPoster = function () {
+Gui.Video.View.Player.prototype.setDefaultPoster = function () {
 
     this.player.attr(
         'poster',
-        this.module.getHelper('VideoPlayer').defaultPoster(this.video)
+        this.module.getHelper('Player').defaultPoster(this.video)
     );
 };
 
 /**
  * add control elements
  */
-Gui.Window.View.VideoPlayer.prototype.initControls = function () {
+Gui.Video.View.Player.prototype.initControls = function () {
 
     this.controls.appendTo(this.node);
     this.addControlButtons()
@@ -207,9 +213,9 @@ Gui.Window.View.VideoPlayer.prototype.initControls = function () {
 
 /**
  * initialize osd
- * @returns {Gui.Window.View.VideoPlayer}
+ * @returns {Gui.Video.View.Player}
  */
-Gui.Window.View.VideoPlayer.prototype.initOsd = function () {
+Gui.Video.View.Player.prototype.initOsd = function () {
 
     if ("undefined" !== typeof this.osd) {
         this.osd.remove();
@@ -228,7 +234,7 @@ Gui.Window.View.VideoPlayer.prototype.initOsd = function () {
 /**
  * add control buttons to overlay
  */
-Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
+Gui.Video.View.Player.prototype.addControlButtons = function () {
 
     this.ctrlPlay = $(
         '<div class="vdr-web-symbol play">' + this.symbolPlay + '</div>'
@@ -250,6 +256,12 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
         '<div class="vdr-web-symbol minimize">' + this.symbolMinimize + '</div>'
     ).appendTo(this.controls);
 
+    if (this.data.isVideo) {
+        this.ctrlCut = $(
+            '<div class="vdr-web-symbol cut">' + this.symbolCut + '</div>'
+        ).appendTo(this.controls);
+    }
+
     this.addDownloadButton();
     this.addChannelButtons();
 
@@ -259,7 +271,7 @@ Gui.Window.View.VideoPlayer.prototype.addControlButtons = function () {
 /**
  * add download button
  */
-Gui.Window.View.VideoPlayer.prototype.addDownloadButton = function () {
+Gui.Video.View.Player.prototype.addDownloadButton = function () {
 
     if (VDRest.config.getItem('streamDownload') && this.data.isVideo) {
         this.ctrlDownload = $(
@@ -271,7 +283,7 @@ Gui.Window.View.VideoPlayer.prototype.addDownloadButton = function () {
 /**
  * add download button
  */
-Gui.Window.View.VideoPlayer.prototype.removeDownloadButton = function () {
+Gui.Video.View.Player.prototype.removeDownloadButton = function () {
 
     if ("undefined" !== typeof this.ctrlDownload) {
         this.ctrlDownload.remove();
@@ -281,9 +293,9 @@ Gui.Window.View.VideoPlayer.prototype.removeDownloadButton = function () {
 
 /**
  * add timeline
- * @returns {Gui.Window.View.VideoPlayer}
+ * @returns {Gui.Video.View.Player}
  */
-Gui.Window.View.VideoPlayer.prototype.addTimeLine = function () {
+Gui.Video.View.Player.prototype.addTimeLine = function () {
 
     this.ctrlTimeline = $('<div class="slider timeline">').appendTo(this.osd);
     this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
@@ -294,7 +306,7 @@ Gui.Window.View.VideoPlayer.prototype.addTimeLine = function () {
 /**
  * add channel buttons
  */
-Gui.Window.View.VideoPlayer.prototype.addChannelButtons = function () {
+Gui.Video.View.Player.prototype.addChannelButtons = function () {
 
     if (this.data.isTv && !this.ctrlChannelUp) {
         this.ctrlChannelUp = $(
@@ -309,7 +321,7 @@ Gui.Window.View.VideoPlayer.prototype.addChannelButtons = function () {
 /**
  * remove channel buttons
  */
-Gui.Window.View.VideoPlayer.prototype.removeChannelButtons = function () {
+Gui.Video.View.Player.prototype.removeChannelButtons = function () {
 
     if (this.ctrlChannelUp) {
         this.ctrlChannelUp.remove();
@@ -322,7 +334,7 @@ Gui.Window.View.VideoPlayer.prototype.removeChannelButtons = function () {
 /**
  * toggle minimized class
  */
-Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
+Gui.Video.View.Player.prototype.toggleMinimize = function () {
 
     var body = $('body'), className = 'video-minimized';
 
@@ -337,9 +349,9 @@ Gui.Window.View.VideoPlayer.prototype.toggleMinimize = function () {
 
 /**
  * add volume slider and indicator
- * @returns {Gui.Window.View.VideoPlayer}
+ * @returns {Gui.Video.View.Player}
  */
-Gui.Window.View.VideoPlayer.prototype.addVolumeControl = function () {
+Gui.Video.View.Player.prototype.addVolumeControl = function () {
 
     this.volumeWrapper = $('<div class="volume-wrapper">').appendTo(this.controls);
     this.ctrlVolume = $('<div class="slider volume">').appendTo(this.volumeWrapper);
@@ -360,7 +372,7 @@ Gui.Window.View.VideoPlayer.prototype.addVolumeControl = function () {
 /**
  * set initial volume
  */
-Gui.Window.View.VideoPlayer.prototype.setInitialVolume = function () {
+Gui.Video.View.Player.prototype.setInitialVolume = function () {
 
     var volume = VDRest.config.getItem('html5VideoPlayerVol') || 1;
     this.video.volume = parseFloat(volume);
@@ -372,7 +384,7 @@ Gui.Window.View.VideoPlayer.prototype.setInitialVolume = function () {
 /**
  * toggle active state of volume slider
  */
-Gui.Window.View.VideoPlayer.prototype.toggleVolumeSliderActiveState = function () {
+Gui.Video.View.Player.prototype.toggleVolumeSliderActiveState = function () {
 
     this.ctrlVolume.toggleClass('active');
 };
@@ -380,7 +392,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleVolumeSliderActiveState = function (
 /**
  * set height of volume slider
  */
-Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
+Gui.Video.View.Player.prototype.setVolumeSliderHeight = function () {
 
     var percentage = this.getVolumeSliderHeight();
 
@@ -395,7 +407,7 @@ Gui.Window.View.VideoPlayer.prototype.setVolumeSliderHeight = function () {
 /**
  * Update volume indicator
  */
-Gui.Window.View.VideoPlayer.prototype.updateVolumeIndicator = function () {
+Gui.Video.View.Player.prototype.updateVolumeIndicator = function () {
 
     var symbol, value = this.getVolumePercentage();
 
@@ -415,7 +427,7 @@ Gui.Window.View.VideoPlayer.prototype.updateVolumeIndicator = function () {
  * toggle volume indicator visibility
  * @param {Boolean} show
  */
-Gui.Window.View.VideoPlayer.prototype.toggleVolumeIndicator = function (show) {
+Gui.Video.View.Player.prototype.toggleVolumeIndicator = function (show) {
 
     show = !!show;
     this.volumeIndicator.toggleClass('show', show);
@@ -425,7 +437,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleVolumeIndicator = function (show) {
  * retrieve css top property for volumeslider
  * @returns {string}
  */
-Gui.Window.View.VideoPlayer.prototype.getVolumeSliderHeight = function () {
+Gui.Video.View.Player.prototype.getVolumeSliderHeight = function () {
 
     var height = 100 - this.getVolumePercentage();
 
@@ -436,7 +448,7 @@ Gui.Window.View.VideoPlayer.prototype.getVolumeSliderHeight = function () {
  * retrieve percentage volume
  * @returns {int}
  */
-Gui.Window.View.VideoPlayer.prototype.getVolumePercentage = function () {
+Gui.Video.View.Player.prototype.getVolumePercentage = function () {
 
     return parseInt(this.player.get(0).volume * 100, 10);
 };
@@ -444,7 +456,7 @@ Gui.Window.View.VideoPlayer.prototype.getVolumePercentage = function () {
 /**
  * show controls overlay
  */
-Gui.Window.View.VideoPlayer.prototype.toggleControls = function (e) {
+Gui.Video.View.Player.prototype.toggleControls = function (e) {
 
     if (this.omitToggleControls) {
         this.omitToggleControls = undefined;
@@ -472,7 +484,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleControls = function (e) {
 /**
  * defer hiding controls
  */
-Gui.Window.View.VideoPlayer.prototype.deferHideControls = function () {
+Gui.Video.View.Player.prototype.deferHideControls = function () {
 
     var me = this;
 
@@ -485,7 +497,7 @@ Gui.Window.View.VideoPlayer.prototype.deferHideControls = function () {
 /**
  * stop hiding controls
  */
-Gui.Window.View.VideoPlayer.prototype.stopHideControls = function () {
+Gui.Video.View.Player.prototype.stopHideControls = function () {
 
     if ("undefined" !== typeof this.controlsTimeout) {
         clearTimeout(this.controlsTimeout);
@@ -496,7 +508,7 @@ Gui.Window.View.VideoPlayer.prototype.stopHideControls = function () {
 /**
  * add throbber
  */
-Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
+Gui.Video.View.Player.prototype.addThrobber = function () {
 
     this.throbber = $(
         '<div style="background-image: url('
@@ -511,7 +523,7 @@ Gui.Window.View.VideoPlayer.prototype.addThrobber = function () {
 /**
  * toggle throbber
  */
-Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
+Gui.Video.View.Player.prototype.toggleThrobber = function () {
 
     this.throbber.toggleClass('show');
 };
@@ -520,7 +532,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleThrobber = function () {
  * show quality overlay
  * @param {Boolean} [force]
  */
-Gui.Window.View.VideoPlayer.prototype.toggleQuality = function (force) {
+Gui.Video.View.Player.prototype.toggleQuality = function (force) {
 
     this.stopHideControls();
     this.qualitySelect.toggleClass('show', force);
@@ -529,7 +541,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleQuality = function (force) {
 /**
  * set width of timeline slider
  */
-Gui.Window.View.VideoPlayer.prototype.setTimelineSliderWidth = function () {
+Gui.Video.View.Player.prototype.setTimelineSliderWidth = function () {
 
     this.timelineSlider.css({
         "right" : this.getTimelinePercentage()
@@ -541,7 +553,7 @@ Gui.Window.View.VideoPlayer.prototype.setTimelineSliderWidth = function () {
 /**
  * toggle timeline active state
  */
-Gui.Window.View.VideoPlayer.prototype.toggleTimeLineActiveState = function () {
+Gui.Video.View.Player.prototype.toggleTimeLineActiveState = function () {
 
     this.ctrlTimeline.toggleClass('active');
 };
@@ -550,7 +562,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleTimeLineActiveState = function () {
  * retrieve css left property fpr timelineSlider
  * @returns {string}
  */
-Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
+Gui.Video.View.Player.prototype.getTimelinePercentage = function () {
 
     var percentage, now, broadcast;
 
@@ -581,7 +593,7 @@ Gui.Window.View.VideoPlayer.prototype.getTimelinePercentage = function () {
 /**
  * add timer
  */
-Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
+Gui.Video.View.Player.prototype.addProgress = function () {
 
     var start, end, duration, helper = this.helper(), broadcast;
 
@@ -625,7 +637,7 @@ Gui.Window.View.VideoPlayer.prototype.addProgress = function () {
  * update recording end time periodically in case of recording is paused
  * @param {Boolean} action
  */
-Gui.Window.View.VideoPlayer.prototype.updateRecordingEndTime = function (action) {
+Gui.Video.View.Player.prototype.updateRecordingEndTime = function (action) {
 
     var me = this,
         duration = this.data.sourceModel.getData('duration'),
@@ -649,7 +661,7 @@ Gui.Window.View.VideoPlayer.prototype.updateRecordingEndTime = function (action)
 /**
  * update start and end time
  */
-Gui.Window.View.VideoPlayer.prototype.updateRecordingStartEndTime = function () {
+Gui.Video.View.Player.prototype.updateRecordingStartEndTime = function () {
 
     var duration = this.data.sourceModel.getData('duration'),
         helper = this.helper(), start, end, d = new Date();
@@ -666,7 +678,7 @@ Gui.Window.View.VideoPlayer.prototype.updateRecordingStartEndTime = function () 
  * @param {Number} [time]
  * update timer
  */
-Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
+Gui.Video.View.Player.prototype.updateProgress = function (time) {
 
     var now, broadcast;
 
@@ -693,7 +705,7 @@ Gui.Window.View.VideoPlayer.prototype.updateProgress = function (time) {
 /**
  * add quality selector
  */
-Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
+Gui.Video.View.Player.prototype.addQualitySelector = function () {
 
     var i, l = this.bitrates.length, item;
 
@@ -725,7 +737,7 @@ Gui.Window.View.VideoPlayer.prototype.addQualitySelector = function () {
     return this;
 };
 
-Gui.Window.View.VideoPlayer.prototype.toggleQualityControlActiveState = function (selector) {
+Gui.Video.View.Player.prototype.toggleQualityControlActiveState = function (selector) {
 
     selector.toggleClass('active');
 };
@@ -733,7 +745,7 @@ Gui.Window.View.VideoPlayer.prototype.toggleQualityControlActiveState = function
 /**
  * add title and subtitle to player
  */
-Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
+Gui.Video.View.Player.prototype.addTitle = function () {
 
     var now,
         me = this, logo, end,
@@ -795,7 +807,7 @@ Gui.Window.View.VideoPlayer.prototype.addTitle = function () {
 /**
  * update info area
  */
-Gui.Window.View.VideoPlayer.prototype.updateInfo = function () {
+Gui.Video.View.Player.prototype.updateInfo = function () {
 
     var broadcast, start, end, helper = this.helper();
 
@@ -817,7 +829,7 @@ Gui.Window.View.VideoPlayer.prototype.updateInfo = function () {
 /**
  * scroll title
  */
-Gui.Window.View.VideoPlayer.prototype.scrollTitle = function () {
+Gui.Video.View.Player.prototype.scrollTitle = function () {
 
     if ("undefined" !== typeof this.infoAreaScrollInterval) {
         clearInterval(this.infoAreaScrollInterval);
@@ -836,7 +848,7 @@ Gui.Window.View.VideoPlayer.prototype.scrollTitle = function () {
 /**
  * animate info area
  */
-Gui.Window.View.VideoPlayer.prototype.animateInfoArea = function () {
+Gui.Video.View.Player.prototype.animateInfoArea = function () {
 
     var me = this,
         indent = 0,
@@ -909,9 +921,9 @@ Gui.Window.View.VideoPlayer.prototype.animateInfoArea = function () {
 
 /**
  * add classes
- * @returns {Gui.Window.View.VideoPlayer}
+ * @returns {Gui.Video.View.Player}
  */
-Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
+Gui.Video.View.Player.prototype.addClasses = function () {
 
     var classNames = ['html5-player', 'fullsize', 'collapsed'];
 
@@ -923,7 +935,7 @@ Gui.Window.View.VideoPlayer.prototype.addClasses = function () {
 /**
  * destroy window
  */
-Gui.Window.View.VideoPlayer.prototype.destruct = function () {
+Gui.Video.View.Player.prototype.destruct = function () {
 
     var me = this, player = this.player.get(0);
 

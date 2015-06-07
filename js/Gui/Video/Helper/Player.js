@@ -2,19 +2,20 @@
  * @class
  * @constructor
  */
-Gui.Window.Helper.VideoPlayer = function () {};
+Gui.Video.Helper.Player = function () {
+};
 
 /**
  * @type {VDRest.Abstract.Helper}
  */
-Gui.Window.Helper.VideoPlayer.prototype = new VDRest.Abstract.Helper();
+Gui.Video.Helper.Player.prototype = new VDRest.Abstract.Helper();
 
 /**
  * capture current frame from video tag
  * @param {HTMLVideoElement} video
  * @returns {string}
  */
-Gui.Window.Helper.VideoPlayer.prototype.captureFrame = function (video) {
+Gui.Video.Helper.Player.prototype.captureFrame = function (video) {
 
     var c = document.createElement('canvas'),
         ctx = c.getContext('2d');
@@ -33,7 +34,7 @@ Gui.Window.Helper.VideoPlayer.prototype.captureFrame = function (video) {
  * @param video
  * @returns {string}
  */
-Gui.Window.Helper.VideoPlayer.prototype.defaultPoster = function (video) {
+Gui.Video.Helper.Player.prototype.defaultPoster = function (video) {
 
     var c = document.createElement('canvas'),
         ctx = c.getContext('2d'), i = new Image();
@@ -63,7 +64,7 @@ Gui.Window.Helper.VideoPlayer.prototype.defaultPoster = function (video) {
  *      startTime: int
  *  }} options
  */
-Gui.Window.Helper.VideoPlayer.prototype.setVideoPoster = function (options) {
+Gui.Video.Helper.Player.prototype.setVideoPoster = function (options) {
 
     var d = new Date().getTime(), streamdevParams = [];
 
