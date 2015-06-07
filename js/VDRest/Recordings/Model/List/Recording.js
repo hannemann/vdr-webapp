@@ -26,6 +26,8 @@ VDRest.Recordings.Model.List.Recording.prototype.cacheKey = 'file_name';
  */
 VDRest.Recordings.Model.List.Recording.prototype.init = function () {
 
+    this.eventKey = this.keyInCache.toCacheKey();
+
     this.addObserver();
 };
 
@@ -43,7 +45,7 @@ VDRest.Recordings.Model.List.Recording.prototype.addObserver = function () {
  */
 VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
 
-    var i, eventKey = this.keyInCache.toCacheKey();
+    var i;
 
     for (i in e.payload.data.recordings[0]) {
 
@@ -54,7 +56,7 @@ VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
     }
     this.module.cache.updateKeys(this, this.data.file_name);
     $.event.trigger({
-        "type": "gui-recording.updated." + eventKey
+        "type": "gui-recording.updated." + this.eventKey
     });
     this.addObserver();
 };
@@ -77,6 +79,108 @@ VDRest.Recordings.Model.List.Recording.prototype.getStreamUrl = function (stream
     return this.helper().getBaseStreamUrl(streamdevParams)
         + recordingId
         + '.rec.ts';
+};
+
+/**
+ * retrieve cutting marks
+ */
+VDRest.Recordings.Model.List.Recording.prototype.getCuttingMarks = function () {
+
+    this.module.getResource('List.Recording').getCuttingMarks(this);
+
+    $window.one("vdrest-api-actions.recording-marks-loaded" + this.eventKey, this.update.bind(this))
+};
+
+/**
+ * delete cutting marks
+ */
+VDRest.Recordings.Model.List.Recording.prototype.deleteCuttingMarks = function () {
+
+    this.module.getResource('List.Recording').deleteCuttingMarks(this);
+
+    $window.one("vdrest-api-actions.recording-marks-deleted" + this.eventKey, function () {
+        this.data.marks = [];
+        $.event.trigger({
+            "type": "gui-recording.cutting-marks-deleted." + this.eventKey
+        });
+    }.bind(this))
+};
+
+/**
+ * save cutting marks
+ */
+VDRest.Recordings.Model.List.Recording.prototype.saveCuttingMarks = function () {
+
+    if (this.validateCuttingMarks()) {
+
+        this.sortCuttingMarks();
+
+        this.module.getResource('List.Recording').saveCuttingMarks(this);
+
+        $window.one("vdrest-api-actions.recording-marks-saved" + this.eventKey, function () {
+            $.event.trigger({
+                "type": "gui-recording.cutting-marks-saved." + this.eventKey
+            });
+        }.bind(this))
+    } else {
+        $.event.trigger({
+            "type": "gui-recording.cutting-marks-invalid." + this.eventKey
+        });
+    }
+};
+
+/**
+ * validate cutting marks
+ * @return {boolean}
+ */
+VDRest.Recordings.Model.List.Recording.prototype.validateCuttingMarks = function () {
+
+    var valid = true, reg = /[0-9]{1,2}:[0-9]{2}:[0-9]{2}(\.[0-9]{2})?/;
+
+    if (!this.data.marks instanceof Array) {
+        return false;
+    }
+
+    this.data.marks.forEach(function (mark) {
+        if (!reg.test(mark)) {
+            valid = false;
+        }
+    });
+    return valid;
+};
+
+/**
+ * sort cutting marks
+ * @return VDRest.Recordings.Model.List.Recording
+ */
+VDRest.Recordings.Model.List.Recording.prototype.sortCuttingMarks = function () {
+
+    this.data.marks.sort(function (a, b) {
+        a = parseInt(a.replace(/[^0-9]/g, ''));
+        b = parseInt(b.replace(/[^0-9]/g, ''));
+
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    });
+
+    return this;
+};
+
+VDRest.Recordings.Model.List.Recording.prototype.cut = function () {
+
+    if (this.validateCuttingMarks()) {
+
+        this.sortCuttingMarks();
+
+        this.module.getResource('List.Recording').cutRecording(this);
+
+        $window.one("vdrest-api-actions.recording-cut." + this.eventKey, function () {
+
+            console.log('cut ready');
+
+        }.bind(this))
+    }
 };
 
 /**

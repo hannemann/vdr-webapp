@@ -145,7 +145,8 @@ VDRest.Api.Resource.prototype.onError = function (e) {
         403,
         406,
         407,
-        408
+        408,
+        "custom"
     ];
 
     VDRest.helper.log(e);
