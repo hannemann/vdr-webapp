@@ -12,7 +12,7 @@ VDRest.Abstract.Controller.prototype = new VDRest.Lib.Object();
 
 /**
  * animationEnd event names
- * @type {string[]}
+ * @type {string}
  */
 VDRest.Abstract.Controller.prototype.animationEndEvents = function () {
 

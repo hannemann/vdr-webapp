@@ -158,6 +158,23 @@ Gui.Window.View.Abstract.prototype.getToolButton = function (options) {
     return dom;
 };
 
+Gui.Window.View.Abstract.prototype.removeModal = function (e) {
+
+    if (e.currentTarget === this.modalOverlay[0]) {
+
+        this.modalOverlay[0].removeEventListener(
+            VDRest.Abstract.Controller.prototype.animationEndEvents,
+            this.removeModalHandler
+        );
+        delete this.removeModalHandler;
+        this.modalOverlay.remove();
+        delete this.modalOverlay;
+
+        document.body.classList.remove(this.modalClassNameHide);
+        document.body.classList.remove(this.modalClassNameShow);
+    }
+};
+
 /**
  * remove window
  */
@@ -169,31 +186,32 @@ Gui.Window.View.Abstract.prototype.destruct = function () {
 
     if (this.hasHeader) {
         this.header.empty();
+        delete this.header;
     }
     if (this.hasOwnProperty('body')) {
         this.body.empty();
+        delete this.body;
     }
     this.remove();
+    delete this.node;
 
     if (this.isModal || this.isModalViewport) {
 
         if (!this.isModalTransparent) {
 
-            this.modalOverlay.on(VDRest.Abstract.Controller.prototype.animationEndEvents, function (e) {
+            this.removeModalHandler = this.removeModal.bind(this);
 
-                if (e.target === this.modalOverlay[0]) {
-
-                    this.modalOverlay.remove();
-
-                    $('body').removeClass(this.modalClassNameHide + ' ' + this.modalClassNameShow);
-                }
-            }.bind(this));
-
-            $('body').addClass(this.modalClassNameHide + ' ' + this.modalClassNameShow);
+            this.modalOverlay[0].addEventListener(
+                VDRest.Abstract.Controller.prototype.animationEndEvents,
+                this.removeModalHandler
+            );
+            document.body.classList.add(this.modalClassNameHide);
+            document.body.classList.add(this.modalClassNameShow);
 
         } else {
 
             this.modalOverlay.remove();
+            delete this.modalOverlay;
         }
     }
 };
