@@ -39,6 +39,7 @@ Gui.Video.Controller.Player.prototype.init = function () {
 
     this.video = this.module.getController('Player.Video', {"parent" : this});
     this.controls = this.module.getController('Player.Controls', {"parent" : this});
+    this.volumeCtrl = this.module.getController('Player.Controls.Volume', {"parent" : this});
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 
@@ -59,6 +60,7 @@ Gui.Video.Controller.Player.prototype.dispatchView = function () {
         Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
         this.video.dispatchView();
         this.controls.dispatchView();
+        this.volumeCtrl.dispatchView();
 
         this.addObserver();
 
@@ -84,8 +86,6 @@ Gui.Video.Controller.Player.prototype.dispatchView = function () {
  */
 Gui.Video.Controller.Player.prototype.addObserver = function () {
 
-    this.view.volumeWrapper.on('mousedown touchstart', this.volumeDown.bind(this));
-    this.view.volumeWrapper.on('click', VDRest.helper.stopPropagation);
     this.view.sizeSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
     this.view.bitrateSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
 
@@ -116,9 +116,6 @@ Gui.Video.Controller.Player.prototype.addOsdObserver = function () {
  */
 Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
-    this.view.ctrlVolume.off('mousedown touchstart');
-    this.view.ctrlVolume.off('click');
-    this.view.ctrlVolume.off('click');
     this.view.sizeSelect.off('mousedown touchstart');
     this.view.bitrateSelect.off('mousedown touchstart');
     this.removeOsdObserver();
@@ -366,99 +363,6 @@ Gui.Video.Controller.Player.prototype.qualitySelectMove = function (e) {
             me.qualityAnimating = false;
         });
     }
-};
-
-/**
- * handle start volume change
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.volumeDown = function (e) {
-
-    if (this.controls.isHidden) {
-        return;
-    }
-
-    this.view.toggleQuality(false);
-
-    e.stopPropagation();
-    e.preventDefault();
-    $document.one('mouseup.videoplayer-volume touchend.videoplayer-volume', this.volumeUp.bind(this));
-
-    this.controls.stopHide();
-    if ('touchstart' === e.type) {
-        this.volumeSlidePos = e.originalEvent.changedTouches[0].pageY;
-    } else {
-        this.volumeSlidePos = e.pageY;
-    }
-    $document.on(
-        'mousemove.videoplayer-volume touchmove.videoplayer-volume',
-        this.volumeMove.bind(this)
-    );
-    this.isAllowedUpdateVolume = false;
-    this.view.volumeIndicator.on(this.transitionEndEvents, function () {
-        this.view.volumeIndicator.off(this.transitionEndEvents);
-        this.isAllowedUpdateVolume = true;
-    }.bind(this));
-    this.view.toggleVolumeIndicator(true);
-    this.view.toggleVolumeSliderActiveState();
-    this.vibrate();
-};
-
-/**
- * handle stop volume change
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.volumeUp = function (e) {
-
-    e.stopPropagation();
-    e.preventDefault();
-    this.view.isAllowedUpdateVolume = undefined;
-    $document.off('mousemove.videoplayer-volume touchmove.videoplayer-volume');
-    $document.off('mouseup.videoplayer-volume touchend.videoplayer-volume');
-    this.view.toggleVolumeIndicator(false);
-    this.view.toggleVolumeSliderActiveState();
-};
-
-/**
- * handle volume change
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.volumeMove = function (e) {
-
-    var newPos;
-
-    if (!this.isAllowedUpdateVolume) {
-        return;
-    }
-
-    e.stopPropagation();
-    e.preventDefault();
-    newPos = e.type === 'touchmove'
-        ? e.originalEvent.changedTouches[0].pageY
-        : e.pageY;
-
-    this.setVolume(newPos >= this.volumeSlidePos ? 'decrease' : 'increase');
-    this.volumeSlidePos = newPos;
-};
-
-/**
- * set actual volume
- * @param {string} action
- */
-Gui.Video.Controller.Player.prototype.setVolume = function (action) {
-
-    var vol = this.video.getVolume(),
-        value = 0.01;
-
-    if ('increase' == action) {
-
-        this.video.setVolume(vol + value > 1 ? 1 : vol + value);
-    } else {
-
-        this.video.setVolume(vol - value < 0 ? 0 : vol - value);
-    }
-    VDRest.config.setItem('html5VideoPlayerVol', this.video.getVolume());
-    this.view.setVolumeSliderHeight();
 };
 
 /**
@@ -992,6 +896,8 @@ Gui.Video.Controller.Player.prototype.destructView = function () {
     delete this.controls;
     this.video.destructView();
     delete this.video;
+    this.volumeCtrl.destructView();
+    delete this.volumeCtrl;
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();

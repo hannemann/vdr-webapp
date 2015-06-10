@@ -119,10 +119,7 @@ Gui.Video.View.Player.prototype.initPlayer = function () {
  */
 Gui.Video.View.Player.prototype.initControls = function () {
 
-    this.addVolumeControl()
-        .setInitialVolume()
-        .setVolumeSliderHeight()
-        .addQualitySelector();
+    this.addQualitySelector();
 
     return this;
 };
@@ -173,112 +170,6 @@ Gui.Video.View.Player.prototype.toggleMinimize = function () {
     } else {
         this.ctrlMinimize.html(this.symbolMinimize);
     }
-};
-
-/**
- * add volume slider and indicator
- * @returns {Gui.Video.View.Player}
- */
-Gui.Video.View.Player.prototype.addVolumeControl = function () {
-
-    this.volumeWrapper = $('<div class="volume-wrapper">').appendTo(this.module.getController('Player.Controls').view.node);
-    this.ctrlVolume = $('<div class="slider volume">').appendTo(this.volumeWrapper);
-    this.volumeSlider = $('<div>').appendTo(this.ctrlVolume);
-    this.volumeIndicator = $('<div class="vdr-web-symbol info volume-indicator">');
-    this.volumeIndicator.attr('data-animate', 'opacity fast');
-    this.volumeIndicator.appendTo(this.module.getController('Player.Controls').view.node);
-    this.volumeIndicatorLabel = $('<span class="label">').appendTo(
-        this.volumeIndicator
-    );
-    this.volumeIndicatorValue = $('<span class="value">').appendTo(
-        this.volumeIndicator
-    );
-
-    return this;
-};
-
-/**
- * set initial volume
- */
-Gui.Video.View.Player.prototype.setInitialVolume = function () {
-
-    var volume = VDRest.config.getItem('html5VideoPlayerVol') || 1;
-    this.module.getController('Player.Video').setVolume(parseFloat(volume));
-    this.updateVolumeIndicator(this.getVolumePercentage());
-
-    return this;
-};
-
-/**
- * toggle active state of volume slider
- */
-Gui.Video.View.Player.prototype.toggleVolumeSliderActiveState = function () {
-
-    this.ctrlVolume.toggleClass('active');
-};
-
-/**
- * set height of volume slider
- */
-Gui.Video.View.Player.prototype.setVolumeSliderHeight = function () {
-
-    var percentage = this.getVolumeSliderHeight();
-
-    this.volumeSlider.css({
-        "top" : percentage
-    });
-    this.updateVolumeIndicator();
-
-    return this;
-};
-
-/**
- * Update volume indicator
- */
-Gui.Video.View.Player.prototype.updateVolumeIndicator = function () {
-
-    var symbol, value = this.getVolumePercentage();
-
-    if (value == 0) {
-        symbol = 'U';
-    } else if (value <= 50) {
-        symbol = 'V';
-    } else {
-        symbol = 'W';
-    }
-
-    this.volumeIndicatorLabel.text(symbol);
-    this.volumeIndicatorValue.text(value.toString() + '%');
-};
-
-/**
- * toggle volume indicator visibility
- * @param {Boolean} show
- */
-Gui.Video.View.Player.prototype.toggleVolumeIndicator = function (show) {
-
-    show = !!show;
-    this.volumeIndicator.toggleClass('show', show);
-};
-
-/**
- * retrieve css top property for volumeslider
- * @returns {string}
- */
-Gui.Video.View.Player.prototype.getVolumeSliderHeight = function () {
-
-    var height = 100 - this.getVolumePercentage();
-
-    return height <= 0 ? '1px' : height.toString() + '%';
-};
-
-/**
- * retrieve percentage volume
- * @returns {int}
- */
-Gui.Video.View.Player.prototype.getVolumePercentage = function () {
-
-    return parseInt(this.module.getController('Player.Video').getVolume() * 100, 10);
 };
 
 /**
