@@ -40,6 +40,7 @@ Gui.Video.Controller.Player.prototype.init = function () {
     this.video = this.module.getController('Player.Video', {"parent" : this});
     this.controls = this.module.getController('Player.Controls', {"parent" : this});
     this.volumeCtrl = this.module.getController('Player.Controls.Volume', {"parent" : this});
+    this.osd = this.module.getController('Player.Osd', {"parent" : this});
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 
@@ -61,6 +62,7 @@ Gui.Video.Controller.Player.prototype.dispatchView = function () {
         this.video.dispatchView();
         this.controls.dispatchView();
         this.volumeCtrl.dispatchView();
+        this.osd.dispatchView();
 
         this.addObserver();
 
@@ -71,7 +73,7 @@ Gui.Video.Controller.Player.prototype.dispatchView = function () {
 
         this.data.isTv = true;
         this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
-            this.view.setData('current_broadcast', broadcast);
+            this.setData('current_broadcast', broadcast);
             this.data.startTime = parseInt(Date.now() / 1000, 10) - broadcast.getData('start_time');
             callback();
         }.bind(this));
@@ -95,20 +97,9 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
 
     this.video.addStalledObserver(this.handleStalled.bind(this));
 
-    this.addOsdObserver();
-
     if (this.data.isVideo) {
         this.video.addPlayObserver(this.view.updateRecordingStartEndTime.bind(this.view), true);
     }
-};
-
-/**
- * add osd related event listeners
- */
-Gui.Video.Controller.Player.prototype.addOsdObserver = function () {
-
-    this.view.osd.on(VDRest.helper.pointerEnd, this.toggleControls.bind(this));
-    this.view.osd.on(VDRest.helper.pointerStart, this.setTimeDown.bind(this));
 };
 
 /**
@@ -118,7 +109,6 @@ Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
     this.view.sizeSelect.off('mousedown touchstart');
     this.view.bitrateSelect.off('mousedown touchstart');
-    this.removeOsdObserver();
 };
 
 /**
@@ -143,15 +133,6 @@ Gui.Video.Controller.Player.prototype.removeCutObserver = function () {
 };
 
 /**
- * remove osd related event listeners
- */
-Gui.Video.Controller.Player.prototype.removeOsdObserver = function () {
-
-    this.view.osd.off(VDRest.helper.pointerEnd);
-    this.view.osd.off(VDRest.helper.pointerStart);
-};
-
-/**
  * toggle controls
  * @param {jQuery.Event} e
  */
@@ -161,7 +142,7 @@ Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
         this.data.sourceModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', this.oldChannelId);
         this.oldChannelId = undefined;
         this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
-            this.view.setData('current_broadcast', broadcast);
+            this.setData('current_broadcast', broadcast);
             this.view.initOsd();
         }.bind(this));
     }
@@ -470,6 +451,7 @@ Gui.Video.Controller.Player.prototype.setTime = function (action, value) {
     }
     this.view.setData('startTime', this.data.startTime);
     this.view.updateProgress(this.data.startTime);
+    this.osd.updateInfo();
 };
 
 /**
@@ -527,8 +509,6 @@ Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
  */
 Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
 
-    var me = this;
-
     if (this.controls.isHidden && !this.data.isMinimized) {
         return;
     }
@@ -545,20 +525,21 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         this.observeHash = VDRest.app.getLocationHash();
         VDRest.app.observeHash.pop();
         history.back();
+        document.body.classList.add('video-minimized');
+        this.controls.view.toggleMinimize(true);
+        setTimeout(function () {
+            this.view.node.one('click', function () {
+                this.toggleMinimize();
+            });
+        }.bind(this), 2000);
+        this.data.isMinimized = true;
     } else {
         VDRest.app.observe();
         VDRest.app.setLocationHash(this.observeHash);
         VDRest.app.destroyer.push(this.destroyer);
-    }
-    this.view.toggleMinimize();
-    this.data.isMinimized = !this.data.isMinimized;
-
-    if (this.data.isMinimized) {
-        setTimeout(function () {
-            me.view.node.one('click', function () {
-                me.toggleMinimize();
-            });
-        }, 2000);
+        document.body.classList.remove('video-minimized');
+        this.controls.view.toggleMinimize(false);
+        this.data.isMinimized = false;
     }
 };
 
@@ -694,9 +675,9 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
             this.view.updateRecordingEndTime(false);
 
             this.data.isVideo && this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
-            this.removeOsdObserver();
-            this.view.initOsd();
-            this.addOsdObserver();
+            this.osd.removeObserver();
+            this.osd.view.update();
+            this.osd.addObserver();
         }.bind(this);
 
     if (e instanceof jQuery.Event) {
@@ -744,7 +725,7 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
     if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
         this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
             if (broadcast) {
-                this.view.setData('current_broadcast', broadcast);
+                this.setData('current_broadcast', broadcast);
                 this.setIsTv();
                 this.data.startTime = parseInt(Date.now() / 1000, 10) - broadcast.getData('start_time');
                 this.view.setData('startTime', this.data.startTime);
@@ -898,6 +879,8 @@ Gui.Video.Controller.Player.prototype.destructView = function () {
     delete this.video;
     this.volumeCtrl.destructView();
     delete this.volumeCtrl;
+    this.osd.destructView();
+    delete this.osd;
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();

@@ -109,7 +109,7 @@ Gui.Video.View.Player.prototype.render = function () {
  */
 Gui.Video.View.Player.prototype.initPlayer = function () {
 
-    this.initControls().initOsd();
+    this.initControls();
 
     return this;
 };
@@ -154,22 +154,6 @@ Gui.Video.View.Player.prototype.addTimeLine = function () {
     this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
 
     return this;
-};
-
-/**
- * toggle minimized class
- */
-Gui.Video.View.Player.prototype.toggleMinimize = function () {
-
-    var body = $('body'), className = 'video-minimized';
-
-    body.toggleClass(className);
-
-    if (body.hasClass(className)) {
-        this.ctrlMinimize.html(this.symbolMaximize);
-    } else {
-        this.ctrlMinimize.html(this.symbolMinimize);
-    }
 };
 
 /**
@@ -342,7 +326,6 @@ Gui.Video.View.Player.prototype.updateProgress = function (time) {
 
     this.currentProgress.text(this.helper().getDurationAsString(time, true));
     this.setTimelineSliderWidth();
-    this.updateInfo();
     return this;
 };
 
@@ -387,184 +370,6 @@ Gui.Video.View.Player.prototype.toggleQualityControlActiveState = function (sele
 };
 
 /**
- * add title and subtitle to player
- */
-Gui.Video.View.Player.prototype.addTitle = function () {
-
-    var now,
-        me = this, logo, end,
-        sourceModel = this.data.sourceModel;
-
-    if (this.infoArea) {
-        this.infoArea.remove();
-    }
-
-    this.infoArea = $('<div class="info-area info">');
-    this.title = $('<div class="title info">').appendTo(this.infoArea);
-
-    if (this.data.isVideo) {
-        this.title.text(sourceModel.getData('event_title'));
-        if ('' !== sourceModel.getData('event_short_text')) {
-            this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
-            this.subTitle.text(sourceModel.getData('event_short_text'));
-        }
-    } else {
-
-        if ("undefined" != typeof this.changeTitleTimeout) {
-            clearTimeout(this.changeTitleTimeout);
-        }
-
-        sourceModel.getCurrentBroadcast(function (broadcast) {
-            if (broadcast) {
-                this.setData('current_broadcast', broadcast);
-                this.title.text(broadcast.getData('title'));
-                if ('' !== broadcast.getData('short_text')) {
-                    this.subTitle = $('<div class="short-text info">').appendTo(this.infoArea);
-                    this.subTitle.text(broadcast.getData('short_text'));
-                }
-
-                now = new Date().getTime() / 1000;
-                end = (broadcast.getData('end_time') - parseInt(now, 10)) * 1000;
-
-                this.changeTitleTimeout = setTimeout(function () {
-                    me.addTitle();
-                }, end);
-            }
-
-            logo = this.data.sourceModel.getData('image');
-            if (logo) {
-                this.infoArea.addClass('has-logo');
-                this.infoArea.css({
-                    "background-image": "url(" + logo + ")"
-                });
-            }
-        }.bind(this));
-    }
-
-    this.osd.prepend(this.infoArea);
-
-    $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
-
-    return this;
-};
-
-/**
- * update info area
- */
-Gui.Video.View.Player.prototype.updateInfo = function () {
-
-    var broadcast, start, end, helper = this.helper();
-
-    if (!this.data.isVideo) {
-        broadcast = this.getData('current_broadcast');
-        this.title.text(broadcast.getData('title'));
-        if ('' !== broadcast.getData('short_text')) {
-            this.subTitle.text(broadcast.getData('short_text'));
-        }
-
-        start = helper.getTimeString(broadcast.getData('start_date'));
-        end = helper.getTimeString(broadcast.getData('end_date'));
-        this.start.text(start);
-        this.end.text(end);
-        $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
-    }
-};
-
-/**
- * scroll title
- */
-Gui.Video.View.Player.prototype.scrollTitle = function () {
-
-    if ("undefined" !== typeof this.infoAreaScrollInterval) {
-        clearInterval(this.infoAreaScrollInterval);
-        this.infoAreaScrollInterval = undefined;
-    }
-    if ("undefined" !== typeof this.infoAreaScrollTimeout) {
-        clearTimeout(this.infoAreaScrollTimeout);
-        this.infoAreaScrollTimeout = undefined;
-    }
-
-    //if (this.controls.hasClass('show')) {
-        this.animateInfoArea();
-    //}
-
-};
-
-/**
- * animate info area
- */
-Gui.Video.View.Player.prototype.animateInfoArea = function () {
-
-    var me = this,
-        indent = 0,
-        elem = this.infoArea,
-        infoWidth = this.infoArea.width(),
-        titleWidth,
-        subTitleWidth = 0,
-        delta;
-
-    elem.css({
-        "text-indent": indent
-    });
-
-    titleWidth = this.title.width();
-    if (this.subTitle) {
-        subTitleWidth = this.subTitle.width();
-    }
-
-    delta = Math.max(titleWidth, subTitleWidth) - infoWidth;
-
-    if (delta < 1) return;
-
-    this.infoAreaScrollTimeout = setTimeout(function () {
-
-        me.infoAreaScrollInterval = setInterval(function () {
-            indent -= 1;
-
-            if (Math.abs(indent) > delta) {
-                clearInterval(me.infoAreaScrollInterval);
-                me.infoAreaScrollInterval = undefined;
-                me.infoAreaScrollTimeout = setTimeout(function () {
-                    var skip = 0;
-                    elem.find('.info').animate({
-                        'opacity' : 0
-                    }, {
-                        "duration" : "fast",
-                        "complete" : function () {
-                            elem.css({
-                                "text-indent" : 0
-                            });
-                            elem.find('.info').animate({
-                                'opacity' : 1
-                            }, {
-                                "duration" : "fast",
-                                "complete" : function () {
-                                    if (skip < 3) {
-                                        skip += 1;
-                                        return;
-                                    }
-                                    me.animateInfoArea.call(me);
-                                }
-                            })
-                        }
-                    });
-                }, 2000);
-            } else if (!me.controls.hasClass('show')) {
-                clearInterval(me.infoAreaScrollInterval);
-                me.infoAreaScrollInterval = undefined;
-                elem.css({
-                    "text-indent": 0
-                });
-            } else {
-                elem.css({
-                    "text-indent": indent + 'px'
-                });
-            }
-        }, 40);
-    }, 2000);
-};
-
-/**
  * add classes
  * @returns {Gui.Video.View.Player}
  */
@@ -582,23 +387,7 @@ Gui.Video.View.Player.prototype.addClasses = function () {
  */
 Gui.Video.View.Player.prototype.destruct = function () {
 
-    var me = this;
-
-    if ("undefined" != typeof this.changeTitleTimeout) {
-        clearTimeout(this.changeTitleTimeout);
-        this.changeTitleTimeout = undefined;
-    }
-
-    if ("undefined" !== this.infoAreaScrollInterval) {
-        clearInterval(this.infoAreaScrollInterval);
-        this.infoAreaScrollInterval = undefined;
-    }
-    if ("undefined" !== typeof this.infoAreaScrollTimeout) {
-        clearTimeout(this.infoAreaScrollTimeout);
-        this.infoAreaScrollTimeout = undefined;
-    }
-
-    Gui.Window.View.Abstract.prototype.destruct.call(me);
+    Gui.Window.View.Abstract.prototype.destruct.call(this);
     $('body').removeClass('has-video-player');
     $('title').text(this.defaultTitle);
 };

@@ -49,4 +49,7 @@ VDRest.Abstract.View.prototype.remove = function () {
 VDRest.Abstract.View.prototype.destruct = function () {
 
     this.remove();
+    if ("undefined" !== typeof this.node) {
+        delete this.node;
+    }
 };

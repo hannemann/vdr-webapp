@@ -163,8 +163,6 @@ Gui.Window.View.Abstract.prototype.getToolButton = function (options) {
  */
 Gui.Window.View.Abstract.prototype.destruct = function () {
 
-    var me=this;
-
     $.event.trigger({
         "type" : "destruct.window-" + this.keyInCache
     });
@@ -183,14 +181,13 @@ Gui.Window.View.Abstract.prototype.destruct = function () {
 
             this.modalOverlay.on(VDRest.Abstract.Controller.prototype.animationEndEvents, function (e) {
 
-                if (e.target === me.modalOverlay.get(0)) {
+                if (e.target === this.modalOverlay[0]) {
 
-                    me.modalOverlay.remove();
-                    //$('body').removeClass('hide-modal');
+                    this.modalOverlay.remove();
 
-                    $('body').removeClass(me.modalClassNameHide + ' ' + me.modalClassNameShow);
+                    $('body').removeClass(this.modalClassNameHide + ' ' + this.modalClassNameShow);
                 }
-            });
+            }.bind(this));
 
             $('body').addClass(this.modalClassNameHide + ' ' + this.modalClassNameShow);
 

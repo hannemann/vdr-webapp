@@ -49,6 +49,10 @@ Gui.Video.View.Player.Video.prototype.addThrobber = function () {
  */
 Gui.Video.View.Player.Video.prototype.destruct = function () {
 
+    this.throbber.remove();
+    delete this.throbber;
     this.node[0].pause();
     this.node.prop('src', false);
+    this.node.remove();
+    delete this.node;
 };

@@ -122,3 +122,21 @@ Gui.Video.View.Player.Controls.Volume.prototype.getVolumePercentage = function (
 
     return parseInt(this.player.video.getVolume() * 100, 10);
 };
+
+/**
+ * destroy osd
+ */
+Gui.Video.View.Player.Controls.Volume.prototype.destruct = function () {
+
+    this.indicatorLabel.remove();
+    delete this.indicatorLabel;
+    this.indicatorValue.remove();
+    delete this.indicatorValue;
+    this.indicator.remove();
+    delete this.indicator;
+    this.volumeSlider.remove();
+    delete this.volumeSlider;
+    this.ctrl.remove();
+    delete this.ctrl;
+    Gui.Window.View.Abstract.prototype.destruct.call(this);
+};

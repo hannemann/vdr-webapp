@@ -169,16 +169,41 @@ Gui.Video.View.Player.Controls.prototype.removeChannelButtons = function () {
     }
 };
 
+/**
+ * toggle minimized class
+ * @param {boolean} minimized
+ */
+Gui.Video.View.Player.Controls.prototype.toggleMinimize = function (minimized) {
+
+    if (minimized) {
+        this.ctrlMinimize.html(this.symbolMaximize);
+    } else {
+        this.ctrlMinimize.html(this.symbolMinimize);
+    }
+};
+
+/**
+ * destroy nodes
+ */
 Gui.Video.View.Player.Controls.prototype.destruct = function () {
 
     this.removeChannelButtons();
     this.removeDownloadButton();
-    this.node.empty();
+
+    this.ctrlPlay.remove();
+    this.ctrlStop.remove();
+    this.ctrlFullScreen.remove();
+    this.ctrlQuality.remove();
+    this.ctrlMinimize.remove();
+    if ("undefined" !== typeof this.ctrlCut) {
+        this.ctrlCut.remove();
+        delete this.ctrlCut;
+    }
+
     delete this.ctrlPlay;
     delete this.ctrlStop;
     delete this.ctrlFullScreen;
     delete this.ctrlQuality;
     delete this.ctrlMinimize;
-    delete this.ctrlCut;
 };
 
