@@ -20,6 +20,30 @@ Gui.Video.Controller.Player.Controls.prototype.init = function () {
     });
     this.view.setParentView(this.player.view);
     this.isHidden = false;
+
+    this.triggerPlay = this.module.getController(
+        'Player.Controls.Trigger.Play',
+        {
+            "parent" : this.view,
+            "handler" : this.player.togglePlayback.bind(this.player)
+        }
+    );
+
+    this.triggerStop = this.module.getController(
+        'Player.Controls.Trigger.Stop',
+        {
+            "parent" : this.view,
+            "handler" : this.player.stopPlayback.bind(this.player)
+        }
+    );
+
+    this.triggerFullScreen = this.module.getController(
+        'Player.Controls.Trigger.ToggleFullScreen',
+        {
+            "parent" : this.view,
+            "handler" : this.player.toggleFullScreen.bind(this.player)
+        }
+    );
 };
 
 /**
@@ -28,6 +52,9 @@ Gui.Video.Controller.Player.Controls.prototype.init = function () {
 Gui.Video.Controller.Player.Controls.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    this.triggerPlay.dispatchView();
+    this.triggerStop.dispatchView();
+    this.triggerFullScreen.dispatchView();
     this.addObserver()
 };
 
@@ -38,9 +65,6 @@ Gui.Video.Controller.Player.Controls.prototype.addObserver = function () {
 
     this.view.node.on('click.' + this.player.keyInCache, this.player.toggleControls.bind(this.player));
     this.view.ctrlQuality.on('click.' + this.player.keyInCache, this.player.toggleQuality.bind(this.player));
-    this.view.ctrlStop.on('click.' + this.player.keyInCache, this.player.stopPlayback.bind(this.player));
-    this.view.ctrlPlay.on('click.' + this.player.keyInCache, this.player.togglePlayback.bind(this.player));
-    this.view.ctrlFullScreen.on('click.' + this.player.keyInCache, this.player.toggleFullScreen.bind(this.player));
     this.view.ctrlMinimize.on('click.' + this.player.keyInCache, this.player.toggleMinimize.bind(this.player));
 
     if (this.player.data.isTv) {
@@ -84,9 +108,6 @@ Gui.Video.Controller.Player.Controls.prototype.addDownloadObserver = function ()
 Gui.Video.Controller.Player.Controls.prototype.removeObserver = function () {
 
     this.view.node.off('click');
-    this.view.ctrlStop.off('click');
-    this.view.ctrlPlay.off('click');
-    this.view.ctrlFullScreen.off('click');
     this.view.ctrlQuality.off('click');
     this.view.ctrlMinimize.off('click');
     this.removeZappObserver();
@@ -215,5 +236,8 @@ Gui.Video.Controller.Player.Controls.prototype.setIsVideo = function () {
 Gui.Video.Controller.Player.Controls.prototype.destructView = function () {
 
     this.stopHide();
+    this.triggerPlay.destructView();
+    this.triggerStop.destructView();
+    this.triggerFullScreen.destructView();
     VDRest.Abstract.Controller.prototype.destructView.call(this);
 };

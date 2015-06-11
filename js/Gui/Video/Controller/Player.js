@@ -496,12 +496,18 @@ Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
 
     e.stopPropagation();
 
-    if (this.data.isTv && this.isPlaying) {
-        this.startPlayback();
-        return;
-    }
+    //if (this.data.isTv && this.isPlaying) {
+    //    this.startPlayback();
+    //    return;
+    //}
 
-    this[this.isPlaying ? 'pausePlayback' : 'startPlayback']();
+    if (this.isPlaying) {
+
+        this.pausePlayback();
+    } else {
+
+        this.startPlayback();
+    }
 };
 
 /**
@@ -530,7 +536,7 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         setTimeout(function () {
             this.view.node.one('click', function () {
                 this.toggleMinimize();
-            });
+            }.bind(this));
         }.bind(this), 2000);
         this.data.isMinimized = true;
     } else {
@@ -572,7 +578,6 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
 
         this.video.toggleThrobber();
         if (this.data.isVideo) {
-            this.view.ctrlPlay.html(this.view.symbolPause).addClass('pause');
             this.view.updateRecordingEndTime(false);
         }
 
@@ -638,8 +643,6 @@ Gui.Video.Controller.Player.prototype.pausePlayback = function () {
     }
     this.isPlaying = false;
     this.video.pause();
-
-    this.view.ctrlPlay.html(this.view.symbolPlay).removeClass('pause');
 
     if (this.noTimeUpdateWorkaround) {
         clearInterval(this.noTimeoutInterval);
@@ -849,8 +852,6 @@ Gui.Video.Controller.Player.prototype.requestFullscreen = function () {
             document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         }
     }
-
-    this.controls.view.ctrlFullScreen.html(this.controls.view.symbolExitFullscreen);
 };
 
 /**
@@ -865,7 +866,6 @@ Gui.Video.Controller.Player.prototype.cancelFullscreen = function () {
     } else if (document.webkitCancelFullScreen) {
         document.webkitCancelFullScreen();
     }
-    this.controls.view.ctrlFullScreen.html(this.controls.view.symbolFullscreen);
 };
 
 /**
@@ -885,7 +885,9 @@ Gui.Video.Controller.Player.prototype.destructView = function () {
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();
     this.module.cache.flush();
-    clearInterval(this.noTimeoutInterval);
+    if ("undefined" !== this.noTimeoutInterval) {
+        clearInterval(this.noTimeoutInterval);
+    }
 
     VDRest.app.getModule('Gui.Epg').unMute();
 };

@@ -86,18 +86,6 @@ Gui.Video.View.Player.Controls.prototype.render = function () {
  */
 Gui.Video.View.Player.Controls.prototype.addControlButtons = function () {
 
-    this.ctrlPlay = $(
-        '<div class="vdr-web-symbol play">' + this.symbolPlay + '</div>'
-    ).appendTo(this.node);
-
-    this.ctrlStop = $(
-        '<div class="vdr-web-symbol stop">' + this.symbolStop + '</div>'
-    ).appendTo(this.node);
-
-    this.ctrlFullScreen = $(
-        '<div class="vdr-web-symbol toggle-fullScreen">' + this.symbolFullscreen + '</div>'
-    ).appendTo(this.node);
-
     this.ctrlQuality = $(
         '<div class="vdr-web-symbol toggle-quality">' + this.symbolQuality + '</div>'
     ).appendTo(this.node);
@@ -190,9 +178,6 @@ Gui.Video.View.Player.Controls.prototype.destruct = function () {
     this.removeChannelButtons();
     this.removeDownloadButton();
 
-    this.ctrlPlay.remove();
-    this.ctrlStop.remove();
-    this.ctrlFullScreen.remove();
     this.ctrlQuality.remove();
     this.ctrlMinimize.remove();
     if ("undefined" !== typeof this.ctrlCut) {
@@ -200,9 +185,6 @@ Gui.Video.View.Player.Controls.prototype.destruct = function () {
         delete this.ctrlCut;
     }
 
-    delete this.ctrlPlay;
-    delete this.ctrlStop;
-    delete this.ctrlFullScreen;
     delete this.ctrlQuality;
     delete this.ctrlMinimize;
 };
