@@ -754,10 +754,10 @@ Gui.Video.Controller.Player.prototype.startCutting = function () {
     $window.one('gui-recording.updated.' + this.data.sourceModel.keyInCache.toCacheKey(), function () {
 
 
-        this.cutter = this.module.getController('Cutter', {
-            "sourceModel": this.data.sourceModel,
-            "parent": this
-        }).dispatchView();
+        //this.cutter = this.module.getController('Cutter', {
+        //    "sourceModel": this.data.sourceModel,
+        //    "parent": this
+        //}).dispatchView();
 
 
         //console.log('VP: ', this.data.sourceModel);
@@ -810,6 +810,8 @@ Gui.Video.Controller.Player.prototype.setIsTv = function () {
  */
 Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
 
+    var isFullscreen = false;
+
     if (this.controls.isHidden) {
         return;
     }
@@ -818,18 +820,16 @@ Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
 
     this.vibrate();
 
-    var isFullscreen = false;
-
-    if ("undefined" != typeof document.fullScreen) {
-        isFullscreen = document.fullScreen;
+    if ("undefined" != typeof document['fullScreen']) {
+        isFullscreen = document['fullScreen'];
     }
 
-    if ("undefined" != typeof document.mozFullscreen) {
-        isFullscreen = document.mozFullscreen;
+    if ("undefined" != typeof document['mozFullscreen']) {
+        isFullscreen = document['mozFullscreen'];
     }
 
-    if ("undefined" != typeof document.webkitIsFullScreen) {
-        isFullscreen = document.webkitIsFullScreen;
+    if ("undefined" != typeof document['webkitIsFullScreen']) {
+        isFullscreen = document['webkitIsFullScreen'];
     }
 
     this[isFullscreen ? 'cancelFullscreen' : 'requestFullscreen']();
@@ -842,14 +842,14 @@ Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
  */
 Gui.Video.Controller.Player.prototype.requestFullscreen = function () {
 
-    if ((document.fullScreenElement && document.fullScreenElement !== null) ||
-        (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-        if (document.documentElement.requestFullScreen) {
-            document.documentElement.requestFullScreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-            document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullScreen) {
-            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    if ((document['fullScreenElement'] && document['fullScreenElement'] !== null) ||
+        (!document['mozFullScreen'] && !document['webkitIsFullScreen'])) {
+        if (document.documentElement['requestFullScreen']) {
+            document.documentElement['requestFullScreen']();
+        } else if (document.documentElement['mozRequestFullScreen']) {
+            document.documentElement['mozRequestFullScreen']();
+        } else if (document.documentElement['webkitRequestFullScreen']) {
+            document.documentElement['webkitRequestFullScreen'](Element['ALLOW_KEYBOARD_INPUT']);
         }
     }
 };
@@ -859,12 +859,12 @@ Gui.Video.Controller.Player.prototype.requestFullscreen = function () {
  */
 Gui.Video.Controller.Player.prototype.cancelFullscreen = function () {
 
-    if (document.cancelFullScreen) {
-        document.cancelFullScreen();
-    } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-    } else if (document.webkitCancelFullScreen) {
-        document.webkitCancelFullScreen();
+    if (document['cancelFullScreen']) {
+        document['cancelFullScreen']();
+    } else if (document['mozCancelFullScreen']) {
+        document['mozCancelFullScreen']();
+    } else if (document['webkitCancelFullScreen']) {
+        document['webkitCancelFullScreen']();
     }
 };
 
