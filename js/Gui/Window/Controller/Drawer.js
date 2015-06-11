@@ -86,7 +86,6 @@ Gui.Window.Controller.Drawer.prototype.triggerAnimation = function () {
 
         this.removeShowClasses();
         this.view.modalOverlay[0].classList.add('hide');
-        this.view.node.one(this.transitionEndEvents, this.resetTransition.bind(this));
         this.resetTransform();
         this.isDispatched = false;
     }
@@ -449,8 +448,6 @@ Gui.Window.Controller.Drawer.prototype.getRemainDuration = function () {
  */
 Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
 
-    Gui.Window.Controller.Abstract.prototype.destructView.call(this);
-
     this.view.modalOverlay[0].classList.remove('hide');
     this.removeShowClasses();
 
@@ -461,6 +458,8 @@ Gui.Window.Controller.Drawer.prototype.destructCallback = function () {
         "type" : "drawer.statechanged",
         "payload" : false
     });
+
+    Gui.Window.Controller.Abstract.prototype.destructView.call(this);
 };
 
 /**
@@ -494,15 +493,17 @@ Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
             "y": source - dest + wrapperTop
         };
 
-        slider.translate(delta);
 
+        this.view.node.one(this.transitionEndEvents, function (e) {
+            slider.translate(delta);
+
+            channel.addClass('attention');
+
+            setTimeout(function () {
+                channel.removeClass('attention');
+            }, 3000);
+        }.bind(this));
         this.stateChangedHandler(e);
-
-        channel.addClass('attention');
-
-        setTimeout(function () {
-            channel.removeClass('attention');
-        }, 3000);
     }
 };
 
