@@ -810,8 +810,6 @@ Gui.Video.Controller.Player.prototype.setIsTv = function () {
  */
 Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
 
-    var isFullscreen = false;
-
     if (this.controls.isHidden) {
         return;
     }
@@ -820,19 +818,26 @@ Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
 
     this.vibrate();
 
+    this[this.isFullScreen() ? 'cancelFullscreen' : 'requestFullscreen']();
+};
+
+/**
+ * detect player is full screen
+ * @return {boolean}
+ */
+Gui.Video.Controller.Player.prototype.isFullScreen = function () {
+
     if ("undefined" != typeof document['fullScreen']) {
-        isFullscreen = document['fullScreen'];
+        return document['fullScreen'];
     }
 
     if ("undefined" != typeof document['mozFullscreen']) {
-        isFullscreen = document['mozFullscreen'];
+        return document['mozFullscreen'];
     }
 
     if ("undefined" != typeof document['webkitIsFullScreen']) {
-        isFullscreen = document['webkitIsFullScreen'];
+        return document['webkitIsFullScreen'];
     }
-
-    this[isFullscreen ? 'cancelFullscreen' : 'requestFullscreen']();
 };
 
 /**

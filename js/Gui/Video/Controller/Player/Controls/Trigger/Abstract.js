@@ -15,7 +15,9 @@ Gui.Video.Controller.Player.Controls.Trigger.Abstract.prototype = new VDRest.Abs
  */
 Gui.Video.Controller.Player.Controls.Trigger.Abstract.prototype.init = function () {
 
-    this.view = this.module.getView('Player.Controls.Trigger.' + this.type);
+    this.view = this.module.getView('Player.Controls.Trigger.' + this.type, {
+        "parent" : this.data.parent
+    });
 
     this.view.setParentView(this.data.parent);
 };

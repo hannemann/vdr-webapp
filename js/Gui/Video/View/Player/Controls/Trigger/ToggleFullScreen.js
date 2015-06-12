@@ -35,3 +35,14 @@ Gui.Video.View.Player.Controls.Trigger.ToggleFullScreen.prototype.state = 'off';
  * @type {string}
  */
 Gui.Video.View.Player.Controls.Trigger.ToggleFullScreen.prototype.className = 'toggle-fullScreen';
+
+/**
+ * initialize
+ */
+Gui.Video.View.Player.Controls.Trigger.ToggleFullScreen.prototype.init = function () {
+
+    if (this.data.parent.data.player.isFullScreen()) {
+        this.state = 'on';
+    }
+    Gui.Video.View.Player.Controls.Trigger.Abstract.prototype.init.call(this);
+};
