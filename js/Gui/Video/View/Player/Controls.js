@@ -90,10 +90,6 @@ Gui.Video.View.Player.Controls.prototype.addControlButtons = function () {
         '<div class="vdr-web-symbol toggle-quality">' + this.symbolQuality + '</div>'
     ).appendTo(this.node);
 
-    this.ctrlMinimize = $(
-        '<div class="vdr-web-symbol minimize">' + this.symbolMinimize + '</div>'
-    ).appendTo(this.node);
-
     if (this.data.isVideo) {
         this.ctrlCut = $(
             '<div class="vdr-web-symbol cut">' + this.symbolCut + '</div>'
@@ -158,19 +154,6 @@ Gui.Video.View.Player.Controls.prototype.removeChannelButtons = function () {
 };
 
 /**
- * toggle minimized class
- * @param {boolean} minimized
- */
-Gui.Video.View.Player.Controls.prototype.toggleMinimize = function (minimized) {
-
-    if (minimized) {
-        this.ctrlMinimize.html(this.symbolMaximize);
-    } else {
-        this.ctrlMinimize.html(this.symbolMinimize);
-    }
-};
-
-/**
  * destroy nodes
  */
 Gui.Video.View.Player.Controls.prototype.destruct = function () {
@@ -179,13 +162,11 @@ Gui.Video.View.Player.Controls.prototype.destruct = function () {
     this.removeDownloadButton();
 
     this.ctrlQuality.remove();
-    this.ctrlMinimize.remove();
     if ("undefined" !== typeof this.ctrlCut) {
         this.ctrlCut.remove();
         delete this.ctrlCut;
     }
 
     delete this.ctrlQuality;
-    delete this.ctrlMinimize;
 };
 

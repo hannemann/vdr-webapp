@@ -532,7 +532,6 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         VDRest.app.observeHash.pop();
         history.back();
         document.body.classList.add('video-minimized');
-        this.controls.view.toggleMinimize(true);
         setTimeout(function () {
             this.view.node.one('click', function () {
                 this.toggleMinimize();
@@ -544,7 +543,6 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         VDRest.app.setLocationHash(this.observeHash);
         VDRest.app.destroyer.push(this.destroyer);
         document.body.classList.remove('video-minimized');
-        this.controls.view.toggleMinimize(false);
         this.data.isMinimized = false;
     }
 };

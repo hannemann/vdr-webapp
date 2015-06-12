@@ -44,6 +44,14 @@ Gui.Video.Controller.Player.Controls.prototype.init = function () {
             "handler" : this.player.toggleFullScreen.bind(this.player)
         }
     );
+
+    this.triggerToggleMinimize = this.module.getController(
+        'Player.Controls.Trigger.Minimize',
+        {
+            "parent" : this.view,
+            "handler" : this.player.toggleMinimize.bind(this.player)
+        }
+    );
 };
 
 /**
@@ -55,6 +63,7 @@ Gui.Video.Controller.Player.Controls.prototype.dispatchView = function () {
     this.triggerPlay.dispatchView();
     this.triggerStop.dispatchView();
     this.triggerFullScreen.dispatchView();
+    this.triggerToggleMinimize.dispatchView();
     this.addObserver()
 };
 
@@ -65,7 +74,6 @@ Gui.Video.Controller.Player.Controls.prototype.addObserver = function () {
 
     this.view.node.on('click.' + this.player.keyInCache, this.player.toggleControls.bind(this.player));
     this.view.ctrlQuality.on('click.' + this.player.keyInCache, this.player.toggleQuality.bind(this.player));
-    this.view.ctrlMinimize.on('click.' + this.player.keyInCache, this.player.toggleMinimize.bind(this.player));
 
     if (this.player.data.isTv) {
         this.addZappObserver();
@@ -109,7 +117,6 @@ Gui.Video.Controller.Player.Controls.prototype.removeObserver = function () {
 
     this.view.node.off('click');
     this.view.ctrlQuality.off('click');
-    this.view.ctrlMinimize.off('click');
     this.removeZappObserver();
     this.removeDownloadObserver();
     this.removeCutObserver();
@@ -239,5 +246,6 @@ Gui.Video.Controller.Player.Controls.prototype.destructView = function () {
     this.triggerPlay.destructView();
     this.triggerStop.destructView();
     this.triggerFullScreen.destructView();
+    this.triggerToggleMinimize.destructView();
     VDRest.Abstract.Controller.prototype.destructView.call(this);
 };
