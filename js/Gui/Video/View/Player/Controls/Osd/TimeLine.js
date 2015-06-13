@@ -19,40 +19,59 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.render = function () {
 
     VDRest.Abstract.View.prototype.render.call(this);
     this.slider.appendTo(this.node);
-    this.setSliderWidth();
+    this.addProgress();
 };
 
-Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.setSliderWidth = function () {
+/**
+ * @param {number} percentage
+ */
+Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.setSliderWidth = function (percentage) {
 
     this.slider.css({
-        "right" : this.getPercentage()
+        "right" : percentage
     });
 };
 
-Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.getPercentage = function () {
+/**
+ * add timer
+ */
+Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.addProgress = function () {
 
-    var percentage, now, broadcast;
+    var start, end, duration, helper = this.helper(), broadcast;
 
-    if (this.player.data.isVideo) {
-        percentage = 100 - (
-        100 * (
-        this.getData('startTime') + this.player.video.getCurrentTime()
-        ) / this.player.data.sourceModel.getData('duration')
-        );
-    } else if (this.player.data.isTv) {
-
-        now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.player.getData('current_broadcast');
-        if (broadcast) {
-            percentage = 100 - (
-            100 * (
-            now - broadcast.getData('start_time')
-            ) / broadcast.getData('duration')
-            );
-        } else {
-            percentage = 100;
-        }
+    if ("undefined" != typeof this.progress) {
+        this.progress.remove();
+        delete this.progress;
     }
 
-    return percentage <= 0 ? '1px' : percentage.toString() + '%';
+    this.progress = $('<div class="progress info"></div>');
+    this.start = $('<div class="progress-start info">').appendTo(this.progress);
+    this.currentProgress = $('<div class="progress-current info">')
+        .text(this.data.progress)
+        .appendTo(this.progress);
+    this.duration = $('<div class="progress-duration info">')
+        .appendTo(this.progress);
+    this.end = $('<div class="progress-end info">').appendTo(this.progress);
+
+    if (this.player.data.isVideo) {
+
+        start = helper.getTimeString(new Date());
+        duration = this.player.data.sourceModel.getData('duration');
+        end = helper.getTimeString(
+            new Date(Date.now() + duration * 1000)
+        );
+        duration = helper.getDurationAsString(duration, true);
+    } else {
+        broadcast = this.player.getData('current_broadcast');
+        start = helper.getTimeString(broadcast.getData('start_date'));
+        end = helper.getTimeString(broadcast.getData('end_date'));
+        duration = helper.getDurationAsString(broadcast.getData('duration'), true);
+    }
+
+    this.start.text(start);
+    this.end.text(end);
+    this.duration.html('&nbsp;/&nbsp;' + duration);
+
+    this.progress.appendTo(this.parentView.node);
+    return this;
 };

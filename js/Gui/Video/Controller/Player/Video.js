@@ -54,7 +54,7 @@ Gui.Video.Controller.Player.Video.prototype.addPlayObserver = function(callback,
 /**
  * add time update event listener
  * @param {function} callback
- * @param {boolean} once
+ * @param {boolean} [once]
  */
 Gui.Video.Controller.Player.Video.prototype.addTimeUpdateObserver = function(callback, once) {
 

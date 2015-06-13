@@ -1,6 +1,11 @@
 Gui.Video.Controller.Player.Controls.Layer = function () {};
 
-Gui.Video.Controller.Player.Controls.Layer.prototype = new Gui.Video.Controller.Player.Controls.Abstract();
+Gui.Video.Controller.Player.Controls.Layer.prototype = new VDRest.Abstract.Controller();
+
+/**
+ * @type {boolean}
+ */
+Gui.Video.Controller.Player.Controls.Layer.prototype.bypassCache = true;
 
 /**
  * initialize

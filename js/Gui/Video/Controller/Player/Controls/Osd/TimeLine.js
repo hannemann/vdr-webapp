@@ -24,4 +24,14 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.init = function () {
         "player" : this.player
     });
     this.view.setParentView(this.data.parent.view);
+    this.view.setSliderWidth(this.getPercentage());
+};
+
+/**
+ * initialize
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.dispatchView = function () {
+
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    this.updateProgress();
 };

@@ -106,7 +106,7 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
     this.view.node.on('click', this.dispatchControls.bind(this));
 
     if (!this.noTimeUpdateWorkaround) {
-        this.video.addTimeUpdateObserver(this.view.updateProgress.bind(this.view));
+        this.video.addTimeUpdateObserver(this.controls.layer.osd.timeLine.updateProgress.bind(this.view));
     }
 
     this.video.addStalledObserver(this.handleStalled.bind(this));
@@ -448,7 +448,7 @@ Gui.Video.Controller.Player.prototype.setTime = function (action, value) {
         this.data.startTime = sourceModel.getData('duration');
     }
     this.view.setData('startTime', this.data.startTime);
-    this.view.updateProgress(this.data.startTime);
+    this.controls.layer.osd.timeLine.updateProgress(this.data.startTime);
     this.osd.updateInfo();
 };
 
@@ -574,7 +574,7 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
 
         if (this.noTimeUpdateWorkaround) {
             this.noTimeoutInterval = setInterval(function () {
-                this.view.updateProgress(this.data.isVideo ? this.data.startTime + currentTime++ : undefined);
+                this.controls.layer.osd.timeLine.updateProgress(this.data.isVideo ? this.data.startTime + currentTime++ : undefined);
             }.bind(this), 1000);
         }
     }.bind(this), true);

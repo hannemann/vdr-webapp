@@ -39,9 +39,9 @@ Gui.Video.Controller.Player.Controls.Osd.prototype.init = function () {
         timeLineType = 'Cut';
     }
 
-    this.timeLine = this.module.getController('Player.Controls.Osd.TimeLine', {
-        "parent" : this
-    });
+    this.timeLine = this.module.getController(
+        'Player.Controls.Osd.TimeLine.' + timeLineType, {"parent" : this}
+    );
 };
 
 /**
