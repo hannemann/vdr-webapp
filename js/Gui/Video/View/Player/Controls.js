@@ -86,10 +86,6 @@ Gui.Video.View.Player.Controls.prototype.render = function () {
  */
 Gui.Video.View.Player.Controls.prototype.addControlButtons = function () {
 
-    this.ctrlQuality = $(
-        '<div class="vdr-web-symbol toggle-quality">' + this.symbolQuality + '</div>'
-    ).appendTo(this.node);
-
     if (this.data.isVideo) {
         this.ctrlCut = $(
             '<div class="vdr-web-symbol cut">' + this.symbolCut + '</div>'
@@ -161,12 +157,9 @@ Gui.Video.View.Player.Controls.prototype.destruct = function () {
     this.removeChannelButtons();
     this.removeDownloadButton();
 
-    this.ctrlQuality.remove();
     if ("undefined" !== typeof this.ctrlCut) {
         this.ctrlCut.remove();
         delete this.ctrlCut;
     }
-
-    delete this.ctrlQuality;
 };
 

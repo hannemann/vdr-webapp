@@ -152,6 +152,7 @@ Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
         clearTimeout(this.spoolTimeout);
         e.stopPropagation();
         e.preventDefault();
+        this.view.toggleQuality(false);
         this.controls.toggle();
     }
 
