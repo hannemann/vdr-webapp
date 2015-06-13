@@ -142,7 +142,7 @@ VDRest.Abstract.Controller.prototype.preventScrollReload = function () {
     if (
         event && node &&
         0 === node.scrollTop &&
-        event.changedTouches[0].pageY > VDRest.helper.touchStartPosition.y
+        event.changedTouches[0].pageY > VDRest.helper.pointerStartPosition.y
     ) {
         event.preventDefault();
     }

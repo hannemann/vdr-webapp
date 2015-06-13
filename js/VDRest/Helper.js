@@ -12,30 +12,46 @@ VDRest.Helper = function () {
         document.body.classList.add('is-firefox');
     }
 
+    this.pointerStartHandler = this.getPointerStart.bind(this);
+    this.pointerMoveHandler = this.getCanCancelEvent.bind(this);
     if (this.isTouchDevice) {
-        this.touchStartHandler = this.getTouchStart.bind(this);
-        this.touchMoveHandler = this.cancelTouchMove.bind(this);
-        document.addEventListener('touchstart', this.touchStartHandler);
-        document.addEventListener('touchmove', this.touchMoveHandler);
         this.pointerStart = 'touchstart';
         this.pointerMove = 'touchmove';
         this.pointerEnd = 'touchend';
     } else {
-        this.mouseStartHandler = this.getPointerStart.bind(this);
-        this.mouseMoveHandler = this.cancelMouseMove.bind(this);
-        document.addEventListener('mousedown', this.mouseStartHandler);
-        document.addEventListener('mousemove', this.mouseMoveHandler);
         this.pointerStart = 'mousedown';
         this.pointerMove = 'mousemove';
         this.pointerEnd = 'mouseup';
     }
+    document.addEventListener(this.pointerStart, this.pointerStartHandler);
+    document.addEventListener(this.pointerMove, this.pointerMoveHandler);
 };
 
 /**
- * get touch start position
- * @param e
+ * retrieve pointer delta
+ * @param {Event} e
  */
-VDRest.Helper.prototype.getTouchStart = function (e) {
+VDRest.Helper.prototype.getPointerDelta = function (e) {
+
+    if (this.isTouchDevice) {
+        this.pointerDelta = {
+            "x": this.pointerStartPosition.x - e.changedTouches[0].pageX,
+            "y": this.pointerStartPosition.y - e.changedTouches[0].pageY
+        };
+    } else {
+        this.pointerDelta = {
+            "x": this.pointerStartPosition.x - e.pageX,
+            "y": this.pointerStartPosition.y - e.pageY
+        };
+    }
+    return this.pointerDelta;
+};
+
+/**
+ * get pointer start position
+ * @param {Event} e
+ */
+VDRest.Helper.prototype.getPointerStart = function (e) {
 
     this.canCancelEvent = false;
 
@@ -44,64 +60,30 @@ VDRest.Helper.prototype.getTouchStart = function (e) {
         "y": 0
     };
 
-    this.touchStartPosition = {
-        "x" : e.changedTouches[0].pageX,
-        "y" : e.changedTouches[0].pageY
-    };
-};
-
-/**
- * determine if touch event is cancelable
- * @param e
- */
-VDRest.Helper.prototype.cancelTouchMove = function (e) {
-
-    this.getPointerDelta(e);
-
-    if ("undefined" !== typeof this.touchStartPosition &&
-        (Math.abs(this.pointerDelta.x) > 5 ||
-        Math.abs(this.pointerDelta.y) > 5)
-    ) {
-
-        this.canCancelEvent = true;
+    if (this.isTouchDevice) {
+        this.pointerStartPosition = {
+            "x" : e.changedTouches[0].pageX,
+            "y" : e.changedTouches[0].pageY
+        };
+    } else {
+        this.pointerStartPosition = {
+            "x" : e.pageX,
+            "y" : e.pageY
+        };
     }
 };
 
 /**
- * determine if touch event is cancelable
- * @param e
+ * determine if event is cancelable
+ * @param {Event} e
  */
-VDRest.Helper.prototype.getPointerDelta = function (e) {
+VDRest.Helper.prototype.getCanCancelEvent = function (e) {
 
-    this.pointerDelta = {
-        "x": this.touchStartPosition.x - e.changedTouches[0].pageX,
-        "y": this.touchStartPosition.y - e.changedTouches[0].pageY
-    };
-};
+    var delta = this.getPointerDelta(e);
 
-/**
- * get pointer start position
- * @param e
- */
-VDRest.Helper.prototype.getPointerStart = function (e) {
-
-    this.canCancelEvent = false;
-
-    this.mouseStartPosition = {
-        "x" : e.pageX,
-        "y" : e.pageY
-    };
-};
-
-/**
- * determine if mouse event is cancelable
- * @param e
- */
-VDRest.Helper.prototype.cancelMouseMove = function (e) {
-
-    if ("undefined" !== typeof this.mouseStartPosition &&
-        (Math.abs(e.pageX - this.mouseStartPosition.x) > 5 ||
-        Math.abs(e.pageY - this.mouseStartPosition.y) > 5)
+    if ("undefined" !== typeof this.pointerStartPosition &&
+        (Math.abs(delta.x) > 5 ||
+        Math.abs(delta.y) > 5)
     ) {
 
         this.canCancelEvent = true;
