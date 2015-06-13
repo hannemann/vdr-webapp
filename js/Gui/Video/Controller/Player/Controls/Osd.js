@@ -18,12 +18,30 @@ Gui.Video.Controller.Player.Controls.Osd.prototype.bypassCache = true;
  */
 Gui.Video.Controller.Player.Controls.Osd.prototype.init = function () {
 
+    var timeLineType;
+
     this.player = this.data.parent.player;
 
     this.view = this.module.getView('Player.Controls.Osd', {
         "player" : this.player
     });
     this.view.setParentView(this.data.parent.view);
+
+    if (this.player.data.isTv) {
+        timeLineType = 'Tv';
+    }
+
+    if (this.player.data.isVideo) {
+        timeLineType = 'Video';
+    }
+
+    if (this.player.mode == 'cut') {
+        timeLineType = 'Cut';
+    }
+
+    this.timeLine = this.module.getController('Player.Controls.Osd.TimeLine', {
+        "parent" : this
+    });
 };
 
 /**
@@ -32,6 +50,7 @@ Gui.Video.Controller.Player.Controls.Osd.prototype.init = function () {
 Gui.Video.Controller.Player.Controls.Osd.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    this.timeLine.dispatchView();
 };
 
 /**
@@ -50,4 +69,14 @@ Gui.Video.Controller.Player.Controls.Osd.prototype.removeObserver = function () 
 
     this.view.node.off(VDRest.helper.pointerEnd);
     this.view.node.off(VDRest.helper.pointerStart);
+};
+
+/**
+ * destruct view
+ */
+Gui.Video.Controller.Player.Controls.Osd.prototype.destructView = function () {
+
+    this.timeLine.destructView();
+    delete this.timeLine;
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
 };
