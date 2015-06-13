@@ -11,6 +11,11 @@ Gui.Video.View.Player.Controls.Trigger.Abstract = function () {};
 Gui.Video.View.Player.Controls.Trigger.Abstract.prototype = new VDRest.Abstract.View();
 
 /**
+ * @type {boolean}
+ */
+Gui.Video.View.Player.Controls.Trigger.Abstract.prototype.bypassCache = true;
+
+/**
  * initialize
  */
 Gui.Video.View.Player.Controls.Trigger.Abstract.prototype.init = function () {
