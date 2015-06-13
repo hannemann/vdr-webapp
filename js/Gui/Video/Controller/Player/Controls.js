@@ -9,6 +9,11 @@ Gui.Video.Controller.Player.Controls = function () {};
 Gui.Video.Controller.Player.Controls.prototype = new VDRest.Abstract.Controller();
 
 /**
+ * @type {boolean}
+ */
+Gui.Video.Controller.Player.Controls.prototype.bypassCache = true;
+
+/**
  * initialize
  */
 Gui.Video.Controller.Player.Controls.prototype.init = function () {
@@ -20,60 +25,30 @@ Gui.Video.Controller.Player.Controls.prototype.init = function () {
     });
     this.view.setParentView(this.player.view);
     this.isHidden = false;
-
-    this.triggerPlay = this.module.getController(
-        'Player.Controls.Trigger.Play',
-        {
-            "parent" : this.view,
-            "handler" : this.player.togglePlayback.bind(this.player)
-        }
-    );
-
-    this.triggerStop = this.module.getController(
-        'Player.Controls.Trigger.Stop',
-        {
-            "parent" : this.view,
-            "handler" : this.player.stopPlayback.bind(this.player)
-        }
-    );
-
-    this.triggerFullScreen = this.module.getController(
-        'Player.Controls.Trigger.ToggleFullScreen',
-        {
-            "parent" : this.view,
-            "handler" : this.player.toggleFullScreen.bind(this.player)
-        }
-    );
-
-    this.triggerToggleMinimize = this.module.getController(
-        'Player.Controls.Trigger.Minimize',
-        {
-            "parent" : this.view,
-            "handler" : this.player.toggleMinimize.bind(this.player)
-        }
-    );
-
-    this.triggerQualitySelect = this.module.getController(
-        'Player.Controls.Trigger.Quality',
-        {
-            "parent" : this.view,
-            "handler" : this.player.toggleQuality.bind(this.player)
-        }
-    );
+    this.getLayer();
 };
 
-/**
- * dispatch view
- */
-Gui.Video.Controller.Player.Controls.prototype.dispatchView = function () {
+Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
 
-    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-    this.triggerPlay.dispatchView();
-    this.triggerStop.dispatchView();
-    this.triggerFullScreen.dispatchView();
-    this.triggerToggleMinimize.dispatchView();
-    this.triggerQualitySelect.dispatchView();
-    this.addObserver()
+    var type;
+
+    if (this.player.data.isTv) {
+        type = 'Tv';
+    }
+
+    if (this.player.data.isVideo) {
+        type = 'Video';
+    }
+
+    if (this.player.mode == 'cut') {
+        type = 'Cut';
+    }
+
+    this.layer = this.module.getController('Player.Controls.Layer.' + type, {
+        "parent" : this
+    });
+    this.addObserver();
+    this.layer.dispatchView();
 };
 
 /**
@@ -81,83 +56,15 @@ Gui.Video.Controller.Player.Controls.prototype.dispatchView = function () {
  */
 Gui.Video.Controller.Player.Controls.prototype.addObserver = function () {
 
-    this.view.node.on('click.' + this.player.keyInCache, this.player.toggleControls.bind(this.player));
-
-    if (this.player.data.isTv) {
-        this.addZappObserver();
-    } else {
-        this.addDownloadObserver();
-        this.addCutObserver();
-    }
+    this.view.node.on('click', this.destructView.bind(this));
 };
 
 /**
- * add event listeners for zapping
- */
-Gui.Video.Controller.Player.Controls.prototype.addZappObserver = function () {
-
-    this.view.ctrlChannelUp.on('click.' + this.player.keyInCache, this.player.changeSrc.bind(this.player));
-    this.view.ctrlChannelDown.on('click.' + this.player.keyInCache, this.player.changeSrc.bind(this.player));
-};
-
-/**
- * add event listeners for zapping
- */
-Gui.Video.Controller.Player.Controls.prototype.addCutObserver = function () {
-
-    this.view.ctrlCut.on('click.' + this.player.keyInCache, this.player.startCutting.bind(this.player));
-};
-
-/**
- * add download event listener
- */
-Gui.Video.Controller.Player.Controls.prototype.addDownloadObserver = function () {
-
-    if ("undefined" !== typeof this.view.ctrlDownload) {
-        this.view.ctrlDownload.on('click', this.startDownload.bind(this));
-    }
-};
-
-/**
- * remove event listeners
+ * add event listeners
  */
 Gui.Video.Controller.Player.Controls.prototype.removeObserver = function () {
 
     this.view.node.off('click');
-    this.removeZappObserver();
-    this.removeDownloadObserver();
-    this.removeCutObserver();
-};
-
-/**
- * remove event listeners for zapping
- */
-Gui.Video.Controller.Player.Controls.prototype.removeZappObserver = function () {
-
-    if ("undefined" !== typeof this.view.ctrlChannelUp) {
-        this.view.ctrlChannelUp.off('click');
-        this.view.ctrlChannelDown.off('click');
-    }
-};
-
-/**
- * remove event listeners for zapping
- */
-Gui.Video.Controller.Player.Controls.prototype.removeCutObserver = function () {
-
-    if ("undefined" !== typeof this.view.ctrlCut) {
-        this.view.ctrlCut.off('click');
-    }
-};
-
-/**
- * remove osd related event listeners
- */
-Gui.Video.Controller.Player.Controls.prototype.removeDownloadObserver = function () {
-
-    if ("undefined" !== typeof this.view.ctrlDownload) {
-        this.view.ctrlDownload.off('click');
-    }
 };
 
 /**
@@ -178,12 +85,10 @@ Gui.Video.Controller.Player.Controls.prototype.toggle = function (e) {
     if (this.view.node.hasClass('show')) {
         this.view.node.removeClass('show');
         this.isHidden = true;
-        //this.qualitySelect.removeClass('show');
     } else {
 
         this.view.node.addClass('show');
         this.isHidden = false;
-        //this.scrollTitle();
         if (!e) {
             this.deferHide();
         }
@@ -196,8 +101,7 @@ Gui.Video.Controller.Player.Controls.prototype.toggle = function (e) {
 Gui.Video.Controller.Player.Controls.prototype.deferHide = function () {
 
     this.controlsTimeout = setTimeout(function () {
-        this.view.node.removeClass('show');
-        //me.qualitySelect.removeClass('show');
+        this.destructView();
     }.bind(this), 5000);
 };
 
@@ -213,47 +117,20 @@ Gui.Video.Controller.Player.Controls.prototype.stopHide = function () {
 };
 
 /**
- * remove recording related elements
- * add tv related elements
- * @return {Gui.Video.Controller.Player.Controls}
- */
-Gui.Video.Controller.Player.Controls.prototype.setIsTv = function () {
-
-    this.removeDownloadObserver();
-    this.view.removeDownloadButton();
-    this.view.addChannelButtons();
-    this.removeZappObserver();
-    this.addZappObserver();
-
-    return this;
-};
-
-/**
- * remove rv related elements
- * add recording related elements
- * @return {Gui.Video.Controller.Player.Controls}
- */
-Gui.Video.Controller.Player.Controls.prototype.setIsVideo = function () {
-
-    this.removeZappObserver();
-    this.view.removeChannelButtons();
-    this.view.addDownloadButton();
-    this.removeDownloadObserver();
-    this.addDownloadObserver();
-
-    return this;
-};
-
-/**
  * destruct view
  */
-Gui.Video.Controller.Player.Controls.prototype.destructView = function () {
+Gui.Video.Controller.Player.Controls.prototype.destructView = function (e) {
 
-    this.stopHide();
-    this.triggerPlay.destructView();
-    this.triggerStop.destructView();
-    this.triggerFullScreen.destructView();
-    this.triggerToggleMinimize.destructView();
-    this.triggerQualitySelect.destructView();
-    VDRest.Abstract.Controller.prototype.destructView.call(this);
+    if (e instanceof jQuery.Event) {
+        e.stopPropagation();
+    }
+
+    this.view.node.one(this.transitionEndEvents, function () {
+        this.stopHide();
+        this.layer.destructView();
+        VDRest.Abstract.Controller.prototype.destructView.call(this);
+        delete this.player.controls;
+    }.bind(this));
+
+    this.view.node.removeClass('show');
 };

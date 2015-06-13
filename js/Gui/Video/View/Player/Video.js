@@ -9,6 +9,11 @@ Gui.Video.View.Player.Video = function () {};
 Gui.Video.View.Player.Video.prototype = new VDRest.Abstract.View();
 
 /**
+ * @type {boolean}
+ */
+Gui.Video.View.Player.Video.prototype.bypassCache = true;
+
+/**
  * initialize
  */
 Gui.Video.View.Player.Video.prototype.init = function () {

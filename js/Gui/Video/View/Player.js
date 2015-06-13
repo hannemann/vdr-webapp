@@ -11,6 +11,11 @@ Gui.Video.View.Player = function () {
 Gui.Video.View.Player.prototype = new Gui.Window.View.Abstract();
 
 /**
+ * @type {boolean}
+ */
+Gui.Video.View.Player.prototype.bypassCache = true;
+
+/**
  * @type {Gui.Window.Controller.Abstract}
  */
 Gui.Video.View.Player.prototype.isModal = true;
@@ -95,12 +100,12 @@ Gui.Video.View.Player.prototype.render = function () {
 
     this.node.toggleClass('collapsed expand');
 
-    this.sizeList.css({
-        "top": - this.sizeList.find('.item.selected').position().top + 'px'
-    });
-    this.bitrateList.css({
-        "top": - this.bitrateList.find('.item.selected').position().top + 'px'
-    });
+    //this.sizeList.css({
+    //    "top": - this.sizeList.find('.item.selected').position().top + 'px'
+    //});
+    //this.bitrateList.css({
+    //    "top": - this.bitrateList.find('.item.selected').position().top + 'px'
+    //});
 };
 
 /**
@@ -119,7 +124,7 @@ Gui.Video.View.Player.prototype.initPlayer = function () {
  */
 Gui.Video.View.Player.prototype.initControls = function () {
 
-    this.addQualitySelector();
+    //this.addQualitySelector();
 
     return this;
 };

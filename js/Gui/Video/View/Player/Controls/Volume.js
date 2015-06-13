@@ -9,6 +9,11 @@ Gui.Video.View.Player.Controls.Volume = function () {};
 Gui.Video.View.Player.Controls.Volume.prototype = new VDRest.Abstract.View();
 
 /**
+ * @type {boolean}
+ */
+Gui.Video.View.Player.Controls.Volume.prototype.bypassCache = true;
+
+/**
  * initialize
  */
 Gui.Video.View.Player.Controls.Volume.prototype.init = function () {
@@ -35,8 +40,7 @@ Gui.Video.View.Player.Controls.Volume.prototype.render = function () {
 
     this.setInitialVolume();
     VDRest.Abstract.View.prototype.render.call(this);
-    this.node.appendTo(this.player.controls.view.node);
-    this.indicator.appendTo(this.player.controls.view.node);
+    this.indicator.appendTo(this.parentView.node);
 };
 
 /**
@@ -46,7 +50,8 @@ Gui.Video.View.Player.Controls.Volume.prototype.setInitialVolume = function () {
 
     var volume = VDRest.config.getItem('html5VideoPlayerVol') || 1;
     this.player.video.setVolume(parseFloat(volume));
-    this.updateVolumeIndicator(this.getVolumePercentage());
+    this.updateVolumeIndicator()
+        .setVolumeSliderHeight();
 
     return this;
 };
@@ -91,6 +96,7 @@ Gui.Video.View.Player.Controls.Volume.prototype.updateVolumeIndicator = function
 
     this.indicatorLabel.text(symbol);
     this.indicatorValue.text(value.toString() + '%');
+    return this;
 };
 
 /**

@@ -9,16 +9,21 @@ Gui.Video.Controller.Player.Controls.Volume = function () {};
 Gui.Video.Controller.Player.Controls.Volume.prototype = new VDRest.Abstract.Controller();
 
 /**
+ * @type {boolean}
+ */
+Gui.Video.Controller.Player.Controls.Volume.prototype.bypassCache = true;
+
+/**
  * initialize
  */
 Gui.Video.Controller.Player.Controls.Volume.prototype.init = function () {
 
-    this.player = this.data.parent;
+    this.player = this.data.player;
 
     this.view = this.module.getView('Player.Controls.Volume', {
         "player" : this.player
     });
-    this.view.setParentView(this.player.view);
+    this.view.setParentView(this.data.parent.view);
 };
 
 /**

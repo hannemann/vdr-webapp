@@ -1,21 +1,26 @@
-Gui.Video.View.Player.Osd = function () {};
+Gui.Video.View.Player.Controls.Osd = function () {};
 
-Gui.Video.View.Player.Osd.prototype = new VDRest.Abstract.View();
+Gui.Video.View.Player.Controls.Osd.prototype = new VDRest.Abstract.View();
 
-Gui.Video.View.Player.Osd.prototype.init = function () {
+/**
+ * @type {boolean}
+ */
+Gui.Video.View.Player.Controls.Osd.prototype.bypassCache = true;
+
+Gui.Video.View.Player.Controls.Osd.prototype.init = function () {
 
     this.player = this.data.player;
 
     this.node = $('<div class="video-osd">');
 };
 
-Gui.Video.View.Player.Osd.prototype.render = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.render = function () {
 
-    this.node.appendTo(this.player.controls.view.node);
+    VDRest.Abstract.View.prototype.render.call(this);
     this.update();
 };
 
-Gui.Video.View.Player.Osd.prototype.update = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.update = function () {
 
     this.addTitle()
         .scrollTitle();
@@ -24,7 +29,7 @@ Gui.Video.View.Player.Osd.prototype.update = function () {
 /**
  * add title and subtitle to player
  */
-Gui.Video.View.Player.Osd.prototype.addTitle = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.addTitle = function () {
 
     var logo, end,
         sourceModel = this.player.data.sourceModel,
@@ -82,7 +87,7 @@ Gui.Video.View.Player.Osd.prototype.addTitle = function () {
 /**
  * update info area
  */
-Gui.Video.View.Player.Osd.prototype.updateInfo = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.updateInfo = function () {
 
     var broadcast, start, end, helper = this.helper();
 
@@ -104,7 +109,7 @@ Gui.Video.View.Player.Osd.prototype.updateInfo = function () {
 /**
  * scroll title
  */
-Gui.Video.View.Player.Osd.prototype.scrollTitle = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.scrollTitle = function () {
 
     if ("undefined" !== typeof this.infoAreaScrollInterval) {
         clearInterval(this.infoAreaScrollInterval);
@@ -124,7 +129,7 @@ Gui.Video.View.Player.Osd.prototype.scrollTitle = function () {
 /**
  * animate info area
  */
-Gui.Video.View.Player.Osd.prototype.animateInfoArea = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.animateInfoArea = function () {
 
     var me = this,
         indent = 0,
@@ -199,7 +204,7 @@ Gui.Video.View.Player.Osd.prototype.animateInfoArea = function () {
 /**
  * destroy osd
  */
-Gui.Video.View.Player.Osd.prototype.destruct = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.destruct = function () {
 
     if ("undefined" != typeof this.changeTitleTimeout) {
         clearTimeout(this.changeTitleTimeout);

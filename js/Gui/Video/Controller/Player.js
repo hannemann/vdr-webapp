@@ -11,6 +11,11 @@ Gui.Video.Controller.Player = function () {
 Gui.Video.Controller.Player.prototype = new Gui.Window.Controller.Abstract();
 
 /**
+ * @type {boolean}
+ */
+Gui.Video.Controller.Player.prototype.bypassCache = true;
+
+/**
  * @type {string}
  */
 Gui.Video.Controller.Player.prototype.cacheKey = 'url';
@@ -34,13 +39,16 @@ Gui.Video.Controller.Player.prototype.init = function () {
     this.data.progress = '0:00:00';
     this.settingParams = false;
     this.spooling = false;
+    this.mode = 'Playback';
 
     this.view = this.module.getView('Player', this.data);
+    if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
+        this.data.isTv = true;
+    } else {
+        this.data.isVideo = true;
+    }
 
     this.video = this.module.getController('Player.Video', {"parent" : this});
-    this.controls = this.module.getController('Player.Controls', {"parent" : this});
-    this.volumeCtrl = this.module.getController('Player.Controls.Volume', {"parent" : this});
-    this.osd = this.module.getController('Player.Osd', {"parent" : this});
 
     Gui.Window.Controller.Abstract.prototype.init.call(this);
 
@@ -54,33 +62,38 @@ Gui.Video.Controller.Player.prototype.init = function () {
  */
 Gui.Video.Controller.Player.prototype.dispatchView = function () {
 
-    var callback = function () {
+    if (this.data.isTv) {
 
-        VDRest.app.getModule('Gui.Epg').mute();
-
-        Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
-        this.video.dispatchView();
-        this.controls.dispatchView();
-        this.volumeCtrl.dispatchView();
-        this.osd.dispatchView();
-
-        this.addObserver();
-
-        this.data.isVideo && this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
-    }.bind(this);
-
-    if (this.data.sourceModel instanceof VDRest.Epg.Model.Channels.Channel) {
-
-        this.data.isTv = true;
         this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
             this.setData('current_broadcast', broadcast);
             this.data.startTime = parseInt(Date.now() / 1000, 10) - broadcast.getData('start_time');
-            callback();
+            this.doDispatch();
         }.bind(this));
     } else {
-        this.data.isVideo = true;
-        callback();
+        this.doDispatch();
     }
+};
+
+/**
+ * dispatch view
+ */
+Gui.Video.Controller.Player.prototype.doDispatch = function () {
+
+    VDRest.app.getModule('Gui.Epg').mute();
+
+    Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+    this.video.dispatchView();
+    this.dispatchControls();
+
+    this.addObserver();
+
+    this.data.isVideo && this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
+};
+
+Gui.Video.Controller.Player.prototype.dispatchControls = function () {
+
+    this.controls = this.module.getController('Player.Controls', {"parent" : this});
+    this.controls.dispatchView();
 };
 
 /**
@@ -88,8 +101,9 @@ Gui.Video.Controller.Player.prototype.dispatchView = function () {
  */
 Gui.Video.Controller.Player.prototype.addObserver = function () {
 
-    this.view.sizeSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
-    this.view.bitrateSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
+    //this.view.sizeSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
+    //this.view.bitrateSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
+    this.view.node.on('click', this.dispatchControls.bind(this));
 
     if (!this.noTimeUpdateWorkaround) {
         this.video.addTimeUpdateObserver(this.view.updateProgress.bind(this.view));
@@ -107,29 +121,9 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
  */
 Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
-    this.view.sizeSelect.off('mousedown touchstart');
-    this.view.bitrateSelect.off('mousedown touchstart');
-};
-
-/**
- * remove event listeners for zapping
- */
-Gui.Video.Controller.Player.prototype.removeZappObserver = function () {
-
-    if ("undefined" !== typeof this.view.ctrlChannelUp) {
-        this.view.ctrlChannelUp.off('click');
-        this.view.ctrlChannelDown.off('click');
-    }
-};
-
-/**
- * remove event listeners for zapping
- */
-Gui.Video.Controller.Player.prototype.removeCutObserver = function () {
-
-    if ("undefined" !== typeof this.view.ctrlCut) {
-        this.view.ctrlCut.off('click');
-    }
+    this.view.node.off('click');
+    //this.view.sizeSelect.off('mousedown touchstart');
+    //this.view.bitrateSelect.off('mousedown touchstart');
 };
 
 /**
@@ -152,8 +146,11 @@ Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
         clearTimeout(this.spoolTimeout);
         e.stopPropagation();
         e.preventDefault();
-        this.view.toggleQuality(false);
-        this.controls.toggle();
+        //this.view.toggleQuality(false);
+        this.osd.destructView();
+        delete this.osd;
+        this.controls.destructView();
+        delete this.controls;
     }
 
     this.stopToggleControls = undefined;
@@ -497,11 +494,6 @@ Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
 
     e.stopPropagation();
 
-    //if (this.data.isTv && this.isPlaying) {
-    //    this.startPlayback();
-    //    return;
-    //}
-
     if (this.isPlaying) {
 
         this.pausePlayback();
@@ -566,7 +558,7 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
     this.isPlaying = true;
     this.video.toggleThrobber();
     this.controls.omitToggleControls = false;
-    this.controls.toggle();
+    this.controls.destructView();
     this.settingParams = false;
 
     this.video.play(this.getStreamUrl());
@@ -877,14 +869,12 @@ Gui.Video.Controller.Player.prototype.cancelFullscreen = function () {
  */
 Gui.Video.Controller.Player.prototype.destructView = function () {
 
-    this.controls.destructView();
-    delete this.controls;
+    if (this.controls) {
+        this.controls.destructView();
+        delete this.controls;
+    }
     this.video.destructView();
     delete this.video;
-    this.volumeCtrl.destructView();
-    delete this.volumeCtrl;
-    this.osd.destructView();
-    delete this.osd;
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
     this.module.cache.invalidateAllTypes(this);
     this.module.unsetVideoPlayer();

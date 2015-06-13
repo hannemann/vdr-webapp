@@ -11,6 +11,11 @@ Gui.Video.Controller.Player.Video.prototype = new VDRest.Abstract.Controller();
 /**
  * @type {boolean}
  */
+Gui.Video.Controller.Player.Video.prototype.bypassCache = true;
+
+/**
+ * @type {boolean}
+ */
 Gui.Video.Controller.Player.Video.prototype.noTimeUpdateWorkaround = true;
 
 /**
