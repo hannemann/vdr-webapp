@@ -57,7 +57,7 @@ Gui.Video.Controller.Player.Controls.Layer.prototype.init = function () {
         'Player.Controls.Trigger.Quality',
         {
             "parent" : this.data.parent.view,
-            "handler" : this.player.toggleQuality.bind(this.player)
+            "handler" : this.toggleQuality.bind(this)
         }
     );
 };
@@ -74,6 +74,21 @@ Gui.Video.Controller.Player.Controls.Layer.prototype.dispatchView = function () 
     this.triggerFullScreen.dispatchView();
     this.triggerToggleMinimize.dispatchView();
     this.triggerQualitySelect.dispatchView();
+};
+
+/**
+ * toggle quality selector
+ */
+Gui.Video.Controller.Player.Controls.Layer.prototype.toggleQuality = function () {
+
+    this.data.parent.omitDestruct = true;
+    if (!this.qualitySelector) {
+        this.qualitySelector = this.module.getController('Player.Controls.Quality', {"parent" : this.data.parent});
+        this.qualitySelector.dispatchView()
+    } else {
+        this.qualitySelector.destructView();
+        delete this.qualitySelector;
+    }
 };
 
 /**

@@ -125,6 +125,11 @@ Gui.Video.Controller.Player.Controls.prototype.destructView = function (e) {
         e.stopPropagation();
     }
 
+    if (this.omitDestruct) {
+        this.omitDestruct = undefined;
+        return;
+    }
+
     this.view.node.one(this.transitionEndEvents, function () {
         this.stopHide();
         this.layer.destructView();

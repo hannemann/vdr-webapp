@@ -36,47 +36,6 @@ Gui.Video.View.Player.prototype.modalExtraClasses = "modal-video";
 Gui.Video.View.Player.prototype.cacheKey = 'url';
 
 /**
- * @type {string}
- */
-Gui.Video.View.Player.prototype.sizes = {
-    "HD1080" : {
-        "width" : 1920,
-        "height" : 1080
-    },
-    "HD720" : {
-        "width" : 1280,
-        "height" : 720
-    },
-    "SD" : {
-        "width" : 1024,
-        "height" : 576
-    },
-    "768x432" : {
-        "width" : 768,
-        "height" : 432
-    },
-    "640x360" : {
-        "width" : 640,
-        "height" : 360
-    },
-    "480x270" : {
-        "width" : 480,
-        "height" : 270
-    },
-    "320x180" : {
-        "width" : 320,
-        "height" : 180
-    }
-};
-
-/**
- * @type {string[]}
- */
-Gui.Video.View.Player.prototype.bitrates = [
-    '2048K', '1536K', '1024K', '768K', '512K', '256K', '128K', '96K', '64K'
-];
-
-/**
  * initialize video node
  */
 Gui.Video.View.Player.prototype.init = function () {
@@ -92,41 +51,11 @@ Gui.Video.View.Player.prototype.init = function () {
  */
 Gui.Video.View.Player.prototype.render = function () {
 
-    this.initPlayer();
-
     Gui.Window.View.Abstract.prototype.render.call(this);
 
     this.addClasses();
 
     this.node.toggleClass('collapsed expand');
-
-    //this.sizeList.css({
-    //    "top": - this.sizeList.find('.item.selected').position().top + 'px'
-    //});
-    //this.bitrateList.css({
-    //    "top": - this.bitrateList.find('.item.selected').position().top + 'px'
-    //});
-};
-
-/**
- * initialize player
- * @returns {Gui.Video.View.Player}
- */
-Gui.Video.View.Player.prototype.initPlayer = function () {
-
-    this.initControls();
-
-    return this;
-};
-
-/**
- * add control elements
- */
-Gui.Video.View.Player.prototype.initControls = function () {
-
-    //this.addQualitySelector();
-
-    return this;
 };
 
 /**
@@ -150,18 +79,6 @@ Gui.Video.View.Player.prototype.initOsd = function () {
 };
 
 /**
- * add timeline
- * @returns {Gui.Video.View.Player}
- */
-Gui.Video.View.Player.prototype.addTimeLine = function () {
-
-    this.ctrlTimeline = $('<div class="slider timeline">').appendTo(this.osd);
-    this.timelineSlider = $('<div>').appendTo(this.ctrlTimeline);
-
-    return this;
-};
-
-/**
  * show quality overlay
  * @param {Boolean} [force]
  */
@@ -172,98 +89,11 @@ Gui.Video.View.Player.prototype.toggleQuality = function (force) {
 };
 
 /**
- * set width of timeline slider
- */
-Gui.Video.View.Player.prototype.setTimelineSliderWidth = function () {
-
-    this.timelineSlider.css({
-        "right" : this.getTimelinePercentage()
-    });
-
-    return this;
-};
-
-/**
  * toggle timeline active state
  */
 Gui.Video.View.Player.prototype.toggleTimeLineActiveState = function () {
 
     this.ctrlTimeline.toggleClass('active');
-};
-
-/**
- * retrieve css left property fpr timelineSlider
- * @returns {string}
- */
-Gui.Video.View.Player.prototype.getTimelinePercentage = function () {
-
-    var percentage, now, broadcast;
-
-    if (this.data.isVideo) {
-        percentage = 100 - (
-            100 * (
-                this.getData('startTime') + this.module.getController('Player.Video').getCurrentTime()
-            ) / this.data.sourceModel.getData('duration')
-        );
-    } else if (this.data.isTv) {
-
-        now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.getData('current_broadcast');
-        if (broadcast) {
-            percentage = 100 - (
-                100 * (
-                now - broadcast.getData('start_time')
-                ) / broadcast.getData('duration')
-            );
-        } else {
-            percentage = 100;
-        }
-    }
-
-    return percentage <= 0 ? '1px' : percentage.toString() + '%';
-};
-
-/**
- * add timer
- */
-Gui.Video.View.Player.prototype.addProgress = function () {
-
-    var start, end, duration, helper = this.helper(), broadcast;
-
-    if ("undefined" != typeof this.progress) {
-        this.progress.remove();
-        delete this.progress;
-    }
-
-    this.progress = $('<div class="progress info"></div>');
-    this.start = $('<div class="progress-start info">').appendTo(this.progress);
-    this.currentProgress = $('<div class="progress-current info">')
-        .text(this.data.progress)
-        .appendTo(this.progress);
-    this.duration = $('<div class="progress-duration info">')
-        .appendTo(this.progress);
-    this.end = $('<div class="progress-end info">').appendTo(this.progress);
-
-    if (this.data.isVideo) {
-
-        start = helper.getTimeString(new Date());
-        duration = this.data.sourceModel.getData('duration');
-        end = helper.getTimeString(
-            new Date(new Date().getTime() + duration * 1000)
-        );
-        duration = helper.getDurationAsString(duration, true);
-    } else {
-        broadcast = this.getData('current_broadcast');
-        start = helper.getTimeString(broadcast.getData('start_date'));
-        end = helper.getTimeString(broadcast.getData('end_date'));
-        duration = helper.getDurationAsString(broadcast.getData('duration'), true);
-    }
-    this.start.text(start);
-    this.end.text(end);
-    this.duration.html('&nbsp;/&nbsp;' + duration);
-
-    this.progress.appendTo(this.osd);
-    return this;
 };
 
 /**
@@ -367,11 +197,6 @@ Gui.Video.View.Player.prototype.addQualitySelector = function () {
     this.qualitySelect.appendTo(this.module.getController('Player.Controls').view.node);
 
     return this;
-};
-
-Gui.Video.View.Player.prototype.toggleQualityControlActiveState = function (selector) {
-
-    selector.toggleClass('active');
 };
 
 /**

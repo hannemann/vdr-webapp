@@ -101,8 +101,6 @@ Gui.Video.Controller.Player.prototype.dispatchControls = function () {
  */
 Gui.Video.Controller.Player.prototype.addObserver = function () {
 
-    //this.view.sizeSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
-    //this.view.bitrateSelect.on('mousedown touchstart', this.qualitySelectDown.bind(this));
     this.view.node.on('click', this.dispatchControls.bind(this));
 
     if (!this.noTimeUpdateWorkaround) {
@@ -122,8 +120,6 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
 Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
     this.view.node.off('click');
-    //this.view.sizeSelect.off('mousedown touchstart');
-    //this.view.bitrateSelect.off('mousedown touchstart');
 };
 
 /**
@@ -154,21 +150,6 @@ Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
     }
 
     this.stopToggleControls = undefined;
-};
-
-/**
- * toggle quality
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.toggleQuality = function (e) {
-
-    if (this.controls.isHidden) return;
-
-    this.vibrate();
-
-    e.stopPropagation();
-    e.preventDefault();
-    this.view.toggleQuality();
 };
 
 /**
@@ -231,117 +212,6 @@ Gui.Video.Controller.Player.prototype.handleStalled = function () {
     this.addTimeUpdateObserver(function () {
         this.video.toggleThrobber();
     }.bind(this), true);
-};
-
-/**
- * handle quality selector down
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.qualitySelectDown = function (e) {
-
-    if (this.controls.isHidden || !this.view.qualitySelect.hasClass('show')) {
-        return;
-    }
-    e.preventDefault();
-    e.stopPropagation();
-    this.controls.stopHide();
-    if (this.isPlaying) {
-        this.pausePlayback();
-    }
-    this.settingParams = true;
-    this.controls.omitToggleControls = true;
-
-    if ($(e.currentTarget).hasClass('size-select')) {
-        this.currentQualitySelect = this.view.sizeSelect;
-    } else  {
-        this.currentQualitySelect = this.view.bitrateSelect;
-    }
-    this.view.toggleQualityControlActiveState(this.currentQualitySelect);
-
-    if ('touchstart' === e.type) {
-        this.qualityTouchPos = e.originalEvent.changedTouches[0].pageY;
-    } else {
-        this.qualityTouchPos = e.pageY;
-    }
-    this.qualityDelta = 0;
-
-    $document.on('mousemove.qualityselect touchmove.qualitySelect', this.qualitySelectMove.bind(this));
-    $document.one('mouseup.qualitySelect touchend.qualitySelect', this.qualitySelectUp.bind(this));
-};
-
-/**
- * handle quality selector up
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.qualitySelectUp = function (e) {
-
-    if (e instanceof jQuery.Event) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    VDRest.config.setItem(
-            'videoQualitySize',
-        this.view.sizeSelect.find('.item.selected').text()
-    );
-    VDRest.config.setItem(
-        'videoQualityBitrate',
-        this.view.bitrateSelect.find('.item.selected').text()
-    );
-
-    $document.off('mousemove.qualityselect touchmove.qualitySelect');
-    $document.off('mouseup.qualitySelect touchend.qualitySelect');
-    this.view.toggleQualityControlActiveState(this.currentQualitySelect);
-    this.currentQualitySelect = undefined;
-    this.qualityTouchPos = undefined;
-    this.qualityDelta = undefined;
-};
-
-/**
- * handle quality selector move
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.qualitySelectMove = function (e) {
-
-    var itemList = this.currentQualitySelect.find('.item-list'),
-        current = itemList.find('.item.selected'),
-        me = this;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    this.qualityDelta = (
-        e.type === 'touchmove'
-            ? e.originalEvent.changedTouches[0].pageY
-            : e.pageY
-    ) - this.qualityTouchPos;
-
-    if (Math.abs(this.qualityDelta) > 24 && !this.qualityAnimating) {
-        this.qualityAnimating = true;
-        if (this.qualityDelta > 0) {
-
-            if (current.prev().get(0)) {
-                current.removeClass('selected');
-                current.prev().addClass('selected')
-            }
-
-        } else {
-
-            if (current.next().get(0)) {
-                current.removeClass('selected');
-                current.next().addClass('selected')
-            }
-        }
-
-        itemList.animate({
-            "top" : - itemList.find('.item.selected').position().top + 'px'
-        }, function () {
-            me.qualityTouchPos = e.type === 'touchmove'
-                ? e.originalEvent.changedTouches[0].pageY
-                : e.pageY;
-            me.qualityAnimating = false;
-        });
-    }
 };
 
 /**
@@ -574,7 +444,9 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
 
         if (this.noTimeUpdateWorkaround) {
             this.noTimeoutInterval = setInterval(function () {
-                this.controls.layer.osd.timeLine.updateProgress(this.data.isVideo ? this.data.startTime + currentTime++ : undefined);
+                if (this.controls) {
+                    this.controls.layer.osd.timeLine.updateProgress(this.data.isVideo ? this.data.startTime + currentTime++ : undefined);
+                }
             }.bind(this), 1000);
         }
     }.bind(this), true);
@@ -588,8 +460,8 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
  */
 Gui.Video.Controller.Player.prototype.getStreamUrl = function (streamdevParams, type) {
 
-    var size = this.view.sizeList.find('.item.selected').text(),
-        bitrate = this.view.bitrateList.find('.item.selected').text(),
+    var size = VDRest.config.getItem('videoQualitySize'),
+        bitrate = VDRest.config.getItem('videoQualityBitrate'),
         duration, src, d = new Date();
 
     streamdevParams = streamdevParams || [];
@@ -597,8 +469,8 @@ Gui.Video.Controller.Player.prototype.getStreamUrl = function (streamdevParams, 
     type = type || VDRest.config.getItem('streamdevContainer');
 
     streamdevParams.push('TYPE=' + type);
-    streamdevParams.push('WIDTH=' + this.view.sizes[size].width);
-    streamdevParams.push('HEIGHT=' + this.view.sizes[size].height);
+    streamdevParams.push('WIDTH=' + Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].width);
+    streamdevParams.push('HEIGHT=' + Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].height);
     streamdevParams.push('VBR=' + bitrate);
 
     if (this.data.isVideo) {
