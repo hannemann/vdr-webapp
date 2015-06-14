@@ -22,7 +22,8 @@ Gui.Video.View.Player.Controls.Osd.prototype.render = function () {
 
 Gui.Video.View.Player.Controls.Osd.prototype.update = function () {
 
-    this.addTitle()
+    this.clearTimeouts()
+        .addTitle()
         .scrollTitle();
 };
 
@@ -201,17 +202,14 @@ Gui.Video.View.Player.Controls.Osd.prototype.animateInfoArea = function () {
     }, 2000);
 };
 
-/**
- * destroy osd
- */
-Gui.Video.View.Player.Controls.Osd.prototype.destruct = function () {
+Gui.Video.View.Player.Controls.Osd.prototype.clearTimeouts = function () {
 
     if ("undefined" != typeof this.changeTitleTimeout) {
         clearTimeout(this.changeTitleTimeout);
         this.changeTitleTimeout = undefined;
     }
 
-    if ("undefined" !== this.infoAreaScrollInterval) {
+    if ("undefined" !== typeof this.infoAreaScrollInterval) {
         clearInterval(this.infoAreaScrollInterval);
         this.infoAreaScrollInterval = undefined;
     }
@@ -220,6 +218,15 @@ Gui.Video.View.Player.Controls.Osd.prototype.destruct = function () {
         this.infoAreaScrollTimeout = undefined;
     }
 
+    return this;
+};
+
+/**
+ * destroy osd
+ */
+Gui.Video.View.Player.Controls.Osd.prototype.destruct = function () {
+
+    this.clearTimeouts();
     this.title.remove();
     delete this.title;
     if (this.subTitle && this.subTitle[0].parentNode) {
