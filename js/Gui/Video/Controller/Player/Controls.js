@@ -56,15 +56,7 @@ Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
  */
 Gui.Video.Controller.Player.Controls.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.destructView.bind(this));
-};
-
-/**
- * add event listeners
- */
-Gui.Video.Controller.Player.Controls.prototype.removeObserver = function () {
-
-    this.view.node.off('click');
+    this.view.node.on('click', this.destructView.bind(this, true));
 };
 
 /**
@@ -93,26 +85,29 @@ Gui.Video.Controller.Player.Controls.prototype.stopHide = function () {
 /**
  * destruct view
  */
-Gui.Video.Controller.Player.Controls.prototype.destructView = function (e) {
-
-    if (e instanceof jQuery.Event) {
-        e.stopPropagation();
-    }
+Gui.Video.Controller.Player.Controls.prototype.destructView = function (transition) {
 
     if (this.omitDestruct) {
         this.omitDestruct = undefined;
         return;
     }
+    this.view.node.off('click');
 
-    var er = new Error();
-    console.log(er.stack);
+    if (transition) {
+        this.view.node.one(this.transitionEndEvents, this.doDestruct.bind(this));
+        this.view.node.removeClass('show');
+    } else {
+        this.doDestruct();
+    }
+};
 
-    this.view.node.one(this.transitionEndEvents, function () {
-        this.stopHide();
-        this.layer.destructView();
-        VDRest.Abstract.Controller.prototype.destructView.call(this);
-        delete this.player.controls;
-    }.bind(this));
+/**
+ * do destruct view
+ */
+Gui.Video.Controller.Player.Controls.prototype.doDestruct = function () {
 
-    this.view.node.removeClass('show');
+    this.stopHide();
+    this.layer.destructView();
+    VDRest.Abstract.Controller.prototype.destructView.call(this);
+    delete this.player.controls;
 };
