@@ -54,21 +54,12 @@ Gui.Video.Controller.Player.Controls.Osd.prototype.dispatchView = function () {
 };
 
 /**
- * add event listeners
+ * update view
  */
-Gui.Video.Controller.Player.Controls.Osd.prototype.addObserver = function () {
+Gui.Video.Controller.Player.Controls.Osd.prototype.update = function () {
 
-    this.view.node.on(VDRest.helper.pointerEnd, this.player.toggleControls.bind(this.player));
-    this.view.node.on(VDRest.helper.pointerStart, this.player.setTimeDown.bind(this.player));
-};
-
-/**
- * remove event listeners
- */
-Gui.Video.Controller.Player.Controls.Osd.prototype.removeObserver = function () {
-
-    this.view.node.off(VDRest.helper.pointerEnd);
-    this.view.node.off(VDRest.helper.pointerStart);
+    this.view.update();
+    this.timeLine.update();
 };
 
 /**

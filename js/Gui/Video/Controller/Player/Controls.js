@@ -68,38 +68,11 @@ Gui.Video.Controller.Player.Controls.prototype.removeObserver = function () {
 };
 
 /**
- * show controls overlay
- */
-Gui.Video.Controller.Player.Controls.prototype.toggle = function (e) {
-
-    if (this.omitToggleControls) {
-        this.omitToggleControls = undefined;
-        return;
-    }
-
-    if (e instanceof jQuery.Event) {
-        e.stopPropagation();
-    }
-    this.stopHide();
-
-    if (this.view.node.hasClass('show')) {
-        this.view.node.removeClass('show');
-        this.isHidden = true;
-    } else {
-
-        this.view.node.addClass('show');
-        this.isHidden = false;
-        if (!e) {
-            this.deferHide();
-        }
-    }
-};
-
-/**
  * defer hiding controls
  */
 Gui.Video.Controller.Player.Controls.prototype.deferHide = function () {
 
+    this.omitDestruct = undefined;
     this.controlsTimeout = setTimeout(function () {
         this.destructView();
     }.bind(this), 5000);
@@ -110,6 +83,7 @@ Gui.Video.Controller.Player.Controls.prototype.deferHide = function () {
  */
 Gui.Video.Controller.Player.Controls.prototype.stopHide = function () {
 
+    this.omitDestruct = true;
     if ("undefined" !== typeof this.controlsTimeout) {
         clearTimeout(this.controlsTimeout);
         this.controlsTimeout = undefined;
@@ -129,6 +103,9 @@ Gui.Video.Controller.Player.Controls.prototype.destructView = function (e) {
         this.omitDestruct = undefined;
         return;
     }
+
+    var er = new Error();
+    console.log(er.stack);
 
     this.view.node.one(this.transitionEndEvents, function () {
         this.stopHide();

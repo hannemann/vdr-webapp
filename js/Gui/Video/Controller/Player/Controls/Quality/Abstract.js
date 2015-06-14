@@ -39,6 +39,7 @@ Gui.Video.Controller.Player.Controls.Quality.Abstract.prototype.dispatchView = f
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.addObserver();
+    this.player.controls.stopHide();
 };
 
 /**
@@ -65,13 +66,11 @@ Gui.Video.Controller.Player.Controls.Quality.Abstract.prototype.qualitySelectDow
 
     e.preventDefault();
     e.stopPropagation();
-
     this.controls.stopHide();
 
     if (this.player.isPlaying) {
         this.player.pausePlayback();
     }
-    this.controls.omitDestruct = true;
 
     this.view.toggleActiveState();
 

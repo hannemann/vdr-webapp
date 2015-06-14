@@ -57,7 +57,7 @@ Gui.Video.Controller.Player.Controls.Layer.prototype.init = function () {
         'Player.Controls.Trigger.Quality',
         {
             "parent" : this.data.parent.view,
-            "handler" : this.toggleQuality.bind(this)
+            "handler" : this.toggleQualitySelector.bind(this)
         }
     );
 };
@@ -79,13 +79,31 @@ Gui.Video.Controller.Player.Controls.Layer.prototype.dispatchView = function () 
 /**
  * toggle quality selector
  */
-Gui.Video.Controller.Player.Controls.Layer.prototype.toggleQuality = function () {
+Gui.Video.Controller.Player.Controls.Layer.prototype.toggleQualitySelector = function () {
 
     this.data.parent.omitDestruct = true;
     if (!this.qualitySelector) {
-        this.qualitySelector = this.module.getController('Player.Controls.Quality', {"parent" : this.data.parent});
-        this.qualitySelector.dispatchView()
+        this.showQualitySelector();
     } else {
+        this.hideQualitySelector();
+    }
+};
+
+/**
+ * hide quality selector
+ */
+Gui.Video.Controller.Player.Controls.Layer.prototype.showQualitySelector = function () {
+
+    this.qualitySelector = this.module.getController('Player.Controls.Quality', {"parent" : this.data.parent});
+    this.qualitySelector.dispatchView();
+};
+
+/**
+ * hide quality selector
+ */
+Gui.Video.Controller.Player.Controls.Layer.prototype.hideQualitySelector = function () {
+
+    if (this.qualitySelector) {
         this.qualitySelector.destructView();
         delete this.qualitySelector;
     }

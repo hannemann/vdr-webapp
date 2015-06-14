@@ -24,6 +24,9 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.init = function () {
         "player" : this.player
     });
     this.view.setParentView(this.data.parent.view);
+    this.handlerDown = this.volumeDown.bind(this);
+    this.handlerMove = this.volumeMove.bind(this);
+    this.handlerUp = this.volumeUp.bind(this);
 };
 
 /**
@@ -40,8 +43,7 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.dispatchView = function ()
  */
 Gui.Video.Controller.Player.Controls.Volume.prototype.addObserver = function () {
 
-    this.view.ctrl.on('mousedown touchstart', this.volumeDown.bind(this));
-    this.view.ctrl.on('click', VDRest.helper.stopPropagation);
+    this.view.ctrl.on(VDRest.helper.pointerStart, this.handlerDown);
 };
 
 /**
@@ -49,7 +51,7 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.addObserver = function () 
  */
 Gui.Video.Controller.Player.Controls.Volume.prototype.removeObserver = function () {
 
-    this.view.ctrl.off('mousedown touchstart click');
+    this.view.ctrl.off(VDRest.helper.pointerStart);
 };
 
 /**
@@ -62,11 +64,11 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeDown = function (e) 
         return;
     }
 
-    this.player.view.toggleQuality(false);
+    this.player.controls.layer.hideQualitySelector();
 
     e.stopPropagation();
     e.preventDefault();
-    $document.one('mouseup.videoplayer-volume touchend.videoplayer-volume', this.volumeUp.bind(this));
+    $document.one(VDRest.helper.pointerEnd, this.handlerUp);
 
     this.player.controls.stopHide();
     if ('touchstart' === e.type) {
@@ -75,8 +77,8 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeDown = function (e) 
         this.volumeSlidePos = e.pageY;
     }
     $document.on(
-        'mousemove.videoplayer-volume touchmove.videoplayer-volume',
-        this.volumeMove.bind(this)
+        VDRest.helper.pointerMove,
+        this.handlerMove
     );
     this.isAllowedUpdateVolume = false;
     this.view.indicator.on(this.transitionEndEvents, function () {
@@ -98,8 +100,8 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeUp = function (e) {
     e.stopPropagation();
     e.preventDefault();
     this.isAllowedUpdateVolume = undefined;
-    $document.off('mousemove.videoplayer-volume touchmove.videoplayer-volume');
-    $document.off('mouseup.videoplayer-volume touchend.videoplayer-volume');
+    $document.off(VDRest.helper.pointerMove, this.handlerMove);
+    $document.off(VDRest.helper.pointerEnd, this.handlerUp);
     this.view.toggleVolumeIndicator(false);
     this.view.toggleVolumeSliderActiveState();
 };

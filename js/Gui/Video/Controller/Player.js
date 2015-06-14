@@ -84,16 +84,21 @@ Gui.Video.Controller.Player.prototype.doDispatch = function () {
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
     this.video.dispatchView();
     this.dispatchControls();
-
     this.addObserver();
-
     this.data.isVideo && this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
 };
 
+/**
+ * dispatch controls
+ */
 Gui.Video.Controller.Player.prototype.dispatchControls = function () {
 
     this.controls = this.module.getController('Player.Controls', {"parent" : this});
     this.controls.dispatchView();
+    if (this.controlsInitiallyDispatched) {
+        this.controls.deferHide();
+    }
+    this.controlsInitiallyDispatched = true;
 };
 
 /**
@@ -123,36 +128,6 @@ Gui.Video.Controller.Player.prototype.removeObserver = function () {
 };
 
 /**
- * toggle controls
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
-
-    if (this.oldChannelId && this.oldChannelId !== this.data.sourceModel.getData('channel_id')) {
-        this.data.sourceModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', this.oldChannelId);
-        this.oldChannelId = undefined;
-        this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
-            this.setData('current_broadcast', broadcast);
-            this.view.initOsd();
-        }.bind(this));
-    }
-
-    if ("undefined" === typeof this.stopToggleControls) {
-
-        clearTimeout(this.spoolTimeout);
-        e.stopPropagation();
-        e.preventDefault();
-        //this.view.toggleQuality(false);
-        this.osd.destructView();
-        delete this.osd;
-        this.controls.destructView();
-        delete this.controls;
-    }
-
-    this.stopToggleControls = undefined;
-};
-
-/**
  * retrieve options object for poster extraction
  * @param {int} [time]
  * @returns {{
@@ -165,12 +140,12 @@ Gui.Video.Controller.Player.prototype.toggleControls = function (e) {
  */
 Gui.Video.Controller.Player.prototype.getPosterOptions = function (time) {
 
-    var size = this.view.sizeList.find('.item.selected').text();
+    var size = VDRest.config.getItem('videoQualitySize');
     time = time || this.getData('startTime');
 
     return {
-        "width" : this.view.sizes[size].width,
-        "height" : this.view.sizes[size].height,
+        "width" : Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].width,
+        "height" : Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].height,
         "video" : this.video.view.node[0],
         "sourceModel" : this.data.sourceModel,
         "startTime" : time
@@ -215,154 +190,20 @@ Gui.Video.Controller.Player.prototype.handleStalled = function () {
 };
 
 /**
- * handle start startTime change
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.setTimeDown = function (e) {
-
-    if (this.controls.isHidden || this.data.isTv) {
-        return;
-    }
-
-    e.stopPropagation();
-    e.preventDefault();
-
-    this.spoolTimeout = setTimeout(this.spool.bind(this), 2000);
-
-    this.controls.stopHide();
-    if (this.isPlaying) {
-        this.pausePlayback();
-    }
-    this.settingParams = true;
-    if ('touchstart' === e.type) {
-        this.timelineSlidePos = e.originalEvent.changedTouches[0].pageX;
-        $document.one('touchend.videoplayer-time', this.setTimeUp.bind(this));
-    } else {
-        this.timelineSlidePos = e.pageX;
-        $document.one('mouseup.videoplayer-time', this.setTimeUp.bind(this));
-    }
-    this.timelineDownPos = this.timelineSlidePos;
-    $document.on('mousemove.videoplayer-time touchmove.videoplayer-time', this.setTimeMove.bind(this));
-    this.view.toggleTimeLineActiveState();
-    this.vibrate();
-};
-
-/**
- * handle change startTime stop
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.setTimeUp = function (e) {
-
-    clearTimeout(this.spoolTimeout);
-    clearInterval(this.spoolInterval);
-    clearInterval(this.increaseValueInterval);
-    e.stopPropagation();
-    e.preventDefault();
-
-    $document.off('mousemove.videoplayer-time touchmove.videoplayer-time');
-    $document.off('touchend.videoplayer-time mouseup.videoplayer-time');
-
-    if ("undefined" !== typeof this.fetchPoster) {
-        this.module.getHelper('Player')
-            .setVideoPoster(this.getPosterOptions());
-
-        this.fetchPoster = undefined;
-    }
-    this.view.toggleTimeLineActiveState();
-};
-
-/**
- * handle move startTime
- * @param {jQuery.Event} e
- */
-Gui.Video.Controller.Player.prototype.setTimeMove = function (e) {
-
-    var newPos;
-
-    this.stopToggleControls = true;
-    this.fetchPoster = true;
-
-    e.stopPropagation();
-    e.preventDefault();
-    newPos = e.type === 'touchmove'
-        ? e.originalEvent.changedTouches[0].pageX
-        : e.pageX;
-
-    if (Math.abs(newPos - this.timelineDownPos) > 2) {
-        clearTimeout(this.spoolTimeout);
-    }
-
-    this.setTime(newPos >= this.timelineSlidePos ? 'increase' : 'decrease');
-    this.timelineSlidePos = newPos;
-};
-
-/**
- * set start time
- * @param {String} action
- * @param {Number} [value]
- */
-Gui.Video.Controller.Player.prototype.setTime = function (action, value) {
-
-    var sourceModel = this.data.sourceModel;
-
-    value = value || 1;
-    if (action === 'increase') {
-        this.data.startTime +=value;
-    } else {
-        this.data.startTime -= value;
-    }
-    if (this.data.startTime < 0) {
-        this.data.startTime = 0;
-    }
-    if (this.data.startTime > sourceModel.getData('duration')) {
-        this.data.startTime = sourceModel.getData('duration');
-    }
-    this.view.setData('startTime', this.data.startTime);
-    this.controls.layer.osd.timeLine.updateProgress(this.data.startTime);
-    this.osd.updateInfo();
-};
-
-/**
- * handle spooling
- */
-Gui.Video.Controller.Player.prototype.spool = function () {
-
-    var me = this,
-        slider = this.view.timelineSlider,
-        timelinePos = slider.offset().left + slider.width();
-
-    this.vibrate(100);
-
-    this.stopToggleControls = true;
-    this.fetchPoster = true;
-
-    $document.off('mousemove.videoplayer-time touchmove.videoplayer-time');
-
-    this.spooling = 5;
-
-    this.increaseValueInterval = setInterval(function () {
-
-        me.spooling += 5;
-    }, 1000);
-
-    this.spoolInterval = setInterval(function () {
-        me.setTime(
-            me.timelineSlidePos > timelinePos ? 'increase' : 'decrease',
-            me.spooling
-        );
-    }, 100);
-};
-
-/**
  * toggle playback
  */
 Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
 
-    if (this.controls.isHidden) return;
-
     this.vibrate();
 
     e.stopPropagation();
+
+    if (this.isPlaying) {
+        if (this.oldChannelId && this.oldChannelId !== this.data.sourceModel.getData('channel_id')) {
+            this.oldChannelId = undefined;
+            this.pausePlayback();
+        }
+    }
 
     if (this.isPlaying) {
 
@@ -415,20 +256,8 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
  */
 Gui.Video.Controller.Player.prototype.startPlayback = function () {
 
-    if (this.isPlaying) {
-        if (this.oldChannelId && this.oldChannelId === this.data.sourceModel.getData('channel_id')) {
-            return;
-        }
-        if (this.oldChannelId) {
-            this.oldChannelId = undefined;
-        }
-        this.pausePlayback();
-    }
-
     this.isPlaying = true;
     this.video.toggleThrobber();
-    this.controls.omitToggleControls = false;
-    this.controls.destructView();
     this.settingParams = false;
 
     this.video.play(this.getStreamUrl());
@@ -445,7 +274,9 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
         if (this.noTimeUpdateWorkaround) {
             this.noTimeoutInterval = setInterval(function () {
                 if (this.controls) {
-                    this.controls.layer.osd.timeLine.updateProgress(this.data.isVideo ? this.data.startTime + currentTime++ : undefined);
+                    this.controls.layer.osd.timeLine.updateProgress(
+                        this.data.isVideo ? this.data.startTime + currentTime++ : undefined
+                    );
                 }
             }.bind(this), 1000);
         }
@@ -506,6 +337,7 @@ Gui.Video.Controller.Player.prototype.pausePlayback = function () {
     }
     this.isPlaying = false;
     this.video.pause();
+    this.controls.layer.triggerPlay.view.setState('off');
 
     if (this.noTimeUpdateWorkaround) {
         clearInterval(this.noTimeoutInterval);
@@ -537,28 +369,22 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
 
     var channels, getter, nextChannel,
         callback = function () {
-
+            var newTriggerPlayState = 'off';
             this.view.updateRecordingEndTime(false);
-
             this.data.isVideo && this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
-            this.osd.removeObserver();
-            this.osd.view.update();
-            this.osd.addObserver();
+            this.controls.layer.osd.update();
+            if (this.data.isTv) {
+                if (this.data.sourceModel.getData('channel_id') == this.oldChannelId) {
+                    newTriggerPlayState = 'on';
+                }
+                this.controls.layer.triggerPlay.view.setState(newTriggerPlayState);
+            }
         }.bind(this);
 
     if (e instanceof jQuery.Event) {
         e.preventDefault();
         e.stopPropagation();
-    }
-
-    this.controls.stopHide();
-    this.controls.removeDownloadObserver();
-
-    if (
-        !$('body').hasClass('video-minimized')
-        && this.controls.isHidden
-    ) {
-        return;
+        this.controls.stopHide();
     }
 
     if (this.data.sourceModel == e) {
@@ -649,7 +475,6 @@ Gui.Video.Controller.Player.prototype.startCutting = function () {
  */
 Gui.Video.Controller.Player.prototype.setIsVideo = function () {
 
-    this.controls.setIsVideo();
     this.data.isTv = false;
     this.data.isVideo = true;
     this.view.data.isTv = this.data.isTv;
@@ -661,7 +486,6 @@ Gui.Video.Controller.Player.prototype.setIsVideo = function () {
  */
 Gui.Video.Controller.Player.prototype.setIsTv = function () {
 
-    this.controls.setIsTv();
     this.data.isTv = true;
     this.data.isVideo = false;
     this.view.data.isTv = this.data.isTv;

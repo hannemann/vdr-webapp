@@ -12,6 +12,17 @@ Gui.Video.View.Player.Controls.prototype.bypassCache = true;
  */
 Gui.Video.View.Player.Controls.prototype.init = function () {
 
-    this.node = $('<div class="html5-player-controls show">');
+    this.node = $('<div class="html5-player-controls">');
     this.node.attr('data-animate', 'opacity');
+};
+
+/**
+ * initialize
+ */
+Gui.Video.View.Player.Controls.prototype.render = function () {
+
+    VDRest.Abstract.View.prototype.render.call(this);
+    setTimeout(function () {
+        this.node.addClass('show');
+    }.bind(this), 20);
 };

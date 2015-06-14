@@ -59,44 +59,6 @@ Gui.Video.View.Player.prototype.render = function () {
 };
 
 /**
- * initialize osd
- * @returns {Gui.Video.View.Player}
- */
-Gui.Video.View.Player.prototype.initOsd = function () {
-
-    if ("undefined" !== typeof this.osd) {
-        this.osd.remove();
-    }
-
-    this.osd = $('<div class="video-osd">').appendTo(this.module.getView('Player.Controls').node);
-    this.addTitle()
-        .addTimeLine()
-        .addProgress()
-        .updateProgress()
-        .scrollTitle();
-
-    return this;
-};
-
-/**
- * show quality overlay
- * @param {Boolean} [force]
- */
-Gui.Video.View.Player.prototype.toggleQuality = function (force) {
-
-    this.module.getController('Player.Controls').stopHide();
-    this.qualitySelect.toggleClass('show', force);
-};
-
-/**
- * toggle timeline active state
- */
-Gui.Video.View.Player.prototype.toggleTimeLineActiveState = function () {
-
-    this.ctrlTimeline.toggleClass('active');
-};
-
-/**
  * update recording end time periodically in case of recording is paused
  * @param {Boolean} action
  */
@@ -135,68 +97,6 @@ Gui.Video.View.Player.prototype.updateRecordingStartEndTime = function () {
 
     this.end.text(end);
     this.start.text(start);
-};
-
-/**
- * @param {Number} [time]
- * update timer
- */
-Gui.Video.View.Player.prototype.updateProgress = function (time) {
-
-    var now, broadcast;
-
-    if (isNaN(time)) {
-        if (this.data.isVideo) {
-            time = this.getData('startTime') + this.module.getController('Player.Video').getCurrentTime();
-        } else {
-            now = parseInt(new Date().getTime() / 1000, 10);
-            broadcast = this.getData('current_broadcast');
-            if (broadcast) {
-                time = now - broadcast.getData('start_time');
-            } else {
-                time = 0;
-            }
-        }
-    }
-
-    this.currentProgress.text(this.helper().getDurationAsString(time, true));
-    this.setTimelineSliderWidth();
-    return this;
-};
-
-/**
- * add quality selector
- */
-Gui.Video.View.Player.prototype.addQualitySelector = function () {
-
-    var i, l = this.bitrates.length, item;
-
-    this.qualitySelect = $('<div class="quality-select">');
-    this.qualitySelect.attr('data-animate', 'opacity');
-    this.sizeSelect = $('<div class="select size-select">').appendTo(this.qualitySelect);
-    this.bitrateSelect = $('<div class="select bitrate-select">').appendTo(this.qualitySelect);
-
-    this.sizeList = $('<div class="item-list sizes">').appendTo(this.sizeSelect);
-    for (i in this.sizes) {
-        if (this.sizes.hasOwnProperty(i)) {
-            item = '<div class="item size' +
-            (i == VDRest.config.getItem('videoQualitySize') ? ' selected' : '')
-            + '">';
-            $(item).text(i).appendTo(this.sizeList);
-        }
-    }
-
-    this.bitrateList = $('<div class="item-list bitrates">').appendTo(this.bitrateSelect);
-    for (i=0; i<l; i++) {
-        item = '<div class="item bitrate' +
-        (this.bitrates[i] == VDRest.config.getItem('videoQualityBitrate') ? ' selected' : '')
-        + '">';
-        $(item).text(this.bitrates[i]).appendTo(this.bitrateList);
-    }
-
-    this.qualitySelect.appendTo(this.module.getController('Player.Controls').view.node);
-
-    return this;
 };
 
 /**

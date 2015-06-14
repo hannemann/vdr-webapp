@@ -35,3 +35,28 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.dispatchView = funct
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.updateProgress();
 };
+
+/**
+ * update
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.update = function () {
+
+    this.removeObserver();
+    this.updateProgress();
+    this.addObserver();
+};
+
+/**
+ * add event listeners
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.addObserver = function () {};
+
+/**
+ * remove event listeners
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.removeObserver = function () {};
+
+/**
+ * update progress
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.updateProgress = function () {};
