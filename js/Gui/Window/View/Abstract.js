@@ -180,10 +180,6 @@ Gui.Window.View.Abstract.prototype.removeModal = function (e) {
  */
 Gui.Window.View.Abstract.prototype.destruct = function () {
 
-    $.event.trigger({
-        "type" : "destruct.window-" + this.keyInCache
-    });
-
     if (this.hasHeader) {
         this.header.empty();
         delete this.header;
