@@ -9,10 +9,9 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Tv = function () {};
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Tv.prototype = new Gui.Video.Controller.Player.Controls.Osd.TimeLine();
 
 /**
- * @type {boolean}
+ * retrieve percentage css value
+ * @return {string}
  */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Tv.prototype.bypassCache = true;
-
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Tv.prototype.getPercentage = function () {
 
     var percentage, now, broadcast;
@@ -33,25 +32,46 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Tv.prototype.getPercentage = f
 };
 
 /**
- * @param {Number} [time]
  * update timer
  */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.updateProgress = function (time) {
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Tv.prototype.updateProgress = function () {
 
-    var now, broadcast;
+    var now, progress, broadcast;
 
-    if (isNaN(time)) {
-
-        now = parseInt(new Date().getTime() / 1000, 10);
-        broadcast = this.player.getData('current_broadcast');
-        if (broadcast) {
-            time = now - broadcast.getData('start_time');
-        } else {
-            time = 0;
-        }
+    if ("undefined" !== typeof this.progressInterval) {
+        clearInterval(this.progressInterval);
     }
 
-    this.view.currentProgress.text(this.helper().getDurationAsString(time, true));
-    this.view.setSliderWidth(this.getPercentage());
+    broadcast = this.player.getData('current_broadcast');
+
+    this.progressInterval = setInterval(function () {
+
+        now = parseInt(Date.now() / 1000, 10);
+        if (broadcast) {
+            progress = now - broadcast.getData('start_time');
+        } else {
+            progress = 0;
+        }
+
+        progress = VDRest.helper.getDurationAsString(progress, true);
+
+        this.player.data.progress = progress;
+
+        this.view.currentProgress.text(progress);
+        this.view.setSliderWidth(this.getPercentage());
+
+    }.bind(this), 1000);
+
     return this;
+};
+
+/**
+ * destruct
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Tv.prototype.destructView = function () {
+
+    if ("undefined" !== typeof this.progressInterval) {
+        clearInterval(this.progressInterval);
+    }
+    Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.destructView.call(this);
 };

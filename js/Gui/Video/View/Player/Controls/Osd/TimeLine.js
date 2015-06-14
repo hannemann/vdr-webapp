@@ -7,6 +7,9 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.prototype = new VDRest.Abstract.View
  */
 Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.bypassCache = true;
 
+/**
+ * initialize
+ */
 Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.init = function () {
 
     this.player = this.data.player;
@@ -15,15 +18,18 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.init = function () {
     this.slider = $('<div>');
 };
 
+/**
+ * render
+ */
 Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.render = function () {
 
+    this.addProgress();
     VDRest.Abstract.View.prototype.render.call(this);
     this.slider.appendTo(this.node);
-    this.addProgress();
 };
 
 /**
- * @param {number} percentage
+ * @param {string} percentage
  */
 Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.setSliderWidth = function (percentage) {
 
@@ -37,8 +43,6 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.setSliderWidth = function 
  */
 Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.addProgress = function () {
 
-    var start, end, duration, helper = this.helper(), broadcast;
-
     if ("undefined" != typeof this.progress) {
         this.progress.remove();
         delete this.progress;
@@ -47,31 +51,31 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.addProgress = function () 
     this.progress = $('<div class="progress info"></div>');
     this.start = $('<div class="progress-start info">').appendTo(this.progress);
     this.currentProgress = $('<div class="progress-current info">')
-        .text(this.data.progress)
+        .text(this.player.data.progress)
         .appendTo(this.progress);
     this.duration = $('<div class="progress-duration info">')
         .appendTo(this.progress);
     this.end = $('<div class="progress-end info">').appendTo(this.progress);
+};
 
-    if (this.player.data.isVideo) {
+/**
+ * destruct
+ */
+Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.destruct = function () {
 
-        start = helper.getTimeString(new Date());
-        duration = this.player.data.sourceModel.getData('duration');
-        end = helper.getTimeString(
-            new Date(Date.now() + duration * 1000)
-        );
-        duration = helper.getDurationAsString(duration, true);
-    } else {
-        broadcast = this.player.getData('current_broadcast');
-        start = helper.getTimeString(broadcast.getData('start_date'));
-        end = helper.getTimeString(broadcast.getData('end_date'));
-        duration = helper.getDurationAsString(broadcast.getData('duration'), true);
-    }
+    this.progress.remove();
+    delete this.progress;
+    this.start.remove();
+    delete this.start;
+    this.currentProgress.remove();
+    delete this.currentProgress;
+    this.duration.remove();
+    delete this.duration;
+    this.end.remove();
+    delete this.end;
+    this.slider.remove();
+    delete this.slider;
+    delete this.player;
 
-    this.start.text(start);
-    this.end.text(end);
-    this.duration.html('&nbsp;/&nbsp;' + duration);
-
-    this.progress.appendTo(this.parentView.node);
-    return this;
+    VDRest.Abstract.View.prototype.destruct.call(this);
 };

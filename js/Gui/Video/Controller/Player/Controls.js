@@ -66,7 +66,7 @@ Gui.Video.Controller.Player.Controls.prototype.deferHide = function () {
 
     this.omitDestruct = undefined;
     this.controlsTimeout = setTimeout(function () {
-        this.destructView();
+        this.destructView(true);
     }.bind(this), 5000);
 };
 

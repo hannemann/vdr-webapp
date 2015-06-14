@@ -20,7 +20,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.init = function () {
 
     this.player = this.data.parent.player;
 
-    this.view = this.module.getView('Player.Controls.Osd.TimeLine', {
+    this.view = this.module.getView('Player.Controls.Osd.TimeLine.' + this._class.split('.').pop(), {
         "player" : this.player
     });
     this.view.setParentView(this.data.parent.view);
@@ -42,6 +42,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.dispatchView = funct
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.update = function () {
 
     this.removeObserver();
+    this.view.addProgress();
     this.updateProgress();
     this.addObserver();
 };
@@ -60,3 +61,8 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.removeObserver = fun
  * update progress
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.updateProgress = function () {};
+
+/**
+ * update time
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.updateTime = function () {};

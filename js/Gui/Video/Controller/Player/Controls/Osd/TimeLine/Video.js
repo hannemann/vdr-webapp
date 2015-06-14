@@ -9,10 +9,9 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video = function () {};
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype = new Gui.Video.Controller.Player.Controls.Osd.TimeLine();
 
 /**
- * @type {boolean}
+ * retrieve percentage css value
+ * @return {string}
  */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.bypassCache = true;
-
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.getPercentage = function () {
 
     var percentage;
@@ -27,16 +26,13 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.getPercentage 
 };
 
 /**
- * @param {Number} [time]
  * update timer
  */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateProgress = function (time) {
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateProgress = function () {
 
-    if (isNaN(time)) {
-        time = this.player.getData('startTime') + this.player.video.getCurrentTime();
-    }
+    var progress = this.player.getData('progress') + this.player.video.getCurrentTime();
 
-    this.view.currentProgress.text(this.helper().getDurationAsString(time, true));
+    this.view.currentProgress.text(VDRest.helper.getDurationAsString(progress, true));
     this.view.setSliderWidth(this.getPercentage());
     return this;
 };
@@ -62,15 +58,29 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateRecordin
         this.endTimeInterval = setInterval(function () {
 
             this.view.end.text(VDRest.helper.getTimeString(
-                new Date(new Date().getTime()
+                new Date(Date.now()
                     + duration * 1000
-                    - this.player.getData('startTime') * 1000
+                    - this.player.data.startTime * 1000
                 )
             ));
         }.bind(this), 1000);
     } else {
         clearInterval(this.endTimeInterval);
     }
+};
+
+/**
+ * update start and end time
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateRecordingStartEndTime = function () {
+
+    var duration = this.player.data.sourceModel.getData('duration'),
+        end, d = new Date();
+
+    end = VDRest.helper.getTimeString(new Date(d.getTime() + duration * 1000 - this.player.data.startTime * 1000));
+
+    this.view.end.text(end);
+    this.view.start.text(VDRest.helper.getTimeString(d));
 };
 
 /**
@@ -208,4 +218,20 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.spool = functi
             me.spooling
         );
     }, 100);
+};
+
+/**
+ * destruct
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.destructView = function () {
+
+    if ("undefined" !== this.endTimeInterval) {
+        clearInterval(this.endTimeInterval);
+        this.endTimeInterval = undefined;
+    }
+    if ("undefined" !== this.spoolInterval) {
+        clearInterval(this.spoolInterval);
+        this.spoolInterval = undefined;
+    }
+    Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.destructView.call(this);
 };

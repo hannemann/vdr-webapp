@@ -121,9 +121,7 @@ Gui.Video.View.Player.Controls.Osd.prototype.scrollTitle = function () {
         this.infoAreaScrollTimeout = undefined;
     }
 
-    //if (this.controls.hasClass('show')) {
     this.animateInfoArea();
-    //}
 
 };
 
