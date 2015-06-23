@@ -103,6 +103,10 @@ body.has-menubar {
     backface-visibility: hidden;
     perspective: 1000px;
 }
+.big-font #header {
+    padding-top: 6px;
+    font-size: 24px;
+}
 
 .opaque-menubar #header {
     opacity: 0;

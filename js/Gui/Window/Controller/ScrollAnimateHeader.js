@@ -17,6 +17,8 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.init = function () {
 
 Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
 
+    var menubarHeader;
+
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     if (this.view.fanart) {
@@ -27,6 +29,15 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
     }
 
     if (this.view.canAnimateScroll()) {
+
+        menubarHeader = $('.menubar-header');
+        this.headerHeight = this.view.header[0].offsetHeight;
+        this.menuBarHeight = $('#menubar')[0].offsetHeight;
+        this.menuHeaderOffset = menubarHeader[0].offsetLeft;
+        this.menuBarController = VDRest.app.getModule('Gui.Menubar').getController('Default');
+        if (this.view.fanart) {
+            this.menuBarController.view.node.addClass('big-font');
+        }
 
         this.touchScroll = new TouchMove.Scroll({
             "wrapper": document.body,
@@ -69,14 +80,13 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.removeObserver = function ()
  */
 Gui.Window.Controller.ScrollAnimateHeader.prototype.onscrollAction = function (e) {
 
-    var delta, style, n;
+    var delta, style, shadowStyle, titleStyle, n, deltaPercentage, headerOffsetLeft;
 
     if (e instanceof jQuery.Event) {
         delta = this.view.node[0].scrollTop;
     } else {
         delta = -e.y;
     }
-
     style = "translateY(" + (delta / 2).toString() + "px)";
 
     this.view.scrollShiftWrapper.css({
@@ -85,22 +95,40 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.onscrollAction = function (e
 
     if (this.view.fanart) {
 
+
+        deltaPercentage = 100 / (this.headerHeight - this.menuBarHeight) * Math.abs(delta);
+        deltaPercentage = deltaPercentage > 100 ? 100 : deltaPercentage;
+        headerOffsetLeft = Math.round((this.menuHeaderOffset - 8) * deltaPercentage / 100);
+
+
+        shadowStyle = "translateY(-" + (delta / 2).toString() + "px)";
+
+        this.view.scrollShiftShadow.css({
+            "transform": shadowStyle
+        });
+
+        if (this.headerHeight - delta > this.menuBarHeight) {
+            titleStyle = {
+                "transform": "translate3d(" + headerOffsetLeft + "px, -" + (delta / 2).toString() + "px, 0)"
+            };
+        } else {
+            titleStyle = {
+                "transform": "translate3d(" + headerOffsetLeft + "px, -" + (delta / 2 - (this.menuBarHeight - (this.headerHeight - delta))).toString() + "px, 0)"
+            };
+        }
+
+        this.view.title.css(titleStyle);
+
         n = this.view.header[0].offsetHeight - delta;
 
         if (n < this.menubar.offsetHeight && this.menubarHidden) {
 
-            $.event.trigger({
-                "type": "opaqueMenubar",
-                "payload": false
-            });
+            this.menuBarController.setOpaque({"payload" : false});
             this.menubarHidden = false;
 
         } else if (n >= this.menubar.offsetHeight && !this.menubarHidden) {
 
-            $.event.trigger({
-                "type": "opaqueMenubar",
-                "payload": true
-            });
+            this.menuBarController.setOpaque({"payload" : true});
             this.menubarHidden = true;
         }
     }
@@ -117,6 +145,8 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.destructView = function () {
     });
     delete this.touchScroll;
     document.body.style.overflow = '';
+    this.menuBarController.view.node.removeClass('big-font');
+    delete this.menuBarController;
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
 };

@@ -117,6 +117,13 @@
     text-shadow: none;
 }
 
+.document-fullsize .window-header.has-fanart .scroll-shift h2 {
+    font-weight: normal;
+    bottom: 7px;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
 .document-fullsize .window-header.has-fanart ul {
     top: 12px;
     left: 12px;
@@ -145,6 +152,8 @@
 
 .scroll-shift-shadow {
     display: none;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 .window-header.has-fanart .scroll-shift-shadow {
