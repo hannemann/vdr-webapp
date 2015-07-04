@@ -8,6 +8,16 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video = function () {};
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype = new Gui.Video.Controller.Player.Controls.Osd.TimeLine();
 
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.addObserver = function () {
+
+    this.view.node.on(VDRest.helper.pointerStart, this.setTimeDown.bind(this));
+};
+
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.removeObserver = function () {
+
+    this.view.node.off(VDRest.helper.pointerStart);
+};
+
 /**
  * retrieve percentage css value
  * @return {string}
@@ -30,7 +40,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.getPercentage 
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateProgress = function () {
 
-    var progress = this.player.getData('progress') + this.player.video.getCurrentTime();
+    var progress = this.player.data.startTime + this.player.video.getCurrentTime();
 
     this.view.currentProgress.text(VDRest.helper.getDurationAsString(progress, true));
     this.view.setSliderWidth(this.getPercentage());
@@ -89,20 +99,17 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateRecordin
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeDown = function (e) {
 
-    if (this.controls.isHidden || this.data.isTv) {
-        return;
-    }
-
     e.stopPropagation();
     e.preventDefault();
 
     this.spoolTimeout = setTimeout(this.spool.bind(this), 2000);
 
-    this.controls.stopHide();
-    if (this.isPlaying) {
-        this.pausePlayback();
+    this.player.controls.stopHide();
+    if (this.player.isPlaying) {
+        this.player.pausePlayback();
+        this.player.controls.layer.triggerPlay.view.setState('off');
     }
-    this.settingParams = true;
+
     if ('touchstart' === e.type) {
         this.timelineSlidePos = e.originalEvent.changedTouches[0].pageX;
         $document.one('touchend.videoplayer-time', this.setTimeUp.bind(this));
@@ -110,6 +117,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeDown = 
         this.timelineSlidePos = e.pageX;
         $document.one('mouseup.videoplayer-time', this.setTimeUp.bind(this));
     }
+    
     this.timelineDownPos = this.timelineSlidePos;
     $document.on('mousemove.videoplayer-time touchmove.videoplayer-time', this.setTimeMove.bind(this));
     this.toggleActiveState();
@@ -133,11 +141,11 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeUp = fu
 
     if ("undefined" !== typeof this.fetchPoster) {
         this.module.getHelper('Player')
-            .setVideoPoster(this.getPosterOptions());
+            .setVideoPoster(this.player.getPosterOptions());
 
         this.fetchPoster = undefined;
     }
-    this.view.toggleTimeLineActiveState();
+    this.toggleActiveState();
 };
 
 /**
@@ -171,23 +179,22 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeMove = 
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTime = function (action, value) {
 
-    var sourceModel = this.data.sourceModel;
+    var duration = this.player.data.sourceModel.getData('duration');
 
     value = value || 1;
     if (action === 'increase') {
-        this.data.startTime +=value;
+        this.player.data.startTime +=value;
     } else {
-        this.data.startTime -= value;
+        this.player.data.startTime -= value;
     }
-    if (this.data.startTime < 0) {
-        this.data.startTime = 0;
+    if (this.player.data.startTime < 0) {
+        this.player.data.startTime = 0;
     }
-    if (this.data.startTime > sourceModel.getData('duration')) {
-        this.data.startTime = sourceModel.getData('duration');
+    if (this.player.data.startTime > duration) {
+        this.player.data.startTime = duration;
     }
-    this.view.setData('startTime', this.data.startTime);
-    this.controls.layer.osd.timeLine.updateProgress(this.data.startTime);
-    this.osd.updateInfo();
+    this.view.setData('startTime', this.player.data.startTime);
+    this.updateProgress();
 };
 
 /**
@@ -196,7 +203,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTime = func
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.spool = function () {
 
     var me = this,
-        slider = this.view.timelineSlider,
+        slider = this.view.slider,
         timelinePos = slider.offset().left + slider.width();
 
     this.vibrate(100);

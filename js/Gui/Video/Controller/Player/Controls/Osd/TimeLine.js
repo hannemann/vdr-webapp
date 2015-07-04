@@ -34,6 +34,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.prototype.dispatchView = funct
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.updateProgress();
+    this.addObserver();
 };
 
 /**
