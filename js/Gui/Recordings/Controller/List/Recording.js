@@ -255,7 +255,7 @@ Gui.Recordings.Controller.List.Recording.prototype.updateAction = function () {
     }
 
     this.module.getController('List').removeIfEmpty(oldParent.view.getPath());
-    if (this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()]) {
+    if (this.module.cache.store.Controller['Window.Recording'] && this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()]) {
         this.module.cache.store.Controller['Window.Recording'][this.keyInCache.toCacheKey()].updateAction();
     }
     this.module.cache.updateKeys(this, this.dataModel.keyInCache);
