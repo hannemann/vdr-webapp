@@ -38,7 +38,7 @@ Gui.Osd.View.Default.prototype.render = function () {
     this.osd.appendTo(this.osdWrapper);
     VDRest.Abstract.View.prototype.render.call(this);
 
-    poster = VDRest.app.getModule('Gui.Window').getHelper('Player').defaultPoster(this.node.get(0));
+    poster = VDRest.app.getModule('Gui.Video').getHelper('Player').defaultPoster(this.node.get(0));
 
     this.node.css({
         "background-image": 'url(' + poster + ')'
