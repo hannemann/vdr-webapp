@@ -70,6 +70,7 @@ Gui.Video.Controller.Player.Controls.Quality.Abstract.prototype.qualitySelectDow
 
     if (this.player.isPlaying) {
         this.player.pausePlayback();
+        this.player.controls.layer.triggerPlay.view.setState('off');
     }
 
     this.view.toggleActiveState();

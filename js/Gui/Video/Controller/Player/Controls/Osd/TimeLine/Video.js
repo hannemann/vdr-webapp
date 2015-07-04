@@ -117,7 +117,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeDown = 
         this.timelineSlidePos = e.pageX;
         $document.one('mouseup.videoplayer-time', this.setTimeUp.bind(this));
     }
-    
+
     this.timelineDownPos = this.timelineSlidePos;
     $document.on('mousemove.videoplayer-time touchmove.videoplayer-time', this.setTimeMove.bind(this));
     this.toggleActiveState();
