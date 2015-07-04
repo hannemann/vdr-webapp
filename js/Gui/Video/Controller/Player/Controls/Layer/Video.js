@@ -24,6 +24,22 @@ Gui.Video.Controller.Player.Controls.Layer.Video.prototype.init = function () {
             "handler" : this.player.startCutting.bind(this.player)
         }
     );
+
+    this.triggerFullScreen = this.module.getController(
+        'Player.Controls.Trigger.ToggleFullScreen',
+        {
+            "parent" : this.data.parent.view,
+            "handler" : this.player.toggleFullScreen.bind(this.player)
+        }
+    );
+
+    this.triggerToggleMinimize = this.module.getController(
+        'Player.Controls.Trigger.Minimize',
+        {
+            "parent" : this.data.parent.view,
+            "handler" : this.player.toggleMinimize.bind(this.player)
+        }
+    );
 };
 
 /**
@@ -34,6 +50,8 @@ Gui.Video.Controller.Player.Controls.Layer.Video.prototype.dispatchView = functi
     Gui.Video.Controller.Player.Controls.Layer.prototype.dispatchView.call(this);
     this.triggerDownload.dispatchView();
     this.triggerCut.dispatchView();
+    this.triggerFullScreen.dispatchView();
+    this.triggerToggleMinimize.dispatchView();
 };
 
 /**
@@ -43,5 +61,7 @@ Gui.Video.Controller.Player.Controls.Layer.Video.prototype.destructView = functi
 
     this.triggerDownload.destructView();
     this.triggerCut.destructView();
+    this.triggerFullScreen.destructView();
+    this.triggerToggleMinimize.destructView();
     Gui.Video.Controller.Player.Controls.Layer.prototype.destructView.call(this);
 };

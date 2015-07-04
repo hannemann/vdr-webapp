@@ -498,29 +498,13 @@ Gui.Video.Controller.Player.prototype.startCutting = function () {
 
     $window.one('gui-recording.updated.' + this.data.sourceModel.keyInCache.toCacheKey(), function () {
 
-
-        //this.cutter = this.module.getController('Cutter', {
-        //    "sourceModel": this.data.sourceModel,
-        //    "parent": this
-        //}).dispatchView();
-
-
-        //console.log('VP: ', this.data.sourceModel);
-        //
-        //console.log(this.video.getCurrentTime());
-        //
-        //this.data.sourceModel.data.marks = [
-        //
-        //    '00:40:02.03',
-        //    '00:01:02.03'
-        //];
-        //
-        //this.data.sourceModel.saveCuttingMarks();
-        //
-        //setTimeout(function () {
-        //
-        //    this.data.sourceModel.cut();
-        //}.bind(this), 2000);
+        if (this.controls) {
+            this.controls.destructView();
+            delete this.controls;
+            this.mode = 'cut';
+            this.dispatchControls();
+            this.controls.stopHide();
+        }
     }.bind(this));
 
     this.data.sourceModel.getCuttingMarks();

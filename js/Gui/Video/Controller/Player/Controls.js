@@ -87,6 +87,10 @@ Gui.Video.Controller.Player.Controls.prototype.stopHide = function () {
  */
 Gui.Video.Controller.Player.Controls.prototype.destructView = function (transition) {
 
+    if (this.player.mode === 'cut') {
+        return;
+    }
+
     if (this.omitDestruct) {
         this.omitDestruct = undefined;
         return;

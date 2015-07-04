@@ -37,22 +37,6 @@ Gui.Video.Controller.Player.Controls.Layer.prototype.init = function () {
         }
     );
 
-    this.triggerFullScreen = this.module.getController(
-        'Player.Controls.Trigger.ToggleFullScreen',
-        {
-            "parent" : this.data.parent.view,
-            "handler" : this.player.toggleFullScreen.bind(this.player)
-        }
-    );
-
-    this.triggerToggleMinimize = this.module.getController(
-        'Player.Controls.Trigger.Minimize',
-        {
-            "parent" : this.data.parent.view,
-            "handler" : this.player.toggleMinimize.bind(this.player)
-        }
-    );
-
     this.triggerQualitySelect = this.module.getController(
         'Player.Controls.Trigger.Quality',
         {
@@ -71,8 +55,6 @@ Gui.Video.Controller.Player.Controls.Layer.prototype.dispatchView = function () 
     this.volumeCtrl.dispatchView();
     this.triggerPlay.dispatchView();
     this.triggerStop.dispatchView();
-    this.triggerFullScreen.dispatchView();
-    this.triggerToggleMinimize.dispatchView();
     this.triggerQualitySelect.dispatchView();
 };
 
@@ -118,7 +100,5 @@ Gui.Video.Controller.Player.Controls.Layer.prototype.destructView = function () 
     this.volumeCtrl.destructView();
     this.triggerPlay.destructView();
     this.triggerStop.destructView();
-    this.triggerFullScreen.destructView();
-    this.triggerToggleMinimize.destructView();
     this.triggerQualitySelect.destructView();
 };
