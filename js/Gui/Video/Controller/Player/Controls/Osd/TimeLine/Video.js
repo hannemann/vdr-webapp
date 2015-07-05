@@ -139,12 +139,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeUp = fu
     $document.off('mousemove.videoplayer-time touchmove.videoplayer-time');
     $document.off('touchend.videoplayer-time mouseup.videoplayer-time');
 
-    if ("undefined" !== typeof this.fetchPoster) {
-        this.module.getHelper('Player')
-            .setVideoPoster(this.player.getPosterOptions());
-
-        this.fetchPoster = undefined;
-    }
+    this.fetchPoster();
     this.toggleActiveState();
 };
 
@@ -155,8 +150,6 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeUp = fu
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeMove = function (e) {
 
     var newPos;
-
-    this.fetchPoster = true;
 
     e.stopPropagation();
     e.preventDefault();
@@ -208,8 +201,6 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.spool = functi
 
     this.vibrate(100);
 
-    this.fetchPoster = true;
-
     $document.off('mousemove.videoplayer-time touchmove.videoplayer-time');
 
     this.spooling = 5;
@@ -225,6 +216,17 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.spool = functi
             me.spooling
         );
     }, 100);
+};
+
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.fetchPoster = function () {
+
+    if ("undefined" !== typeof this.fetchPosterTimeout) {
+        clearTimeout(this.fetchPosterTimeout);
+    }
+    this.fetchPosterTimeout = setTimeout(function () {
+        this.module.getHelper('Player')
+            .setVideoPoster(this.player.getPosterOptions());
+    }.bind(this), 400);
 };
 
 /**

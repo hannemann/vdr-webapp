@@ -177,9 +177,19 @@ VDRest.Recordings.Model.List.Recording.prototype.cut = function () {
 
         $window.one("vdrest-api-actions.recording-cut." + this.eventKey, function () {
 
-            console.log('cut ready');
+            $.event.trigger({
+                "type": "gui-recording.cut." + this.eventKey
+            });
 
-        }.bind(this))
+        }.bind(this));
+
+        $window.one("vdrest-api-actions.cutter-start-failed." + this.eventKey, function () {
+
+            $.event.trigger({
+                "type": "gui-recording.cutter-start-failed." + this.eventKey
+            });
+
+        }.bind(this));
     }
 };
 

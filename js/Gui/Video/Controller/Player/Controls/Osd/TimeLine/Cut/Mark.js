@@ -74,14 +74,16 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.Mark.prototype.timestampTo
  * retrieve float value as timestamp
  * @return {String}
  */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.Mark.prototype.floatToTimestamp = function (float) {
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.Mark.prototype.floatToTimestamp = function (float, fps) {
 
     var ts = [], hh, mm, ss, ff;
+
+    fps = fps || this.player.data.sourceModel.data.frames_per_second;
 
     hh = parseInt(float / 3600, 10);
     mm = parseInt((float - hh * 3600) / 60, 10);
     ss = (float - (hh * 3600) - (mm * 60)).toFixed(2);
-    ff = (parseFloat('0.' + ss.split('.')[1]) * 1000) / this.data.frameDistance;
+    ff = (parseFloat('0.' + ss.split('.')[1]) * 1000) / (1000 / fps);
     ss = ss.split('.')[0];
 
     ts.push(hh);
@@ -93,5 +95,19 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.Mark.prototype.floatToTime
 
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.Mark.prototype.moveByFrames = function (frames) {
 
-    this.data.timestamp = this.floatToTimestamp(this.timestampToFloat() + (frames * this.data.frameDistance / 1000));
+    var timestamp = this.timestampToFloat() + (frames * this.data.frameDistance / 1000),
+        duration = this.player.data.sourceModel.data.duration;
+
+    if (timestamp < 0) timestamp = 0;
+    if (timestamp > duration) timestamp = duration;
+
+    this.data.timestamp = this.floatToTimestamp(timestamp);
+};
+
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.Mark.prototype.setIsActive = function () {
+    this.view.node.addClass('active');
+};
+
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.Mark.prototype.unsetIsActive = function () {
+    this.view.node.removeClass('active');
 };

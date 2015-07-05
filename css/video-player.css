@@ -59,6 +59,44 @@
     z-index: 1;
 }
 
+.html5-player-controls .mark-controls-wrapper,
+.html5-player-controls .mark-controls-wrapper * {
+    background: none;
+    border: none;
+    height: auto;
+    width: auto;
+}
+.html5-player-controls .mark-controls-wrapper {
+    display: block;
+}
+
+.html5-player-controls .mark-controls {
+    width: 33%;
+    position: relative;
+    display: inline-block;
+}
+.html5-player-controls .mark-controls:first-child {
+    text-align: left;
+}
+.html5-player-controls .mark-controls:last-child {
+    text-align: right;
+}
+.html5-player-controls .mark-controls:first-child .timeline-control,
+.html5-player-controls .mark-controls:last-child .timeline-control {
+    margin: 0;
+}
+.html5-player-controls .timeline-control {
+    font-size: 14px;
+    padding: 0 6px;
+    margin: 0 5px;
+    position: relative;
+    display: inline-block;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
+}
+
 
 .html5-player-controls .stop,
 .html5-player-controls .play,
@@ -77,16 +115,19 @@
 .html5-player-controls .cut:active,
 .html5-player-controls .download:active,
 .html5-player-controls .channel-up:active,
-.html5-player-controls .channel-down:active {
+.html5-player-controls .channel-down:active,
+.html5-player-controls .vdr-web-symbol.timeline-control:active {
     background-color: rgba(255,255,255,0.5);
 }
-.html5-player-controls .play {
+.html5-player-controls .play,
+.html5-player-controls .jump-mark-prev {
     left: 10px;
 }
 .html5-player-controls .play.pause {
     font-weight: bold;
 }
-.html5-player-controls .stop {
+.html5-player-controls .stop,
+.html5-player-controls.cut .cut {
     left: 64px;
 }
 
@@ -111,17 +152,34 @@
 }
 
 .html5-player-controls .channel-up,
-.html5-player-controls .channel-down {
+.html5-player-controls .channel-down,
+.html5-player-controls .move-mark-forward,
+.html5-player-controls .move-mark-backward,
+.html5-player-controls .mark-minute-forward,
+.html5-player-controls .mark-minute-backward {
     left: 10px;
     top: 50%;
 }
+.html5-player-controls .mark-minute-forward,
+.html5-player-controls .mark-minute-backward {
+    right: 10px;
+    left: auto;
+}
 
-.html5-player-controls .channel-up {
+.html5-player-controls .channel-up,
+.html5-player-controls .move-mark-backward,
+.html5-player-controls .mark-minute-backward {
     margin-top: -49px;
 }
 
-.html5-player-controls .channel-down {
+.html5-player-controls .channel-down,
+.html5-player-controls .move-mark-forward,
+.html5-player-controls .mark-minute-forward{
     margin-top: 5px;
+}
+
+.html5-player-controls .move-mark-forward {
+    transform: rotate(180deg);
 }
 
 .html5-player-controls .info {
@@ -171,6 +229,9 @@
     width: 100%;
     margin: 0;
     min-height: 38px;
+}
+.html5-player-controls.cut .info-area {
+    display: none;
 }
 
 .html5-player-controls .info-area.has-logo {
@@ -247,6 +308,17 @@
     border-radius: 0;
     background-color: rgba(255,0,0,0.5);
 }
+.html5-player-controls .slider div.cutting-mark.active:before {
+    position: absolute;
+    width: 0;
+    height: 0;
+    content: '';
+    left: -5px;
+    bottom: -7px;
+    border: 5px solid;
+    border-color: transparent transparent red;
+}
+
 .html5-player-controls .volume-wrapper {
     bottom: 102px;
     top: 10px;
@@ -379,17 +451,40 @@
     .html5-player-controls .play,
     .html5-player-controls .toggle-fullScreen,
     .html5-player-controls .toggle-quality,
-    .html5-player-controls .minimize {
+    .html5-player-controls .minimize,
+    .html5-player-controls .move-mark-backward,
+    .html5-player-controls.cut .cut {
         top: -54px;
     }
     .html5-player-controls .channel-up,
     .html5-player-controls .channel-down,
     .html5-player-controls .cut,
-    .html5-player-controls .download {
+    .html5-player-controls .download,
+    .html5-player-controls .move-mark-backward,
+    .html5-player-controls .move-mark-forward,
+    .html5-player-controls .mark-minute-backward,
+    .html5-player-controls .mark-minute-forward {
         bottom: -50px;
         top: auto;
     }
-    .html5-player-controls .channel-down {
+    .html5-player-controls.cut .cut {
+        bottom: auto;
+    }
+    .html5-player-controls .move-mark-backward {
+        left: 10px;
+    }
+    .html5-player-controls .mark-minute-backward,
+    .html5-player-controls .mark-minute-forward {
+        left: auto;
+    }
+    .html5-player-controls .mark-minute-forward {
+        right: 10px;
+    }
+    .html5-player-controls .mark-minute-backward {
+        right: 64px;
+    }
+    .html5-player-controls .channel-down,
+    .html5-player-controls .move-mark-forward {
         left: 64px;
     }
 

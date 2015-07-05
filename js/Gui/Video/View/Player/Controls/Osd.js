@@ -88,24 +88,24 @@ Gui.Video.View.Player.Controls.Osd.prototype.addTitle = function () {
 /**
  * update info area
  */
-Gui.Video.View.Player.Controls.Osd.prototype.updateInfo = function () {
-
-    var broadcast, start, end, helper = this.helper();
-
-    if (this.player.data.isTv) {
-        broadcast = this.player.getData('current_broadcast');
-        this.title.text(broadcast.getData('title'));
-        if ('' !== broadcast.getData('short_text')) {
-            this.subTitle.text(broadcast.getData('short_text'));
-        }
-
-        start = helper.getTimeString(broadcast.getData('start_date'));
-        end = helper.getTimeString(broadcast.getData('end_date'));
-        this.start.text(start);
-        this.end.text(end);
-        $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
-    }
-};
+//Gui.Video.View.Player.Controls.Osd.prototype.updateInfo = function () {
+//
+//    var broadcast, start, end, helper = this.helper();
+//
+//    if (this.player.data.isTv) {
+//        broadcast = this.player.getData('current_broadcast');
+//        this.title.text(broadcast.getData('title'));
+//        if ('' !== broadcast.getData('short_text')) {
+//            this.subTitle.text(broadcast.getData('short_text'));
+//        }
+//
+//        start = helper.getTimeString(broadcast.getData('start_date'));
+//        end = helper.getTimeString(broadcast.getData('end_date'));
+//        this.start.text(start);
+//        this.end.text(end);
+//        $('title').text(this.title.text() + (this.subTitle ? ' - ' + this.subTitle.text() : ''));
+//    }
+//};
 
 /**
  * scroll title

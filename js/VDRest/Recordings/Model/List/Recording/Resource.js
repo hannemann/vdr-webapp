@@ -241,8 +241,6 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getCutterStatus = func
 
     this.fetchAsync(request, function (response) {
 
-        console.log(response.active);
-
         this.cutterActive = response.active;
         $.event.trigger({
             "type": "vdrest-api-actions.cutter-status"

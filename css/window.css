@@ -312,6 +312,7 @@
     font-size: 16px;
     height: 16px;
     padding: 10px 0;
+    z-index: 5;
 }
 
 .window-notification.show {

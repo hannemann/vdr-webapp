@@ -25,9 +25,22 @@ Gui.Video.Controller.Player.Controls.prototype.init = function () {
     });
     this.view.setParentView(this.player.view);
     this.isHidden = false;
-    this.getLayer();
 };
 
+/**
+ * dispatch view
+ */
+Gui.Video.Controller.Player.Controls.prototype.dispatchView = function () {
+
+    this.getLayer();
+    this.layer.dispatchView();
+    this.addObserver();
+    VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+};
+
+/**
+ * init layer
+ */
 Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
 
     var type;
@@ -48,8 +61,6 @@ Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
     this.layer = this.module.getController('Player.Controls.Layer.' + type, {
         "parent" : this
     });
-    this.addObserver();
-    this.layer.dispatchView();
 };
 
 /**
