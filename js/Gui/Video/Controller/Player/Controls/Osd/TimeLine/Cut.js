@@ -203,6 +203,22 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpMark = funct
     }
 };
 
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpProgress = function (frames) {
+
+    var startTime = this.player.data.startTime,
+        fps = this.player.data.sourceModel.data.frames_per_second,
+        duration = this.player.data.sourceModel.data.duration;
+
+    startTime += frames * (1000 / fps / 1000);
+
+    if (startTime < 0) startTime = 0;
+    if (startTime > duration) startTime = duration;
+
+    this.player.data.startTime = startTime;
+    this.player.controls.layer.osd.timeLine.updateProgress();
+    this.player.fetchPoster();
+};
+
 /**
  * jump to mark
  * @param {number} index
@@ -317,7 +333,10 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.deleteMarks = fu
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.moveMark = function (index, frames) {
 
-    if ("undefined" === typeof this.data.activeMark) return;
+    if ("undefined" === typeof this.data.activeMark) {
+        this.jumpProgress(frames);
+        return;
+    }
 
     this.data.marks[index].moveByFrames(frames);
     this.player.data.sourceModel.data.marks[index] = this.data.marks[index].data.timestamp;
@@ -325,20 +344,6 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.moveMark = funct
     this.addCuttingMarks();
     this.setMarkerWidth();
     this.jumpToMark(index);
-};
-
-/**
- * move mark a minute
- * @param {number} index
- * @param {boolean} [rew]
- */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.moveMarkAMinute = function (index, rew) {
-
-    var frames = 60 * this.player.data.sourceModel.data.frames_per_second;
-
-    frames *= rew ? -1 : 1;
-
-    this.moveMark(index, frames);
 };
 
 /**

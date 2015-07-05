@@ -141,6 +141,9 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeUp = fu
 
     this.player.fetchPoster();
     this.toggleActiveState();
+    if ('cut' === this.player.mode) {
+        this.data.activeMark = undefined;
+    }
 };
 
 /**
