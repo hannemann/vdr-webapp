@@ -13,7 +13,7 @@ Gui.Video.Controller.Player.Controls.Layer.Video.prototype.init = function () {
         'Player.Controls.Trigger.Download',
         {
             "parent" : this.data.parent.view,
-            "handler" : this.player.startDownload.bind(this)
+            "handler" : this.player.startDownload.bind(this.player)
         }
     );
 
