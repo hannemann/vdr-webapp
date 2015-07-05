@@ -42,6 +42,7 @@ Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
 
     if (this.player.mode == 'cut') {
         type = 'Cut';
+        this.view.node.addClass('cut');
     }
 
     this.layer = this.module.getController('Player.Controls.Layer.' + type, {

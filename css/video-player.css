@@ -160,6 +160,9 @@
     width: auto;
     z-index: 0;
 }
+.html5-player-controls.cut .video-osd {
+    width: auto;
+}
 .html5-player-controls .video-osd > div {
     position: relative;
     margin-bottom: 3px;
