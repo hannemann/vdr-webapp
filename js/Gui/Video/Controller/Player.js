@@ -136,6 +136,11 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
         this.video.hideThrobber();
         this.view.poster.classList.remove('hidden');
     }.bind(this);
+
+    this.view.poster.onerror = function () {
+        this.video.hideThrobber();
+        this.view.poster.classList.add('hidden');
+    }.bind(this);
 };
 
 /**
@@ -144,6 +149,8 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
 Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
     this.view.node.off('click');
+    this.view.poster.onload = undefined;
+    this.view.poster.onerror = undefined;
 };
 
 /**
