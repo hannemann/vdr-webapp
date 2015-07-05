@@ -38,7 +38,6 @@ Gui.Video.Controller.Player.prototype.init = function () {
     this.data.startDate = Date.now();
     this.data.startTime = 0;
     this.data.progress = 0;
-    this.settingParams = false;
     this.spooling = false;
     this.mode = 'Playback';
 
@@ -85,12 +84,12 @@ Gui.Video.Controller.Player.prototype.doDispatch = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
     this.video.dispatchView();
+    this.addObserver();
     if (this.data.isVideo) {
-        this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
+        this.fetchPoster(2);
     }
     this.data.isTv && this.startUpdateBroadcastTimer();
     this.dispatchControls();
-    this.addObserver();
 };
 
 /**
@@ -132,6 +131,11 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
             }
         }.bind(this), true);
     }
+
+    this.view.poster.onload = function () {
+        this.video.hideThrobber();
+        this.view.poster.classList.remove('hidden');
+    }.bind(this);
 };
 
 /**
@@ -163,8 +167,23 @@ Gui.Video.Controller.Player.prototype.getPosterOptions = function (time) {
         "height" : Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].height,
         "video" : this.video.view.node[0],
         "sourceModel" : this.data.sourceModel,
-        "startTime" : time
+        "startTime" : time,
+        "poster" : this.view.poster
     }
+};
+
+Gui.Video.Controller.Player.prototype.fetchPoster = function (time) {
+
+    time = time || this.getData('startTime');
+
+    if ("undefined" !== typeof this.fetchPosterTimeout) {
+        clearTimeout(this.fetchPosterTimeout);
+    }
+    this.fetchPosterTimeout = setTimeout(function () {
+        this.video.showThrobber();
+        this.module.getHelper('Player')
+            .setVideoPoster(this.getPosterOptions(time));
+    }.bind(this), 400);
 };
 
 /**
@@ -301,7 +320,7 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
 
     this.isPlaying = true;
     this.video.toggleThrobber();
-    this.settingParams = false;
+    this.view.poster.classList.add('hidden');
 
     this.video.play(this.getStreamUrl());
 
@@ -376,12 +395,12 @@ Gui.Video.Controller.Player.prototype.pausePlayback = function () {
             this.controls.layer.osd.timeLine.updateRecordingEndTime(true);
         }
     }
-
-    if (!this.settingParams) {
-        this.video.setPoster();
-    }
     this.isPlaying = false;
     this.video.pause();
+
+    if (this.data.isVideo) {
+        this.fetchPoster();
+    }
 
     if (this.noTimeUpdateWorkaround) {
         clearInterval(this.noTimeoutInterval);
@@ -422,7 +441,7 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
                 this.controls.layer.triggerPlay.view.setState(newTriggerPlayState);
             } else {
                 this.controls.layer.osd.timeLine.updateRecordingEndTime(false);
-                this.module.getHelper('Player').setVideoPoster(this.getPosterOptions(2));
+                this.fetchPoster(2);
             }
         }.bind(this);
 

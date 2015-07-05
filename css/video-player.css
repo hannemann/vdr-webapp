@@ -29,6 +29,15 @@
     top: 50%;
     bottom: auto;
 }
+.html5-player .poster {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+.html5-player .poster.hidden {
+    display: none;
+}
 .html5-player .throbber {
     position: absolute;
     top: 0;

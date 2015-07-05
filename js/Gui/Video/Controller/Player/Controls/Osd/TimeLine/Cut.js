@@ -225,7 +225,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpToMark = fun
     }.bind(this));
 
     this.view.currentProgress.text(this.data.marks[index].data.timestamp);
-    fetchPoster && this.fetchPoster();
+    fetchPoster && this.player.fetchPoster();
 };
 
 /**
@@ -246,7 +246,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpTo = functio
     } else {
         this.data.activeMark = this.data.marks.length;
     }
-    this.fetchPoster();
+    this.player.fetchPoster();
 };
 
 /**

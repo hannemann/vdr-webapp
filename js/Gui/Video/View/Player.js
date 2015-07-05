@@ -35,6 +35,9 @@ Gui.Video.View.Player.prototype.modalExtraClasses = "modal-video";
 Gui.Video.View.Player.prototype.init = function () {
 
     this.node = $('<div class="video-player-wrapper">');
+    this.poster = new Image();
+    this.poster.classList.add('poster');
+    this.node[0].appendChild(this.poster);
     this.defaultTitle = $('title').text();
     $('body').addClass('has-video-player');
 };

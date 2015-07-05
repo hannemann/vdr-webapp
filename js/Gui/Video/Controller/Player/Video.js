@@ -145,6 +145,24 @@ Gui.Video.Controller.Player.Video.prototype.toggleThrobber = function () {
 };
 
 /**
+ * hide throbber
+ */
+Gui.Video.Controller.Player.Video.prototype.hideThrobber = function () {
+
+    this.view.throbber.removeClass('show');
+    return this;
+};
+
+/**
+ * show throbber
+ */
+Gui.Video.Controller.Player.Video.prototype.showThrobber = function () {
+
+    this.view.throbber.addClass('show');
+    return this;
+};
+
+/**
  * set poster with icon
  */
 Gui.Video.Controller.Player.Video.prototype.setDefaultPoster = function () {

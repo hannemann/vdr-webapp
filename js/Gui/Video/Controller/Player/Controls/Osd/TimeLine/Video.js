@@ -139,7 +139,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeUp = fu
     $document.off('mousemove.videoplayer-time touchmove.videoplayer-time');
     $document.off('touchend.videoplayer-time mouseup.videoplayer-time');
 
-    this.fetchPoster();
+    this.player.fetchPoster();
     this.toggleActiveState();
 };
 
@@ -216,17 +216,6 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.spool = functi
             me.spooling
         );
     }, 100);
-};
-
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.fetchPoster = function () {
-
-    if ("undefined" !== typeof this.fetchPosterTimeout) {
-        clearTimeout(this.fetchPosterTimeout);
-    }
-    this.fetchPosterTimeout = setTimeout(function () {
-        this.module.getHelper('Player')
-            .setVideoPoster(this.player.getPosterOptions());
-    }.bind(this), 400);
 };
 
 /**
