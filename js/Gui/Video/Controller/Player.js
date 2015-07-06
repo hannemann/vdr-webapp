@@ -530,10 +530,15 @@ Gui.Video.Controller.Player.prototype.startCutting = function () {
             this.mode = 'cut';
             this.dispatchControls();
             this.controls.stopHide();
+            this.video.hideThrobber();
         }
     }.bind(this));
 
-    this.data.sourceModel.getCuttingMarks();
+    if (!this.cutRequest) {
+        this.video.showThrobber();
+        this.cutRequest = true;
+        this.data.sourceModel.getCuttingMarks();
+    }
 };
 
 /**
