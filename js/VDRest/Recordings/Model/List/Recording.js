@@ -54,6 +54,7 @@ VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
             this.data[i] = e.payload.data.recordings[0][i];
         }
     }
+    this.sortCuttingMarks();
     this.module.cache.updateKeys(this, this.data.file_name);
     $.event.trigger({
         "type": "gui-recording.updated." + this.eventKey

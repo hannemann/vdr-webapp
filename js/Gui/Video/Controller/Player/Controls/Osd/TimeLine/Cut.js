@@ -172,27 +172,28 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.setMarkerWidth =
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpMark = function (dir) {
 
     var index = this.data.activeMark,
-        startTime = this.player.data.startTime;
+        startTime = this.player.data.startTime,
+        marks,
+        l = this.data.marks.length;
 
-    if ("undefined" === typeof index && 'prev' === dir) return;
-    if (this.data.marks.length === index && 'next' === dir) return;
-
-    if (startTime > 0) {
-        index = 0;
-        this.data.marks.forEach(function (mark) {
-            if (mark.timestampToFloat() < startTime) {
-                index += 1;
-            }
-        }.bind(this));
+    if (0 === this.data.marks.length) {
+        this.data.activeMark = 0;
+        this.jumpTo('next' === dir ? 'end' : 'start');
+        return;
     }
 
     if ("undefined" === typeof index) {
-        index = 0;
-    } else if ('next' === dir) {
-        index += 1;
-    } else {
-        index -= 1;
+        marks = JSON.parse(JSON.stringify(this.player.data.sourceModel.data.marks));
+        marks.reverse().forEach(function (mark, i) {
+            if ("undefined" === typeof index && this.data.marks[l-1-i].timestampToFloat() < startTime) {
+                index = l-1-i;
+            }
+        }.bind(this));
+
+        index = "undefined" === typeof index ? -1 : index;
+        index = 'prev' === dir ? index + 1 : index;
     }
+    index = 'next' === dir ? index + 1 : index - 1;
 
     if (index < 0) {
         this.jumpTo('start');
@@ -256,12 +257,10 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpTo = functio
         this.player.data.startTime = this.player.data.sourceModel.data.duration;
     }
     this.player.controls.layer.osd.timeLine.updateProgress();
-    this.data.marks[this.data.activeMark].unsetIsActive();
-    if ('start' === point) {
-        this.data.activeMark = undefined;
-    } else {
-        this.data.activeMark = this.data.marks.length;
+    if ("undefined" !== typeof this.data.marks[this.data.activeMark]) {
+        this.data.marks[this.data.activeMark].unsetIsActive();
     }
+    this.data.activeMark = undefined;
     this.player.fetchPoster();
 };
 
