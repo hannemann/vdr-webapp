@@ -342,7 +342,7 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
             this.noTimeoutInterval = setInterval(function () {
                 this.data.progress++;
                 if (this.controls) {
-                    this.controls.layer.osd.timeLine.updateProgress();
+                    this.controls.layer.osd.timeLine.updateProgress(this.data.progress);
                 }
             }.bind(this), 1000);
         }
@@ -398,6 +398,9 @@ Gui.Video.Controller.Player.prototype.pausePlayback = function () {
             this.data.progress += Math.floor(this.video.getCurrentTime());
         }
         this.data.startTime += this.data.progress;
+        if (this.noTimeUpdateWorkaround) {
+            this.data.progress = 0;
+        }
         if (this.controls) {
             this.controls.layer.osd.timeLine.updateRecordingEndTime(true);
         }

@@ -346,26 +346,6 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.moveMark = funct
 };
 
 /**
- * update timer
- */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.updateProgress = function () {
-
-    var startTime = this.player.data.startTime;
-
-    Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateProgress.call(this);
-
-    this.data.marks.forEach(function (mark) {
-        if (startTime === mark.timestampToFloat()) {
-            mark.setIsActive();
-        } else {
-            mark.unsetIsActive();
-        }
-    }.bind(this));
-
-    return this;
-};
-
-/**
  * destruct
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.destructView = function () {

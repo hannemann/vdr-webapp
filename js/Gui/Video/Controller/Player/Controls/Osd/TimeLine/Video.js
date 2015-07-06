@@ -38,9 +38,13 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.getPercentage 
 /**
  * update timer
  */
-Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateProgress = function () {
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateProgress = function (noTimeUpdateProgress) {
 
     var progress = this.player.data.startTime + this.player.video.getCurrentTime();
+
+    if (noTimeUpdateProgress) {
+        progress = this.player.data.startTime + noTimeUpdateProgress;
+    }
 
     this.view.currentProgress.text(VDRest.helper.getDurationAsString(progress, true));
     this.view.setSliderWidth(this.getPercentage());
