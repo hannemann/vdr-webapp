@@ -175,7 +175,7 @@ Gui.Window.Controller.ContextMenu.prototype.reloadAction = function () {
 
 Gui.Window.Controller.ContextMenu.prototype.resizeAction = function () {
 
-    var height = window.innerWidth / 16 * 9;
+    var height = (window.innerWidth - VDRest.helper.scrollbarWidth) / 16 * 9;
     window.resizeTo(window.innerWidth, height);
 };
 

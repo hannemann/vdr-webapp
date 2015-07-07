@@ -7,6 +7,7 @@ VDRest.Helper = function () {
     this.touchMoveCapable = this.isTouchDevice && !this.isFirefox;
 
     document.body.classList.add('is' + (this.isTouchDevice ? '' : '-not') + '-touch');
+    this.getScrollbarWidth();
 
     if (this.isFirefox) {
         document.body.classList.add('is-firefox');
@@ -23,8 +24,8 @@ VDRest.Helper = function () {
         this.pointerMove = 'mousemove';
         this.pointerEnd = 'mouseup';
     }
-    document.addEventListener(this.pointerStart, this.pointerStartHandler);
-    document.addEventListener(this.pointerMove, this.pointerMoveHandler);
+    window.addEventListener(this.pointerStart, this.pointerStartHandler);
+    window.addEventListener(this.pointerMove, this.pointerMoveHandler);
 };
 
 /**
@@ -32,6 +33,10 @@ VDRest.Helper = function () {
  * @param {Event} e
  */
 VDRest.Helper.prototype.getPointerDelta = function (e) {
+
+    if (!this.pointerStartPosition) {
+        this.getPointerStart(e);
+    }
 
     if (this.isTouchDevice) {
         this.pointerDelta = {
@@ -403,6 +408,37 @@ VDRest.Helper.prototype.getIsFullscreen = function () {
     }
 
     return isFullscreen;
+};
+
+VDRest.Helper.prototype.getScrollbarWidth = function () {
+
+    var outer, widthNoScroll, inner, widthWithScroll;
+
+    if (!this.scrollbarWidth) {
+        outer = document.createElement("div");
+        outer.style.visibility = "hidden";
+        outer.style.width = "100px";
+        outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+        document.body.appendChild(outer);
+
+        widthNoScroll = outer.offsetWidth;
+        // force scrollbars
+        outer.style.overflow = "scroll";
+
+        // add innerdiv
+        inner = document.createElement("div");
+        inner.style.width = "100%";
+        outer.appendChild(inner);
+
+        widthWithScroll = inner.offsetWidth;
+
+        // remove divs
+        outer.parentNode.removeChild(outer);
+        this.scrollbarWidth = widthNoScroll - widthWithScroll
+    }
+
+    return this.scrollbarWidth;
 };
 
 VDRest.helper = new VDRest.Helper();

@@ -28,16 +28,17 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
         });
     }
 
-    if (this.view.canAnimateScroll()) {
+    this.menuBarController = VDRest.app.getModule('Gui.Menubar').getController('Default');
 
-        menubarHeader = $('.menubar-header');
-        this.headerHeight = this.view.header[0].offsetHeight;
-        this.menuBarHeight = $('#menubar')[0].offsetHeight;
-        this.menuHeaderOffset = menubarHeader[0].offsetLeft;
-        this.menuBarController = VDRest.app.getModule('Gui.Menubar').getController('Default');
-        if (this.view.fanart) {
-            this.menuBarController.view.node.addClass('big-font');
-        }
+    menubarHeader = $('.menubar-header');
+    this.headerHeight = this.view.header[0].offsetHeight;
+    this.menuBarHeight = $('#menubar')[0].offsetHeight;
+    this.menuHeaderOffset = menubarHeader[0].offsetLeft;
+    if (this.view.fanart) {
+        this.menuBarController.view.node.addClass('big-font');
+    }
+
+    if (this.view.canAnimateScroll()) {
 
         this.touchScroll = new TouchMove.Scroll({
             "wrapper": document.body,

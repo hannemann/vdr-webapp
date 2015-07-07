@@ -23,7 +23,6 @@
     bottom: 20px;
     left: 20px;
     background: #696969;
-    border-bottom: 20px solid #696969;
     z-index: 2;
     overflow: auto;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
