@@ -464,6 +464,9 @@
         top: auto;
         min-height: 0;
     }
+    .html5-player-controls .video-osd {
+        bottom: -40px;
+    }
 
     .html5-player-controls .stop,
     .html5-player-controls .play,
@@ -483,7 +486,7 @@
     .html5-player-controls .move-mark-forward,
     .html5-player-controls .mark-minute-backward,
     .html5-player-controls .mark-minute-forward {
-        bottom: -50px;
+        bottom: -90px;
         top: auto;
     }
     .html5-player-controls.cut .cut {
