@@ -113,7 +113,8 @@
 .html5-player-controls .toggle-quality,
 .html5-player-controls .minimize,
 .html5-player-controls .cut,
-.html5-player-controls .download {
+.html5-player-controls .download,
+.html5-player-controls .watch {
     top: 10px;
 }
 .html5-player-controls .stop:active,
@@ -140,7 +141,8 @@
     left: 64px;
 }
 
-.html5-player-controls .toggle-fullScreen {
+.html5-player-controls .toggle-fullScreen,
+.html5-player-controls .watch {
     left: 118px;
 }
 
@@ -462,7 +464,8 @@
     .html5-player-controls .toggle-quality,
     .html5-player-controls .minimize,
     .html5-player-controls .move-mark-backward,
-    .html5-player-controls.cut .cut {
+    .html5-player-controls.cut .cut,
+    .html5-player-controls.cut .watch {
         top: -54px;
     }
     .html5-player-controls .channel-up,

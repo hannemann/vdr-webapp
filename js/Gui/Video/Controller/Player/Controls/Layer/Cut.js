@@ -48,6 +48,14 @@ Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.init = function () {
             "handler" : this.doCut.bind(this)
         }
     );
+
+    this.triggerWatch = this.module.getController(
+        'Player.Controls.Trigger.Watch',
+        {
+            "parent" : this.data.parent.view,
+            "handler" : this.watch.bind(this)
+        }
+    );
 };
 
 /**
@@ -60,6 +68,7 @@ Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.dispatchView = function
     this.triggerMinuteForward.dispatchView();
     this.triggerMinuteBackward.dispatchView();
     this.triggerCut.dispatchView();
+    this.triggerWatch.dispatchView();
     Gui.Video.Controller.Player.Controls.Layer.prototype.dispatchView.call(this);
 };
 
@@ -176,6 +185,14 @@ Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.moveBySeconds = functio
 };
 
 /**
+ * watch mark
+ */
+Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.watch = function () {
+
+    this.osd.timeLine.watchMark();
+};
+
+/**
  * destruct view
  */
 Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.destructView = function () {
@@ -185,5 +202,6 @@ Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.destructView = function
     this.triggerMinuteForward.destructView();
     this.triggerMinuteBackward.destructView();
     this.triggerCut.destructView();
+    this.triggerWatch.destructView();
     Gui.Video.Controller.Player.Controls.Layer.prototype.destructView.call(this);
 };

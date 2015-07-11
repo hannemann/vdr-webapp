@@ -183,10 +183,12 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.setMarkerWidth =
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpMark = function (dir) {
 
-    var index = this.data.activeMark,
-        startTime = this.player.data.startTime,
-        marks,
-        l = this.data.marks.length;
+    var index = this.data.activeMark;
+
+    if (this.player.isPlaying) {
+        this.player.pausePlayback();
+        this.player.controls.layer.triggerPlay.view.toggleState()
+    }
 
     if (0 === this.data.marks.length) {
         this.data.activeMark = 0;
@@ -195,17 +197,11 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpMark = funct
     }
 
     if ("undefined" === typeof index) {
-        marks = JSON.parse(JSON.stringify(this.player.data.sourceModel.data.marks));
-        marks.reverse().forEach(function (mark, i) {
-            if ("undefined" === typeof index && this.data.marks[l-1-i].timestampToFloat() < startTime) {
-                index = l-1-i;
-            }
-        }.bind(this));
 
-        index = "undefined" === typeof index ? -1 : index;
-        index = 'prev' === dir ? index + 1 : index;
+        index = this.getMarkIndexByTime(dir);
+    } else {
+        index = 'next' === dir ? index + 1 : index - 1;
     }
-    index = 'next' === dir ? index + 1 : index - 1;
 
     if (index < 0) {
         this.jumpTo('start');
@@ -215,6 +211,34 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpMark = funct
         this.jumpToMark(index);
     }
 };
+
+/**
+ * retrieve mark index by direction and current timestamp
+ * @param {string} dir prev|next
+ * @return {number}
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.getMarkIndexByTime = function (dir) {
+
+    var index,
+        startTime = this.player.data.startTime,
+        marks,
+        l = this.data.marks.length;
+
+    marks = JSON.parse(JSON.stringify(this.player.data.sourceModel.data.marks));
+    marks.reverse().forEach(function (mark, i) {
+        if ("undefined" === typeof index && this.data.marks[l-1-i].timestampToFloat() < startTime) {
+            index = l-1-i;
+        }
+    }.bind(this));
+
+    index = "undefined" === typeof index ? -1 : index;
+    index = 'prev' === dir ? index + 1 : index;
+    index = 'next' === dir ? index + 1 : index - 1;
+
+    return index;
+};
+
+
 
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpProgress = function (frames) {
 
@@ -302,6 +326,11 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.addMark = functi
     this.data.marks.splice(index, 0, mark);
     this.player.data.sourceModel.data.marks.splice(index, 0, mark.data.timestamp);
 
+    if (this.player.isPlaying) {
+        this.player.pausePlayback();
+        this.player.controls.layer.triggerPlay.view.toggleState()
+    }
+
     this.deleteMarks();
     this.addCuttingMarks();
     this.setMarkerWidth();
@@ -371,6 +400,31 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.moveMark = funct
         }.bind(this));
         this.player.data.sourceModel.saveCuttingMarks();
     }.bind(this), 300);
+};
+
+/**
+ * jump to time at 3000ms before next mark and toggle play
+ */
+Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.watchMark = function () {
+
+    var index = this.getMarkIndexByTime('next');
+
+    if (index <= 0) {
+        index = 1;
+    }
+
+    if (this.player.isPlaying) {
+        this.player.pausePlayback();
+        this.player.controls.layer.triggerPlay.view.toggleState()
+    }
+
+    if ("undefined" !== typeof this.data.activeMark) {
+        this.data.marks[this.data.activeMark].unsetIsActive();
+    }
+
+    this.player.data.startTime = this.data.marks[index].timestampToFloat() - 3;
+    this.updateProgress();
+    this.player.fetchPoster();
 };
 
 /**

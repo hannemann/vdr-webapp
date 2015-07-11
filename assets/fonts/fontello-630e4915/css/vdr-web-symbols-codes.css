@@ -30,4 +30,9 @@
 .icon-folder:before { content: '\65'; } /* 'e' */
 .icon-folder-open:before { content: '\66'; } /* 'f' */
 .icon-left-bold:before { content: '\67'; } /* 'g' */
+.icon-group:before { content: '\68'; } /* 'h' */
 .icon-info:before { content: '\69'; } /* 'i' */
+.icon-search:before { content: '\6a'; } /* 'j' */
+.icon-sort-alt-up:before { content: '\6b'; } /* 'k' */
+.icon-video-alt:before { content: '\6c'; } /* 'l' */
+.icon-eye:before { content: '\e800'; } /* '' */
