@@ -331,10 +331,21 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.addMark = functi
         this.player.controls.layer.triggerPlay.view.toggleState()
     }
 
-    this.deleteMarks();
-    this.addCuttingMarks();
-    this.setMarkerWidth();
-    this.jumpToMark(index, false);
+    if ("undefined" !== this.saveMarkTimeout) {
+        clearTimeout(this.saveMarkTimeout);
+    }
+
+    this.saveMarkTimeout = setTimeout(function () {
+        this.player.video.showThrobber();
+        $window.one('gui-recording.cutting-marks-saved.' + this.player.data.sourceModel.keyInCache.toCacheKey(), function () {
+            this.player.video.hideThrobber();
+            this.deleteMarks();
+            this.addCuttingMarks();
+            this.setMarkerWidth();
+            this.jumpToMark(index, false);
+        }.bind(this));
+        this.player.data.sourceModel.saveCuttingMarks();
+    }.bind(this), 300);
 };
 
 /**
@@ -351,8 +362,19 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.removeMark = fun
     this.data.marks.splice(index, 1);
     this.player.data.sourceModel.data.marks.splice(index, 1);
 
-    this.addCuttingMarks();
-    this.setMarkerWidth();
+    if ("undefined" !== this.saveMarkTimeout) {
+        clearTimeout(this.saveMarkTimeout);
+    }
+
+    this.saveMarkTimeout = setTimeout(function () {
+        this.player.video.showThrobber();
+        $window.one('gui-recording.cutting-marks-saved.' + this.player.data.sourceModel.keyInCache.toCacheKey(), function () {
+            this.player.video.hideThrobber();
+            this.addCuttingMarks();
+            this.setMarkerWidth();
+        }.bind(this));
+        this.player.data.sourceModel.saveCuttingMarks();
+    }.bind(this), 300);
 };
 
 /**
