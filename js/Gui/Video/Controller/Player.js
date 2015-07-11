@@ -536,8 +536,16 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
  */
 Gui.Video.Controller.Player.prototype.startCutting = function () {
 
-    $window.one('gui-recording.updated.' + this.data.sourceModel.keyInCache.toCacheKey(), function () {
+    var eventKey = this.data.sourceModel.keyInCache.toCacheKey();
 
+    $window.one('vdrest-api-actions.load-recording-marks-failed' + eventKey, function () {
+        $window.off('gui-recording.updated.' + eventKey);
+        this.video.hideThrobber();
+    }.bind(this));
+
+    $window.one('gui-recording.updated.' + eventKey, function () {
+
+        $window.off('vdrest-api-actions.load-recording-marks-failed' + eventKey);
         if (this.controls) {
             this.controls.destructView();
             delete this.controls;

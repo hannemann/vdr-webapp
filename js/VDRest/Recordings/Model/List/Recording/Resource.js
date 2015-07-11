@@ -121,6 +121,13 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getCuttingMarks = func
                 }
             });
         } else {
+
+            $.event.trigger({
+                "type": "vdrest-api-actions.load-recording-marks-failed" + recording.eventKey,
+                "payload": {
+                    "data": response
+                }
+            });
             this.onError({
                 "readyState": 4,
                 "status": "custom",
