@@ -155,33 +155,44 @@ Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
 /**
  * retrieve options object for poster extraction
- * @param {int} [time]
+ * @param {number|{mark: number}} [time]
  * @returns {{
- *      width: int,
- *      height: int,
+ *      width: number,
+ *      height: number,
  *      video: HTMLVideoElement,
  *      sourceModel: VDRest.Recordings.Model.List.Recording|VDRest.Epg.Model.Channels.Channel,
- *      startTime: int
+ *      poster: HTMLImageElement,
+ *      [startTime]: number,
+ *      [mark]: number
  *  }}
  */
 Gui.Video.Controller.Player.prototype.getPosterOptions = function (time) {
 
-    var size = VDRest.config.getItem('videoQualitySize');
+    var size = VDRest.config.getItem('videoQualitySize'),
+        options = {
+            "width" : Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].width,
+            "height" : Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].height,
+            "video" : this.video.view.node[0],
+            "sourceModel" : this.data.sourceModel,
+            "poster" : this.view.poster
+        };
+
     time = time || this.getData('startTime');
 
-    return {
-        "width" : Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].width,
-        "height" : Gui.Video.View.Player.Controls.Quality.Size.prototype.values[size].height,
-        "video" : this.video.view.node[0],
-        "sourceModel" : this.data.sourceModel,
-        "startTime" : time,
-        "poster" : this.view.poster
+    if (time instanceof Object && "undefined" !== typeof time.mark) {
+        options.mark = time.mark;
+    } else {
+        options.startTime = time
     }
+
+    return options;
 };
 
+/**
+ * fetch video poster
+ * @param time
+ */
 Gui.Video.Controller.Player.prototype.fetchPoster = function (time) {
-
-    time = time || this.getData('startTime');
 
     if ("undefined" !== typeof this.fetchPosterTimeout) {
         clearTimeout(this.fetchPosterTimeout);

@@ -11,6 +11,10 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype = new Gui.Video.
 
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.steps = [
     {
+        "label" : "30s",
+        "seconds" : 30
+    },
+    {
         "label" : "1m",
         "seconds" : 60
     },
@@ -25,6 +29,10 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.steps = [
     {
         "label" : "10m",
         "seconds" : 600
+    },
+    {
+        "label" : "30m",
+        "seconds" : 900
     }
 ];
 
@@ -40,6 +48,10 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.fineSteps = [
     {
         "label" : "10f",
         "frames" : 10
+    },
+    {
+        "label" : "25f",
+        "frames" : 25
     },
     {
         "label" : "50f",
@@ -59,8 +71,8 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.init = function 
     Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.init.call(this);
     this.data.marks = [];
     this.moveByFrames = 10;
-    this.selectedStep = 1;
-    this.selectedFineStep = 3;
+    this.selectedStep = 2;
+    this.selectedFineStep = 4;
 };
 
 /**
@@ -242,7 +254,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.jumpToMark = fun
     }.bind(this));
 
     this.view.currentProgress.text(this.data.marks[index].data.timestamp);
-    fetchPoster && this.player.fetchPoster();
+    fetchPoster && this.player.fetchPoster({"mark" : index});
 };
 
 /**
@@ -339,10 +351,26 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.moveMark = funct
 
     this.data.marks[index].moveByFrames(frames);
     this.player.data.sourceModel.data.marks[index] = this.data.marks[index].data.timestamp;
-    this.deleteMarks();
-    this.addCuttingMarks();
-    this.setMarkerWidth();
-    this.jumpToMark(index);
+
+    this.player.data.startTime = this.data.marks[index].timestampToFloat();
+    this.player.controls.layer.osd.timeLine.updateProgress();
+    this.view.currentProgress.text(this.data.marks[index].data.timestamp);
+
+    if ("undefined" !== this.saveMarkTimeout) {
+        clearTimeout(this.saveMarkTimeout);
+    }
+
+    this.saveMarkTimeout = setTimeout(function () {
+        this.player.video.showThrobber();
+        $window.one('gui-recording.cutting-marks-saved.' + this.player.data.sourceModel.keyInCache.toCacheKey(), function () {
+            this.player.video.hideThrobber();
+            this.deleteMarks();
+            this.addCuttingMarks();
+            this.setMarkerWidth();
+            this.jumpToMark(index);
+        }.bind(this));
+        this.player.data.sourceModel.saveCuttingMarks();
+    }.bind(this), 300);
 };
 
 /**

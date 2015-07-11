@@ -61,19 +61,26 @@ Gui.Video.Helper.Player.prototype.defaultPoster = function (video) {
  *      height: int,
  *      video: HTMLVideoElement,
  *      sourceModel: VDRest.Recordings.Model.List.Recording|VDRest.Epg.Model.Channels.Channel,
- *      startTime: int
+ *      [startTime]: int,
+ *      poster: HTMLImageElement,
+ *      [mark]: number
  *  }} options
  */
 Gui.Video.Helper.Player.prototype.setVideoPoster = function (options) {
 
-    var d = new Date().getTime(), streamdevParams = [];
+    var d = new Date().getTime(), streamdevParams = [], offsetParam = '?pos=';
 
     streamdevParams.push('WIDTH=' + options.width);
     streamdevParams.push('HEIGHT=' + options.height);
     streamdevParams.push('TYPE=poster');
 
+    if ("undefined" === typeof options.mark) {
+        offsetParam += 'time.' + options.startTime;
+    } else {
+        offsetParam += 'mark.' + options.mark;
+    }
+
     options.poster.src = options.sourceModel
         .getStreamUrl(streamdevParams)
-            + '?pos=time.'
-            + options.startTime + '&d=' + d;
+            + offsetParam + '&d=' + d;
 };
