@@ -123,7 +123,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getCuttingMarks = func
         } else {
             this.onError({
                 "readyState": 4,
-                "alertStatus": "custom",
+                "status": "custom",
                 "message": "The requested recording does not match the servers response. Please update your recordings"
             });
         }
