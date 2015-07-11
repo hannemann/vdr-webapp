@@ -6,6 +6,9 @@
     left: 0;
     z-index: 2;
 }
+.has-video-player .modal-overlay.dark:not([class~=modal-video]) {
+    z-index: 5;
+}
 #viewport .modal-overlay {
     position: absolute;
     height: 100%;

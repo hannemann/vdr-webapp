@@ -46,8 +46,9 @@ Gui.Window.View.Alert.prototype.addButtons = function () {
 
     if (this.data.settings) {
         this.settings = $('<div class="button button-settings vdr-web-symbol ">').text(this.symbolSettings).appendTo(this.node);
+    } else {
+        $('<div class="button">').appendTo(this.node);
     }
-
     this.ok = $('<div class="button button-confirm">').text('OK').appendTo(this.node);
 
     return this;
