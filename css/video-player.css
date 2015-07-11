@@ -97,13 +97,20 @@
 .html5-player-controls .timeline-control {
     font-size: 14px;
     padding: 0 6px;
-    margin: 0 5px;
+    margin: 0 2px;
     position: relative;
     display: inline-block;
     -webkit-user-select: none;  /* Chrome all / Safari all */
     -moz-user-select: none;     /* Firefox all */
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;
+    min-width: 10px;
+    background: rgba(0,0,0,0.01);
+}
+.html5-player-controls .mark-controls:first-child .timeline-control:nth-child(2),
+.html5-player-controls .mark-controls:last-child .timeline-control:nth-child(2) {
+    min-width: 30px;
+    text-align: center;
 }
 
 
