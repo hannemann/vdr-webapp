@@ -160,3 +160,8 @@ TODO: create fancy animation that doesn't burn my device
 *[data-animate*="fast"] {
     transition-duration: .2s;
 }
+
+.window-indicator.cut .vdr-web-symbol {
+    animation: animateCutIndicator 1s infinite;
+    -webkit-animation: animateCutIndicator 1s infinite;
+}

@@ -77,7 +77,7 @@ Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.dispatchView = function
  */
 Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.doCut = function () {
 
-    var recording = this.player.data.sourceModel;
+    var recording = this.player.data.sourceModel, d = Date.now();
 
     $window.one('gui-recording.cutting-marks-invalid.' + recording.eventKey, function () {
 
@@ -118,6 +118,18 @@ Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.doCut = function () {
                 }
             }
         });
+
+        $.event.trigger({
+            "type": "window.request",
+            "payload": {
+                "type": "Indicator",
+                "data": {
+                    "symbol" : $('<div class="vdr-web-symbol">').html('Z'),
+                    "className" : "cut",
+                    "destructTrigger" : "cut-ready." + d
+                }
+            }
+        });
     }.bind(this));
 
     $window.one('gui-recording.cut.' + recording.eventKey, function () {
@@ -130,6 +142,10 @@ Gui.Video.Controller.Player.Controls.Layer.Cut.prototype.doCut = function () {
                     "text" : 'Edit recording ready'
                 }
             }
+        });
+
+        $.event.trigger({
+            "type": "cut-ready." + d
         });
     }.bind(this));
 

@@ -317,12 +317,32 @@
     z-index: 5;
 }
 
+.window-indicator.show,
 .window-notification.show {
     opacity: 1;
 }
 
 .window-notification.error {
     background-color: rgba(255, 0, 0, 0.50);
+}
+
+.window-indicator {
+    z-index: 10;
+    display: inline-block;
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: rgb(15, 46, 74);
+    border-radius: 30px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 30px;
+    padding: 10px;
+    border: 1px solid green;
+    opacity: 0;
+    transition: opacity .7s linear;
 }
 
 /* Inpput Popup */
