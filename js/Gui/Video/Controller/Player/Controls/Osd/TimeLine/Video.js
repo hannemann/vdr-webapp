@@ -126,6 +126,12 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeDown = 
     $document.on('mousemove.videoplayer-time touchmove.videoplayer-time', this.setTimeMove.bind(this));
     this.toggleActiveState();
     this.vibrate();
+    if ('cut' === this.player.mode) {
+        if ("undefined" !== typeof this.data.activeMark) {
+            this.data.marks[this.data.activeMark].unsetIsActive();
+        }
+        this.data.activeMark = undefined;
+    }
 };
 
 /**
@@ -145,9 +151,6 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeUp = fu
 
     this.player.fetchPoster();
     this.toggleActiveState();
-    if ('cut' === this.player.mode) {
-        this.data.activeMark = undefined;
-    }
 };
 
 /**
