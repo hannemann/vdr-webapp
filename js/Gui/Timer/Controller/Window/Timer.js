@@ -7,7 +7,7 @@ Gui.Timer.Controller.Window.Timer = function () {};
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Timer.Controller.Window.Timer.prototype = new Gui.Window.Controller.Abstract();
+Gui.Timer.Controller.Window.Timer.prototype = new Gui.Window.Controller.ScrollAnimateHeader();
 
 /**
  * @type {string}
@@ -21,15 +21,17 @@ Gui.Timer.Controller.Window.Timer.prototype.init = function () {
 
     this.eventPrefix = 'window.timer-' + this.data.id;
 
+    this.data.sliderClassName = "scroll-animate-header-timer";
+
     this.eventNameSpace = this.module.namespace + '-' + this.module.name;
 
     this.view = this.module.getView('Window.Timer', this.data);
 
-    Gui.Window.Controller.Abstract.prototype.init.call(this);
-
     this.view.setParentView(
         VDRest.app.getModule('Gui.Viewport').getView('Default')
     );
+
+    Gui.Window.Controller.ScrollAnimateHeader.prototype.init.call(this);
 };
 
 /**
@@ -111,6 +113,10 @@ Gui.Timer.Controller.Window.Timer.prototype.dispatchView = function () {
 
             this.view.setHasBroadcast();
             this.data.resource.data.event_id = this.broadcast.getData('id');
+
+            this.header = VDRest.app.getModule('Gui.Menubar').getView('Default').getHeader();
+            this.oldHeader = this.header.text();
+            this.header.text(this.broadcast.data.title);
         }
 
         this.module.getViewModel('Window.Timer', {
@@ -124,7 +130,7 @@ Gui.Timer.Controller.Window.Timer.prototype.dispatchView = function () {
             "type" : "hideContextMenu"
         });
 
-        Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
+        Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView.call(this);
 
         this.addObserver();
 
@@ -375,15 +381,19 @@ Gui.Timer.Controller.Window.Timer.prototype.destructView = function () {
 
     var me = this;
 
-    // apply animation
-    this.view.node.toggleClass('collapse expand');
     // remove on animation end
     this.view.node.one(this.animationEndEvents, function () {
 
-        Gui.Window.Controller.Abstract.prototype.destructView.call(me);
+        Gui.Window.Controller.ScrollAnimateHeader.prototype.destructView.call(me);
 
         $.event.trigger({
             "type" : "showContextMenu"
         });
     });
+    // apply animation
+    this.view.node.toggleClass('collapse expand');
+
+    if ("undefined" !== typeof this.header) {
+        this.header.text(this.oldHeader);
+    }
 };

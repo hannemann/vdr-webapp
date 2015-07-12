@@ -17,7 +17,11 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.init = function () {
 
 Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
 
-    var menubarHeader;
+    var menubarHeader, sliderClassName = "scroll-animate-header";
+
+    if ("undefined" !== typeof this.data.sliderClassName) {
+        sliderClassName = this.data.sliderClassName;
+    }
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
@@ -44,7 +48,7 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
             "wrapper": document.body,
             "onmove": this.onscrollAction.bind(this),
             "allowedDirections": ['y'],
-            "sliderClassName": "scroll-animate-header"
+            "sliderClassName": sliderClassName
         });
         document.body.style.overflow = 'hidden';
     }

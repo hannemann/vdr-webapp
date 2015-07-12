@@ -21,6 +21,15 @@ Gui.Timer.ViewModel.Window.Timer.prototype.init = function () {
 
     this.resource = this.data.resource;
     this.broadcast = this.data.broadcast;
+    this.view = this.data.view;
+
+    this.baseUrl = VDRest.Api.Resource.prototype.getBaseUrl();
+
+    this.view.getEpgImage = this.getEpgImage.bind(this);
+
+    this.view.getEpisodeImage = this.getEpisodeImage.bind(this);
+
+    this.view.getFanart = this.getFanart.bind(this);
 
     this.initViewMethods();
 };
@@ -69,4 +78,82 @@ Gui.Timer.ViewModel.Window.Timer.prototype.initViewMethods = function () {
 
         return wholeName.split('~').pop();
     };
+};
+
+/**
+ * retrieve epg image
+ * @returns {String|Boolean}
+ */
+Gui.Timer.ViewModel.Window.Timer.prototype.getEpgImage = function () {
+
+    var images = this.broadcast.getData('images');
+
+    if (images && images.length > 0) {
+        return images[0];
+    }
+
+    return false;
+};
+
+/**
+ * retrieve fanart
+ * @param {Number} width
+ * @returns {String|Boolean}
+ */
+Gui.Timer.ViewModel.Window.Timer.prototype.getFanart = function (width) {
+
+    /**
+     * @type {additionalMediaEpisode|additionalMediaMovie}
+     */
+    var media = this.broadcast.getData('additional_media'),
+        resize = '';
+
+    if (media) {
+
+        if (width) {
+            resize = 'width/' + width + '/';
+        }
+
+        if ('series' === media.type) {
+
+            if (media.fanarts.length > 0) {
+                return this.baseUrl + 'scraper/image/' + resize + media.fanarts[0].path;
+            }
+        } else if ('movie' === media.type) {
+
+            if (media.fanart) {
+                return this.baseUrl + 'scraper/image/' + resize + media.fanart;
+            }
+        }
+    }
+    return false;
+};
+
+/**
+ * retrieve episode image
+ * @param {Number} width
+ * @returns {String|Boolean}
+ */
+Gui.Timer.ViewModel.Window.Timer.prototype.getEpisodeImage = function (width) {
+
+    /**
+     * @type {additionalMediaEpisode|additionalMediaMovie}
+     */
+    var media = this.broadcast.getData('additional_media'),
+        resize = '';
+
+    if (media) {
+
+        if (width) {
+            resize = 'width/' + width + '/';
+        }
+
+        if ('series' === media.type) {
+
+            if (media.episode_image) {
+                return this.baseUrl + 'scraper/image/' + resize + media.episode_image;
+            }
+        }
+    }
+    return false;
 };

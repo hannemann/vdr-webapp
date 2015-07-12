@@ -7,7 +7,7 @@ Gui.Timer.View.Window.Timer = function () {};
 /**
  * @type {Gui.Window.Controller.Abstract}
  */
-Gui.Timer.View.Window.Timer.prototype = new Gui.Window.View.Abstract();
+Gui.Timer.View.Window.Timer.prototype = new Gui.Window.View.ScrollAnimateHeader();
 
 /**
  * @type {string}
@@ -47,13 +47,19 @@ Gui.Timer.View.Window.Timer.prototype.init = function () {
  */
 Gui.Timer.View.Window.Timer.prototype.render = function () {
 
+    Gui.Window.View.ScrollAnimateHeader.prototype.render.call(this);
+
+    this.fanart = this.getEpisodeImage(window.innerWidth) || this.getFanart(window.innerWidth);
+
     this.addClasses().decorateHeader().decorateBody();
 
-    this.node.addClass('collapsed viewport-fullsize');
-
-    Gui.Window.View.Abstract.prototype.render.call(this);
+    this.node.addClass('collapsed document-fullsize');
 
     this.node.toggleClass('collapsed expand');
+
+    if (this.canAnimateScroll()) {
+        this.node.addClass('touchscroll');
+    }
 };
 
 /**
@@ -61,7 +67,12 @@ Gui.Timer.View.Window.Timer.prototype.render = function () {
  */
 Gui.Timer.View.Window.Timer.prototype.update = function () {
 
-    this.header.empty();
+    this.details.remove();
+    this.filename.remove();
+    this.title.remove();
+    if ("undefined" !== typeof this.image) {
+        this.image.remove();
+    }
 
     this.addClasses().decorateHeader();
 };
@@ -72,7 +83,7 @@ Gui.Timer.View.Window.Timer.prototype.update = function () {
  */
 Gui.Timer.View.Window.Timer.prototype.addClasses = function () {
 
-
+    this.node.addClass(this.data.sliderClassName);
     return this;
 };
 
@@ -95,12 +106,7 @@ Gui.Timer.View.Window.Timer.prototype.decorateHeader = function () {
 
     this.details = $('<ul class="window-header-details">');
 
-    this.addTitle().addDetails().addMainImage();
-
-    this.details
-        .appendTo(this.header);
-
-    this.addFilename();
+    this.addTitle().addFilename().addMainImage().addDetails();
 
     return this;
 };
@@ -134,7 +140,7 @@ Gui.Timer.View.Window.Timer.prototype.addTitle = function () {
 
     this.title = $('<h2 class="window-title left">')
         .text(title)
-        .appendTo(this.header);
+        .appendTo(this.scrollShiftWrapper);
 
     return this;
 };
@@ -170,6 +176,9 @@ Gui.Timer.View.Window.Timer.prototype.addDetails = function () {
         + this.getEndTime()+'</li>'
     );
 
+    this.details.addClass('window-' + (this.fanart ? 'body' : 'header') + '-details');
+    this.details[(this.fanart ? 'prependTo' : 'appendTo')]((this.fanart ? this.detailsTab : this.scrollShiftWrapper));
+
     return this;
 };
 
@@ -179,10 +188,18 @@ Gui.Timer.View.Window.Timer.prototype.addDetails = function () {
  */
 Gui.Timer.View.Window.Timer.prototype.addMainImage = function () {
 
-    if (this.hasBroadcast && this.hasBroadcastImages()) {
+    var src = this.fanart || this.getEpgImage();
 
-        this.image = $('<img class="window-header-image right" src="' + this.getBroadcastImages()[0] + '">')
-            .appendTo(this.header);
+    if (!this.fanart && src) {
+        this.image = $('<img class="window-header-image right" src="' + src + '">')
+            .appendTo(this.scrollShiftWrapper);
+    }
+
+    if (this.fanart) {
+        this.scrollShiftWrapper.css({
+            "background-image": 'url(' + this.fanart + ')'
+        });
+        this.header.addClass('has-fanart');
     }
 
     return this;
@@ -194,9 +211,10 @@ Gui.Timer.View.Window.Timer.prototype.addMainImage = function () {
  */
 Gui.Timer.View.Window.Timer.prototype.addFilename = function () {
 
-    $('<div class="additional-info">')
-        .text(VDRest.app.translate('File') + ': ' + this.getFilename())
-        .appendTo(this.header);
+    this.filename = $('<div class="additional-info">')
+        .text(VDRest.app.translate('File') + ': ' + this.getFilename());
+
+    this.filename[(this.fanart ? 'prependTo' : 'appendTo')]((this.fanart ? this.detailsTab : this.scrollShiftWrapper));
 
     return this;
 };
@@ -240,6 +258,7 @@ Gui.Timer.View.Window.Timer.prototype.getTabConfig = function () {
             "content": function (content) {
 
                 $(content).append(me.getBroadcastDescription());
+                me.detailsTab = content;
             },
             "default": true
         };

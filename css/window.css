@@ -173,6 +173,7 @@
     white-space: pre-wrap;
 }
 
+.window-body .additional-info,
 .window-header.has-fanart ~ .window-body .window-body-details {
     margin-bottom: 8px;
 }
