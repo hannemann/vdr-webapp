@@ -32,7 +32,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isVisible = true;
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
 
-    this.epgController = this.module.getController('Epg');
+    this.epgController = this.module.cache.store.Controller.Epg;
     this.broadcastsController = this.epgController.getBroadcasts();
     this.broadcasts = [];
     this.view = this.module.getView('Broadcasts.List', {
@@ -46,7 +46,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.fromTime = this.module.getFromDate().getTime();
     this.initial = true;
-    this.overflowCount = 1;
+    this.overflowCountX = 2;
+    this.overflowCountY = .5;
 
     this.addObserver();
 };
@@ -95,14 +96,15 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
             ? this.broadcasts[this.broadcasts.length - 1].data.dataModel.data.end_date
             : new Date(this.fromTime),
         minTimeSpan = 3600000,
-        timeSpanAdd = this.broadcastsController.getAvailableTimeSpan('milliseconds') * this.overflowCount,
+        timeSpanAdd = (this.broadcastsController.currentScrollTime * 1000 - from.getTime())
+            + this.broadcastsController.getAvailableTimeSpan('milliseconds') * this.overflowCountX,
         to = new Date(
             from.getTime()
             + (timeSpanAdd < minTimeSpan ? minTimeSpan : timeSpanAdd)
         );
 
     if (VDRest.config.getItem('loadAllChannelsInitially') || this.isInView()) {
-        this.getStoreModel().getNextBroadcasts(to);
+        this.epgController.setLoadBroadcasts(this, from, to);
     }
 };
 
@@ -253,7 +255,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
     if (l > 0) {
 
         metrics = this.epgController.getMetrics();
-        threshold = this.epgController.metrics.viewPort.width * this.overflowCount;
+        threshold = this.epgController.metrics.viewPort.width * this.overflowCountX;
         vOffset = this.view.node.offset();
 
         for (i; i < l; i++) {
@@ -271,7 +273,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
         if (!this.isChannelView) {
             // load next events
-            if (this.broadcasts[l - 1].view.getLeft() + vOffset.left < metrics.win.width) {
+            if (this.broadcasts[l - 1].view.getRight() + vOffset.left < metrics.win.width) {
 
                 this.getBroadcasts();
             }
@@ -311,7 +313,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
 
     var i,
         l = this.broadcasts.length,
-        timeThreshold = (this.epgController.metrics.viewPort.width / this.pixelPerSecond) * this.overflowCount,
+        timeThreshold = (this.epgController.metrics.viewPort.width / this.pixelPerSecond) * this.overflowCountX,
         currentScrollLeft = this.broadcastsController.currentScrollLeft,
         currentScrollTime = this.broadcastsController.currentScrollTime - timeThreshold,
         visibleEndTime = this.broadcastsController.visibleEndTime + timeThreshold,
@@ -426,7 +428,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () 
         height = this.view.node.height(),
         bottom = top + height,
         metrics = this.epgController.metrics,
-        threshold = metrics.win.height * this.overflowCount,
+        threshold = metrics.win.height * this.overflowCountY,
         scrollTop = Math.abs(this.epgController.getScrollTop()),
         isInView;
 

@@ -58,7 +58,7 @@ Gui.Epg.Controller.Broadcasts.prototype.height = function () {
 Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-    this.epgController = this.module.getController('Epg');
+    this.epgController = this.module.cache.store.Controller.Epg;
 
     this.setScrollData();
     if ('now' === this.lastEpg) {
@@ -363,6 +363,8 @@ Gui.Epg.Controller.Broadcasts.prototype.fnHandleScrollBroadcasts = function (e) 
             this.broadcastLists[i].handleScroll(e);
         }
     }
+
+    this.epgController.loadBroadcasts();
 };
 
 Gui.Epg.Controller.Broadcasts.prototype.setScrollData = function () {
@@ -430,6 +432,8 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 
             this.broadcastLists[i].dispatchView();
         }
+
+        this.epgController.loadBroadcasts();
     }
 };
 

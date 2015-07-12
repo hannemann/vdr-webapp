@@ -29,7 +29,7 @@ Gui.Epg.Controller.TimeLine.prototype.dispatchView = function () {
 
 
     this.broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0);
-    this.epgController = this.module.getController('Epg');
+    this.epgController = this.module.cache.store.Controller.Epg;
     this.currentDate = this.view.node.find('*[data-date]:first').attr('data-date');
 
     this.addObserver();

@@ -26,7 +26,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.init = function () {
 
     this.eventNameSpace = this.module.namespace + '-' + this.module.name;
 
-    this.epgController = this.module.getController('Epg');
+    this.epgController = this.module.cache.store.Controller.Epg;
 
     this.windowModule = this.module;
 

@@ -22,7 +22,8 @@ VDRest.Epg.Model.Broadcasts.Resource.prototype._class = 'VDRest.Epg.Model.Broadc
  */
 VDRest.Epg.Model.Broadcasts.Resource.prototype.urls = {
 
-    "initial" : "events.json?timespan=21600"
+    "initial" : "events.json?timespan=21600",
+    "broadcasts" : "events.json"
 };
 
 /**
@@ -42,6 +43,38 @@ VDRest.Epg.Model.Broadcasts.Resource.prototype.setChannelLimit = function () {
     }
 
     return this;
+};
+
+VDRest.Epg.Model.Broadcasts.Resource.prototype.getBroadcasts = function (from, to, chFrom, chTo) {
+
+    this.urls.broadcasts = "events.json?from="
+        + from + '&timespan=' + (to - from) + '&chfrom=' + chFrom + '&chto=' + chTo;
+
+    this.load({
+            "url" : 'broadcasts',
+            "callback": this.processCollection.bind(this)
+        });
+};
+
+VDRest.Epg.Model.Broadcasts.Resource.prototype.processCollection = function (result) {
+
+    var store = this.module.cache.store.Model['Channels.Channel'], channels = {}, channel;
+
+    result.events.forEach(function (event) {
+
+        if (!channels[event.channel]) {
+            channels[event.channel] = {
+                "events" : []
+            }
+        }
+        channels[event.channel].events.push(event);
+    });
+
+    for (channel in channels) {
+        if (channels.hasOwnProperty(channel)) {
+            store[channel].processCollection(channels[channel]);
+        }
+    }
 };
 
 /**

@@ -55,6 +55,11 @@ Gui.Epg.Controller.Epg.prototype.init = function () {
     this.channels = this.module.getController('Channels', {"parent":this});
 
     this.broadcasts = this.module.getController('Broadcasts', {"parent":this});
+
+    this.minList = Infinity;
+    this.maxList = 0;
+    this.minFrom = Infinity;
+    this.maxTo = 0;
 };
 
 /**
@@ -83,6 +88,56 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
         this.module.store.initChannels();
 
     }
+};
+
+/**
+ * @param {Gui.Epg.Controller.Broadcasts.List} broadcastsList
+ */
+Gui.Epg.Controller.Epg.prototype.setLoadBroadcasts = function (broadcastsList, from, to) {
+
+    var channelNumber = broadcastsList.data.dataModel.data.index;
+
+    from = from.getTime() / 1000;
+    to = to.getTime() / 1000;
+
+    if (this.minList > channelNumber) {
+        this.minList = channelNumber;
+    }
+
+    if (this.minFrom > from) {
+        this.minFrom = from;
+    }
+
+    if (this.maxList < channelNumber) {
+        this.maxList = channelNumber;
+    }
+
+    if (this.maxTo < to) {
+        this.maxTo = to;
+    }
+};
+
+/**
+ */
+Gui.Epg.Controller.Epg.prototype.loadBroadcasts = function () {
+
+
+    var chFrom = this.minList,
+        chTo = this.maxList,
+        from = this.minFrom,
+        to = this.maxTo;
+
+    this.minList = Infinity;
+    this.maxList = 0;
+    this.minFrom = Infinity;
+    this.maxTo = 0;
+
+    if (chFrom < Infinity && from < Infinity) {
+        this.module.store.getResource('Broadcasts')
+            .getBroadcasts(from, to, chFrom, chTo);
+    }
+
+
 };
 
 /**
