@@ -59,12 +59,12 @@ function error
 #
 ###
 PROG=$(which ffmpeg)
-[ -x ${PROG} ] || PROG='/opt/ffmpeg/bin/ffmpeg'
-[ -x ${PROG} ] || PROG=$(which avconv)
+[ "${PROG}" != "" ] && [ -x ${PROG} ] || PROG='/opt/ffmpeg/bin/ffmpeg'
+[ "${PROG}" != "" ] && [ -x ${PROG} ] || PROG=$(which avconv)
 
-if [ ! -x ${PROG} ]; then
-	error 'No ffmpeg binary found'
-	exit 1;
+if [ "${PROG}" != "" ] && [ ! -x ${PROG} ]; then
+        error 'No ffmpeg binary found'
+        exit 1;
 fi
 
 getParentPid () { ps -p $1 -o ppid=; }
