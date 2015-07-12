@@ -81,6 +81,10 @@
     -webkit-animation-name: collapse;
     -webkit-transform: scale(.5,.5);
 }
+.window.touchscroll.collapse {
+    height: 100%;
+    overflow: hidden;
+}
 
 /* viewport full-size window */
 .window.viewport-fullsize.expand {

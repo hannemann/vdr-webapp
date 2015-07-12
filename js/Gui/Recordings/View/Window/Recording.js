@@ -128,6 +128,10 @@ Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
     this.details.addClass('window-' + (this.fanart ? 'body' : 'header') + '-details');
     this.details[(this.fanart ? 'prependTo' : 'appendTo')]((this.fanart ? this.detailsTab : this.scrollShiftWrapper));
 
+    if (this.fanart && this.detailsTab.parent('ul').height() < this.detailsTab.height()) {
+        this.detailsTab.parent('ul').height(this.detailsTab.height());
+    }
+
     return this;
 };
 

@@ -19,6 +19,20 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
 
     var menubarHeader, sliderClassName = "scroll-animate-header";
 
+    this.view.node.css({
+        "height" : "100%",
+        "overflow" : "hidden"
+    });
+
+    this.view.node.one(this.animationEndEvents, function () {
+
+        this.view.node.css({
+            "height" : "",
+            "overflow" : ""
+        });
+
+    }.bind(this));
+
     if ("undefined" !== typeof this.data.sliderClassName) {
         sliderClassName = this.data.sliderClassName;
     }
