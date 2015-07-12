@@ -16,6 +16,12 @@ Gui.Menubar.Controller.Default.prototype = new VDRest.Abstract.Controller();
 Gui.Menubar.Controller.Default.prototype.throbberCalls = 0;
 
 /**
+ * opaque counter
+ * @type {number}
+ */
+Gui.Menubar.Controller.Default.prototype.opaqueCalls = 0;
+
+/**
  * defer click on icon
  * @type {boolean}
  */
@@ -250,10 +256,18 @@ Gui.Menubar.Controller.Default.prototype.onIconClick = function (e) {
 Gui.Menubar.Controller.Default.prototype.setOpaque = function (e) {
 
     if (e.payload) {
-        document.body.classList.add('opaque-menubar');
-        this.view.drawerIndicator[0].classList.add('text-shadow');
+        if (this.opaqueCalls === 0) {
+            document.body.classList.add('opaque-menubar');
+            this.view.drawerIndicator[0].classList.add('text-shadow');
+        }
+        this.opaqueCalls++;
     } else if (!e.payload) {
-        document.body.classList.remove('opaque-menubar');
-        this.view.drawerIndicator[0].classList.remove('text-shadow');
+
+        this.opaqueCalls--;
+        if (this.opaqueCalls <= 0) {
+            document.body.classList.remove('opaque-menubar');
+            this.view.drawerIndicator[0].classList.remove('text-shadow');
+            this.opaqueCalls = 0;
+        }
     }
 };
