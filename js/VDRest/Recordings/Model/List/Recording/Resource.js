@@ -144,7 +144,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getCuttingMarks = func
 VDRest.Recordings.Model.List.Recording.Resource.prototype.saveCuttingMarks = function (recording) {
 
     var request = {
-        "url": this.getBaseUrl() + 'recordings/marks/' + recording.data.number + '.json',
+        "url": this.getBaseUrl() + 'recordings/marks/' + recording.data.number,
         "method": "POST",
         "data": {
             "marks": recording.data.marks
@@ -169,7 +169,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.saveCuttingMarks = fun
 VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteCuttingMarks = function (recording) {
 
     var request = {
-        "url": this.getBaseUrl() + 'recordings/marks/' + recording.data.number + '.json',
+        "url": this.getBaseUrl() + 'recordings/marks/' + recording.data.number,
         "method": "DELETE"
     };
 

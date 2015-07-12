@@ -116,13 +116,13 @@ VDRest.Recordings.Model.List.Recording.prototype.saveCuttingMarks = function () 
 
         this.sortCuttingMarks();
 
-        this.module.getResource('List.Recording').saveCuttingMarks(this);
-
         $window.one("vdrest-api-actions.recording-marks-saved" + this.eventKey, function () {
             $.event.trigger({
                 "type": "gui-recording.cutting-marks-saved." + this.eventKey
             });
-        }.bind(this))
+        }.bind(this));
+
+        this.module.getResource('List.Recording').saveCuttingMarks(this);
     } else {
         $.event.trigger({
             "type": "gui-recording.cutting-marks-invalid." + this.eventKey
