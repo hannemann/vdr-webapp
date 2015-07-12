@@ -143,7 +143,7 @@ Gui.Timer.Controller.Window.Timer.prototype.dispatchView = function () {
  */
 Gui.Timer.Controller.Window.Timer.prototype.addObserver = function () {
 
-    if (this.view.hasBroadcast && this.view.hasBroadcastImages()) {
+    if (this.view.hasBroadcast && "undefined" !== typeof this.view.image && this.view.hasBroadcastImages()) {
 
         this.view.image.on('click', this.animateImageAction.bind(this));
     }
@@ -173,7 +173,7 @@ Gui.Timer.Controller.Window.Timer.prototype.addObserver = function () {
  */
 Gui.Timer.Controller.Window.Timer.prototype.removeObserver = function () {
 
-    if (this.view.hasBroadcast && this.view.hasBroadcastImages()) {
+    if (this.view.hasBroadcast && "undefined" !== typeof this.view.image &&  this.view.hasBroadcastImages()) {
 
         this.view.image.off('click');
     }
