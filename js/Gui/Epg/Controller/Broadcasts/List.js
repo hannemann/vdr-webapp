@@ -35,13 +35,15 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.epgController = this.module.getController('Epg');
     this.broadcastsController = this.epgController.getBroadcasts();
     this.broadcasts = [];
-    this.view = this.module.getView('Broadcasts.List', {
-        "channel_id" : this.data.channel_id
-    });
-    this.view.setParentView(this.data.parent.view);
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', {
         "channel_id" : this.data.channel_id
     });
+    this.view = this.module.getView('Broadcasts.List', {
+        "channel_id" : this.data.channel_id,
+        "broadcastsHeight" : window.innerHeight - this.epgController.metrics.broadcasts.top,
+        "listIndex" : this.dataModel.data.listIndex
+    });
+    this.view.setParentView(this.data.parent.view);
     this.scrollLeft = 0;
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.fromTime = this.module.getFromDate().getTime();
@@ -217,7 +219,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.handleScroll = function () {
         }
 
         if (this.isVisible != isInView) {
-            this.view.setIsVisible(isInView);
+            //this.view.setIsVisible(isInView);
             this.isVisible = isInView;
         }
     } else if (this.view.node.hasClass('active') && !this.isLoading) {
@@ -285,7 +287,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
                 this.broadcastsController.view.node.width(metrics.win.width + this.broadcasts[l - 1].view.getRight());
             }
 
-            this.toggleBroadcastsVisibility();
+            //this.toggleBroadcastsVisibility();
 
         } else if (this.view.node.hasClass('active')) {
             // load next events

@@ -149,12 +149,17 @@ Gui.Epg.Controller.Channels.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Channels.prototype.iterateChannels = function (collection) {
 
+    var listIndex = 0;
+
     collection.iterate(function (channelModel) {
 
         if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
 
             return true;
         }
+
+        channelModel.data.listIndex = listIndex;
+        listIndex++;
 
         this.channelsList.push(this.module.getController('Channels.Channel', {
             "channel_id" : channelModel.data.channel_id,

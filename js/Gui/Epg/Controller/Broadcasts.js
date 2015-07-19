@@ -367,16 +367,34 @@ Gui.Epg.Controller.Broadcasts.prototype.fnHandleScrollBroadcasts = function (e) 
 
 Gui.Epg.Controller.Broadcasts.prototype.setScrollData = function () {
 
-    var wrapperWidth = this.view.wrapper[0].offsetWidth,
+    var h = 0, d,
+        wrapperWidth = this.view.wrapper[0].offsetWidth,
+        wrapperHeight = this.view.wrapper[0].offsetHeight,
+        visibleHours = Math.ceil(wrapperWidth / VDRest.config.getItem('pixelPerSecond') / 60 / 60) + 1,
         currentScrollLeft = Math.abs(this.epgController.getScrollLeft()),
+        currentScrollTop = Math.abs(this.epgController.getScrollTop()),
         currentScrollDate = new Date((currentScrollLeft / this.pixelPerSecond) * 1000 + this.module.getFromDate().getTime()),
         currentScrollTime = currentScrollDate.getTime() / 1000,
         visibleEndDate = new Date((wrapperWidth / this.pixelPerSecond) * 1000 + currentScrollTime * 1000),
-        visibleEndTime = visibleEndDate.getTime() / 1000;
+        visibleEndTime = visibleEndDate.getTime() / 1000,
+        currentScreen = Math.floor(currentScrollTop/Math.abs(wrapperHeight));
 
     this.currentScrollTime = currentScrollTime;
     this.visibleEndTime = visibleEndTime;
     this.currentScrollLeft = currentScrollLeft;
+
+    d = currentScrollDate.getTime();
+    d -= d%3600000;
+
+    this.view.wrapper[0].className = '';
+    for (h; h<visibleHours;h++) {
+        this.view.wrapper[0].classList.add('visible-hour-' + (d + 3600000 * h).toString());
+    }
+
+
+    this.view.wrapper[0].classList.add('visible-screen-' + currentScreen);
+    this.view.wrapper[0].classList.add('visible-screen-' + (currentScreen + 1));
+
 
     return this;
 };

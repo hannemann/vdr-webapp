@@ -49,7 +49,9 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.init = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
 
-    var previous = this.data.listController.broadcasts[this.data.position - 1];
+    var previous = this.data.listController.broadcasts[this.data.position - 1],
+        s = this.getStartDate().getTime(),
+        e = this.getEndDate().getTime();
 
     if (0 === this.data.position) {
         this.parentView.node.prepend(this.node);
@@ -63,6 +65,13 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.render = function () {
         "background-size": this.getWidth() + 'px ' + this.node.height() + 'px'
     });
     this.addImage();
+
+    s -= s%3600000;
+
+    while(s <= e) {
+        this.node[0].classList.add('visible-hour-' + s.toString());
+        s += 3600000;
+    }
 
     this.isRendered = !this.isRendered;
 };

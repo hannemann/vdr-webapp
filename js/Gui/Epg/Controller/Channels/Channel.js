@@ -217,3 +217,16 @@ Gui.Epg.Controller.Channels.Channel.prototype.startStream = function (channel) {
         window.location.href = channel.getStreamUrl();
     }
 };
+
+/**
+ * retrieve screen index
+ * @returns {number}
+ */
+Gui.Epg.Controller.Channels.Channel.prototype.getScreen = function () {
+
+    var channelHeight = this.view.node[0].offsetHeight,
+        channelViewportHeight = window.innerHeight - this.data.parent.data.parent.metrics.broadcasts.top,
+        top = this.data.dataModel.data.listIndex * channelHeight;
+
+    return Math.floor(top/channelViewportHeight);
+};

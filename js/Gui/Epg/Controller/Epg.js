@@ -55,6 +55,9 @@ Gui.Epg.Controller.Epg.prototype.init = function () {
     this.channels = this.module.getController('Channels', {"parent":this});
 
     this.broadcasts = this.module.getController('Broadcasts', {"parent":this});
+
+    this.overflowVisibleX = 1;
+    this.overflowVisibleY = .5;
 };
 
 /**
@@ -81,7 +84,92 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
         $.event.trigger('epg.dispatched');
 
         this.module.store.initChannels();
+        this.addEpgVisibleCSSRules();
+    }
+};
 
+Gui.Epg.Controller.Epg.prototype.addEpgVisibleCSSRules = function () {
+
+    var channelHeight = document.querySelector('.channel').offsetHeight,
+        styleSheetPortrait = document.querySelector('head').appendChild(document.createElement('STYLE')),
+        styleSheetLandscape,
+        channelLimit = VDRest.config.getItem('channelLimit'),
+        viewPort = this.metrics.viewPort.height - this.timeLine.view.node.height(),
+        visible = Math.ceil((viewPort + this.metrics.visibleOverflow.y) / channelHeight),
+        currentScreen = 0,
+        d, dateLimit, currentHour, selector = [], screens;
+
+    if ("undefined" !== typeof window.orientation) {
+        styleSheetPortrait.setAttribute('media', '(orientation: portrait)');
+        this.addLandscapeRules();
+    }
+
+    screens = Math.ceil(channelLimit / Math.ceil(viewPort / channelHeight));
+
+    channelLimit = channelLimit === 0 ? this.channels.channelsList.length : channelLimit;
+    d = this.module.getFromDate();
+    d = new Date(d-d%3600000).getTime();
+    dateLimit = d + 60 * 60 * 24 * 14 * 1000;
+
+    while (currentScreen <= screens) {
+
+        currentHour = d;
+        while(currentHour <= dateLimit) {
+            selector.push(
+                '#broadcasts-wrapper.visible-screen-'
+                + currentScreen.toString()
+                + '.visible-hour-'
+                + currentHour.toString()
+                + ' .broadcasts-list.visible-screen-'
+                + currentScreen.toString()
+                + ' .broadcast.visible-hour-'
+                + currentHour.toString()
+            );
+            currentHour += 3600000;
+        }
+        styleSheetPortrait.sheet.insertRule(selector.join(',') + '{display: block;}', 0);
+        currentScreen++;
+        selector = [];
+    }
+};
+Gui.Epg.Controller.Epg.prototype.addLandscapeRules = function () {
+
+    var channelHeight = document.querySelector('.channel').offsetHeight,
+        styleSheet = document.querySelector('head').appendChild(document.createElement('STYLE')),
+        channelLimit = VDRest.config.getItem('channelLimit'),
+        viewPort = window.innerWidth - this.metrics.broadcasts.top - this.timeLine.view.node.height(),
+        visible = Math.ceil((viewPort + this.metrics.visibleOverflow.y) / channelHeight),
+        currentScreen = 0,
+        d, dateLimit, currentHour, selector = [], screens;
+
+    styleSheet.setAttribute('media', '(orientation: landscape)');
+
+    screens = Math.ceil(channelLimit / Math.ceil(viewPort / channelHeight));
+
+    channelLimit = channelLimit === 0 ? this.channels.channelsList.length : channelLimit;
+    d = this.module.getFromDate();
+    d = new Date(d-d%3600000).getTime();
+    dateLimit = d + 60 * 60 * 24 * 14 * 1000;
+
+    while (currentScreen <= screens) {
+
+        currentHour = d;
+        while(currentHour <= dateLimit) {
+            selector.push(
+                '#broadcasts-wrapper.visible-screen-'
+                + currentScreen.toString()
+                + '.visible-hour-'
+                + currentHour.toString()
+                + ' .broadcasts-list.visible-screen-'
+                + currentScreen.toString()
+                + ' .broadcast.visible-hour-'
+                + currentHour.toString()
+            );
+            currentHour += 3600000;
+        }
+        styleSheet.sheet.insertRule(selector.join(',') + '{display: block;}', 0);
+        currentScreen++;
+        selector = [];
     }
 };
 
@@ -187,6 +275,10 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
             "left" : bOffset.left,
             "width" : broadcasts.view.node.width(),
             "height" : broadcasts.view.node.height()
+        },
+        "visibleOverflow" : {
+            "x" : viewPort.width() * this.overflowVisibleX,
+            "y" : viewPort.height() * this.overflowVisibleY
         }
     };
 };

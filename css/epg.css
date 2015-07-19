@@ -88,10 +88,10 @@
     font-family: Source Sans ProBold, sans-serif;
     background-image: linear-gradient(135deg, dimgrey 15%, #404040 85%);
 }
-#broadcasts .broadcasts-list .broadcast.invisible,
-#broadcasts .broadcasts-list.invisible .broadcast {
-    display: none !important;
-}
+/*#broadcasts .broadcasts-list .broadcast.invisible,*/
+/*#broadcasts .broadcasts-list.invisible .broadcast {*/
+    /*display: none !important;*/
+/*}*/
 #broadcasts .broadcasts-list .broadcast.has-image .title span {
     /*background: rgba(0, 0, 0, 0.19);*/
     border-radius: 5px;
@@ -408,12 +408,15 @@ div#time-line .ql.hour {
     height: calc(.75em * 5);
     overflow: hidden;
 }
-#broadcasts .broadcasts-list .broadcast.first-visible,
-#broadcasts .broadcasts-list .broadcast.first-visible ~ .broadcast {
-    display: block;
-}
-#broadcasts .broadcasts-list .broadcast,
-#broadcasts .broadcasts-list .broadcast.last-visible ~ .broadcast {
+/*#broadcasts .broadcasts-list .broadcast.first-visible,*/
+/*#broadcasts .broadcasts-list .broadcast.first-visible ~ .broadcast {*/
+    /*display: block;*/
+/*}*/
+/*#broadcasts .broadcasts-list .broadcast,*/
+/*#broadcasts .broadcasts-list .broadcast.last-visible ~ .broadcast {*/
+    /*display: none;*/
+/*}*/
+.broadcasts-list .broadcast {
     display: none;
 }
 

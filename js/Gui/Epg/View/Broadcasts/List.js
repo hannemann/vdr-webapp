@@ -25,7 +25,23 @@ Gui.Epg.View.Broadcasts.List.prototype.init = function () {
 /**
  * set list visibility
  */
+Gui.Epg.View.Broadcasts.List.prototype.render = function () {
+
+    var height, top;
+    VDRest.Abstract.View.prototype.render.apply(this);
+
+    height = this.node[0].offsetHeight;
+    top = this.data.listIndex * height;
+
+    this.onScreen = Math.floor(top/this.data.broadcastsHeight);
+
+    this.node[0].classList.add('visible-screen-' + this.onScreen.toString());
+};
+
+/**
+ * set list visibility
+ */
 Gui.Epg.View.Broadcasts.List.prototype.setIsVisible = function (visible) {
 
-        this.node.toggleClass('invisible', !visible);
+    //this.node.toggleClass('invisible', !visible);
 };
