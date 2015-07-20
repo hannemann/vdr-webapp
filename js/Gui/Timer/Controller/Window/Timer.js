@@ -317,6 +317,14 @@ Gui.Timer.Controller.Window.Timer.prototype.update = function (e) {
     this.timerActiveAction();
 
     this.view.update();
+
+    $.event.trigger({
+        "type": "opaqueMenubar",
+        "payload": {
+            "set" : !!this.view.fanart,
+            "omitIncrement" : true
+        }
+    });
 };
 
 /**

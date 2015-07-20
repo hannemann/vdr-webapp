@@ -151,7 +151,10 @@ Gui.Recordings.Controller.Window.Recording.prototype.updateAction = function () 
 
     $.event.trigger({
         "type": "opaqueMenubar",
-        "payload": !!this.view.fanart
+        "payload": {
+            "set" : !!this.view.fanart,
+            "omitIncrement" : true
+        }
     });
 };
 
