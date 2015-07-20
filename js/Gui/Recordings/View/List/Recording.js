@@ -36,8 +36,14 @@ Gui.Recordings.View.List.Recording.prototype.render = function () {
             .appendTo(this.node);
     }
 
+    if (!this.time) {
+        this.time = $('<span class="time">')
+            .text(this.getStartTime())
+            .appendTo(this.node);
+    }
+
     if (!this.duration) {
-        this.duration = $('<span class="time">')
+        this.duration = $('<span class="duration">')
             .text(this.getDurationString())
             .appendTo(this.node);
     }

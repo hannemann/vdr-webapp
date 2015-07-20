@@ -118,7 +118,7 @@ Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
     }
 
     $('<li>')
-        .text(this.getStartDate())
+        .text(this.getStartDateTime())
         .appendTo(this.details);
 
     $('<li>')

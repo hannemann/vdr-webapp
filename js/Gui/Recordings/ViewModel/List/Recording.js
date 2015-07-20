@@ -46,6 +46,24 @@ Gui.Recordings.ViewModel.List.Recording.prototype.initViewMethods = function () 
         return string;
     };
 
+    this.data.view.getStartTime = function () {
+
+        var date = new Date(me.data.resource.data.event_start_time * 1000), string = '';
+
+        string += me.helper().getTimeString(date);
+
+        return string;
+    };
+
+    this.data.view.getStartDateTime = function () {
+
+        var date = new Date(me.data.resource.data.event_start_time * 1000), string = '';
+
+        string += me.helper().getWeekDay(date, true) + '. ' + me.helper().getDateTimeString(date, true);
+
+        return string;
+    };
+
     this.data.view.getDurationString = function () {
 
         return '(' + me.helper().getDurationAsString(this.getDuration()) + ')';
