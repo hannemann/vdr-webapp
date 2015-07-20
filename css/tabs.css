@@ -9,6 +9,7 @@
 }
 .tab-content {
     display: none;
+    height: 100%;
 }
 
 .tab-content.current {
