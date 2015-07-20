@@ -355,6 +355,7 @@ Gui.Epg.Controller.Broadcasts.prototype.fnHandleScrollBroadcasts = function (e) 
 
     var i;
 
+    this.epgController.setMetrics();
     this.setScrollData();
 
     for (i in this.broadcastLists) {
