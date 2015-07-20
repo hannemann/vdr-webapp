@@ -67,6 +67,7 @@ Gui.Epg.Controller.Epg.prototype.dispatchView = function () {
         //this.view.node.show();
         this.isHidden = false;
         this.module.unMute();
+        this.setMetrics();
 
     } else {
 
