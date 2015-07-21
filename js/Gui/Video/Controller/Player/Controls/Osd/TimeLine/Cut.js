@@ -367,7 +367,7 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.removeMark = fun
     }
 
     if (0 === this.player.data.sourceModel.data.marks.length) {
-        
+
         this.player.video.showThrobber();
         $window.one('gui-recording.cutting-marks-deleted.' + this.player.data.sourceModel.keyInCache.toCacheKey(), function () {
             this.player.video.hideThrobber();
