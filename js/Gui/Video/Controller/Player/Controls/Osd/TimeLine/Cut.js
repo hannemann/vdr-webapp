@@ -366,15 +366,26 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.removeMark = fun
         clearTimeout(this.saveMarkTimeout);
     }
 
-    this.saveMarkTimeout = setTimeout(function () {
+    if (0 === this.player.data.sourceModel.data.marks.length) {
+        
         this.player.video.showThrobber();
-        $window.one('gui-recording.cutting-marks-saved.' + this.player.data.sourceModel.keyInCache.toCacheKey(), function () {
+        $window.one('gui-recording.cutting-marks-deleted.' + this.player.data.sourceModel.keyInCache.toCacheKey(), function () {
             this.player.video.hideThrobber();
-            this.addCuttingMarks();
-            this.setMarkerWidth();
         }.bind(this));
-        this.player.data.sourceModel.saveCuttingMarks();
-    }.bind(this), 300);
+        this.player.data.sourceModel.deleteCuttingMarks();
+
+    } else {
+
+        this.saveMarkTimeout = setTimeout(function () {
+            this.player.video.showThrobber();
+            $window.one('gui-recording.cutting-marks-saved.' + this.player.data.sourceModel.keyInCache.toCacheKey(), function () {
+                this.player.video.hideThrobber();
+                this.addCuttingMarks();
+                this.setMarkerWidth();
+            }.bind(this));
+            this.player.data.sourceModel.saveCuttingMarks();
+        }.bind(this), 300);
+    }
 };
 
 /**
