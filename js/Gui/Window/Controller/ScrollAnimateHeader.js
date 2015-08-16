@@ -31,6 +31,17 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
             "overflow" : ""
         });
 
+        if (this.view.canAnimateScroll()) {
+
+            this.touchScroll = new TouchMove.Scroll({
+                "wrapper": document.body,
+                "onmove": this.onscrollAction.bind(this),
+                "allowedDirections": ['y'],
+                "sliderClassName": sliderClassName
+            });
+            document.body.style.overflow = 'hidden';
+        }
+
     }.bind(this));
 
     if ("undefined" !== typeof this.data.sliderClassName) {
@@ -54,17 +65,6 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
     this.menuHeaderOffset = menubarHeader[0].offsetLeft;
     if (this.view.fanart) {
         this.menuBarController.view.node.addClass('big-font');
-    }
-
-    if (this.view.canAnimateScroll()) {
-
-        this.touchScroll = new TouchMove.Scroll({
-            "wrapper": document.body,
-            "onmove": this.onscrollAction.bind(this),
-            "allowedDirections": ['y'],
-            "sliderClassName": sliderClassName
-        });
-        document.body.style.overflow = 'hidden';
     }
 };
 
