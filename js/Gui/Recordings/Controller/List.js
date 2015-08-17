@@ -71,7 +71,7 @@ Gui.Recordings.Controller.List.prototype.removeObserver = function () {
 
 Gui.Recordings.Controller.List.prototype.reRender = function () {
 
-    var children = VDRest.app.getModule('Gui.Window').cache.store.View.Directory, i;
+    var children = VDRest.app.getModule('Gui.Recordings').cache.store.View['Window.Directory'], i;
 
     this.view.node.empty();
     this.view.renderFirstLevel();
