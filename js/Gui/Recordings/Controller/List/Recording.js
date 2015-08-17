@@ -58,13 +58,16 @@ Gui.Recordings.Controller.List.Recording.prototype.init = function () {
 /**
  * dispatch view, init event handling
  */
-Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (position) {
+Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (position, omitObserver) {
 
     this.view.position = position;
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.addObserver();
+    if (!omitObserver) {
+
+        this.addObserver();
+    }
 };
 
 /**
@@ -74,18 +77,11 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 
     $document.on("gui-recording.updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
 
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node
-            .on('touchend', this.handleUp.bind(this))
-            .on('touchmove', this.handleMove.bind(this))
-            .on('touchstart', this.handleDown.bind(this))
-        ;
-    } else {
-        this.view.node
-            .on('mouseup', this.handleUp.bind(this))
-            .on('mousedown', this.handleDown.bind(this))
-        ;
-    }
+    this.view.node
+        .on(VDRest.helper.pointerEnd, this.handleUp.bind(this))
+        .on(VDRest.helper.pointerMove, this.handleMove.bind(this))
+        .on(VDRest.helper.pointerStart, this.handleDown.bind(this))
+    ;
 };
 
 /**
@@ -93,8 +89,12 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
  */
 Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () {
 
-    this.view.node.off('click touchend touchstart touchmove mouseup mousedown ');
     $document.off("gui-recording.updated." + this.keyInCache.toCacheKey());
+
+    this.view.node
+        .off(VDRest.helper.pointerEnd)
+        .off(VDRest.helper.pointerMove)
+        .off(VDRest.helper.pointerStart);
 };
 
 /**
