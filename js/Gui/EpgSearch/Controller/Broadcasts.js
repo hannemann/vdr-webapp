@@ -80,9 +80,13 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.initResults = function (resultColl
         this.broadcastList[i].destructView();
     }
 
+    this.view.removeHeader();
+
     this.broadcastList = [];
 
     if (resultCollection.collection.length > 0) {
+
+        this.view.header(resultCollection.collection.length);
 
         resultCollection.iterate(function (dataModel) {
 

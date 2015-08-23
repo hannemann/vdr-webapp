@@ -19,6 +19,7 @@ VDRest.app.de_DE = {
     "Go!" : "Los!",
     "all": "alle",
     "The search returned no results." : "Die Suche war erfolglos.",
+    "%d events found." : "%d Sendungen gefunden.",
     "Delete": "Löschen",
     "Toggle active state": "Aktivieren / Deaktivieren",
     "Activate": "Aktivieren",

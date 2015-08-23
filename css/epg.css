@@ -260,7 +260,8 @@ div#time-line .ql.hour {
 
 .epg-search-view form,
 .epg-search-buttons,
-.epg-search-no-results{
+.epg-search-no-results,
+.epg-search-results-header {
     padding: 0 5px;
 }
 .epg-search-buttons .button-confirm {
