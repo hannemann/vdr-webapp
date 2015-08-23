@@ -422,6 +422,10 @@ div#time-line .ql.hour {
     display: none;
 }
 
+.epg-search-form {
+    margin-bottom: 20px;
+}
+
 @media (min-width: 800px), (min-height: 800px) {
     div#time-line {
         padding-left: 60px;
