@@ -258,12 +258,16 @@ div#time-line .ql.hour {
     height: 100%;
 }
 
-.epg-search-view form {
+.epg-search-view form,
+.epg-search-buttons,
+.epg-search-no-results{
     padding: 0 5px;
 }
-
-.epg-search-view form label.disabled {
-    display: none;
+.epg-search-buttons .button-confirm {
+    background: rgb(39, 97, 181);
+    border: 1px outset rgba(99, 138, 195, 1);
+    min-width: 50px;
+    text-align: center;
 }
 
 #epg-channels .channel .mute {

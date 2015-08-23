@@ -8,7 +8,7 @@ Gui.SearchTimer.Controller.Broadcast = function () {
 /**
  * @type {Gui.EpgSearch.Controller.Broadcast}
  */
-Gui.SearchTimer.Controller.Broadcast.prototype = new Gui.EpgSearch.Controller.Broadcast();
+Gui.SearchTimer.Controller.Broadcast.prototype = new Gui.EpgSearch.Controller.Broadcasts.Broadcast();
 
 /**
  * destruct view

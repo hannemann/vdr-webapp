@@ -22,8 +22,6 @@ Gui.SearchTimer.Controller.List.prototype.init = function () {
 
     this.timerList = VDRest.Lib.Object.prototype.getInstance();
 
-    this.channelgroups = {};
-
     this.dataModel = this.module.store.getModel('List');
 };
 
@@ -155,7 +153,6 @@ Gui.SearchTimer.Controller.List.prototype.dispatchRecordings = function (e) {
 Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
 
     $document.one('searchtimersloaded', this.iterateTimers.bind(this));
-    $document.one('channelgroupsloaded', this.storeChannelGroups.bind(this));
     $document.on('gui-searchtimer.created', this.dispatchNew.bind(this));
     $document.on('gui-searchtimer.deleted', this.deleteSearchTimer.bind(this));
     $document.on('gui-searchtimer.perform', this.dispatchSearchResult.bind(this));
@@ -167,21 +164,9 @@ Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
 Gui.SearchTimer.Controller.List.prototype.removeObserver = function () {
 
     $document.off('searchtimersloaded', this.iterateTimers.bind(this));
-    $document.off('channelgroupsloaded', this.storeChannelGroups.bind(this));
     $document.off('gui-searchtimer.created');
     $document.off('gui-searchtimer.deleted');
     $document.off('gui-searchtimer.perform');
-};
-
-Gui.SearchTimer.Controller.List.prototype.storeChannelGroups = function (collection) {
-
-    collection.iterate(function (channelgroup) {
-
-        this.channelgroups[channelgroup.keyInCache] = {
-            "label": channelgroup.data
-        };
-
-    }.bind(this));
 };
 
 /**

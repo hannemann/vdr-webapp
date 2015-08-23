@@ -45,11 +45,20 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.initViewMethods = functio
  * @property {searchTimerFormFields} fields
  * @return {searchTimerFormConfig}
  */
-Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormData = function () {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormData = function (isSearchtimer) {
+
+    this.searchFormFields = {};
+    this.withAdvanced = !isSearchtimer;
+
+    this.setCommonFields();
+
+    if (isSearchtimer) {
+        this.setSearchTimerFields();
+    }
 
     return {
         "categories": this.getSearchFormCategories(),
-        "fields": this.getSearchFormFields()
+        "fields": this.searchFormFields
     };
 };
 
@@ -122,27 +131,52 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormCategories =
  * @property {searchTimerCommonField} del_mode
  * @property {searchTimerCommonField} del_after_count_recs
  * @property {searchTimerCommonField} del_after_days_of_first_rec
- * @return {searchTimerFormFields}
  */
-Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormFields = function () {
 
-    this.searchFormFields = {};
 
+
+
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setCommonFields = function () {
+
+    var depends = undefined,
+        tol_depends = {
+            "mode" : 5
+        },
+        eei_depends = {
+            "use_ext_epg_info" : true
+        },
+        cg_depends = {
+            "use_channel" : 2
+        };
 
     this.searchFormFields.search = this.getStringField(
         "search", "Query", this.data.resource.data.search
     );
+    if (this.withAdvanced) {
+        this.searchFormFields.advanced = {
+            "type": "boolean",
+            "category": "search",
+            "label": VDRest.app.translate("Advanced"),
+            "checked": false,
+            "accordionIndicator" : true
+        };
+        depends = {"advanced" : true};
+    }
     this.searchFormFields.mode = this.getEnumField(
-        "search", 'Mode', this.getSearchModeValues()
+        "search", 'Mode', this.getSearchModeValues(), depends
     );
+
+    if (this.withAdvanced) {
+        tol_depends.advanced = true;
+    }
     this.searchFormFields.tolerance = this.getNumberField(
-        "search", 'Tolerance', this.data.resource.data.tolerance, {"mode": 5}
+        "search", 'Tolerance', this.data.resource.data.tolerance, tol_depends
     );
     this.searchFormFields.match_case = this.getBooleanField(
-        "parameter", 'Match case', this.data.resource.data.match_case
+        "parameter", 'Match case', this.data.resource.data.match_case, depends
     );
     this.searchFormFields.use_search_in = this.getEnumField(
-        "parameter", 'Search in', this.getSearchInValues(), undefined, true
+        "parameter", 'Search in', this.getSearchInValues(), depends, true
     );
 
     // cannot delete hence disabled
@@ -154,40 +188,53 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormFields = fun
     //);
 
     this.searchFormFields.use_ext_epg_info = this.getBooleanField(
-        "parameter", 'Use Extended EPG Info', this.data.resource.data.use_ext_epg_info
+        "parameter", 'Use Extended EPG Info', this.data.resource.data.use_ext_epg_info, depends, true
     );
     this.getExtEpgInfoFields();
+
+    if (this.withAdvanced) {
+        eei_depends.advanced = true;
+    }
     this.searchFormFields.ignore_missing_epg_cats = this.getBooleanField(
-        "parameter", 'Ignore missing categories', this.data.resource.data.ignore_missing_epg_cats, 'use_ext_epg_info'
+        "parameter", 'Ignore missing categories', this.data.resource.data.ignore_missing_epg_cats, eei_depends
     );
     this.searchFormFields.use_channel = this.getEnumField(
-        "parameter", 'Use Channel', this.getUseChannelValues()
+        "parameter", 'Use Channel', this.getUseChannelValues(), depends
     );
     this.searchFormFields.channel_min = this.getChannelMinField();
     this.searchFormFields.channel_max = this.getChannelMaxField();
+
+    if (this.withAdvanced) {
+        cg_depends.advanced = true;
+    }
     this.searchFormFields.channels = this.getEnumField(
-        "parameter", 'Channel Group', this.getChannelGroupFieldValues(), {"use_channel": 2}
+        "parameter", 'Channel Group', this.getChannelGroupFieldValues(), cg_depends
     );
     this.searchFormFields.use_time = this.getBooleanField(
-        "parameter", 'Use Time', this.data.resource.data.use_time
+        "parameter", 'Use Time', this.data.resource.data.use_time, depends, true
     );
     this.searchFormFields.start_time = this.getStartTimeField();
     this.searchFormFields.stop_time = this.getStopTimeField();
+
     this.searchFormFields.use_duration = this.getBooleanField(
-        "parameter", 'Use duration', this.data.resource.data.use_duration
+        "parameter", 'Use duration', this.data.resource.data.use_duration, depends, true
     );
 
     this.searchFormFields.duration_min = this.getMinDurationField();
     this.searchFormFields.duration_max = this.getMaxDurationField();
 
     this.searchFormFields.use_dayofweek = this.getBooleanField(
-        "parameter", 'Use day of week', this.data.resource.data.use_dayofweek
+        "parameter", 'Use day of week', this.data.resource.data.use_dayofweek, depends, true
     );
     this.searchFormFields.dayofweek = this.getDayOfWeekField();
     this.searchFormFields.blacklist_mode = this.getBlacklistModeField();
     this.searchFormFields.blacklist_ids = this.getBlacklistSelectorField();
     // not available in OSD Edit Menu
     //this.searchFormFields.use_in_favorites = this.getUseInFavoritesField();
+};
+
+
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setSearchTimerFields = function () {
 
     /**
      * searchtimer
@@ -327,10 +374,6 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormFields = fun
             "search_timer_action": 0
         }
     );
-
-
-
-    return this.searchFormFields;
 };
 
 /**
@@ -349,7 +392,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormFields = fun
  * @param {*} [depends]
  * @return {searchTimerCommonField}
  */
-Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBooleanField = function (category, label, checked, depends) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBooleanField = function (category, label, checked, depends, accordion) {
 
     var field = {
         "category": category,
@@ -360,6 +403,10 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBooleanField = functio
 
     if ("undefined" !== typeof depends) {
         field.depends = depends;
+    }
+
+    if ("undefined" !== typeof accordion) {
+        field.accordionIndicator = true;
     }
 
     return field;
@@ -578,12 +625,20 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getExtEpgInfoComboField =
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStartTimeField = function () {
 
+    var depends = {
+        "use_time" : true
+    };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    }
+
     return {
         "category": "parameter",
         "type": "datetime",
         "label": "Broadcast start after",
         "format": "%H:%i",
-        "depends": "use_time",
+        "depends": depends,
         "value": VDRest.helper.pad(this.data.resource.data.start_time, 4),
         "form_order": "Hi"
     }
@@ -594,12 +649,20 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStartTimeField = funct
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStopTimeField = function () {
 
+    var depends = {
+        "use_time" : true
+    };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    }
+
     return {
         "category": "parameter",
         "type": "datetime",
         "label": "Broadcast start before",
         "format": "%H:%i",
-        "depends": "use_time",
+        "depends": depends,
         "value": VDRest.helper.pad(this.data.resource.data.stop_time, 4),
         "form_order": "Hi"
     }
@@ -610,12 +673,20 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStopTimeField = functi
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getMinDurationField = function () {
 
+    var depends = {
+        "use_duration" : true
+    };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    }
+
     return {
         "category": "parameter",
         "type": "datetime",
         "label": "Min duration",
         "format": "%H:%i",
-        "depends": "use_duration",
+        "depends": depends,
         "value": VDRest.helper.pad(this.data.resource.data.duration_min, 4),
         "form_order": "Hi"
     }
@@ -626,12 +697,20 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getMinDurationField = fun
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getMaxDurationField = function () {
 
+    var depends = {
+        "use_duration" : true
+    };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    }
+
     return {
         "category": "parameter",
         "type": "datetime",
         "label": "Max duration",
         "format": "%H:%i",
-        "depends": "use_duration",
+        "depends": depends,
         "value": VDRest.helper.pad(this.data.resource.data.duration_max, 4),
         "form_order": "Hi"
     }
@@ -671,11 +750,19 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getUseChannelValues = fun
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelMinField = function () {
 
+    var depends = {
+        "use_channel" : 1
+    };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    }
+
     return {
         "category": "parameter",
         "type": "channel",
         "label": 'From Channel',
-        "depends": {"use_channel": 1},
+        "depends": depends,
         "selected": this.data.resource.data.channel_min,
         "onchange": function () {
             this.searchFormFields.channel_max.getValuesAfter();
@@ -688,11 +775,19 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelMinField = func
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelMaxField = function () {
 
+    var depends = {
+        "use_channel" : 1
+    };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    }
+
     return {
         "category": "parameter",
         "type": "channel",
         "label": 'To Channel',
-        "depends": {"use_channel": 1},
+        "depends": depends,
         "selected": this.data.resource.data.channel_max,
         "className": "searchtimer",
         "getValuesAfter": function () {
@@ -750,6 +845,14 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelMaxField = func
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDayOfWeekField = function () {
 
+    var depends = {
+        "use_dayofweek" : 1
+    };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    }
+
     return {
         "category": "parameter",
         "type": "enum",
@@ -793,7 +896,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDayOfWeekField = funct
                 "selected": Math.abs(this.data.resource.data.dayofweek) & this.weekDays.sunday
             }
         },
-        "depends": "use_dayofweek"
+        "depends": depends
     }
 };
 
@@ -802,7 +905,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDayOfWeekField = funct
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistModeField = function () {
 
-    return {
+    var field = {
         "category": "parameter",
         "type": "enum",
         "label": 'Use blacklists',
@@ -828,7 +931,15 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistModeField = f
                 "selected": this.data.resource.data.blacklist_mode === 3
             }
         }
+    };
+
+    if (this.withAdvanced) {
+        field.depends = {
+            "advanced" : true
+        };
     }
+
+    return field;
 };
 
 /**
@@ -837,7 +948,14 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistModeField = f
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistSelectorField = function () {
 
     var collection = VDRest.app.getModule('VDRest.SearchTimer').getModel('Blacklists').getCollection(),
-        blacklists = {};
+        blacklists = {},
+        depends = {
+            "blacklist_mode" : 1
+        };
+
+    if (this.withAdvanced) {
+        depends.advanced = true;
+    };
 
     collection.forEach(function (b) {
         var search = b.getData('search'),
@@ -855,7 +973,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistSelectorField
         "type": "enum",
         "multiselect": true,
         "label": 'Blacklists',
-        "depends": {"blacklist_mode": 1},
+        "depends": depends,
         "values": blacklists
     }
 };
@@ -1244,22 +1362,24 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getCompareCategoriesField
 
 /**
  * retrieve channelgroups
- * @return {Gui.SearchTimer.Controller.List.channelgroups}
+ * @return {{}}
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelGroupFieldValues = function () {
 
-    /**
-     * @type {Gui.SearchTimer.Controller.List.channelgroups}
-     */
-    var cGroups = VDRest.app.getModule('Gui.SearchTimer').getController('List').channelgroups, i;
+    var cGroups = {},
+        collection = VDRest.app.getModule('VDRest.SearchTimer').getModel('ChannelGroups').getCollection();
 
-    for (i in cGroups) {
-        if (cGroups.hasOwnProperty(i)) {
-            cGroups[i].value = i;
-            cGroups[i].selected = i === this.data.resource.data.channels;
-            cGroups[i].translate = false;
+
+    collection.forEach(function (item) {
+
+        cGroups[item.data] = {
+            "label" : item.data,
+            "value" : item.data,
+            "selected" : item.data === this.data.resource.data.channels,
+            "translate" : false
         }
-    }
+
+    }.bind(this));
 
     return cGroups;
 };

@@ -75,7 +75,7 @@ Gui.Form.View.Window.Select.prototype.addValues = function () {
  */
 Gui.Form.View.Window.Select.prototype.prepareValue = function (value) {
 
-    var name = this.data.gui.attr('name'), html = '', type;
+    var name = this.data.gui.attr('name'),html = '', type;
 
     type = this.data.multiselect ? 'checkbox' : 'radio';
 
@@ -99,6 +99,15 @@ Gui.Form.View.Window.Select.prototype.prepareValue = function (value) {
 
     value.gui = $('<input name="' + name + '" value="' + value.label + '" type="' + type + '">')
         .appendTo(value.dom);
+
+    if ('checkbox' === type) {
+
+        value.dom.append('<span class="fancy-checkbox"><span>✔</span></span>');
+
+    } else {
+
+        value.dom.append('<span class="fancy-radio"><span>✘</span></span>');
+    }
 
     if (value.selected || this.data.gui.val() === value.label || VDRest.config.getItem(name) === value.value) {
 

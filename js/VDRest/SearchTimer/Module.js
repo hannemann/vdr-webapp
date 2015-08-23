@@ -25,6 +25,14 @@ VDRest.SearchTimer.prototype.initList = function () {
 };
 
 /**
+ * initialize list controller
+ */
+VDRest.SearchTimer.prototype.initLate = function () {
+
+    this.getController('Default');
+};
+
+/**
  * register module
  */
 VDRest.app.registerModule('VDRest.SearchTimer', true);

@@ -94,7 +94,8 @@ form label.constrained.disabled {
 .directory-chooser label.default-expanded:before {
     content: 'f';
 }
-.window-input label span {
+.window-input label span:not([class~="fancy-checkbox"]),
+.window-input label span:not([class~="fancy-radio"]) {
     display: block;
     border-bottom: 1px solid rgb(150, 150, 150);
     margin-left: -20px;
@@ -139,11 +140,66 @@ form .form-field-boolean span.wrapper {
     border-bottom: 1px solid white;
     margin-bottom: 5px;
     display: block;
+    position:relative;
+}
+form .form-field-boolean span.wrapper.has-accordion-indicator input {
+    display: none;
 }
 
 form .disabled,
 form .disabled * {
     color: rgb(180, 180, 180);
+}
+
+label input[type="checkbox"],
+label input[type="checkbox"] {
+    display: none;
+}
+label.clearer span.fancy-checkbox,
+label.clearer span.fancy-radio {
+    display: block;
+    height: 12px;
+    width: 12px;
+    border: 1px solid #B3B3B3;
+    line-height: 10px;
+    font-size: 0;
+    background: #8A8A8A;
+    border-radius: 1px;
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    margin: 0;
+    padding: 0;
+}
+label.clearer span.fancy-radio {
+    border-radius: 7px;
+}
+input[type="checkbox"] ~ span.fancy-checkbox span,
+input[type="radio"] ~ span.fancy-radio span {
+    font-size: 24px;
+    transform: rotate(0deg) scale(0);
+    transition: transform .2s ease-in-out, margin-left .2s;
+    color: #FDCC07;
+    display: block;
+    height: 12px;
+    font-weight: bold;
+    margin-left: 0;
+    border: none;
+    padding: 0;
+}
+input[type="checkbox"]:checked ~ span.fancy-checkbox span,
+input[type="radio"]:checked ~ span.fancy-radio span {
+    transform: rotate(720deg) scale(1);
+    margin-left: -2px;
+}
+input[type="radio"]:checked ~ span.fancy-radio span {
+    margin-left: -4px;
+    margin-top: 2px;
+}
+.window-input.select span.fancy-checkbox,
+.window-input.select span.fancy-radio {
+    top: 3px;
+    right: 1px;
 }
 
 .window-input.channel-chooser,
@@ -172,6 +228,7 @@ form .disabled * {
 }
 .window-input.select label {
     margin-bottom: .25em;
+    position: relative;
     /*height: 1.5em;*/
 }
 .window-input.select label.selected {

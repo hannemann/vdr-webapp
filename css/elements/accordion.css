@@ -3,7 +3,8 @@
     padding: 5px 3px;
     position: relative;
 }
-.accordion .accordion-header:after {
+.accordion .accordion-header:after,
+.accordion-indicator {
     font-family: VDR-web, sans-serif;
     content: 'S';
     position: absolute;
@@ -17,7 +18,9 @@
     height: 12px;
 }
 .accordion .accordion-header.active:after,
-.accordion .accordion-header.initially-open:after {
+input[type="checkbox"]:checked ~ .accordion-indicator,
+.accordion .accordion-header.initially-open:after,
+.accordion-indicator.initially-open {
     transform: rotate(180deg);
 }
 .accordion .accordion-content {

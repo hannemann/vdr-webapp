@@ -58,12 +58,14 @@ Gui.Form.View.Abstract.prototype.addClasses = function () {
  */
 Gui.Form.View.Abstract.prototype.addButtons = function () {
 
+    var okLabel = this.data.submitLabel || 'OK';
+
     this.cancel = $('<div class="button button-cancel">')
         .text(VDRest.app.translate('Cancel'))
         .appendTo(this.data.buttonContainer);
 
     this.ok = $('<div class="button button-confirm">')
-        .text('OK')
+        .text(okLabel)
         .appendTo(this.data.buttonContainer);
 
     return this;
@@ -158,6 +160,15 @@ Gui.Form.View.Abstract.prototype.getBoolean = function (id, field) {
 
     field.dom.addClass('form-field-boolean');
     field.gui.appendTo(field.dom.find('span.wrapper'));
+
+    if (field.accordionIndicator) {
+        field.dom.children('.wrapper')
+            .addClass('has-accordion-indicator')
+            .append('<span class="accordion-indicator">S</span>');
+    } else {
+        field.dom.children('.wrapper')
+            .append('<span class="fancy-checkbox"><span>✔</span></span>')
+    }
 };
 
 /**

@@ -49,7 +49,7 @@ Gui.SearchTimer.Controller.Window.SearchTimer.prototype.dispatchView = function 
  */
 Gui.SearchTimer.Controller.Window.SearchTimer.prototype.requestSearchForm = function () {
 
-    var config = this.view.getSearchFormData();
+    var config = this.view.getSearchFormData(true);
 
     $.event.trigger({
         "type": "form.request",

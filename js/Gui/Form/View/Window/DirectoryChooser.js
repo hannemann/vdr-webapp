@@ -85,7 +85,7 @@ Gui.Form.View.Window.DirectoryChooser.prototype.prepareValue = function (label, 
 
     var name = this.data.gui.attr('name');
 
-    value.dom = $('<label>').addClass('directory');
+    value.dom = $('<label class="directory clearer">');
 
     value.gui = $('<input name="' + name + '" value="' + label + '" type="radio">')
         .appendTo(value.dom);
@@ -96,13 +96,16 @@ Gui.Form.View.Window.DirectoryChooser.prototype.prepareValue = function (label, 
         value.selected ||
         this.data.gui.val() === label ||
         this.data.gui.val() === value.fullPath ||
-        VDRest.config.getItem(name) === value.value
+        VDRest.config.getItem(name) === value.value ||
+        ( '/' === label && '' === this.data.gui.val() )
     ) {
 
         value.gui.prop('checked', true);
         value.dom.addClass('active');
         value.dom.parents('label.directory').addClass('expand');
     }
+
+    value.dom.append('<span class="fancy-radio"><span>✘</span></span>');
 
     if (value.hasChildren) {
         value.childWrapper = $('<span class="child-wrapper">').appendTo(value.dom);

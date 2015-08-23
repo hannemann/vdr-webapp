@@ -2,17 +2,17 @@
  * @class
  * @constructor
  */
-Gui.EpgSearch.Controller.Broadcast = function () {};
+Gui.EpgSearch.Controller.Broadcasts.Broadcast = function () {};
 
 /**
  * @type {Gui.Epg.Controller.Broadcasts.List.Broadcast}
  */
-Gui.EpgSearch.Controller.Broadcast.prototype = new Gui.Epg.Controller.Broadcasts.List.Broadcast();
+Gui.EpgSearch.Controller.Broadcasts.Broadcast.prototype = new Gui.Epg.Controller.Broadcasts.List.Broadcast();
 
 /**
  * initialize view
  */
-Gui.EpgSearch.Controller.Broadcast.prototype.init = function () {
+Gui.EpgSearch.Controller.Broadcasts.Broadcast.prototype.init = function () {
 
     this.eventNameSpace = this.module.namespace + '-' + this.module.name;
 
@@ -25,7 +25,7 @@ Gui.EpgSearch.Controller.Broadcast.prototype.init = function () {
 
     this.view.setParentView(this.data.parent.view);
 
-    this.module.getViewModel('Broadcast', {
+    this.module.getViewModel('Broadcasts.Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel,
         "view" : this.view,

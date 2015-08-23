@@ -52,7 +52,7 @@ VDRest.Epg.Model.Search.prototype.unsetIsSearchTimer = function () {
  */
 VDRest.Epg.Model.Search.prototype.send = function (options) {
 
-    if (!options.query) {
+    if (!options.search) {
 
         throw new Error('EPG search query not set.');
     }
@@ -62,14 +62,7 @@ VDRest.Epg.Model.Search.prototype.send = function (options) {
     this.getResource().load({
         "url" : "search",
         "method" : "POST",
-        "data" : {
-            "query" : options.query,
-            "mode" : options.mode || 0,
-            "channelid" : options.channelid || null,
-            "use_title" : options.use_title !== false,
-            "use_subtitle" : options.use_subtitle === true,
-            "use_description" : options.use_description === true
-        },
+        "data" : options,
         "callback" : this.processCollection.bind(this)
     });
 };

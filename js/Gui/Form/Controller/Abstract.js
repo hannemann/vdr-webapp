@@ -34,6 +34,10 @@ Gui.Form.Controller.Abstract.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
+    if ("function" === typeof this.data.onrender) {
+        this.data.onrender();
+    }
+
     this.addObserver();
 };
 
@@ -47,11 +51,11 @@ Gui.Form.Controller.Abstract.prototype.addObserver = function () {
     $document.on("destruct.form-" + this.keyInCache + " destruct.window-" + this.keyInCache, this.destruct.bind(this));
 
     if ("function" === typeof this.data.onsubmit) {
-        this.view.cancel.on('click', function () {
+        this.view.cancel.on(VDRest.helper.pointerEnd, function () {
             this.vibrate();
             history.back();
         }.bind(this));
-        this.view.ok.on('click', this.submit.bind(this));
+        this.view.ok.on(VDRest.helper.pointerEnd, this.submit.bind(this));
     }
 
     for (i in this.view.data.fields) {
@@ -110,13 +114,20 @@ Gui.Form.Controller.Abstract.prototype.submit = function () {
 
     this.vibrate();
 
-    this.data.container.one(this.animationEndEvents, function () {
+    if (this.data.noWindow) {
 
         this.data.onsubmit(this.data.fields);
 
-    }.bind(this));
+    } else {
 
-    history.back();
+        this.data.container.one(this.animationEndEvents, function () {
+
+            this.data.onsubmit(this.data.fields);
+
+        }.bind(this));
+
+        history.back();
+    }
 };
 
 /**
@@ -334,7 +345,7 @@ Gui.Form.Controller.Abstract.prototype.hasDependencies = function (fieldName) {
  */
 Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, fieldName) {
 
-    var i, n, dc, depends;
+    var i, n, m, dc, depends, disabled;
 
     for (i in this.view.data.fields) {
 
@@ -343,15 +354,37 @@ Gui.Form.Controller.Abstract.prototype.handleDependency = function (field, field
             depends = this.view.data.fields[i].depends;
             if ("undefined" !== typeof depends && (depends === fieldName || depends.hasOwnProperty(fieldName))) {
 
-                if (!this.isDisabled(field, depends)) {
+                if ('string' === typeof depends) {
 
-                    this.view.data.fields[i].dom.removeClass('disabled');
-                    this.view.data.fields[i].disabled = false;
+                    disabled = this.isDisabled(field, depends);
 
                 } else {
 
+                    disabled = false;
+
+                    for (m in depends) {
+
+                        if (depends.hasOwnProperty(m) && this.view.data.fields.hasOwnProperty(m)) {
+
+                            if (this.isDisabled(this.view.data.fields[m], depends)) {
+
+                                disabled = true;
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+                if (disabled) {
+
                     this.view.data.fields[i].dom.addClass('disabled');
                     this.view.data.fields[i].disabled = true;
+
+                } else {
+
+                    this.view.data.fields[i].dom.removeClass('disabled');
+                    this.view.data.fields[i].disabled = false;
                 }
             }
         }
