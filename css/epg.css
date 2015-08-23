@@ -422,8 +422,8 @@ div#time-line .ql.hour {
     display: none;
 }
 
-.epg-search-form {
-    margin-bottom: 20px;
+.epg-search-broadcasts {
+    min-height: 100px;
 }
 
 @media (min-width: 800px), (min-height: 800px) {
