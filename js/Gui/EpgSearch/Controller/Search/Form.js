@@ -44,5 +44,7 @@ Gui.EpgSearch.Controller.Search.Form.prototype.destructView = function () {
         "type" : "destruct.form-Search"
     });
 
+    VDRest.app.getModule('Gui.SearchTimer').cache.flush();
+
     VDRest.Abstract.Controller.prototype.destructView.call(this);
 };
