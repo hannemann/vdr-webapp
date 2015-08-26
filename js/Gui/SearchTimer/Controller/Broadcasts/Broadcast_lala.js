@@ -18,7 +18,7 @@ Gui.EpgSearch.Controller.Broadcasts.Broadcast.prototype.init = function () {
 
     this.windowModule = VDRest.app.getModule('Gui.Epg');
 
-    this.view = this.module.getView('Broadcasts.Broadcast', {
+    this.view = this.module.getView('Broadcast', {
         "id" : this.data.id,
         "channel" : this.data.channel
     });

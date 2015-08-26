@@ -104,7 +104,7 @@ Gui.SearchTimer.Controller.List.prototype.dispatchNew = function (e) {
  */
 Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
 
-    var controller = this.module.getController('Search'),
+    var controller = this.module.getController('Search', {"omitForm" : true}),
         state = this.module.getView('List').node[0].scrollTop,
         callback = function () {
             controller.destructView();
@@ -120,7 +120,7 @@ Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
 
     this.module.destruct();
     controller.dispatchView();
-    controller.initResults(e);
+    controller.broadcasts.initResults(e);
 };
 
 /**

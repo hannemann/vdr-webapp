@@ -2,17 +2,17 @@
  * @class
  * @constructor
  */
-Gui.EpgSearch.View.Broadcast = function () {};
+Gui.EpgSearch.View.Broadcasts.Broadcast = function () {};
 
 /**
  * @type {Gui.Epg.View.Broadcasts.List.Broadcast}
  */
-Gui.EpgSearch.View.Broadcast.prototype = new Gui.Epg.View.Broadcasts.List.Broadcast();
+Gui.EpgSearch.View.Broadcasts.Broadcast.prototype = new Gui.Epg.View.Broadcasts.List.Broadcast();
 
 /**
  * render dom
  */
-Gui.EpgSearch.View.Broadcast.prototype.render = function () {
+Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.render = function () {
 
     VDRest.Abstract.View.prototype.render.call(this);
 
@@ -23,7 +23,7 @@ Gui.EpgSearch.View.Broadcast.prototype.render = function () {
  * override method as its not needed here
  * @returns {Gui.EpgSearch.View.Broadcast}
  */
-Gui.EpgSearch.View.Broadcast.prototype.setWidth = function () {
+Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.setWidth = function () {
 
     return this;
 };
@@ -32,7 +32,7 @@ Gui.EpgSearch.View.Broadcast.prototype.setWidth = function () {
  * override method as its not needed here
  * @returns {Gui.EpgSearch.View.Broadcast}
  */
-Gui.EpgSearch.View.Broadcast.prototype.addChannel = function () {
+Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.addChannel = function () {
 
     if (!this.channel) {
         this.channel = $('<span class="channel">')

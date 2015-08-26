@@ -19,5 +19,5 @@ Gui.Window.View.ScrollAnimateHeader.prototype.render = function () {
 
 Gui.Window.View.ScrollAnimateHeader.prototype.canAnimateScroll = function () {
 
-    return this.node[0].scrollHeight > this.parentView.node[0].offsetHeight && VDRest.helper.touchMoveCapable;
+    return this.node[0].scrollHeight - 20 > this.parentView.node[0].offsetHeight && VDRest.helper.touchMoveCapable;
 };
