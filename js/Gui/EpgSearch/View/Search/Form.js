@@ -32,7 +32,7 @@ Gui.EpgSearch.View.Search.Form.prototype.getSearchFormFields = function () {
 
     var i;
 
-    this.searchFormFields = this.getSearchFormData().fields;
+    this.searchFormFields = this.getSearchFormData(false, true).fields;
 
 
     for (i in this.searchFormFields) {
@@ -73,14 +73,18 @@ Gui.EpgSearch.View.Search.Form.prototype.requestForm = function () {
             }.bind(this),
             "onsubmit": function (fields) {
 
-                var model;
+                var model, dateLimit = 0;
 
                 if ('' !== fields.search.getValue()) {
 
                     model = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id" : -1});
 
+                    if (fields.use_date_limit.getValue()) {
+                        dateLimit = fields.dateLimit.getValue().value;
+                    }
+
                     VDRest.app.getModule('VDRest.Epg').getModel('Search').send(
-                        model.copyFromForm(fields)
+                        model.copyFromForm(fields), dateLimit
                     );
                 }
 
@@ -89,25 +93,25 @@ Gui.EpgSearch.View.Search.Form.prototype.requestForm = function () {
     });
 
 };
-
-/**
- * retrieve channelgroups
- * @return {Gui.EpgSearch.Controller.Search.channelgroups}
- */
-Gui.EpgSearch.View.Search.Form.prototype.getChannelGroupFieldValues = function () {
-
-    /**
-     * @type {Gui.EpgSearch.Controller.Search.channelgroups}
-     */
-    var cGroups = this.module.getController('Search.Form').channelgroups, i;
-
-    for (i in cGroups) {
-        if (cGroups.hasOwnProperty(i)) {
-            cGroups[i].value = i;
-            cGroups[i].selected = false;
-            cGroups[i].translate = false;
-        }
-    }
-
-    return cGroups;
-};
+//
+///**
+// * retrieve channelgroups
+// * @return {Gui.EpgSearch.Controller.Search.channelgroups}
+// */
+//Gui.EpgSearch.View.Search.Form.prototype.getChannelGroupFieldValues = function () {
+//
+//    /**
+//     * @type {Gui.EpgSearch.Controller.Search.channelgroups}
+//     */
+//    var cGroups = this.module.getController('Search.Form').channelgroups, i;
+//
+//    for (i in cGroups) {
+//        if (cGroups.hasOwnProperty(i)) {
+//            cGroups[i].value = i;
+//            cGroups[i].selected = false;
+//            cGroups[i].translate = false;
+//        }
+//    }
+//
+//    return cGroups;
+//};

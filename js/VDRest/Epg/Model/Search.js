@@ -50,7 +50,9 @@ VDRest.Epg.Model.Search.prototype.unsetIsSearchTimer = function () {
 /**
  * perform search request
  */
-VDRest.Epg.Model.Search.prototype.send = function (options) {
+VDRest.Epg.Model.Search.prototype.send = function (options, dateLimit) {
+
+    var resource = this.getResource();
 
     if (!options.search) {
 
@@ -59,11 +61,21 @@ VDRest.Epg.Model.Search.prototype.send = function (options) {
 
     this.flushCollection();
 
-    this.getResource().load({
+    if (dateLimit) {
+        resource.urls.search += '?date_limit=' + dateLimit.toString();
+    }
+
+    delete options.use_date_limit;
+    delete options.dateLimit;
+
+    resource.load({
         "url" : "search",
         "method" : "POST",
         "data" : options,
-        "callback" : this.processCollection.bind(this)
+        "callback" : function (result) {
+            resource.urls.search = "events/search.json";
+            this.processCollection(result);
+        }.bind(this)
     });
 };
 

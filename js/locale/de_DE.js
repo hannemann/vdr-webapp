@@ -1,4 +1,28 @@
+dateFormat.masks.default_de_DE              = "ddd dd mmm yyyy HH:MM:ss";
+dateFormat.masks.shortDate_de_DE            = "dd.mm.yy";
+dateFormat.masks.mediumDate_de_DE           = "dd mmm, yyyy";
+dateFormat.masks.longDate_de_DE             = "dd mmmm, yyyy";
+dateFormat.masks.fullDate_de_DE             = "dddd, dd mmmm, yyyy";
+dateFormat.masks.shortTime_de_DE            = "HH:MM";
+dateFormat.masks.mediumTime_de_DE           = "HH:MM:ss";
+dateFormat.masks.longTime_de_DE             = "HH:MM:ss";
+dateFormat.masks.monthDate_de_DE            = "ddd dd mmm";
+dateFormat.masks.epgSearchDateLimit_de_DE   = "<i>ddd</i> dd mmm";
+
+// Internationalization strings
+dateFormat.i18n_de_DE = {
+    dayNames: [
+        "So.", "Mo.", "Di.", "Mi.", "Do.", "Fr.", "Sa.",
+        "Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"
+    ],
+    monthNames: [
+        "Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez",
+        "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"
+    ]
+};
+
 VDRest.app.de_DE = {
+    "date:format":"%d.%m.%Y",
     "January": "Januar",
     "February": "Februar",
     "March": "März",
@@ -7,6 +31,13 @@ VDRest.app.de_DE = {
     "July": "Juli",
     "October": "Oktober",
     "December": "Dezember",
+    "date:day0":"Sonntag",
+    "date:day1":"Montag",
+    "date:day2":"Dienstag",
+    "date:day3":"Mittwoch",
+    "date:day4":"Donnerstag",
+    "date:day5":"Freitag",
+    "date:day6":"Samstag",
     "New" : "Neu",
     "Recordings" : "Aufnahmen",
     "Channelview" : "Kanal-Ansicht",
@@ -169,6 +200,10 @@ VDRest.app.de_DE = {
     "Max duration": "max. Dauer",
     "Use day of week": "Verwende Wochentag",
     "Day of week": "Wochentag",
+    "Use date limit": "Datum eingrenzen",
+    "Date limit": "Datum bis",
+    "Today only": "nur Heute",
+    "Until tomorrow": "bis Morgen",
     "Broadcast start before": "Sendung beginnt vor",
     "Broadcast start after": "Sendung beginnt nach",
     "Match case": "Groß-, Kleinschreibung",

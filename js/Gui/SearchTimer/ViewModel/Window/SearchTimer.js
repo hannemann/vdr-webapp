@@ -45,10 +45,11 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.initViewMethods = functio
  * @property {searchTimerFormFields} fields
  * @return {searchTimerFormConfig}
  */
-Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormData = function (isSearchtimer) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getSearchFormData = function (isSearchtimer, hasDateLimit) {
 
     this.searchFormFields = {};
     this.withAdvanced = !isSearchtimer;
+    this.hasDateLimit = hasDateLimit;
 
     this.setCommonFields();
 
@@ -147,6 +148,9 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setCommonFields = functio
         },
         cg_depends = {
             "use_channel" : 2
+        },
+        dl_depends = {
+            "use_date_limit" : true
         };
 
     this.searchFormFields.search = this.getStringField(
@@ -227,6 +231,20 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setCommonFields = functio
         "parameter", 'Use day of week', this.data.resource.data.use_dayofweek, depends, true
     );
     this.searchFormFields.dayofweek = this.getDayOfWeekField();
+
+    if (this.hasDateLimit) {
+
+        this.searchFormFields.use_date_limit = this.getBooleanField(
+            "parameter", 'Use date limit', false, depends, true
+        );
+        if (this.withAdvanced) {
+            dl_depends.advanced = true;
+        }
+        this.searchFormFields.dateLimit = this.getEnumField(
+            "parameter", 'Date limit', this.getDateLimitFieldValues(), dl_depends, false, 'epg-search-date-limit'
+        );
+    }
+
     this.searchFormFields.blacklist_mode = this.getBlacklistModeField();
     this.searchFormFields.blacklist_ids = this.getBlacklistSelectorField();
     // not available in OSD Edit Menu
@@ -461,7 +479,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getNumberField = function
 /**
  * @return {searchTimerCommonField}
  */
-Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getEnumField = function (category, label, values, depends, multiselect) {
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getEnumField = function (category, label, values, depends, multiselect, className) {
 
     var field = {
         "category": category,
@@ -475,7 +493,11 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getEnumField = function (
     }
 
     if ("undefined" !== typeof multiselect) {
-        field.multiselect = true;
+        field.multiselect = multiselect;
+    }
+
+    if ("undefined" !== typeof className) {
+        field.className = className;
     }
 
     return field;
@@ -1382,4 +1404,43 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelGroupFieldValue
     }.bind(this));
 
     return cGroups;
+};
+
+/**
+ * retrieve channelgroups
+ * @return {{}}
+ */
+Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDateLimitFieldValues = function () {
+
+    var todayLimit = new Date(
+            (Date.now() - (Date.now() % 86400000))
+            + new Date().getTimezoneOffset() * 60 * 1000 + 86400000
+        ).getTime() / 1000
+        , values = {
+            "today": {
+                "label": 'Today only',
+                "value": todayLimit,
+                "selected": true
+            },
+            "days_1": {
+                "label": 'Until tomorrow',
+                "value": todayLimit,
+                "selected": false
+            }
+        }, days = 14, i = 2, d;
+
+
+    for (i;i<=days;i++) {
+        d = new Date(todayLimit * 1000 + i * 86400000);
+        debugger;
+        values['days_' + i.toString()] = {
+            "label": d.format('epgSearchDateLimit_' + VDRest.app.language),
+            "value": todayLimit + i * 86400,
+            "selected": false,
+            "translate": false
+        }
+    }
+
+    return values;
+
 };
