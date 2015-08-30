@@ -62,6 +62,17 @@ Gui.Recordings.Controller.Window.Directory.prototype.removeObserver = function (
 };
 
 /**
+ * empty window
+ */
+Gui.Recordings.Controller.Window.Directory.prototype.empty = function () {
+
+    this.view.data.listItem.getDirectories().forEach(function (item) {
+        item.destructView();
+        this.module.cache.invalidateAllTypes(item);
+    }.bind(this));
+};
+
+/**
  * destroy
  */
 Gui.Recordings.Controller.Window.Directory.prototype.destructView = function () {

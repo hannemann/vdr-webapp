@@ -46,20 +46,6 @@ Gui.Recordings.ViewModel.List.prototype.init = function () {
 
     this.tree = null;
 
-    this.initial = true;
-
-    this.directories = {
-        "root": {
-            "path": "root",
-            "parent": this.module.getController('List'),
-            "name": "root",
-            "files": [],
-            "directories": [],
-            "oldest": 0,
-            "newest": 0
-        }
-    };
-
     this.resource = this.data.resource;
 
     /**
@@ -76,12 +62,33 @@ Gui.Recordings.ViewModel.List.prototype.init = function () {
     }
 };
 
+Gui.Recordings.ViewModel.List.prototype.initDirectories = function () {
+
+    this.initial = true;
+
+    this.directories = {
+        "root": {
+            "path": "root",
+            "parent": this.module.getController('List'),
+            "name": "root",
+            "files": [],
+            "directories": [],
+            "oldest": 0,
+            "newest": 0
+        }
+    };
+
+    return this;
+};
+
 /**
  * init tree
  */
 Gui.Recordings.ViewModel.List.prototype.getTree = function () {
 
     if (!this.tree) {
+
+        this.initDirectories();
 
         this.resource.each(function (file_name, data) {
 

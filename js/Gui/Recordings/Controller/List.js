@@ -22,9 +22,18 @@ Gui.Recordings.Controller.List.prototype.init = function () {
         VDRest.app.getModule('Gui.Viewport').getView('Default')
     );
 
-    this.recordingsList = VDRest.Lib.Object.prototype.getInstance();
-
+    this.initRecordingsList();
     this.dataModel = this.module.store.getModel('List');
+};
+
+/**
+ * initialize recordings collection object
+ * @returns {Gui.Recordings.Controller.List}
+ */
+Gui.Recordings.Controller.List.prototype.initRecordingsList = function () {
+
+    this.recordingsList = VDRest.Lib.Object.prototype.getInstance();
+    return this;
 };
 
 /**
@@ -83,6 +92,34 @@ Gui.Recordings.Controller.List.prototype.reRender = function () {
     }
 };
 
+Gui.Recordings.Controller.List.prototype.refresh = function () {
+
+    var windows = VDRest.app.getModule('Gui.Window').windows;
+
+    windows.forEach(function (controller) {
+
+        controller.empty();
+
+    }.bind(this));
+
+    this.removeItems().initRecordingsList();
+
+    delete this.module.cache.store.ViewModel.List.tree;
+    this.module.cache.invalidateClasses('List.Directory');
+    this.module.cache.invalidateClasses('List.Recording');
+
+    this.iterateRecordings();
+    setTimeout(function () {
+        windows.forEach(function (controller) {
+
+            controller.data.listItem = this.module.cache.store.View['List.Directory'][controller.data.path];
+            controller.view.data.dispatch = controller.data.listItem.renderItems.bind(controller.data.listItem);
+            controller.view.data.dispatch(controller.view);
+
+        }.bind(this));
+    }.bind(this), 100);
+};
+
 /**
  * iterate data model collection
  */
@@ -108,10 +145,15 @@ Gui.Recordings.Controller.List.prototype.iterateRecordings = function () {
  */
 Gui.Recordings.Controller.List.prototype.dispatchList = function () {
 
-    this.module.getViewModel('List', {
-        "view" : this.view,
-        "resource" : this.recordingsList
-    });
+    if (!this.module.cache.store.ViewModel.List) {
+
+        this.module.getViewModel('List', {
+            "view": this.view,
+            "resource": this.recordingsList
+        });
+    } else {
+        this.module.cache.store.ViewModel.List.resource = this.recordingsList;
+    }
 
     this.view.renderFirstLevel();
 };

@@ -148,37 +148,12 @@ Gui.Recordings.prototype.destruct = function () {
  */
 Gui.Recordings.prototype.refresh = function () {
 
-    var windows = $('.window.recordings'), winModule = VDRest.app.getModule('Gui.Window');
+    var listController = this.getController('List');
 
-    windows.each(function () {
-        $(this).remove();
-        VDRest.app.destroyer.pop();
-        VDRest.app.observeHash.pop();
-        winModule.popRegister();
-    });
+    $document.one('recordingsloaded', listController.refresh.bind(listController));
 
-    if (windows.length > 0) {
-        history.go(-windows.length);
-    }
-
-    this.getController('List').removeItems().recordingsList.initData();
-
-    setTimeout(function () {
-        delete this.cache.store.ViewModel.List.tree;
-        delete this.cache.store.ViewModel.List.resource;
-        delete this.cache.store.ViewModel.List;
-        this.cache.invalidateClasses('List.Directory');
-        this.cache.invalidateClasses('List.Recording');
-        this.cache.invalidateClasses('Window.Directory');
-        this.cache.invalidateClasses('Window.Recording');
-        this.store.getModel('List').flushCollection();
-        this.store.getModel('List').initList();
-        VDRest.app.getModule('Gui.Menubar')
-            .getView('Default')
-            .getHeader()
-            .text(VDRest.app.translate('Recordings'));
-        this.dispatch();
-    }.bind(this), 100);
+    this.store.getModel('List').flushCollection();
+    this.store.getModel('List').initList();
 };
 
 /**
