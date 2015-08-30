@@ -97,16 +97,25 @@ Gui.Recordings.Controller.List.prototype.reRender = function () {
  */
 Gui.Recordings.Controller.List.prototype.refresh = function () {
 
-    var directories = VDRest.app.getModule('Gui.Window').windows;
+    var directories = VDRest.app.getModule('Gui.Window').windows,
+        scrollStates = [], i;
 
     directories.forEach(function (controller) {
 
         if (controller instanceof Gui.Recordings.Controller.Window.Directory) {
+            scrollStates.push({
+                "controller" : controller,
+                "state" : controller.view.body[0].scrollTop
+            });
             controller.empty();
         }
 
     }.bind(this));
 
+    scrollStates.push({
+        "controller" : this,
+        "state" : this.view.node[0].scrollTop
+    });
     this.removeItems().initRecordingsList();
 
     delete this.module.cache.store.ViewModel.List.tree;
@@ -127,6 +136,14 @@ Gui.Recordings.Controller.List.prototype.refresh = function () {
             }
 
         }.bind(this));
+
+        scrollStates.forEach(function (o) {
+            if (o.controller instanceof Gui.Recordings.Controller.List) {
+                o.controller.view.node[0].scrollTop = o.state;
+            } else {
+                o.controller.view.body[0].scrollTop = o.state;
+            }
+        });
 
     }.bind(this), 100);
 };
