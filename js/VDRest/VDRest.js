@@ -217,6 +217,22 @@ VDRest.App.prototype.saveHistoryState = function (eventName, callback, newState)
 
 };
 
+/**
+ * remove callback and hash
+ * @param {string} eventName
+ * @param {string} state
+ */
+VDRest.App.prototype.removeHistoryState = function (eventName, state) {
+
+    this.observeHash.splice(
+        this.observeHash.indexOf(state), 1
+    );
+    this.destroyer.splice(
+        this.destroyer.indexOf(eventName), 1
+    );
+
+};
+
 VDRest.App.prototype.observe = function (hash) {
 
     this.observeHash.push(hash || this.getLocationHash() || VDRest.config.getItem('start'));

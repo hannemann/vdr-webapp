@@ -92,13 +92,18 @@ Gui.Recordings.Controller.List.prototype.reRender = function () {
     }
 };
 
+/**
+ * refresh directory windows
+ */
 Gui.Recordings.Controller.List.prototype.refresh = function () {
 
-    var windows = VDRest.app.getModule('Gui.Window').windows;
+    var directories = VDRest.app.getModule('Gui.Window').windows;
 
-    windows.forEach(function (controller) {
+    directories.forEach(function (controller) {
 
-        controller.empty();
+        if (controller instanceof Gui.Recordings.Controller.Window.Directory) {
+            controller.empty();
+        }
 
     }.bind(this));
 
@@ -110,13 +115,19 @@ Gui.Recordings.Controller.List.prototype.refresh = function () {
 
     this.iterateRecordings();
     setTimeout(function () {
-        windows.forEach(function (controller) {
+        directories.forEach(function (controller) {
 
-            controller.data.listItem = this.module.cache.store.View['List.Directory'][controller.data.path];
-            controller.view.data.dispatch = controller.data.listItem.renderItems.bind(controller.data.listItem);
-            controller.view.data.dispatch(controller.view);
+            if (controller instanceof Gui.Recordings.Controller.Window.Directory) {
+                controller.data.listItem = this.module.cache.store.View['List.Directory'][controller.data.path];
+
+                if ("undefined" !== typeof controller.data.listItem) {
+                    controller.view.data.dispatch = controller.data.listItem.renderItems.bind(controller.data.listItem);
+                    controller.view.data.dispatch(controller.view);
+                }
+            }
 
         }.bind(this));
+
     }.bind(this), 100);
 };
 
@@ -156,51 +167,6 @@ Gui.Recordings.Controller.List.prototype.dispatchList = function () {
     }
 
     this.view.renderFirstLevel();
-};
-
-/**
- * add folder to tree
- */
-Gui.Recordings.Controller.List.prototype.createFolderFromFile = function (file) {
-
-    var viewModel = this.module.getViewModel('List');
-
-    viewModel.current = file;
-
-    viewModel.addToTree(viewModel.current.name, viewModel.tree);
-
-    return viewModel.directories[['root'].concat(file.name.split('~').slice(0, -1)).join('~')];
-};
-
-/**
- * traverse path up to root and remove all empty directories
- * @param {string} path
- */
-Gui.Recordings.Controller.List.prototype.removeIfEmpty = function (path) {
-
-    var dir, i, parentDirs;
-
-    do {
-
-        dir = this.module.getController('List.Directory', path);
-
-        if (dir.data.files.length === 0 && dir.data.directories.length === 0) {
-
-            dir.destructView();
-            this.module.cache.invalidateAllTypes(dir);
-            parentDirs = [];
-            for (i=0; i < dir.data.parent.data.directories.length; i++) {
-
-                if (dir.data.parent.data.directories[i] === dir) continue;
-                parentDirs.push(dir.data.parent.data.directories[i]);
-            }
-            dir.data.parent.data.directories = parentDirs;
-        }
-        path = path.split('~');
-        path.pop();
-        path = path.join('~');
-
-    } while (path.length > 0);
 };
 
 Gui.Recordings.Controller.List.prototype.removeItems = function () {

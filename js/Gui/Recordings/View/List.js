@@ -91,6 +91,7 @@ Gui.Recordings.View.List.prototype.renderDirectories = function () {
         try {
             index = this.renderChunk(index, 'Directory', this.tree.data.directories);
         } catch (e) {
+            debugger;
             VDRest.helper.error(e.message);
             clearInterval(interval);
         }
