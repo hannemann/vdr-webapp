@@ -98,7 +98,7 @@ Gui.Recordings.Controller.List.prototype.reRender = function () {
 Gui.Recordings.Controller.List.prototype.refresh = function () {
 
     var directories = VDRest.app.getModule('Gui.Window').windows,
-        scrollStates = [], i;
+        scrollStates = [];
 
     directories.forEach(function (controller) {
 
