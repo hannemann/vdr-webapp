@@ -40,6 +40,14 @@ VDRest.Recordings.Model.List.Recording.prototype.addObserver = function () {
 };
 
 /**
+ * remove event listener
+ */
+VDRest.Recordings.Model.List.Recording.prototype.removeObserver = function () {
+
+    $document.off('vdrest-api-actions.recording-updated.' + this.eventKey);
+};
+
+/**
  * process update event
  * @param {jQuery.Event} e
  */

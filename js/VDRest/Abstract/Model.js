@@ -178,6 +178,9 @@ VDRest.Abstract.Model.prototype.deleteFromCollection = function (model) {
 VDRest.Abstract.Model.prototype.flushCollection = function () {
 
     this.collection.forEach(function (model) {
+        if ("function" === typeof model.removeObserver) {
+            model.removeObserver();
+        }
         delete model.cache[model.keyInCache];
     });
 
