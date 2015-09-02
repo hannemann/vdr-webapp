@@ -128,6 +128,9 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
 
         if (index >= length) {
             clearInterval(interval);
+            $.event.trigger({
+                "type": "gui-recordings.root.ready"
+            });
         }
 
     }.bind(this), 10);
