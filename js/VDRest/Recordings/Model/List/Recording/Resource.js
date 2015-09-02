@@ -30,17 +30,32 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.urls = {
     "delete" : "recordings",
     "recordingList" : "recordings.json"
 };
+/**
+ * retrieve url encoded path
+ * @param {VDRest.Recordings.Model.List.Recording} recording
+ * @return {string}
+ */
+VDRest.Recordings.Model.List.Recording.Resource.prototype.getFileNameUrlEncoded = function (recording) {
+
+    var parts = recording.data.file_name.split('/');
+
+    parts.forEach(function (part, index) {
+        parts[index] = encodeURIComponent(part);
+    });
+
+    return parts.join('/');
+};
 
 /**
  * delete recording
- * @param obj
- * @param callback
+ * @param {VDRest.Recordings.Model.List.Recording} recording
+ * @param {function} [callback]
  */
-VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = function (obj, callback) {
+VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = function (recording, callback) {
 
-    var message = obj.getEventTitle(), request = {};
+    var message = recording.getData('event_ttle'), request = {};
 
-    message += obj.hasEventShortText() ? ' - ' + obj.getEventShortText() : '';
+    message += recording.getData('event_short_text') ? ' - ' + recording.getData('event_short_text') : '';
 
     $.event.trigger({
         "type" : "window.request",
@@ -48,20 +63,30 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
             "type" : "Confirm",
             "data" : {
                 "message": VDRest.app.translate("Delete Recording") + " '" + message + "'?",
-                "id" : 'delete.recording' + obj.getNumber()
+                "id" : 'delete.recording' + recording.getData('mumber')
             }
         }
     });
 
     $document.one('window.confirm.confirm', function () {
 
-        request.url = this.getBaseUrl() + 'recordings/delete';
-        request.data = {
-            "file" : obj.getFileName()
-        };
-        request.method = 'POST';
+        request.url = this.getBaseUrl() + 'recordings' + this.getFileNameUrlEncoded(recording);
+        request.method = 'DELETE';
 
-        this.fetchAsync(request, callback);
+        this.fetchAsync(request, function (response) {
+
+            $.event.trigger({
+                "type": "vdrest-api-actions.recording-deleted." + recording.eventKey,
+                "payload" : {
+                    data : response
+                }
+            });
+
+            if ("function" === typeof callback) {
+
+                callback(response);
+            }
+        });
 
     }.bind(this));
 
@@ -106,7 +131,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.moveRecording = functi
 VDRest.Recordings.Model.List.Recording.Resource.prototype.getCuttingMarks = function (recording) {
 
     var request = {
-        "url": this.getBaseUrl() + 'recordings/' + recording.data.number + '.json?marks=true',
+        "url": this.getBaseUrl() + 'recordings' + this.getFileNameUrlEncoded(recording) + '.json?marks=true',
         "method": "GET"
     };
 
@@ -144,7 +169,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getCuttingMarks = func
 VDRest.Recordings.Model.List.Recording.Resource.prototype.saveCuttingMarks = function (recording) {
 
     var request = {
-        "url": this.getBaseUrl() + 'recordings/marks/' + recording.data.number,
+        "url": this.getBaseUrl() + 'recordings/marks' + this.getFileNameUrlEncoded(recording),
         "method": "POST",
         "data": {
             "marks": recording.data.marks
@@ -169,7 +194,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.saveCuttingMarks = fun
 VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteCuttingMarks = function (recording) {
 
     var request = {
-        "url": this.getBaseUrl() + 'recordings/marks/' + recording.data.number,
+        "url": this.getBaseUrl() + 'recordings/marks' + this.getFileNameUrlEncoded(recording),
         "method": "DELETE"
     };
 
@@ -191,7 +216,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteCuttingMarks = f
 VDRest.Recordings.Model.List.Recording.Resource.prototype.cutRecording = function (recording) {
 
     var request = {
-        "url": this.getBaseUrl() + 'recordings/cut/' + recording.data.number,
+        "url": this.getBaseUrl() + 'recordings/cut' + this.getFileNameUrlEncoded(recording),
         "method": "POST"
     };
 

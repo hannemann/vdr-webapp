@@ -165,9 +165,17 @@ Gui.Recordings.Controller.Window.Recording.prototype.deleteRecordingAction = fun
 
     this.vibrate();
 
-    VDRest.app.getModule('VDRest.Recordings')
-        .getResource('List.Recording')
-        .deleteRecording(this.view, this.afterDeleteAction.bind(this));
+    this.data.recording.dataModel.delete(this.afterDeleteAction.bind(this));
+};
+
+/**
+ * handle delete
+ */
+Gui.Recordings.Controller.Window.Recording.prototype.afterDeleteAction = function () {
+
+    this.module.getController('List').refresh();
+
+    history.back();
 };
 
 /**
@@ -182,38 +190,6 @@ Gui.Recordings.Controller.Window.Recording.prototype.watchRecordingAction = func
         'List.Recording',
         {"file_name": this.data.recording.keyInCache}
     ).startStream();
-};
-
-/**
- * handle delete
- */
-Gui.Recordings.Controller.Window.Recording.prototype.afterDeleteAction = function () {
-
-    var model = VDRest.app.getModule('VDRest.Recordings').getModel(
-            'List.Recording',
-            this.data.recording.keyInCache
-        ),
-        view = VDRest.app.getModule('Gui.Recordings')
-            .getView('List.Recording', this.data.recording.keyInCache),
-        recording = this.getData('recording'),
-        parent = recording.getData('parent'),
-        oldFilesList = parent.getData('files'), newFilesList = [], i = 0, l = oldFilesList.length;
-
-    for(i;i<l;i++) {
-        if (oldFilesList[i] !== recording) {
-            newFilesList.push(oldFilesList[i]);
-        }
-    }
-
-    parent.setData('files', newFilesList);
-
-    VDRest.app.getModule('VDRest.Recordings').cache.invalidateAllTypes(model);
-
-    VDRest.app.getModule('Gui.Recordings').cache.invalidateAllTypes(view);
-
-    view.destruct();
-
-    history.back();
 };
 
 /**

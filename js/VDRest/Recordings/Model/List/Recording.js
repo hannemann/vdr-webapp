@@ -1,5 +1,7 @@
 /**
  * Channels resource
+ * @property {{}} data
+ * @property {function} getData
  * @constructor
  */
 VDRest.Recordings.Model.List.Recording = function () {};
@@ -37,6 +39,7 @@ VDRest.Recordings.Model.List.Recording.prototype.addObserver = function () {
     this.eventKey = this.keyInCache.toCacheKey();
 
     $document.one('vdrest-api-actions.recording-updated.' + this.eventKey, this.update.bind(this));
+    $document.one('vdrest-api-actions.recording-deleted.' + this.eventKey, this.deleted.bind(this));
 };
 
 /**
@@ -45,6 +48,7 @@ VDRest.Recordings.Model.List.Recording.prototype.addObserver = function () {
 VDRest.Recordings.Model.List.Recording.prototype.removeObserver = function () {
 
     $document.off('vdrest-api-actions.recording-updated.' + this.eventKey);
+    $document.one('vdrest-api-actions.recording-deleted.' + this.eventKey);
 };
 
 /**
@@ -68,6 +72,29 @@ VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
     });
     this.module.cache.updateKeys(this,this.data[this.cacheKey]);
     this.addObserver();
+};
+
+/**
+ * delete recording
+ * @param {function} callback
+ */
+VDRest.Recordings.Model.List.Recording.prototype.delete = function (callback) {
+
+    this.deletedCallback = callback;
+    this.module.getResource('List.Recording').deleteRecording(this);
+};
+
+/**
+ * after delete recording
+ */
+VDRest.Recordings.Model.List.Recording.prototype.deleted = function (e) {
+
+    this.removeObserver();
+    this.module.getModel('List').deleteFromCollection(this);
+    this.module.cache.invalidateAllTypes(this);
+    if ("function" === typeof this.deletedCallback) {
+        this.deletedCallback();
+    }
 };
 
 /**
