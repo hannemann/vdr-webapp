@@ -288,3 +288,22 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getCutterStatus = func
         }
     }.bind(this));
 };
+/**
+ * get edited file status
+ */
+VDRest.Recordings.Model.List.Recording.Resource.prototype.getEditedFile = function (recording) {
+
+    var request = {
+        "url": this.getBaseUrl() + 'recordings/editedfile' + this.getFileNameUrlEncoded(recording) + '.json',
+        "method": "GET"
+    };
+
+    this.fetchAsync(request, function (response) {
+        $.event.trigger({
+            "type": "vdrest-api-actions.edited-file-loaded." + recording.eventKey,
+            "payload" : {
+                "data" : response
+            }
+        });
+    }.bind(this));
+};

@@ -87,7 +87,7 @@ VDRest.Recordings.Model.List.Recording.prototype.delete = function (callback) {
 /**
  * after delete recording
  */
-VDRest.Recordings.Model.List.Recording.prototype.deleted = function (e) {
+VDRest.Recordings.Model.List.Recording.prototype.deleted = function () {
 
     this.removeObserver();
     this.module.getModel('List').deleteFromCollection(this);
@@ -203,6 +203,9 @@ VDRest.Recordings.Model.List.Recording.prototype.sortCuttingMarks = function () 
     return this;
 };
 
+/**
+ * cut recording
+ */
 VDRest.Recordings.Model.List.Recording.prototype.cut = function () {
 
     if (this.validateCuttingMarks()) {
@@ -212,6 +215,8 @@ VDRest.Recordings.Model.List.Recording.prototype.cut = function () {
         this.module.getResource('List.Recording').cutRecording(this);
 
         $window.one("vdrest-api-actions.recording-cut." + this.eventKey, function () {
+
+            setTimeout(this.getEditedFile.bind(this), 1000);
 
             $.event.trigger({
                 "type": "gui-recording.cut." + this.eventKey
@@ -227,6 +232,26 @@ VDRest.Recordings.Model.List.Recording.prototype.cut = function () {
 
         }.bind(this));
     }
+};
+
+/**
+ * retrieve edited file
+ */
+VDRest.Recordings.Model.List.Recording.prototype.getEditedFile = function () {
+
+    $window.one("vdrest-api-actions.edited-file-loaded." + this.eventKey, function (e) {
+
+        this.module.getModel('List').collection.push(
+            this.module.getModel('List.Recording', e.payload.data.recordings[0])
+        );
+
+        $.event.trigger({
+            "type": "gui-recording.edited-file-loaded"
+        });
+
+    }.bind(this));
+
+    this.module.getResource('List.Recording').getEditedFile(this);
 };
 
 /**

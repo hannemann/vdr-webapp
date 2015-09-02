@@ -66,6 +66,8 @@ Gui.Recordings.Controller.List.prototype.addObserver = function () {
         this.view.node.on('touchmove', this.preventReloadHandler);
     }
 
+    $window.on("gui-recording.edited-file-loaded", this.module.refresh.bind(this.module));
+
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
 
@@ -74,6 +76,8 @@ Gui.Recordings.Controller.List.prototype.removeObserver = function () {
     if (VDRest.helper.isTouchDevice) {
         this.view.node.off('touchmove', this.preventReloadHandler);
     }
+
+    $window.off("gui-recording.edited-file-loaded");
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
