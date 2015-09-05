@@ -11,6 +11,26 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype = new Gui.Video.
 
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.steps = [
     {
+        "label" : "1s",
+        "seconds" : 1
+    },
+    {
+        "label" : "2s",
+        "seconds" : 2
+    },
+    {
+        "label" : "5s",
+        "seconds" : 5
+    },
+    {
+        "label" : "10s",
+        "seconds" : 10
+    },
+    {
+        "label" : "15s",
+        "seconds" : 15
+    },
+    {
         "label" : "30s",
         "seconds" : 30
     },
@@ -31,8 +51,16 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.steps = [
         "seconds" : 600
     },
     {
-        "label" : "30m",
+        "label" : "15m",
         "seconds" : 900
+    },
+    {
+        "label" : "30m",
+        "seconds" : 1800
+    },
+    {
+        "label" : "60m",
+        "seconds" : 3600
     }
 ];
 
@@ -71,8 +99,8 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Cut.prototype.init = function 
     Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.init.call(this);
     this.data.marks = [];
     this.moveByFrames = 10;
-    this.selectedStep = 2;
-    this.selectedFineStep = 4;
+    this.selectedStep = 8;
+    this.selectedFineStep = 6;
 };
 
 /**
