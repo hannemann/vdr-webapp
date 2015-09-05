@@ -48,7 +48,7 @@ VDRest.Recordings.Model.List.Recording.prototype.addObserver = function () {
 VDRest.Recordings.Model.List.Recording.prototype.removeObserver = function () {
 
     $document.off('vdrest-api-actions.recording-updated.' + this.eventKey);
-    $document.one('vdrest-api-actions.recording-deleted.' + this.eventKey);
+    $document.off('vdrest-api-actions.recording-deleted.' + this.eventKey);
 };
 
 /**
@@ -58,6 +58,7 @@ VDRest.Recordings.Model.List.Recording.prototype.removeObserver = function () {
 VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
 
     var i;
+    this.removeObserver();
 
     for (i in e.payload.data.recordings[0]) {
 
