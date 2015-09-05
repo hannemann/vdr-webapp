@@ -49,6 +49,7 @@ VDRest.app.de_DE = {
     "Next" : "Nächstes",
     "Go!" : "Los!",
     "all": "alle",
+    "Synchronize":"Synchronisieren",
     "The search returned no results." : "Die Suche war erfolglos.",
     "%d events found." : "%d Sendungen gefunden.",
     "Delete": "Löschen",

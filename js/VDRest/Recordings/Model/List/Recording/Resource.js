@@ -75,7 +75,7 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
             + 'recordings'
             + this.getFileNameUrlEncoded(recording)
             + "?syncId=" + VDRest.config.getItem('recordingsSyncId');
-        
+
         request.method = 'DELETE';
 
         this.fetchAsync(request, function (response) {
