@@ -61,8 +61,10 @@ Gui.Window.Controller.Confirm.prototype.okAction = function () {
 
     history.back();
 
-    $.event.trigger({
-        "type" : "window.confirm.confirm"
+    this.view.node.one(this.animationEndEvents, function () {
+        $.event.trigger({
+            "type" : "window.confirm.confirm"
+        });
     });
 };
 
