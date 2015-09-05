@@ -54,20 +54,9 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getFileNameUrlEncoded 
  */
 VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = function (recording, callback) {
 
-    var message = recording.getData('event_ttle'), request = {};
+    var message = recording.getData('event_title'), request = {};
 
     message += recording.getData('event_short_text') ? ' - ' + recording.getData('event_short_text') : '';
-
-    $.event.trigger({
-        "type" : "window.request",
-        "payload" : {
-            "type" : "Confirm",
-            "data" : {
-                "message": VDRest.app.translate("Delete Recording") + " '" + message + "'?",
-                "id" : 'delete.recording' + recording.getData('mumber')
-            }
-        }
-    });
 
     $document.one('window.confirm.confirm', function () {
 
@@ -94,6 +83,17 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
         });
 
     }.bind(this));
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "type" : "Confirm",
+            "data" : {
+                "message": VDRest.app.translate("Delete Recording") + " '" + message + "'?",
+                "id" : 'delete.recording' + recording.getData('mumber')
+            }
+        }
+    });
 
 };
 
