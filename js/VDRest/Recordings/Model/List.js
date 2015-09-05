@@ -51,6 +51,13 @@ VDRest.Recordings.Model.List.prototype.init = function () {
 
     this.collection = [];
     this.currentResult = [];
+
+    setInterval(function () {
+        // TODO: config
+        if (!navigator.connection || navigator.connection.type != 'none') {
+            this.getUpdates();
+        }
+    }.bind(this), 300000);
 };
 
 /**
@@ -74,6 +81,10 @@ VDRest.Recordings.Model.List.prototype.initList = function () {
  * fetch resource model and load updates
  */
 VDRest.Recordings.Model.List.prototype.getUpdates = function () {
+
+    if (!this.hasCollection) {
+        return;
+    }
 
     this.module.getResource(this.collectionItemModel).load({
         "url" : 'recordingsUpdates',
