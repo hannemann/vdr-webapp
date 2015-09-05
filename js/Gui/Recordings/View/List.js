@@ -67,11 +67,8 @@ Gui.Recordings.View.List.prototype.renderFirstLevel = function () {
 
     this.tree = this.getTree();
     this.tree.view.node.empty();
+    $window.one('recording-directories-dispatched', this.renderDirectories.bind(this));
     this.tree.dispatchView();
-
-    setTimeout(function () {
-        this.renderDirectories();
-    }.bind(this), 20);
 };
 
 Gui.Recordings.View.List.prototype.renderDirectories = function () {

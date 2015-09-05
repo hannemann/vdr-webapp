@@ -115,6 +115,10 @@ VDRest.Lib.Config.prototype.init = function () {
         VDRest.Lib.Config.prototype.defaults.pixelPerSecond = 6/60;
     }
 
+    if (!this.getItem('recordingsSyncId')) {
+        this.setItem('recordingsSyncId', Date.now().toString());
+    }
+
     this.initFieldValues();
 
     return this;

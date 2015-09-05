@@ -65,6 +65,8 @@ Gui.Recordings.Controller.List.Directory.prototype.dispatchView = function (posi
 
         this.addObserver();
     }
+
+    $.event.trigger('recording-directories-dispatched');
 };
 
 /**

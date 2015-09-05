@@ -66,7 +66,8 @@ Gui.Recordings.Controller.List.prototype.addObserver = function () {
         this.view.node.on('touchmove', this.preventReloadHandler);
     }
 
-    $window.on("gui-recording.edited-file-loaded", this.refresh.bind(this));
+    $window.on("gui-recording.edited-file-loaded." + this._class, this.refresh.bind(this));
+    $document.on('recordingsupdatesloaded.' + this._class, this.refresh.bind(this));
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -77,7 +78,8 @@ Gui.Recordings.Controller.List.prototype.removeObserver = function () {
         this.view.node.off('touchmove', this.preventReloadHandler);
     }
 
-    $window.off("gui-recording.edited-file-loaded");
+    $window.off("gui-recording.edited-file-loaded." + this._class);
+    $document.off('recordingsupdatesloaded.' + this._class);
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };
@@ -126,8 +128,6 @@ Gui.Recordings.Controller.List.prototype.refresh = function () {
     this.module.cache.invalidateClasses('List.Directory');
     this.module.cache.invalidateClasses('List.Recording');
 
-    this.iterateRecordings();
-
     $window.one("gui-recordings.root.ready", function () {
         directories.forEach(function (controller) {
 
@@ -151,6 +151,8 @@ Gui.Recordings.Controller.List.prototype.refresh = function () {
         });
 
     }.bind(this));
+
+    this.iterateRecordings();
 };
 
 /**

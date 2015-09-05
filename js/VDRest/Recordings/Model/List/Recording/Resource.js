@@ -28,7 +28,8 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
 VDRest.Recordings.Model.List.Recording.Resource.prototype.urls = {
 
     "delete" : "recordings",
-    "recordingList" : "recordings.json"
+    "recordingList" : "recordings.json?syncId=" + VDRest.config.getItem('recordingsSyncId'),
+    "recordingsUpdates" : "recordings/updates.json?syncId=" + VDRest.config.getItem('recordingsSyncId')
 };
 /**
  * retrieve url encoded path
@@ -70,7 +71,11 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.deleteRecording = func
 
     $document.one('window.confirm.confirm', function () {
 
-        request.url = this.getBaseUrl() + 'recordings' + this.getFileNameUrlEncoded(recording);
+        request.url = this.getBaseUrl()
+            + 'recordings'
+            + this.getFileNameUrlEncoded(recording)
+            + "?syncId=" + VDRest.config.getItem('recordingsSyncId');
+        
         request.method = 'DELETE';
 
         this.fetchAsync(request, function (response) {
@@ -288,8 +293,29 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getCutterStatus = func
         }
     }.bind(this));
 };
+
 /**
  * get edited file status
+ */
+VDRest.Recordings.Model.List.Recording.Resource.prototype.getEditedFile = function (recording) {
+
+    var request = {
+        "url": this.getBaseUrl() + 'recordings/editedfile' + this.getFileNameUrlEncoded(recording) + '.json',
+        "method": "GET"
+    };
+
+    this.fetchAsync(request, function (response) {
+        $.event.trigger({
+            "type": "vdrest-api-actions.edited-file-loaded." + recording.eventKey,
+            "payload" : {
+                "data" : response
+            }
+        });
+    }.bind(this));
+};
+
+/**
+ * get updates
  */
 VDRest.Recordings.Model.List.Recording.Resource.prototype.getEditedFile = function (recording) {
 

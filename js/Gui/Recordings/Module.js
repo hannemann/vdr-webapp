@@ -118,7 +118,7 @@ Gui.Recordings.prototype.contextMenu = {
         "scope" : 'Gui.Recordings',
         "fn" : function () {
 
-            this.refresh();
+            this.store.getModel('List').getUpdates();
         }
     }
 };
@@ -141,19 +141,6 @@ Gui.Recordings.prototype.destruct = function () {
     VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = true;
     this.getController('List').destructView();
     this.cache.flush();
-};
-
-/**
- * refresh
- */
-Gui.Recordings.prototype.refresh = function () {
-
-    var listController = this.getController('List');
-
-    $document.one('recordingsloaded', listController.refresh.bind(listController));
-
-    this.store.getModel('List').flushCollection();
-    this.store.getModel('List').initList();
 };
 
 /**
