@@ -35,7 +35,7 @@ Gui.Window.Controller.Confirm.prototype.addObserver = function () {
 
     this.view.cancel.one('click', this.cancel.bind(this));
 
-    $window.on("resize", this.setPosition.bind(this));
+    $window.on("resize.confirm-window", this.setPosition.bind(this));
 };
 
 /**
@@ -47,7 +47,7 @@ Gui.Window.Controller.Confirm.prototype.removeObserver = function () {
 
     this.view.cancel.off('click');
 
-    $window.off("resize");
+    $window.off("resize.confirm-window");
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };

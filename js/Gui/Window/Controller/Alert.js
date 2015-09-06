@@ -37,7 +37,7 @@ Gui.Window.Controller.Alert.prototype.addObserver = function () {
         this.view.settings.one('click', this.settingsAction.bind(this))
     }
 
-    $window.on("resize", this.setPosition.bind(this));
+    $window.on("resize.alert-window", this.setPosition.bind(this));
 };
 
 /**
@@ -47,7 +47,7 @@ Gui.Window.Controller.Alert.prototype.removeObserver = function () {
 
     this.view.ok.off('click');
 
-    $window.off("resize");
+    $window.off("resize.alert-window");
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };

@@ -236,7 +236,7 @@ Gui.Epg.Controller.Epg.prototype.getIsChannelView = function () {
 Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 
     $window.on('orientationchange.epg-controller', this.handleOrientationChange.bind(this));
-    $window.on('resize', this.setMetrics.bind(this));
+    $window.on('resize.epg', this.setMetrics.bind(this));
     $document.on('epg.channelview', this.setIsChannelView.bind(this));
 };
 
@@ -246,7 +246,7 @@ Gui.Epg.Controller.Epg.prototype.addObserver = function () {
 Gui.Epg.Controller.Epg.prototype.removeObserver = function () {
 
     $window.off('orientationchange.epg-controller');
-    $window.off('resize');
+    $window.off('resize.epg');
     $document.off('epg.channelview');
 };
 

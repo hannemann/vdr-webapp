@@ -56,7 +56,7 @@ Gui.Form.Controller.Window.Input.prototype.addObserver = function () {
 
     this.view.cancel.on('click', this.cancel.bind(this));
 
-    $window.on("resize", this.setPosition.bind(this));
+    $window.on("resize.input-window", this.setPosition.bind(this));
 };
 
 /**
@@ -73,7 +73,7 @@ Gui.Form.Controller.Window.Input.prototype.removeObserver = function () {
 
     this.view.cancel.off('click');
 
-    $window.off("resize");
+    $window.off("resize.input-window");
 };
 
 /**
