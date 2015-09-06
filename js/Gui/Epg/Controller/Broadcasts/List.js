@@ -154,7 +154,10 @@ Gui.Epg.Controller.Broadcasts.List.prototype.detachChannelView = function () {
 
 /**
  * iterate loaded broadcasts
- * @param collection
+ * @param {jQuery.Event} collection
+ * @param {function(function)} collection.iterate
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast[]} collection.collection
+ * @param {string} collection._class
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (collection) {
 

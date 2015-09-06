@@ -195,6 +195,7 @@ Gui.Epg.Controller.Epg.prototype.setMetrics = function () {
 /**
  * toggle channelview
  * @param {jQuery.Event} e
+ * @param {Gui.Epg.Controller.Channels.Channel|{}} e.payload
  * @returns {Gui.Epg.Controller.Epg}
  */
 Gui.Epg.Controller.Epg.prototype.setIsChannelView = function (e) {

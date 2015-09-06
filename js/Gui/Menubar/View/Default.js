@@ -96,6 +96,7 @@ Gui.Menubar.View.Default.prototype.addSettingsButton = function () {
 
 /**
  * @param {jQuery.Event} e
+ * @param {Object.<string>} e.payload
  * @returns {Gui.Menubar.View.Default}
  */
 Gui.Menubar.View.Default.prototype.setTitle = function (e) {
