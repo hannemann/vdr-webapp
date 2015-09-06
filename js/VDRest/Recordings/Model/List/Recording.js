@@ -1,6 +1,30 @@
 /**
- * Channels resource
- * @property {{}} data
+ * @typedef {{}} recordingData
+ * @property {number} number
+ * @property {string} name
+ * @property {string} file_name
+ * @property {string} relative_file_name
+ * @property {string} inode
+ * @property {boolean} is_new
+ * @property {boolean} is_edited
+ * @property {boolean} is_pes_recording
+ * @property {number} duration
+ * @property {number} filesize_mb
+ * @property {string} channel_id
+ * @property {number} frames_per_second
+ * @property {Array.<string>} marks
+ * @property {string} event_title
+ * @property {string} event_short_text
+ * @property {string} event_description
+ * @property {number} event_start_time
+ * @property {number} event_duration
+ * @property {additionalMediaMovie|additionalMediaEpisode} additional_media
+ * @property {string} sync_action
+ */
+
+/**
+ * recordings data model
+ * @property {recordingData} data
  * @property {function} getData
  * @constructor
  */
@@ -54,6 +78,9 @@ VDRest.Recordings.Model.List.Recording.prototype.removeObserver = function () {
 /**
  * process update event
  * @param {jQuery.Event} e
+ * @param {{}} e.payload
+ * @param {{}} e.payload.data
+ * @param {recordingData[]} e.payload.data.recordings
  */
 VDRest.Recordings.Model.List.Recording.prototype.update = function (e) {
 

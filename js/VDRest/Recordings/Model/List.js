@@ -1,6 +1,8 @@
 /**
  * Channels resource
  * @constructor
+ * @property {VDRest.Recordings.Model.List.Recording[]} collection        store for recordings models
+ * @property {VDRest.Recordings.Model.List.Recording[]} currentResult     last loaded recordings
  */
 VDRest.Recordings.Model.List = function () {};
 
@@ -34,8 +36,13 @@ VDRest.Recordings.Model.List.prototype.resultCollection = 'recordings';
 VDRest.Recordings.Model.List.prototype.hasCollection = false;
 
 /**
+ * @type {boolean}
+ */
+VDRest.Recordings.Model.List.prototype.lastSync = 0;
+
+/**
  * event to trigger when collection is loaded
- * @type {{collectionloaded: string}}
+ * @type {Object.<string>}
  */
 VDRest.Recordings.Model.List.prototype.events = {
 
@@ -44,20 +51,34 @@ VDRest.Recordings.Model.List.prototype.events = {
 };
 
 /**
- * @member {object} collection  store for channel models
- * @member {number} data.count  number of currently stored channel objects
+ * initialize
  */
 VDRest.Recordings.Model.List.prototype.init = function () {
+
+    var syncInterval = VDRest.config.getItem('recordingsSyncInterval');
 
     this.collection = [];
     this.currentResult = [];
 
-    setInterval(function () {
-        // TODO: config
-        if (!navigator.connection || navigator.connection.type != 'none') {
-            this.getUpdates();
+    setInterval(this.autoUpdate.bind(this), syncInterval);
+
+    $document.on('visibilitychange', function () {
+
+        if (VDRest.helper.isVisible() && Date.now() - this.lastSync > syncInterval) {
+
+            this.autoUpdate()
         }
-    }.bind(this), 300000);
+    }.bind(this));
+};
+
+/**
+ * trigger update if connection is available
+ */
+VDRest.Recordings.Model.List.prototype.autoUpdate = function () {
+
+    if (VDRest.helper.hasConnection()) {
+        this.getUpdates();
+    }
 };
 
 /**
@@ -99,32 +120,7 @@ VDRest.Recordings.Model.List.prototype.getUpdates = function () {
  */
 VDRest.Recordings.Model.List.prototype.processUpdates = function (result) {
 
-    result[this.resultCollection].forEach(function (recording) {
-
-        var exists = this.hasRecording(recording.file_name),
-            model = this.module.getModel(this.collectionItemModel, recording);
-
-        switch (recording.sync_action) {
-            case 'add':
-                if(exists) {
-                    this.updateRecording(model, recording)
-                } else {
-                    this.collection.push(model);
-                }
-                break;
-            case 'delete':
-                if (exists) {
-                    this.deleteFromCollection(model);
-                    delete this.module.cache.store.Model[this.collectionItemModel][recording.file_name];
-                }
-                break;
-            default:
-                if (exists) {
-                    this.updateRecording(model, recording);
-                }
-        }
-
-    }.bind(this));
+    result[this.resultCollection].forEach(this.doUpdate.bind(this));
 
     if (result[this.resultCollection].length > 0) {
         $.event.trigger({
@@ -132,6 +128,36 @@ VDRest.Recordings.Model.List.prototype.processUpdates = function (result) {
         });
     }
 
+    this.lastSync = Date.now();
+};
+
+/**
+ * @param {recordingData} recording
+ */
+VDRest.Recordings.Model.List.prototype.doUpdate = function (recording) {
+
+    var exists = this.hasRecording(recording.file_name),
+        model = this.module.getModel(this.collectionItemModel, recording);
+
+    switch (recording.sync_action) {
+        case 'add':
+            if(exists) {
+                this.updateRecording(model, recording)
+            } else {
+                this.collection.push(model);
+            }
+            break;
+        case 'delete':
+            if (exists) {
+                this.deleteFromCollection(model);
+                delete this.module.cache.store.Model[this.collectionItemModel][recording.file_name];
+            }
+            break;
+        default:
+            if (exists) {
+                this.updateRecording(model, recording);
+            }
+    }
 };
 
 /**

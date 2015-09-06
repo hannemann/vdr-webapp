@@ -96,6 +96,21 @@ VDRest.Helper.prototype.getCanCancelEvent = function (e) {
 };
 
 /**
+ * determine if device is connected to any network
+ * we assume that desktop browsers are always connected
+ * @return {boolean}
+ */
+VDRest.Helper.prototype.hasConnection = function () {
+
+    return (!navigator.connection || navigator.connection.type != 'none')
+};
+
+VDRest.Helper.prototype.isVisible = function () {
+
+    return 'visible' === document.visibilityState;
+};
+
+/**
  * retrieve instance of Date
  * @returns {Date}
  */

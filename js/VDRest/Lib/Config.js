@@ -215,7 +215,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "showRadio"             :   "false",
     "channelLimit"          :   "100",
     "startChannel"          :   "1",
-    "useSlowServerStrategy": "false",
+    "useSlowServerStrategy" : "false",
     "loadAllChannelsInitially": "false",
     "useHtmlPlayer"         :   "false",
     "defaultSorting"        :   "dateDesc",
@@ -225,9 +225,10 @@ VDRest.Lib.Config.prototype.defaults = {
     "favourites"            :   "",
     "osdDelay"              :   100,
     "osdLoadInterval"       :   2000,
-    "showImageInEpgView": "true",
-    "firstTime": "true",
-    "indicateChannelHD": "false"
+    "showImageInEpgView"    : "true",
+    "firstTime"             : "true",
+    "indicateChannelHD"     : "false",
+    "recordingsSyncInterval": 1800000
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -441,6 +442,46 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "boolean",
         "label": "Use VPS if available",
         "info": "not recommended if epg grabbers are in use"
+    },
+    "recordingsSyncInterval"   :   {
+        "category" : "recordings",
+        "type" : "enum",
+        "label": "Sync Interval",
+        "dataType" : "number",
+        "values" : {
+            "300000" : {
+                "label" : "5 Minutes",
+                "value" : 300000
+            },
+            "900000" : {
+                "label" : "15 Minutes",
+                "value" : 900000
+            },
+            "1800000" : {
+                "label" : "30 Minutes",
+                "value" : 1800000
+            },
+            "3600000" : {
+                "label" : "1 Hour",
+                "value" : 3600000
+            },
+            "7200000" : {
+                "label" : "2 Hours",
+                "value" : 7200000
+            },
+            "14400000" : {
+                "label" : "4 Hours",
+                "value" : 14400000
+            },
+            "28800000" : {
+                "label" : "8 Hours",
+                "value" : 28800000
+            }/*,
+            "5000" : {
+                "label" : "debug",
+                "value" : 5000
+            }*/
+        }
     },
     "streamdevActive"    :   {
         "category" : "streaming",
