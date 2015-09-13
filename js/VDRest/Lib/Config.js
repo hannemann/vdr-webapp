@@ -228,7 +228,8 @@ VDRest.Lib.Config.prototype.defaults = {
     "showImageInEpgView"    : "true",
     "firstTime"             : "true",
     "indicateChannelHD"     : "false",
-    "recordingsSyncInterval": 1800000
+    "recordingsSyncInterval": 1800000,
+    "supportChromecast"     : "false"
 };
 
 VDRest.Lib.Config.prototype.categories = {
@@ -544,6 +545,16 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "boolean",
         "label" : "Use HTML5 Video Player",
         "info" : "An extended externremux.sh is needed"
+    },
+    "supportChromecast":   {
+        "depends" : {
+            "streamdevActive": true,
+            "useHtmlPlayer": [1, 2]
+        },
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Support Chromecast",
+        "info" : "Shows the Chromecast button when controls hide"
     },
     "streamdevParams"  :   {
         "depends" : "streamdevActive",

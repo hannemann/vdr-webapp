@@ -1,11 +1,11 @@
 
-::-webkit-media-controls-overlay-enclosure,
+body:not([class~="support-chromecast"]) ::-webkit-media-controls-overlay-enclosure,
 ::-webkit-media-controls-enclosure {
     display:none !important;
 }
-/*::-webkit-media-controls-overlay-enclosure input[type="button"]:not([pseudo]) {*/
-    /*display: block !important;*/
-/*}*/
+video::-internal-media-controls-overlay-cast-button {
+    display: flex !important;
+}
 :-webkit-full-screen {
     background: black !important;
 }

@@ -1,5 +1,6 @@
 /**
  * @constructor
+ * @property {Gui.Video.Controller.Player} player
  */
 Gui.Video.Controller.Player.Controls = function () {};
 
@@ -126,4 +127,11 @@ Gui.Video.Controller.Player.Controls.prototype.doDestruct = function () {
     this.layer.destructView();
     VDRest.Abstract.Controller.prototype.destructView.call(this);
     delete this.player.controls;
+
+    if (VDRest.config.getItem('supportChromecast') && this.player.isPlaying) {
+        setTimeout(function () {
+            document.body.classList.remove('support-chromecast');
+        }, 5000);
+        document.body.classList.add('support-chromecast');
+    }
 };
