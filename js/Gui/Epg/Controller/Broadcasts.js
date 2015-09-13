@@ -381,6 +381,7 @@ Gui.Epg.Controller.Broadcasts.prototype.setScrollData = function () {
     this.currentScrollTime = currentScrollTime;
     this.visibleEndTime = visibleEndTime;
     this.currentScrollLeft = currentScrollLeft;
+    this.currentScrollTop = Math.abs(this.epgController.getScrollTop());
 
     return this;
 };

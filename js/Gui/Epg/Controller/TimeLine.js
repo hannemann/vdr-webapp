@@ -28,7 +28,8 @@ Gui.Epg.Controller.TimeLine.prototype.dispatchView = function () {
     });
 
 
-    this.broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0);
+    this.broadcastsController = this.module.getController('Broadcasts');
+    this.broadcastsWrapper = this.broadcastsController.view.wrapper.get(0);
     this.epgController = this.module.getController('Epg');
     this.currentDate = this.view.node.find('*[data-date]:first').attr('data-date');
 
@@ -66,8 +67,8 @@ Gui.Epg.Controller.TimeLine.prototype.update = function () {
  */
 Gui.Epg.Controller.TimeLine.prototype.handleScroll = function (e) {
 
-    var scroll = e.x ? e.x : this.broadcastsWrapper.scrollLeft * -1,
-        ddOffset = this.broadcastsWrapper.offsetLeft, me = this;
+    var scroll = "undefined" !== typeof e.x ? e.x : this.broadcastsWrapper.scrollLeft * -1,
+        ddOffset = this.broadcastsController.view.left, me = this;
 
     e = e || {};
 

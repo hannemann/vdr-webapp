@@ -29,6 +29,7 @@ Gui.Epg.View.Broadcasts.prototype.init = function () {
 Gui.Epg.View.Broadcasts.prototype.render = function () {
 
     this.wrapper.appendTo(this.parentView.node);
+    this.left = this.wrapper[0].offsetLeft;
     this.updateIndicator();
 
 

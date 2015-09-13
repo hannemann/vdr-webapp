@@ -257,7 +257,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
 
         metrics = this.epgController.getMetrics();
         threshold = this.epgController.metrics.viewPort.width * this.overflowCount;
-        vOffset = this.view.node.offset();
+        vOffset = {
+            "left" : -this.broadcastsController.currentScrollLeft + this.broadcastsController.view.left
+        };
 
         for (i; i < l; i++) {
 
@@ -424,13 +426,13 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isInView = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () {
 
-    var offset = this.view.node.offset(),
-        top = offset.top - this.view.parentView.node.offset().top,
-        height = this.view.node.height(),
+    var offset = {"top" : this.view.offsetTop},
+        top = this.view.offsetTop,
+        height = this.view.height,
         bottom = top + height,
         metrics = this.epgController.metrics,
         threshold = metrics.win.height * this.overflowCount,
-        scrollTop = Math.abs(this.epgController.getScrollTop()),
+        scrollTop = this.broadcastsController.currentScrollTop,
         isInView;
 
     if (!this.lastOffset || offset.top <= this.lastOffset.top) {
@@ -441,7 +443,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () 
         isInView = bottom + threshold >= scrollTop && bottom < scrollTop + metrics.win.height + threshold / 2;
     }
 
-    this.lastOffset = offset;
+    //this.lastOffset = offset;
+    this.lastOffset = {"top" : top};
 
     return isInView;
 

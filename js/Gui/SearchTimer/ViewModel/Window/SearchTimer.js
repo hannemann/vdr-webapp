@@ -1432,7 +1432,6 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDateLimitFieldValues =
 
     for (i;i<=days;i++) {
         d = new Date(todayLimit * 1000 + i * 86400000);
-        debugger;
         values['days_' + i.toString()] = {
             "label": d.format('epgSearchDateLimit_' + VDRest.app.language),
             "value": todayLimit + i * 86400,

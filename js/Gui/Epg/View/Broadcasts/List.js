@@ -23,6 +23,18 @@ Gui.Epg.View.Broadcasts.List.prototype.init = function () {
 };
 
 /**
+ * @var {jQuery} node
+ */
+Gui.Epg.View.Broadcasts.List.prototype.render = function () {
+
+    VDRest.Abstract.View.prototype.render.call(this);
+
+    this.offsetTop = this.node[0].offsetTop;
+    this.height = this.node[0].offsetHeight;
+    this.left = this.node[0].offsetLeft;
+};
+
+/**
  * set list visibility
  */
 Gui.Epg.View.Broadcasts.List.prototype.setIsVisible = function (visible) {
