@@ -25,6 +25,8 @@ VDRest.Api = function () {};
 VDRest.App = function () {
 	this.current = null;
     this.initWithoutConfig = false;
+    this.historyId = 0;
+    window.addEventListener('popstate', this.handlePopState.bind(this));
 };
 
 /**
@@ -43,16 +45,10 @@ VDRest.App.prototype.checkConfig = function () {
 VDRest.App.prototype.modules = {};
 
 /**
- * destroy callbacks in cas of history is used
- * @type {Array}
+ * store callbacks for history action
+ * @type {Object.<function>}
  */
-VDRest.App.prototype.destroyer = [];
-
-/**
- * observe if location hash changes to observeHash
- * @type {Boolean|String}
- */
-VDRest.App.prototype.observeHash = [];
+VDRest.App.prototype.historyCallbacks = {};
 
 /**
  * add module instance to buffer
@@ -90,7 +86,7 @@ VDRest.App.prototype.run = function () {
 
     this.language = VDRest.config.getItem('language');
 
-    this.startedFullscreen = VDRest.helper.getIsFullscreen();
+    //this.startedFullscreen = VDRest.helper.getIsFullscreen();
 
     if (this.isRegistered(startConfig)) {
 
@@ -102,12 +98,7 @@ VDRest.App.prototype.run = function () {
         this.initial = true;
     }
 
-    if ("object" === typeof window.onhashchange) {
-        window.addEventListener('hashchange', this.locationChange.bind(this));
-
-    } else {
-        this.pollLocation();
-    }
+    this.startModule = start;
 
     if (!this.initWithoutConfig) {
 
@@ -141,129 +132,111 @@ VDRest.App.prototype.run = function () {
 };
 
 /**
- * retrieve location hash
+ * retrieve location pathname
  * @return {String}
  */
-VDRest.App.prototype.getLocationHash = function () {
-    return window.location.hash.replace('#', '');
+VDRest.App.prototype.getLocationSearch = function () {
+    return window.location.search.replace('?', '');
 };
 
 /**
- * set location hash
- * @param hash
- * @return {*}
+ * push history state
+ * @param {string} path
+ * @param {function} [callback]
+ * @return {VDRest.App}
  */
-VDRest.App.prototype.setLocationHash = function (hash) {
+VDRest.App.prototype.pushHistoryState = function (path, callback) {
 
-    if (this.replaceLocation) {
-        this.replaceLocation = undefined;
-        window.location.replace(window.location.href.replace(/(#.*$|$)/, '#' + hash));
-    } else {
-        window.location.hash = '#' + hash;
+    var currentState;
+
+    if ("function" === typeof callback) {
+        this.historyCallbacks[path] = callback;
+        currentState = history.state;
+        currentState.callback = path;
+        this.replaceHistoryState(currentState);
     }
-
+    history.pushState(this.getHistoryState(), document.title, '/?' + path);
     return this;
 };
 
 /**
- * poll location hash and dispatch changes
+ * @param {Object.<number|string>} state
  */
-VDRest.App.prototype.pollLocation = function () {
+VDRest.App.prototype.replaceHistoryState = function (state) {
 
-    setInterval(function () {
-
-        this.locationChange();
-    }.bind(this), 100);
+    history.replaceState(state, document.title, '/?' + this.getLocationSearch());
 };
 
 /**
- * react on location change event
+ * retrieve current state
+ * @return {Object.<string|number>}
  */
-VDRest.App.prototype.locationChange = function () {
-    var start = VDRest.config.getItem('start'), hash;
+VDRest.App.prototype.getHistoryState = function () {
 
-    hash = this.getLocationHash();
+    this.historyId = history.state.historyId + 1;
 
-    if ("" === hash) {
+    return {
+        "module": this.getCurrent(),
+        "windows": this.getModule('Gui.Window').windowNames,
+        "historyId": this.historyId
+    };
+};
 
-        hash = start;
+/**
+ * @param {Event} e
+ * @param {Object.<string|number>} e.state
+ */
+VDRest.App.prototype.handlePopState = function (e) {
+
+    var winModule = this.getModule('Gui.Window'), currentState, back, forward;
+
+    if (!e.state) return;
+
+    back = e.state.historyId <= this.historyId;
+    forward = !back;
+
+    if (forward) {
+        history.back();
+        return;
     }
 
-    if (hash !== this.current && this.isRegistered(hash)) {
+    this.historyId = e.state.historyId;
 
-        this.dispatch(hash);
+    VDRest.helper.log(e.state);
 
-    }
-    if (this.observeHash[this.observeHash.length-1] === hash) {
-
-        this.destroy();
-
+    if (this.noHistoryAction) {
+        this.noHistoryAction = false;
+        return;
     }
 
-};
+    if (e.state.callback) {
 
-/**
- * Method adds callback to queue that is called if eventName is fired
- *
- * @param {String} eventName
- * @param {Function} callback
- * @param {String} newState
- */
-VDRest.App.prototype.saveHistoryState = function (eventName, callback, newState) {
+        this.historyCallbacks[e.state.callback]();
+        delete this.historyCallbacks[e.state.callback];
+        currentState = history.state;
+        delete currentState.callback;
+        this.replaceHistoryState(currentState);
 
-    this.addDestroyer(eventName, callback);
-    this.observe();
-    this.setLocationHash(newState);
+    } else if (back && winModule.windows.length > 0) {
 
-};
-
-/**
- * remove callback and hash
- * @param {string} eventName
- * @param {string} state
- */
-VDRest.App.prototype.removeHistoryState = function (eventName, state) {
-
-    this.observeHash.splice(
-        this.observeHash.indexOf(state), 1
-    );
-    this.destroyer.splice(
-        this.destroyer.indexOf(eventName), 1
-    );
-
-};
-
-VDRest.App.prototype.observe = function (hash) {
-
-    this.observeHash.push(hash || this.getLocationHash() || VDRest.config.getItem('start'));
-};
-
-/**
- * add destroyer method
- * @param {string} destroyer
- * @param {function} callback
- */
-VDRest.App.prototype.addDestroyer = function (destroyer, callback) {
-
-    this.destroyer.push(destroyer);
-    $document.one(destroyer, callback);
-};
-
-/**
- * call last added destroyer
- */
-VDRest.App.prototype.destroy = function () {
-
-    var destroyer = this.destroyer.pop();
-    this.observeHash.pop();
-
-    if ("undefined" !== typeof destroyer) {
-
+        winModule.getLastRegister().destructView();
+        winModule.popRegister();
         $.event.trigger({
-            "type" : destroyer,
-            "skipHistoryBack" : true
+            "type" : "window.close"
         });
+
+    } else {
+
+        this.dispatch(e.state.module);
     }
+};
+
+/**
+ * flag no history action
+ */
+VDRest.App.prototype.setNoHistoryActionFlag = function () {
+
+    this.noHistoryAction = true;
 };
 
 /**
@@ -331,24 +304,53 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
             "payload" : this.modules[this.current]
         });
 
-        if (moduleName !== this.getLocationHash()) {
 
-            if (this.startup) {
-                this.startup = false;
-                this.replaceLocation = true;
-            }
-            this.setLocationHash(moduleName);
-        }
-        this.startup = false;
-        this.replaceLocation = false;
 		this.modules[moduleName].dispatch(callback);
 		this.current = moduleName;
+
+        if (this.startup) {
+
+            history.replaceState({
+                    "module": moduleName,
+                    "windows" : [],
+                    "historyId" : this.historyId
+                },
+                document.title,
+                location.pathname
+            );
+
+
+    } else if (this.canModifyState(moduleName)) {
+
+            this.pushHistoryState(moduleName);
+        }
+        this.startup = false;
 
         $.event.trigger({
             "type":"dispatch.after",
             "payload" : this.modules[this.current]
         });
-	}
+	} else if (this.getLocationSearch().indexOf('Window-') === 0) {
+
+        $.event.trigger({
+            "type" : "window.request",
+            "payload" : {
+                "type" : this.getLocationSearch().replace('Window-', '')
+            }
+        });
+    }
+};
+
+/**
+ * determine if module can dispatch
+ * @param {string} moduleName
+ * @return {boolean}
+ */
+VDRest.App.prototype.canModifyState = function (moduleName) {
+
+    var locPath = this.getLocationSearch();
+
+    return moduleName !== locPath && !(locPath === '' && moduleName === this.startModule);
 };
 
 /**
@@ -356,7 +358,6 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
  */
 VDRest.App.prototype.getConfig = function () {
 
-//	this.modules['Gui.Config'].init();
     this.dispatch('Gui.Config', this.run.bind(this));
 };
 

@@ -120,10 +120,9 @@ Gui.Epg.Controller.Channels.Channel.prototype.handleUp = function (e) {
                 this.module.getController('Channels').handleChannelView({"payload" : this});
             } else {
 
-                VDRest.app.saveHistoryState(
-                    this.eventPrefix + '.hashChanged',
-                    this.module.toggleChannelView.bind(this.module),
-                    'channelView'
+                VDRest.app.pushHistoryState(
+                    'epg-channelview',
+                    this.module.toggleChannelView.bind(this.module)
                 );
                 this.module.toggleChannelView(this);
             }

@@ -259,9 +259,8 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
 
     if (!this.data.isMinimized) {
         this.cancelFullscreen();
-        this.destroyer = VDRest.app.destroyer.pop();
-        this.observeHash = VDRest.app.getLocationHash();
-        VDRest.app.observeHash.pop();
+        this.historyState = history.state;
+        VDRest.app.setNoHistoryActionFlag();
         history.back();
         document.body.classList.add('video-minimized');
         setTimeout(function () {
@@ -271,9 +270,7 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         }.bind(this), 2000);
         this.data.isMinimized = true;
     } else {
-        VDRest.app.observe();
-        VDRest.app.setLocationHash(this.observeHash);
-        VDRest.app.destroyer.push(this.destroyer);
+        history.pushState(this.historyState, document.title, location.pathname);
         document.body.classList.remove('video-minimized');
         this.data.isMinimized = false;
     }

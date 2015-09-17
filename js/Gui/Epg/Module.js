@@ -58,10 +58,9 @@ Gui.Epg.prototype.contextMenu = {
 
             if ("off" === this.contextMenu.Channelview.state) {
 
-                VDRest.app.saveHistoryState(
-                    'channelview.hashChanged',
-                    this.toggleChannelView.bind(this),
-                    'channelView'
+                VDRest.app.pushHistoryState(
+                    'epg-channelview',
+                    this.toggleChannelView.bind(this)
                 );
                 this.toggleChannelView(this.getController('Channels').channelsList[0]);
 

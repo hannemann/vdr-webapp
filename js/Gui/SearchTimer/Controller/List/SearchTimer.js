@@ -283,10 +283,9 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = functio
     module.flush();
     controller = module.getController('List');
 
-    VDRest.app.saveHistoryState(
-        'SearchTimer.ShowTimers.hashChanged',
-        callback,
-        this.module.name + '-ShowTimer' + this.data.id
+    VDRest.app.pushHistoryState(
+        this.module.name + '-ShowTimer' + this.data.id,
+        callback
     );
 
     controller.applySearchTimerFilter(this.data.id)

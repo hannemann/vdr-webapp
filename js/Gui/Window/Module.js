@@ -28,6 +28,7 @@ Gui.Window.prototype.init = function () {
     var me = this;
 
     this.windows = [];
+    this.windowNames = [];
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
@@ -55,19 +56,12 @@ Gui.Window.prototype.dispatch = function (payload) {
     if (!(controller.singleton && controller.view.isRendered)) {
 
         if (!controller.noHistory) {
+
             suffix += payload.hashSuffix ? payload.hashSuffix : '';
 
-            VDRest.app.saveHistoryState(
-                controller.eventPrefix + '.hashChanged',
-                function () {
-                    this.popRegister();
-                    $.event.trigger({
-                        "type" : "window.close"
-                    });
-                    controller.destructView();
-                }.bind(this),
-                this.name + '-' + suffix
-            );
+            if (!payload.omitPushHistory) { // dont push new state in case of history.forward
+                VDRest.app.pushHistoryState(this.name + '-' + suffix);
+            }
 
             this.register(controller);
         }
@@ -78,11 +72,13 @@ Gui.Window.prototype.dispatch = function (payload) {
 
 Gui.Window.prototype.register = function (controller) {
 
+    this.windowNames.push(controller.keyInCache);
     this.windows.push(controller);
 };
 
 Gui.Window.prototype.popRegister = function () {
 
+    this.windowNames.pop();
     this.windows.pop();
 };
 
