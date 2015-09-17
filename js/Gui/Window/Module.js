@@ -28,6 +28,7 @@ Gui.Window.prototype.init = function () {
     var me = this;
 
     this.windows = [];
+    this.windowNames = [];
 
     VDRest.Abstract.Module.prototype.init.call(this);
 
@@ -50,24 +51,45 @@ Gui.Window.prototype.dispatch = function (payload) {
         module = VDRest.app.getModule(module);
     }
 
+    /*
+    if (payload.dataSource) {
+        payload.data = VDRest.app.getModule(
+            payload.dataSource.module
+        ).getController(
+            payload.dataSource.className,
+            payload.dataSource.keyInCache
+        ).getData()
+    }
+    */
+
     controller = module.getController(payload.type, payload.data);
 
     if (!(controller.singleton && controller.view.isRendered)) {
 
         if (!controller.noHistory) {
+
             suffix += payload.hashSuffix ? payload.hashSuffix : '';
 
-            VDRest.app.saveHistoryState(
-                controller.eventPrefix + '.hashChanged',
-                function () {
-                    this.popRegister();
-                    $.event.trigger({
-                        "type" : "window.close"
-                    });
-                    controller.destructView();
-                }.bind(this),
-                this.name + '-' + suffix
-            );
+            if (!payload.omitPushHistory) { // dont push new state in case of history.forward
+                VDRest.app.pushHistoryState(this.name + '-' + suffix);
+                /*
+                VDRest.app.addHistoryStateInfo({
+                    "fireEvent" : {
+                        "type" : "window.request",
+                        "payload" : {
+                            "module" : module.namespace + '.' + module.name,
+                            "type" : payload.type,
+                            "dataSource" : {
+                                "module" : module.namespace + '.' + module.name,
+                                "className" : controller._class,
+                                "keyInCache" : controller.keyInCache != controller._class ? controller.keyInCache : undefined
+                            },
+                            "omitPushHistory" : true
+                        }
+                    }
+                });
+                */
+            }
 
             this.register(controller);
         }
@@ -78,11 +100,13 @@ Gui.Window.prototype.dispatch = function (payload) {
 
 Gui.Window.prototype.register = function (controller) {
 
+    this.windowNames.push(controller.keyInCache);
     this.windows.push(controller);
 };
 
 Gui.Window.prototype.popRegister = function () {
 
+    this.windowNames.pop();
     this.windows.pop();
 };
 

@@ -112,10 +112,9 @@ Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
             this.module.getView('List').node[0].scrollTop = state;
         }.bind(this);
 
-    VDRest.app.saveHistoryState(
-        controller.eventPrefix + '.hashChanged',
-        callback,
-        this.module.name + '-' + controller.eventPrefix
+    VDRest.app.pushHistoryState(
+        this.module.name + '-' + controller.eventPrefix,
+        callback
     );
 
     this.module.destruct();
@@ -136,10 +135,9 @@ Gui.SearchTimer.Controller.List.prototype.dispatchRecordings = function (e) {
             this.module.getView('List').node[0].scrollTop = state;
         }.bind(this);
 
-    VDRest.app.saveHistoryState(
-        controller.eventPrefix + '.hashChanged',
-        callback,
-        this.module.name + '-' + controller.eventPrefix
+    VDRest.app.pushHistoryState(
+        this.module.name + '-' + controller.eventPrefix,
+        callback
     );
 
     this.module.destruct();
