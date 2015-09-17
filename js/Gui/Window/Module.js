@@ -43,7 +43,7 @@ Gui.Window.prototype.init = function () {
  */
 Gui.Window.prototype.dispatch = function (payload) {
 
-    var module, suffix = payload.type, controller;
+    var module, suffix = payload.type, controller, data;
 
     module = payload.module || this;
 
@@ -51,18 +51,16 @@ Gui.Window.prototype.dispatch = function (payload) {
         module = VDRest.app.getModule(module);
     }
 
-    /*
     if (payload.dataSource) {
-        payload.data = VDRest.app.getModule(
+        data = VDRest.app.getModule(
             payload.dataSource.module
         ).getController(
             payload.dataSource.className,
             payload.dataSource.keyInCache
-        ).getData()
+        ).getWindowData()
     }
-    */
 
-    controller = module.getController(payload.type, payload.data);
+    controller = module.getController(payload.type, data);
 
     if (!(controller.singleton && controller.view.isRendered)) {
 
@@ -70,25 +68,16 @@ Gui.Window.prototype.dispatch = function (payload) {
 
             suffix += payload.hashSuffix ? payload.hashSuffix : '';
 
-            if (!payload.omitPushHistory) { // dont push new state in case of history.forward
+            if (!payload.omitPushHistoryState) { // dont push new state in case of history.forward
                 VDRest.app.pushHistoryState(this.name + '-' + suffix);
-                /*
+
+                payload.omitPushHistoryState = true;
                 VDRest.app.addHistoryStateInfo({
                     "fireEvent" : {
                         "type" : "window.request",
-                        "payload" : {
-                            "module" : module.namespace + '.' + module.name,
-                            "type" : payload.type,
-                            "dataSource" : {
-                                "module" : module.namespace + '.' + module.name,
-                                "className" : controller._class,
-                                "keyInCache" : controller.keyInCache != controller._class ? controller.keyInCache : undefined
-                            },
-                            "omitPushHistory" : true
-                        }
+                        "payload" : payload
                     }
                 });
-                */
             }
 
             this.register(controller);

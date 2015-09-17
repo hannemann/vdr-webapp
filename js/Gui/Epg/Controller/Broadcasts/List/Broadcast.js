@@ -82,11 +82,24 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestWindowAction = fun
     $.event.trigger({
         "type" : 'window.request',
         "payload" : {
-            "module" : this.windowModule,
+            "module" : [this.windowModule.namespace, this.windowModule.name].join('.'),
             "type" : "Window.Broadcast",
-            "data" : this.data
+            "dataSource" : {
+                "module" : [this.module.namespace, this.module.name].join('.'),
+                "className" : this._class,
+                "keyInCache" : this.keyInCache
+            }
         }
     })
+};
+
+/**
+ * retrieve window init data
+ * @return {*}
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.getWindowData = function () {
+
+    return this.data;
 };
 
 /**

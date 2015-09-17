@@ -25,6 +25,7 @@ VDRest.Api = function () {};
 VDRest.App = function () {
 	this.current = null;
     this.initWithoutConfig = false;
+    this.historyId = 0;
     window.addEventListener('popstate', this.handlePopState.bind(this));
 };
 
@@ -179,9 +180,12 @@ VDRest.App.prototype.addHistoryStateInfo = function (info) {
  */
 VDRest.App.prototype.getHistoryState = function () {
 
+    this.historyId = history.state.historyId + 1;
+
     return {
         "module" : this.getCurrent(),
-        "windows" : this.getModule('Gui.Window').windowNames
+        "windows" : this.getModule('Gui.Window').windowNames,
+        "historyId" : this.historyId
     };
 };
 
@@ -191,11 +195,16 @@ VDRest.App.prototype.getHistoryState = function () {
  */
 VDRest.App.prototype.handlePopState = function (e) {
 
-    var winModule = this.getModule('Gui.Window'), currentState;
+    var winModule = this.getModule('Gui.Window'), currentState, back, forward;
 
     if (!e.state) return;
 
-    VDRest.helper.log(e.state);
+    back = e.state.historyId <= this.historyId;
+    forward = !back;
+
+    this.historyId = e.state.historyId;
+
+    VDRest.helper.log(e);
 
     if (this.noHistoryAction) {
         this.noHistoryAction = false;
@@ -210,20 +219,19 @@ VDRest.App.prototype.handlePopState = function (e) {
         delete currentState.callback;
         this.replaceHistoryState(currentState);
 
-    } else if (winModule.windows.length > 0) {
+    } else if (forward && e.state.info) {
+
+        if (e.state.info.fireEvent) {
+            $.event.trigger(e.state.info.fireEvent);
+        }
+
+    } else if (back && winModule.windows.length > 0) {
 
         winModule.getLastRegister().destructView();
         winModule.popRegister();
         $.event.trigger({
             "type" : "window.close"
         });
-
-    } else if (e.state.info) {
-
-        if (e.state.info.fireEvent) {
-
-            $.event.trigger(e.state.info.fireEvent);
-        }
 
     } else {
 
@@ -310,7 +318,14 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 
         if (this.startup) {
 
-            history.replaceState({"module": moduleName}, document.title, location.pathname);
+            history.replaceState({
+                    "module": moduleName,
+                    "windows" : [],
+                    "historyId" : this.historyId
+                },
+                document.title,
+                location.pathname
+            );
 
         } else if (this.canModifyState(moduleName)) {
 

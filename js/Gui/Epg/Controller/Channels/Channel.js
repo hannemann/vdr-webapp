@@ -204,9 +204,11 @@ Gui.Epg.Controller.Channels.Channel.prototype.startStream = function (channel) {
                 "type" : "window.request",
                 "payload" : {
                     "type": "Player",
-                    "module": VDRest.app.getModule('Gui.Video'),
-                    "data" : {
-                        "sourceModel" : channel
+                    "module": 'Gui.Video',
+                    "dataSource" : {
+                        "module" : [this.module.namespace, this.module.name].join('.'),
+                        "className" : this._class,
+                        "keyInCache" : this.keyInCache
                     }
                 }
             });
@@ -215,4 +217,11 @@ Gui.Epg.Controller.Channels.Channel.prototype.startStream = function (channel) {
     } else {
         window.location.href = channel.getStreamUrl();
     }
+};
+
+Gui.Epg.Controller.Channels.Channel.prototype.getWindowData = function () {
+
+    return {
+        "sourceModel" : this.data.dataModel
+    };
 };

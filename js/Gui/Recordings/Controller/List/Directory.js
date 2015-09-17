@@ -110,15 +110,28 @@ Gui.Recordings.Controller.List.Directory.prototype.requestWindow = function (e) 
         "payload" : {
             "hashSuffix" : '~' + this.data.path,
             "type" : "Window.Directory",
-            "module" : this.module,
-            "data" : {
-                "listItem" : this.view,
-                "dispatch": this.view.renderItems.bind(this.view),
-                "path" : this.data.path,
-                "id" : this.data.path.toCacheKey()
+            "module" : [this.module.namespace, this.module.name].join('.'),
+            "dataSource" : {
+                "module" : [this.module.namespace, this.module.name].join('.'),
+                "className" : this._class,
+                "keyInCache" : this.keyInCache
             }
         }
     });
+};
+
+/**
+ * retrieve window init data
+ * @return {{listItem: Gui.Recordings.View.List.Directory, dispatch: (function(this:Gui.Recordings.View.List.Directory)|*), path: String, id: number}}
+ */
+Gui.Recordings.Controller.List.Directory.prototype.getWindowData = function () {
+
+    return {
+        "listItem" : this.view,
+        "dispatch": this.view.renderItems.bind(this.view),
+        "path" : this.data.path,
+        "id" : this.data.path.toCacheKey()
+    };
 };
 
 Gui.Recordings.Controller.List.Directory.prototype.getPosition = function () {
