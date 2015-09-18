@@ -138,14 +138,14 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.onscrollAction = function (e
 
         this.view.title.css(titleStyle);
 
-        n = this.view.header[0].offsetHeight - delta;
+        n = this.headerHeight - delta;
 
-        if (n < this.menubar.offsetHeight && this.menubarHidden) {
+        if (n < this.menuBarHeight && this.menubarHidden) {
 
             this.menuBarController.setOpaque({"payload" : false});
             this.menubarHidden = false;
 
-        } else if (n >= this.menubar.offsetHeight && !this.menubarHidden) {
+        } else if (n >= this.menuBarHeight && !this.menubarHidden) {
 
             this.menuBarController.setOpaque({"payload" : true});
             this.menubarHidden = true;
