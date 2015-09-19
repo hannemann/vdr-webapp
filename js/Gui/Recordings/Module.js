@@ -160,12 +160,7 @@ Gui.Recordings.prototype.destruct = function () {
  */
 Gui.Recordings.prototype.resync = function () {
 
-    var listController = this.getController('List');
-
-    $document.one('recordingsloaded', listController.refresh.bind(listController));
-
-    this.store.getModel('List').flushCollection();
-    this.store.getModel('List').initList();
+    this.store.getModel('List').sync();
 };
 
 /**

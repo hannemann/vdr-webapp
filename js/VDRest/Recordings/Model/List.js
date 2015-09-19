@@ -114,6 +114,22 @@ VDRest.Recordings.Model.List.prototype.getUpdates = function () {
 };
 
 /**
+ * send list of file_name,hash pairs
+ */
+VDRest.Recordings.Model.List.prototype.sync = function () {
+
+    var clientList = [];
+
+    this.collection.forEach(function (recording) {
+
+        clientList.push(recording.data.file_name + ',' + recording.data.hash);
+
+    }.bind(this));
+
+    this.module.getResource(this.collectionItemModel).getSyncList(clientList, this.processUpdates.bind(this));
+};
+
+/**
  * process updates
  * fire callback afterwards
  * @param {{}} result

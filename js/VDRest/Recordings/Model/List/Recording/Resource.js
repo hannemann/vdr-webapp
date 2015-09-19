@@ -29,7 +29,8 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.urls = {
 
     "delete" : "recordings",
     "recordingList" : "recordings.json?syncId=" + VDRest.config.getItem('recordingsSyncId'),
-    "recordingsUpdates" : "recordings/updates.json?syncId=" + VDRest.config.getItem('recordingsSyncId')
+    "recordingsUpdates" : "recordings/updates.json?syncId=" + VDRest.config.getItem('recordingsSyncId'),
+    "recordingsSync" : "recordings/sync.json"
 };
 /**
  * retrieve url encoded path
@@ -332,4 +333,22 @@ VDRest.Recordings.Model.List.Recording.Resource.prototype.getEditedFile = functi
             }
         });
     }.bind(this));
+};
+
+/**
+ * fetch syncList
+ * @param {Object.<string>} clientList
+ * @param {function} callback
+ */
+VDRest.Recordings.Model.List.Recording.Resource.prototype.getSyncList = function (clientList, callback) {
+
+    var request = {
+        "url" : this.getBaseUrl() + this.urls.recordingsSync + '?syncId=' + VDRest.config.getItem('recordingsSyncId'),
+        "method" : "POST",
+        "data" : {
+            "recordings" : clientList
+        }
+    };
+
+    this.fetchAsync(request, callback);
 };
