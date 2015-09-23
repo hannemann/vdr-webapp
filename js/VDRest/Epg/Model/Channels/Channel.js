@@ -125,9 +125,9 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function (to) {
             ? this.collection[this.collection.length-1].data.end_date
             : this.getFromDate();
 
-    if (this.loadedNextFrom[from.getTime()]) return;
+    this.loadNextFrom = from.getTime();
 
-    this.loadedNextFrom[from.getTime()] = true;
+    if (this.loadedNextFrom[this.loadNextFrom]) return;
 
     this.getResource()
         .setUrl(from, to)
@@ -135,6 +135,22 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function (to) {
             "url" : 'broadcastsHourly',
             "callback": this.processCollection.bind(this)
         });
+};
+
+/**
+ * mark from timestamp as loaded
+ * @param {{events: Array.<broadcastData>, count: number, total:number}} result
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.processCollection = function (result) {
+
+    if (result.count > 0) {
+
+        if (this.loadNextFrom) {
+            this.loadedNextFrom[this.loadNextFrom] = true;
+        }
+        this.loadNextFrom = undefined;
+    }
+    VDRest.Abstract.Model.prototype.processCollection.call(this, result);
 };
 
 /**
