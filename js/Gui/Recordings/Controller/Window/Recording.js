@@ -66,6 +66,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.addObserver = function () {
     }
 
     $document.on('persistrecordingschange-' + this.keyInCache, this.updateRecordingAction.bind(this));
+    $document.on('gui-recording.updated.' + this.keyInCache, this.updateAction.bind(this));
 
     Gui.Window.Controller.ScrollAnimateHeader.prototype.addObserver.call(this);
 };
@@ -83,6 +84,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.removeObserver = function (
     }
 
     $document.off('persistrecordingschange-' + this.keyInCache);
+    $document.off('gui-recording.updated.' + this.keyInCache);
 
     Gui.Window.Controller.ScrollAnimateHeader.prototype.removeObserver.call(this);
 };
@@ -123,7 +125,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.updateRecordingAction = fun
  */
 Gui.Recordings.Controller.Window.Recording.prototype.updateAction = function () {
 
-    var newKey = this.data.recording.dataModel.keyInCache.toCacheKey();
+    var newKey = this.data.recording.dataModel.data[this.data.recording.dataModel.cacheKey].toCacheKey();
 
     // update tabs
     $.event.trigger({
@@ -148,6 +150,8 @@ Gui.Recordings.Controller.Window.Recording.prototype.updateAction = function () 
     this.addObserver();
     this.header.text(this.data.recording.dataModel.data.name.split('~').pop());
     this.view.update();
+
+    this.module.getController('List').refresh();
 
     $.event.trigger({
         "type": "opaqueMenubar",

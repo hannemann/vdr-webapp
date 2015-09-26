@@ -75,8 +75,6 @@ Gui.Recordings.Controller.List.Recording.prototype.dispatchView = function (posi
  */
 Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
 
-    $document.on("gui-recording.updated." + this.keyInCache.toCacheKey(), this.updateAction.bind(this));
-
     this.view.node
         .on(VDRest.helper.pointerEnd, this.handleUp.bind(this))
         .on(VDRest.helper.pointerMove, this.handleMove.bind(this))
@@ -88,8 +86,6 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
  * dispatch view, init event handling
  */
 Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () {
-
-    $document.off("gui-recording.updated." + this.keyInCache.toCacheKey());
 
     this.view.node
         .off(VDRest.helper.pointerEnd)
