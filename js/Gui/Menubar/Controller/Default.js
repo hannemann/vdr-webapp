@@ -255,7 +255,7 @@ Gui.Menubar.Controller.Default.prototype.onIconClick = function (e) {
 
 Gui.Menubar.Controller.Default.prototype.setOpaque = function (e) {
 
-    if (e.payload || e.payload.set) {
+    if (true === e.payload || true === e.payload.set) {
         if (this.opaqueCalls === 0) {
             document.body.classList.add('opaque-menubar');
             this.view.drawerIndicator[0].classList.add('text-shadow');
@@ -263,7 +263,7 @@ Gui.Menubar.Controller.Default.prototype.setOpaque = function (e) {
         if ("undefined" === typeof e.payload.omitIncrement) {
             this.opaqueCalls++;
         }
-    } else if (!e.payload) {
+    } else if (false === e.payload || false === e.payload.set) {
 
         this.opaqueCalls--;
         if (this.opaqueCalls <= 0) {
