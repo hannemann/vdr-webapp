@@ -63,6 +63,11 @@ ul#menubar #refresh {
     position: relative;
     cursor: default;
 }
+
+.window-drawer .navi-button.not-ready {
+    color: rgba(255,255,255,.5);
+}
+
 .window-drawer .onAir {
     border-bottom: 1px solid rgb(95, 95, 95);
 }

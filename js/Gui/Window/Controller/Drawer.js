@@ -61,6 +61,13 @@ Gui.Window.Controller.Drawer.prototype.dispatchView = function () {
 
         this.addObserver();
 
+        this.view.getButtons().each(function (name, config) {
+
+            if ("function" === typeof config.callback) {
+                config.callback(this.view.node.find('*[data-module="' + name + '"]'));
+            }
+        }.bind(this));
+
         if ("undefined" !== typeof this.data.touchstart) {
             this.triggerPullStart();
         } else {
@@ -126,13 +133,8 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
 
         if (!this.view.buttons[i].hasClass('current')) {
 
-            if (VDRest.helper.isTouchDevice) {
-                this.view.buttons[i].on('touchstart', handlePointerActive);
-                this.view.buttons[i].on('touchend', this.stateChangedHandler);
-            } else {
-                this.view.buttons[i].on('mousedown', handlePointerActive);
-                this.view.buttons[i].on('mouseup', this.stateChangedHandler);
-            }
+            this.view.buttons[i].on(VDRest.helper.pointerStart, handlePointerActive);
+            this.view.buttons[i].on(VDRest.helper.pointerEnd, this.stateChangedHandler);
         }
     }
 
@@ -206,6 +208,7 @@ Gui.Window.Controller.Drawer.prototype.removeBackObserver = function () {
  * containing module name to be dispatched
  * close drawer only if not found
  * @param {jQuery.Event} e
+ * @param {HTMLElement} e.currentTarget
  */
 Gui.Window.Controller.Drawer.prototype.handleStateChanged = function (e) {
 

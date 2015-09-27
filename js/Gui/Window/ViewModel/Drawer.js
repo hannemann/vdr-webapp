@@ -42,7 +42,8 @@ Gui.Window.ViewModel.Drawer.prototype.getButtons = function () {
         i,
         modules = VDRest.app.modules,
         current = VDRest.app.current,
-        module;
+        moduleName,
+        moduleData;
 
     collection.initData();
 
@@ -54,12 +55,17 @@ Gui.Window.ViewModel.Drawer.prototype.getButtons = function () {
                 continue;
             }
 
-            module = modules[i].namespace+'.'+modules[i].name;
-
-            collection.setData(module, {
+            moduleName = modules[i].namespace+'.'+modules[i].name;
+            moduleData = {
                 "headline" : modules[i].headline,
-                "current" : current === module
-            });
+                "current" : current === moduleName
+            };
+
+            if ("function" === typeof modules[i].drawerCallback) {
+                moduleData.callback = modules[i].drawerCallback;
+            }
+
+            collection.setData(moduleName, moduleData);
         }
     }
 
