@@ -12,12 +12,13 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.init = function () {
 
     this.menubar = VDRest.app.getModule('Gui.Menubar').getView('Default').node[0];
     this.menubarHidden = true;
+    this.orientationChangeHandler = this.handleOrientationChange.bind(this);
 };
 
 
 Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
 
-    var menubarHeader, sliderClassName = "scroll-animate-header";
+    var sliderClassName = "scroll-animate-header";
 
     this.view.node.css({
         "height" : "100%",
@@ -63,10 +64,7 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
         this.menuBarController.setBigFont();
     }
 
-    menubarHeader = $('.menubar-header');
-    this.headerHeight = this.view.header[0].offsetHeight;
-    this.menuBarHeight = $('#menubar')[0].offsetHeight;
-    this.menuHeaderOffset = menubarHeader[0].offsetLeft;
+    this.handleOrientationChange();
 };
 
 /**
@@ -78,6 +76,8 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.addObserver = function () {
         this.scrollHandler = this.onscrollAction.bind(this);
         this.view.node.on('scroll', this.scrollHandler);
     }
+
+    $window.on('orientationchange', this.orientationChangeHandler);
 
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
@@ -91,7 +91,21 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.removeObserver = function ()
         this.view.node.off('scroll', this.scrollHandler);
     }
 
+    $window.off('orientationchange', this.orientationChangeHandler);
+
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
+};
+
+/**
+ * handle orientation change event
+ */
+Gui.Window.Controller.ScrollAnimateHeader.prototype.handleOrientationChange = function () {
+
+    setTimeout(function () {
+        this.headerHeight = this.view.header[0].offsetHeight;
+        this.menuBarHeight = $('#menubar')[0].offsetHeight;
+        this.menuHeaderOffset = $('.menubar-header')[0].offsetLeft;
+    }.bind(this), 200);
 };
 
 /**
