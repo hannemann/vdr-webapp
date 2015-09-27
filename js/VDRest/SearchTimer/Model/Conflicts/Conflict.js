@@ -52,8 +52,6 @@ VDRest.SearchTimer.Model.Conflicts.Conflict.prototype.parseConflict = function (
     /** @type {timerConflict} */
     var data = {};
 
-    var timer = VDRest.app.getModule('VDRest.timer');
-
     cArr = conflict.split(':');
     data.time = new Date(cArr.shift() * 1000);
     data.conflictingTimers = [];
