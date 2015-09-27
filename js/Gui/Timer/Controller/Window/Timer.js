@@ -325,6 +325,10 @@ Gui.Timer.Controller.Window.Timer.prototype.update = function (e) {
             "omitIncrement" : true
         }
     });
+
+    if (VDRest.info.hasPlugin('conflictcheckonly')) {
+        this.module.conflicts.load();
+    }
 };
 
 /**
@@ -366,6 +370,9 @@ Gui.Timer.Controller.Window.Timer.prototype.destroyTimer = function () {
     // delete list entry
     if (!this.data.dontDeleteListItem) {
         VDRest.app.getModule('Gui.Timer').getController('List.Timer', this.keyInCache).destructView();
+    }
+    if (VDRest.info.hasPlugin('conflictcheckonly')) {
+        this.module.conflicts.load();
     }
 
     // destroy myself

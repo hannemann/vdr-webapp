@@ -80,3 +80,23 @@ VDRest.SearchTimer.Model.Conflicts.prototype.processCollection = function (resul
 
     VDRest.Abstract.Model.prototype.processCollection.call(this, result);
 };
+
+/**
+ * retrieve all timer ids as array
+ * @return {Array.<number>}
+ */
+VDRest.SearchTimer.Model.Conflicts.prototype.getAllIds = function () {
+
+    var result = [];
+    this.collection.forEach(function (conflict) {
+
+        conflict.data.conflictingTimers.forEach(function (ct) {
+            ct.timer.forEach(function (i) {
+                if (result.indexOf(i) < 0) {
+                    result.push(i);
+                }
+            });
+        });
+    }.bind(this));
+    return result.sort();
+};

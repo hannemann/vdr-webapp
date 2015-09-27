@@ -1,6 +1,7 @@
 /**
  * Conflict model
  * @constructor
+ * @property {timerConflict} data
  */
 VDRest.SearchTimer.Model.Conflicts.Conflict = function () {
 };
@@ -67,7 +68,7 @@ VDRest.SearchTimer.Model.Conflicts.Conflict.prototype.parseConflict = function (
             "timer" : []
         };
         c.pop().split('#').forEach(function (id) {
-            conTimer.timer.push(id);
+            conTimer.timer.push(parseInt(id, 10));
         });
         data.conflictingTimers.push(conTimer);
     });

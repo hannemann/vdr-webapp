@@ -154,6 +154,11 @@ TODO: create fancy animation that doesn't burn my device
 }
 */
 
+.pulse-red {
+    animation: pulse-red 2s infinite;
+    -webkit-animation: pulse-red 2s infinite;
+}
+
 *[data-animate*="opacity"] {
     opacity: 0;
     transition: opacity .6s;

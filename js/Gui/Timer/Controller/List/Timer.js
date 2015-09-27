@@ -194,3 +194,16 @@ Gui.Timer.Controller.List.Timer.prototype.windowAction = function () {
         }
     })
 };
+
+/**
+ * trigger conflict indication
+ * @param {boolean} has_conflict
+ */
+Gui.Timer.Controller.List.Timer.prototype.setHasConflict = function (has_conflict) {
+
+    if (has_conflict && this.data.dataModel.data.is_active) {
+        this.view.node.addClass('pulse-red');
+    } else {
+        this.view.node.removeClass('pulse-red');
+    }
+};

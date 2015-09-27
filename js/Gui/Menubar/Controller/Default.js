@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {Gui.Menubar.View.Default} view
  */
 Gui.Menubar.Controller.Default = function () {};
 
@@ -391,4 +392,17 @@ Gui.Menubar.Controller.Default.prototype.recoverState = function (state) {
     }
 
     this.transparencyCalls = state.transparencyCalls;
+};
+
+/**
+ * @param {boolean} i
+ */
+Gui.Menubar.Controller.Default.prototype.setHasProblem = function (i) {
+
+    this.hasProblem = i;
+    if (i) {
+        this.view.titleWrapper.addClass('pulse-red');
+    } else {
+        this.view.titleWrapper.removeClass('pulse-red');
+    }
 };

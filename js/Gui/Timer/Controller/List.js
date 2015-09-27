@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {Gui.Timer} module
  */
 Gui.Timer.Controller.List = function () {};
 
@@ -93,9 +94,21 @@ Gui.Timer.Controller.List.prototype.dispatchList = function () {
             (!isNaN(this.searchTimerId) && arguments[1].dataModel.isCreatedBySearchTimer(this.searchTimerId))
         ) {
             arguments[1].dispatchView();
+            arguments[1].setHasConflict(
+                this.module.conflictsCollection.indexOf(arguments[1].data.dataModel.data.index) > -1
+            );
         }
     }.bind(this));
     this.searchTimerId = undefined;
+};
+
+Gui.Timer.Controller.List.prototype.applyConflicts = function () {
+
+    this.timerList.each(function () {
+        arguments[1].setHasConflict(
+            this.module.conflictsCollection.indexOf(arguments[1].data.dataModel.data.index) > -1
+        );
+    }.bind(this));
 };
 
 /**

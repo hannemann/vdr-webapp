@@ -37,8 +37,8 @@ Gui.Menubar.View.Default.prototype.render = function () {
  */
 Gui.Menubar.View.Default.prototype.addIcon = function () {
 
-    $('<img src="' + VDRest.image.getIcon() + '" class="icon">')
-        .appendTo(this.titleWrapper);
+    this.icon = $('<img src="' + VDRest.image.getIcon() + '" class="icon">');
+    this.icon.appendTo(this.titleWrapper);
 
     return this;
 };

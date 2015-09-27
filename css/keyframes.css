@@ -125,6 +125,18 @@
     100% { color: white; }
 }
 
+@keyframes pulse-red {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(255, 0, 0, 0.71); }
+    100% { background-color: transparent; }
+}
+
+@-webkit-keyframes pulse-red {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(255, 0, 0, 0.71); }
+    100% { background-color: transparent; }
+}
+
 @keyframes channel-attention {
     0% { box-shadow: none; }
     33% { box-shadow: 0 0 50px 0 #FF0000; }

@@ -168,6 +168,9 @@ Gui.Epg.Controller.Window.Broadcast.prototype.toggleTimerAction = function () {
         resource.addOrUpdateTimer(timer, this.keyInCache);
 
     }
+    if (VDRest.info.hasPlugin('conflictcheckonly')) {
+        VDRest.app.getModule('Gui.Timer').conflicts.load();
+    }
 };
 /**
  * Destroy

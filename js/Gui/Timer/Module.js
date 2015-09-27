@@ -1,6 +1,7 @@
 /**
  * Timer Module
  * @constructor
+ * @property {VDRest.SearchTimer.Model.Conflicts} conflicts
  */
 Gui.Timer = function () {};
 
@@ -40,6 +41,11 @@ Gui.Timer.prototype.startPage = true;
 Gui.Timer.prototype.headline = 'Timer';
 
 /**
+ * @type {[]}
+ */
+Gui.Timer.prototype.conflictsCollection = [];
+
+/**
  * context menu definition
  * @type {{}}
  */
@@ -56,6 +62,46 @@ Gui.Timer.prototype.contextMenu = {
             this.refresh();
         }
     }
+};
+
+/**
+ * initialize
+ */
+Gui.Timer.prototype.initLate = function () {
+
+    $document.one('dispatch.after', function () {
+        if (VDRest.info.hasPlugin('conflictcheckonly')) {
+            this.conflicts = VDRest.app.getModule('VDRest.SearchTimer').getModel('Conflicts');
+
+            $window.on(this.conflicts.events.collectionloaded, function (e) {
+
+                /** @type Gui.Menubar.Controller.Default */
+                var menubar = VDRest.app.getModule('Gui.Menubar').getController('Default');
+
+                if (e.collection.length > 0) {
+                    menubar.setHasProblem(true);
+                    this.drawerCallback = function (button) {
+                        button.addClass('pulse-red');
+                        button.one('click', function () {
+                            menubar.setHasProblem(false);
+                            this.classList.remove('pulse-red');
+                        });
+                    }.bind(this);
+                    this.conflictsCollection = this.conflicts.getAllIds();
+
+                } else {
+                    menubar.setHasProblem(false);
+                    this.drawerCallback = undefined;
+                    this.conflictsCollection = [];
+                }
+                if ([this.namespace, this.name].join('.') === VDRest.app.getCurrent()) {
+                    this.getController('List').applyConflicts();
+                }
+            }.bind(this));
+
+            this.conflicts.load();
+        }
+    }.bind(this));
 };
 
 /**
