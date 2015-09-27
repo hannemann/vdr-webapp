@@ -319,7 +319,7 @@ Gui.Timer.Controller.Window.Timer.prototype.update = function (e) {
     this.view.update();
 
     $.event.trigger({
-        "type": "opaqueMenubar",
+        "type": "transparentMenubar",
         "payload": {
             "set" : !!this.view.fanart,
             "omitIncrement" : true

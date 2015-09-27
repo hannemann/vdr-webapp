@@ -50,22 +50,23 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    if (this.view.fanart) {
-        $.event.trigger({
-            "type": "opaqueMenubar",
-            "payload": true
-        });
-    }
-
     this.menuBarController = VDRest.app.getModule('Gui.Menubar').getController('Default');
+
+    this.menuBarState = this.menuBarController.getState();
+    this.menuBarController.resetState();
+    this.menuBarController.hideContextMenu();
+
+    if (this.view.fanart) {
+        this.menuBarController.setTransparency({
+            "payload" : {"set" : true}
+        });
+        this.menuBarController.setBigFont();
+    }
 
     menubarHeader = $('.menubar-header');
     this.headerHeight = this.view.header[0].offsetHeight;
     this.menuBarHeight = $('#menubar')[0].offsetHeight;
     this.menuHeaderOffset = menubarHeader[0].offsetLeft;
-    if (this.view.fanart) {
-        this.menuBarController.view.node.addClass('big-font');
-    }
 };
 
 /**
@@ -142,12 +143,20 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.onscrollAction = function (e
 
         if (n < this.menuBarHeight && this.menubarHidden) {
 
-            this.menuBarController.setOpaque({"payload" : false});
+            this.menuBarController.setTransparency({
+                "payload" : {
+                    "set" : false
+                }
+            });
             this.menubarHidden = false;
 
         } else if (n >= this.menuBarHeight && !this.menubarHidden) {
 
-            this.menuBarController.setOpaque({"payload" : true});
+            this.menuBarController.setTransparency({
+                "payload" : {
+                    "set" : true
+                }
+            });
             this.menubarHidden = true;
         }
     }
@@ -159,12 +168,12 @@ Gui.Window.Controller.ScrollAnimateHeader.prototype.onscrollAction = function (e
 Gui.Window.Controller.ScrollAnimateHeader.prototype.destructView = function () {
 
     $.event.trigger({
-        "type": "opaqueMenubar",
+        "type": "transparentMenubar",
         "payload": false
     });
     delete this.touchScroll;
     document.body.style.overflow = '';
-    this.menuBarController.view.node.removeClass('big-font');
+    this.menuBarController.recoverState(this.menuBarState);
     delete this.menuBarController;
 
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);

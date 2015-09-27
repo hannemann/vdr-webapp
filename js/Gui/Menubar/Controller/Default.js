@@ -16,10 +16,28 @@ Gui.Menubar.Controller.Default.prototype = new VDRest.Abstract.Controller();
 Gui.Menubar.Controller.Default.prototype.throbberCalls = 0;
 
 /**
- * opaque counter
+ * transparency counter
  * @type {number}
  */
-Gui.Menubar.Controller.Default.prototype.opaqueCalls = 0;
+Gui.Menubar.Controller.Default.prototype.transparencyCalls = 0;
+
+/**
+ * transparency indicator
+ * @type {boolean}
+ */
+Gui.Menubar.Controller.Default.prototype.isTransparent = false;
+
+/**
+ * has big font indicator
+ * @type {boolean}
+ */
+Gui.Menubar.Controller.Default.prototype.bigFont = false;
+
+/**
+ * has context menu indicator
+ * @type {boolean}
+ */
+Gui.Menubar.Controller.Default.prototype.hasContextMenu = true;
 
 /**
  * defer click on icon
@@ -108,7 +126,7 @@ Gui.Menubar.Controller.Default.prototype.addObserver = function () {
 
     this.view.throbber.on('click', $.xhrPool.abortAll.bind($.xhrPool));
 
-    $document.on('opaqueMenubar', this.setOpaque.bind(this));
+    $document.on('transparentMenubar', this.setTransparency.bind(this));
 };
 
 /**
@@ -163,11 +181,21 @@ Gui.Menubar.Controller.Default.prototype.requestContextMenu = function (e) {
         });
     }
 };
+
+/**
+ * hide the settings button
+ */
 Gui.Menubar.Controller.Default.prototype.hideContextMenu = function () {
-    this.view.settingsButton.addClass('inactive');
+    this.view.node.addClass('inactive-button-settings');
+    this.hasContextMenu = false;
 };
+
+/**
+ * show th settings button
+ */
 Gui.Menubar.Controller.Default.prototype.showContextMenu = function () {
-    this.view.settingsButton.removeClass('inactive');
+    this.view.node.removeClass('inactive-button-settings');
+    this.hasContextMenu = true;
 };
 
 /**
@@ -253,23 +281,114 @@ Gui.Menubar.Controller.Default.prototype.onIconClick = function (e) {
     }
 };
 
-Gui.Menubar.Controller.Default.prototype.setOpaque = function (e) {
+/**
+ * set transparency
+ * @param {{}} e
+ * @param {{}|boolean} e.payload
+ * @param {boolean} e.payload.set
+ * @param {boolean} e.payload.omitIncrement
+ */
+Gui.Menubar.Controller.Default.prototype.setTransparency = function (e) {
 
     if (true === e.payload || true === e.payload.set) {
-        if (this.opaqueCalls === 0) {
-            document.body.classList.add('opaque-menubar');
+        if (this.transparencyCalls === 0) {
+            document.body.classList.add('transparent-menubar');
             this.view.drawerIndicator[0].classList.add('text-shadow');
         }
         if ("undefined" === typeof e.payload.omitIncrement) {
-            this.opaqueCalls++;
+            this.transparencyCalls++;
         }
+        this.isTransparent = true;
     } else if (false === e.payload || false === e.payload.set) {
 
-        this.opaqueCalls--;
-        if (this.opaqueCalls <= 0) {
-            document.body.classList.remove('opaque-menubar');
+        this.transparencyCalls--;
+        if (this.transparencyCalls <= 0) {
+            document.body.classList.remove('transparent-menubar');
             this.view.drawerIndicator[0].classList.remove('text-shadow');
-            this.opaqueCalls = 0;
+            this.transparencyCalls = Math.max(0, this.transparencyCalls);
+            this.isTransparent = false;
         }
     }
+};
+
+/**
+ * add big font class
+ */
+Gui.Menubar.Controller.Default.prototype.setBigFont = function () {
+
+    this.view.node.addClass('big-font');
+    this.bigFont = true;
+};
+
+/**
+ * remove big font class
+ */
+Gui.Menubar.Controller.Default.prototype.setNormalFont = function () {
+
+    this.view.node.removeClass('big-font');
+    this.bigFont = false;
+};
+
+/**
+ * reset to default state
+ */
+Gui.Menubar.Controller.Default.prototype.resetState = function () {
+
+    this.setTransparency({
+        "payload" : {
+            "set" : false
+        }
+    });
+    this.transparencyCalls = 0;
+    this.setNormalFont();
+    this.showContextMenu();
+};
+
+
+/**
+ * @typedef {{}} menuBarState
+ * @property {boolean} transparency
+ * @property {boolean} bigFont
+ * @property {number} transparencyCalls
+ * @property {boolean} hasContextMenu
+ */
+/**
+ * retrieve state object
+ * @return {menuBarState}
+ */
+Gui.Menubar.Controller.Default.prototype.getState = function () {
+
+    return {
+        "transparency" : this.isTransparent,
+        "bigFont" : this.bigFont,
+        "transparencyCalls" : this.transparencyCalls,
+        "hasContextMenu" : this.hasContextMenu
+    }
+};
+
+/**
+ * recover state
+ * @param {menuBarState} state
+ */
+Gui.Menubar.Controller.Default.prototype.recoverState = function (state) {
+
+    this.setTransparency({
+        "payload" : {
+            "set" : state.transparency
+        }
+    });
+
+    if (state.bigFont) {
+        this.setBigFont();
+    } else {
+        this.setNormalFont();
+    }
+
+    if (state.hasContextMenu) {
+        this.showContextMenu();
+    } else {
+        this.hideContextMenu();
+    }
+
+    this.transparencyCalls = state.transparencyCalls;
 };

@@ -154,7 +154,7 @@ Gui.Recordings.Controller.Window.Recording.prototype.updateAction = function () 
     this.module.getController('List').refresh();
 
     $.event.trigger({
-        "type": "opaqueMenubar",
+        "type": "transparentMenubar",
         "payload": {
             "set" : !!this.view.fanart,
             "omitIncrement" : true

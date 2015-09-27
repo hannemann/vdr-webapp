@@ -18,7 +18,7 @@ body.has-menubar {
     perspective: 1000px;
 }
 
-.opaque-menubar #menubar {
+.transparent-menubar #menubar {
     background-color: rgba(99, 138, 195, 0);
     border-color: rgba(0, 128, 20, 0);
     box-shadow: none;
@@ -59,6 +59,9 @@ body.has-menubar {
 #menubar .title-wrapper {
     display: inline-block;
     max-width: calc(100% - 36px);
+}
+#menubar.inactive-button-settings .title-wrapper {
+    max-width: 100%;
 }
 #menubar .title-wrapper:active {
     background-color: rgba(255,255,255,0.5);
@@ -108,7 +111,7 @@ body.has-menubar {
     font-size: 24px;
 }
 
-.opaque-menubar #header {
+.transparent-menubar #header {
     opacity: 0;
 }
 #button-settings {
@@ -130,7 +133,7 @@ body.has-menubar {
 #button-settings:active {
     background-color: rgba(255,255,255,0.5);
 }
-#button-settings.inactive {
+#menubar.inactive-button-settings #button-settings {
     opacity: 0;
     transition-timing-function: ease-out;
     -webkit-transition-timing-function: ease-out;
