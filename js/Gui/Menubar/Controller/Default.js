@@ -81,6 +81,7 @@ Gui.Menubar.Controller.Default.prototype.dispatchView = function () {
 Gui.Menubar.Controller.Default.prototype.showThrobber = function () {
 
     if (this.throbberCalls === 0) {
+        this.view.node.addClass('has-throbber');
         this.view.settingsButton.css({"display" : "none"});
         this.view.throbber.toggleClass('show', true);
     }
@@ -96,6 +97,7 @@ Gui.Menubar.Controller.Default.prototype.hideThrobber = function (e) {
 
     this.throbberCalls--;
     if (this.throbberCalls <= 0 || e.force) {
+        this.view.node.removeClass('has-throbber');
         this.view.throbber.toggleClass('show', false);
         this.view.settingsButton.css({"display" : ""});
         this.throbberCalls = 0;

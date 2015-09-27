@@ -60,7 +60,7 @@ body.has-menubar {
     display: inline-block;
     max-width: calc(100% - 36px);
 }
-#menubar.inactive-button-settings .title-wrapper {
+#menubar.inactive-button-settings:not([class~="has-throbber"]) .title-wrapper {
     max-width: 100%;
 }
 #menubar .title-wrapper:active {
