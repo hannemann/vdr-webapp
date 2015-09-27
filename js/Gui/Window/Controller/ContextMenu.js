@@ -38,7 +38,6 @@ Gui.Window.Controller.ContextMenu.prototype.dispatchView = function () {
 Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
 
     var i,
-        config = VDRest.app.getModule('Gui.Config'),
         configButton = this.view.node.find('.config-button'),
         reloadButton = this.view.node.find('.reload-button'),
         resizeButton = this.view.node.find('.resize-button'),
@@ -67,7 +66,7 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
         }
     }
 
-    if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
+    if (VDRest.app.startModule === VDRest.app.getCurrent()) {
 
         configButton
             .on(upEvent, this.handleUp.bind(this, this.configAction, this))

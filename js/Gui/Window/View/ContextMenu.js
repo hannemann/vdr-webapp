@@ -49,8 +49,7 @@ Gui.Window.View.ContextMenu.prototype.addClasses = function () {
  */
 Gui.Window.View.ContextMenu.prototype.addButtons = function () {
 
-    var i, label,
-        config = VDRest.app.getModule('Gui.Config');
+    var i, label;
 
     for (i in this.data) {
 
@@ -68,7 +67,7 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
     }
 
 
-    if (VDRest.app.getCurrent() !== config.namespace + '.' + config.name) {
+    if (VDRest.app.startModule === VDRest.app.getCurrent()) {
 
         $('<div class="config-button">').text(VDRest.app.translate('Configuration'))
             .appendTo(this.node);
