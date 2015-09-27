@@ -46,6 +46,16 @@ Gui.Timer.prototype.headline = 'Timer';
 Gui.Timer.prototype.conflictsCollection = [];
 
 /**
+ * @type {number}
+ */
+Gui.Timer.prototype.conflictCheckInterval = 1000 * 60 * 30;
+
+/**
+ * @type {number}
+ */
+Gui.Timer.prototype.lastConflictCheck = 0;
+
+/**
  * context menu definition
  * @type {{}}
  */
@@ -71,35 +81,9 @@ Gui.Timer.prototype.initLate = function () {
 
     $document.one('dispatch.after', function () {
         if (VDRest.info.hasPlugin('conflictcheckonly')) {
-            this.conflicts = VDRest.app.getModule('VDRest.SearchTimer').getModel('Conflicts');
 
-            $window.on(this.conflicts.events.collectionloaded, function (e) {
-
-                /** @type Gui.Menubar.Controller.Default */
-                var menubar = VDRest.app.getModule('Gui.Menubar').getController('Default');
-
-                if (e.collection.length > 0) {
-                    menubar.setHasProblem(true);
-                    this.drawerCallback = function (button) {
-                        button.addClass('pulse-red');
-                        button.one('click', function () {
-                            menubar.setHasProblem(false);
-                            this.classList.remove('pulse-red');
-                        });
-                    }.bind(this);
-                    this.conflictsCollection = this.conflicts.getAllIds();
-
-                } else {
-                    menubar.setHasProblem(false);
-                    this.drawerCallback = undefined;
-                    this.conflictsCollection = [];
-                }
-                if ([this.namespace, this.name].join('.') === VDRest.app.getCurrent()) {
-                    this.getController('List').applyConflicts();
-                }
-            }.bind(this));
-
-            this.conflicts.load();
+            this.initConflictsCheck()
+                .checkConflicts();
         }
     }.bind(this));
 };
@@ -119,6 +103,80 @@ Gui.Timer.prototype.getStore = function () {
         this.store = VDRest.app.getModule('VDRest.Timer');
     }
     return this.store;
+};
+
+/**
+ * initialize conflicts check
+ * @return {Gui.Timer}
+ */
+Gui.Timer.prototype.initConflictsCheck = function () {
+
+    var menubar = VDRest.app.getModule('Gui.Menubar').getController('Default');
+
+    this.conflicts = VDRest.app.getModule('VDRest.SearchTimer').getModel('Conflicts');
+    $window.on(this.conflicts.events.collectionloaded, this.handleConflicts.bind(this));
+
+    setInterval(this.checkConflicts.bind(this), this.conflictCheckInterval);
+
+    $document.on('visibilitychange', function () {
+
+        if (VDRest.helper.isVisible() && Date.now() - this.lastConflictCheck > this.conflictCheckInterval) {
+
+            this.checkConflicts()
+
+        } else if (VDRest.helper.isVisible() && this.conflictsCollection.length > 0) {
+
+            menubar.setHasProblem(true);
+
+        } else if (!VDRest.helper.isVisible()) {
+
+            menubar.setHasProblem(false);
+        }
+    }.bind(this));
+    return this;
+};
+
+/**
+ * check for timer conflicts
+ * @return {Gui.Timer}
+ */
+Gui.Timer.prototype.checkConflicts = function () {
+
+    if (VDRest.helper.isVisible() && VDRest.helper.hasConnection()) {
+        this.conflicts.load();
+        this.lastConflictCheck = Date.now();
+    }
+    return this;
+};
+
+/**
+ * handle timer conflicts response
+ * @param e
+ */
+Gui.Timer.prototype.handleConflicts = function (e) {
+
+    /** @type Gui.Menubar.Controller.Default */
+    var menubar = VDRest.app.getModule('Gui.Menubar').getController('Default');
+
+    if (e.collection.length > 0) {
+        menubar.setHasProblem(true);
+        this.drawerCallback = function (button) {
+            button.addClass('pulse-red');
+            button.one('click', function () {
+                menubar.setHasProblem(false);
+                this.classList.remove('pulse-red');
+            });
+        }.bind(this);
+        this.conflictsCollection = this.conflicts.getAllIds();
+
+    } else {
+        menubar.setHasProblem(false);
+        this.drawerCallback = undefined;
+        this.conflictsCollection = [];
+    }
+    if ([this.namespace, this.name].join('.') === VDRest.app.getCurrent()) {
+        this.getController('List').applyConflicts();
+    }
 };
 
 /**
