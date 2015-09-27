@@ -94,7 +94,6 @@ Gui.Form.View.Window.DirectoryChooser.prototype.prepareValue = function (label, 
 
     if (
         value.selected ||
-        this.data.gui.val() === label ||
         this.data.gui.val() === value.fullPath ||
         VDRest.config.getItem(name) === value.value ||
         ( '/' === label && '' === this.data.gui.val() )
