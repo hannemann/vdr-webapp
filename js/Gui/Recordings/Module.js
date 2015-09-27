@@ -136,13 +136,45 @@ Gui.Recordings.prototype.contextMenu = {
 };
 
 /**
+ * @param {jQuery} button
+ */
+Gui.Recordings.prototype.onDrawerOpen = function (button) {
+
+    if (!this.dataModel.hasCollection) {
+        $document.one(this.dataModel.events.collectionloaded, function () {
+            button.removeClass('not-ready');
+        });
+        button.addClass('not-ready');
+    }
+};
+
+/**
+ * init late
+ */
+Gui.Recordings.prototype.initLate = function () {
+
+    this.store = VDRest.app.getModule('VDRest.Recordings');
+    this.dataModel = this.store.getModel('List');
+    this.drawerCallback = this.onDrawerOpen.bind(this);
+};
+
+/**
  * dispatch default view
  */
 Gui.Recordings.prototype.dispatch = function () {
 
+    var menubar;
+
     VDRest.Recordings.Model.List.Recording.Resource.prototype.noThrobber = false;
-    this.store = VDRest.app.getModule('VDRest.Recordings');
     this.getController('List').dispatchView();
+
+    if (!this.dataModel.hasCollection) {
+        menubar = VDRest.app.getModule('Gui.Menubar').getController('Default');
+        $document.one(this.dataModel.events.collectionloaded, function () {
+            menubar.hideThrobber();
+        });
+        menubar.showThrobber();
+    }
 };
 
 /**
