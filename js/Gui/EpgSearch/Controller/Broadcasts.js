@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {Gui.EpgSearch.Controller.Broadcasts.Broadcast[]} broadcastList
  */
 Gui.EpgSearch.Controller.Broadcasts = function () {};
 
@@ -51,6 +52,11 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.addObserver = function () {
     this.view.node[0].addEventListener(VDRest.helper.pointerStart, this.pointerStartHandler);
     this.view.node[0].addEventListener(VDRest.helper.pointerMove, this.pointerMoveHandler);
     this.view.node[0].addEventListener(VDRest.helper.pointerEnd, this.pointerEndHandler);
+
+    this.timerHandler = this.handleTimer.bind(this);
+    $document.on('gui-timer.created', this.timerHandler);
+    $document.on('gui-timer.updated.epg', this.timerHandler);
+    $document.on('gui-timer.deleted.epg', this.timerHandler);
 };
 
 /**
@@ -63,6 +69,10 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.removeObserver = function () {
     this.view.node[0].removeEventListener(VDRest.helper.pointerStart, this.pointerStartHandler);
     this.view.node[0].removeEventListener(VDRest.helper.pointerMove, this.pointerMoveHandler);
     this.view.node[0].removeEventListener(VDRest.helper.pointerEnd, this.pointerEndHandler);
+
+    $document.off('gui-timer.created', this.timerHandler);
+    $document.off('gui-timer.updated.epg', this.timerHandler);
+    $document.off('gui-timer.deleted.epg', this.timerHandler);
 };
 
 /**
@@ -103,6 +113,21 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.initResults = function (resultColl
 
         this.view.showNoResults();
     }
+};
+
+/**
+ * delegate timer event to epg broadcast and window
+ * @param {jQuery.Event} e
+ * @param {{}} e.payload
+ * @param {string} e.payload.event
+ */
+Gui.EpgSearch.Controller.Broadcasts.prototype.handleTimer = function (e) {
+
+    try {
+        if (this.cache['Broadcasts.Broadcast'][e.payload.event]) {
+            this.cache['Broadcasts.Broadcast'][e.payload.event].handleTimer();
+        }
+    } catch (e) {}
 };
 
 /**

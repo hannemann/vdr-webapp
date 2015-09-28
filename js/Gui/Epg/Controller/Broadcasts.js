@@ -188,7 +188,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
  * delegate timer event to epg broadcast and window
  * @param {jQuery.Event} e
  * @param {{}} e.payload
- * @param {Gui.Epg.Controller.Broadcasts.List.Broadcast|Gui.Epg.Controller.Window.Broadcast} e.payload.event
+ * @param {string} e.payload.event
  */
 Gui.Epg.Controller.Broadcasts.prototype.handleTimer = function (e) {
 
