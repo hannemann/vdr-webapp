@@ -16,7 +16,7 @@
  * @property {Number} table_id          ???
  * @property {boolean} timer_active
  * @property {boolean} timer_exists
- * @property {Number} timer_id
+ * @property {string} timer_id
  * @property {string} title
  * @property {Number} version
  * @property {Number} vps               timestamp
@@ -115,31 +115,7 @@
  * Broadcast data model
  * @class
  * @constructor
- * @var {object} data
- * @property {string} channel           channel_name
- * @property {VDRest.Epg.Model.Channels.Channel} channelObj           channel_name
- * @property {string} channel_name      channel_name
- * @property {Array} components         stream descriptions
- * @property {Array} contents
- * @property {string} description
- * @property {Array} details
- * @property {Number} duration
- * @property {Number} id
- * @property {Number} images            number of epg images
- * @property {Number} parental_rating
- * @property {Array} raw_contents       ???
- * @property {string} short_text        short description, subtitle
- * @property {Number} table_id          ???
- * @property {boolean} timer_active
- * @property {boolean} timer_exists
- * @property {Number} timer_id
- * @property {string} title
- * @property {Number} version
- * @property {Number} vps               timestamp
- * @property {Number} start_time        timestamp
- * @property {Number} end_time          timestamp
- * @property {Date} start_date
- * @property {Date} end_date
+ * @property {broadcastData} data
  */
 VDRest.Epg.Model.Channels.Channel.Broadcast = function () {};
 

@@ -1,6 +1,9 @@
 /**
  * Channels resource
  * @constructor
+ * @property {[]} collection
+ * @property {[]} currentResult
+ * @property {VDRest.Timer} module
  */
 VDRest.Timer.Model.List = function () {};
 
@@ -29,6 +32,12 @@ VDRest.Timer.Model.List.prototype.collectionItemModel = 'List.Timer';
 VDRest.Timer.Model.List.prototype.resultCollection = 'timers';
 
 /**
+ * flag collection loaded
+ * @type {boolean}
+ */
+VDRest.Timer.Model.List.prototype.collectionLoaded = false;
+
+/**
  * event to trigger when collection is loaded
  * @type {{collectionloaded: string}}
  */
@@ -48,11 +57,13 @@ VDRest.Timer.Model.List.prototype.init = function () {
 };
 
 /**
- * fetch resource model and load channels
+ * fetch resource model and load timer
  * fire callback afterwards
  */
 VDRest.Timer.Model.List.prototype.initList = function () {
 
+    this.collection = [];
+    this.collectionLoaded = false;
     this.module.getResource(this.collectionItemModel).load({
         "url" : 'timerList',
         "callback": this.processCollection.bind(this)
@@ -60,17 +71,25 @@ VDRest.Timer.Model.List.prototype.initList = function () {
 };
 
 /**
+ * set collection loaded
+ * @param {{count: number, total: number, timers: Array.<timerData>}} result
+ */
+VDRest.Timer.Model.List.prototype.processCollection = function (result) {
+
+    this.collectionLoaded = true;
+    VDRest.Abstract.Model.prototype.processCollection.call(this, result);
+};
+
+/**
  * sort callback
- * @param a
- * @param b
+ * @param {VDRest.Timer.Model.List.Timer} a
+ * @param {VDRest.Timer.Model.List.Timer} b
  * @returns {number}
  */
 VDRest.Timer.Model.List.prototype.sortByTime = function (a, b) {
 
-    a = parseInt(a.data.start_timestamp.replace(/[^0-9]/g, ''));
-    b = parseInt(b.data.start_timestamp.replace(/[^0-9]/g, ''));
-
-    return a - b;
+    return parseInt(a.data.start_timestamp.replace(/[^0-9]/g, ''))
+        - parseInt(b.data.start_timestamp.replace(/[^0-9]/g, ''));
 };
 
 /**

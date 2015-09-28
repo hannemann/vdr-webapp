@@ -2,6 +2,7 @@
  * @class
  * @property {object} collection
  * @property {object} data
+ * @property {Object.<string[]>} timers
  * @extends VDRest.Abstract.Model
  */
 VDRest.Epg.Model.Observer = function () {};
@@ -28,40 +29,53 @@ VDRest.Epg.Model.Observer.prototype.init = function () {
 
 /**
  * store broadcast id
- * @param broadcast
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast} broadcast
  */
 VDRest.Epg.Model.Observer.prototype.registerTimer = function (broadcast) {
 
-    this.timers[broadcast.data.timer_id] = broadcast.keyInCache;
+    if (!this.timers[broadcast.data.timer_id]) {
+        this.timers[broadcast.data.timer_id] = [];
+    }
+    if (this.timers[broadcast.data.timer_id].indexOf(broadcast.keyInCache) < 0) {
+        this.timers[broadcast.data.timer_id].push(broadcast.keyInCache);
+    }
 };
 
 /**
  * handle timer is deleted
  * @param {jQuery.Event} e
+ * @param {string} e.payload
  */
 VDRest.Epg.Model.Observer.prototype.handleTimerDeleted = function (e) {
 
-    var model;
-
     if (this.timers[e.payload]) {
 
-        model = this.getBroadcast(this.timers[e.payload]);
+        this.timers[e.payload].forEach(this.deleteTimer.bind(this));
 
         delete this.timers[e.payload];
+    }
+};
 
-        if (model) {
+/**
+ * delete timer
+ * @param {string} broadcastKey
+ */
+VDRest.Epg.Model.Observer.prototype.deleteTimer = function (broadcastKey) {
 
-            model.data.timer_exists = false;
-            model.data.timer_active = false;
-            model.data.timer_id = '';
+    var model = this.getBroadcast(broadcastKey);
 
-            $.event.trigger({
-                "type": 'gui-timer.deleted.epg',
-                "payload": {
-                    "event": model.keyInCache
-                }
-            });
-        }
+    if (model) {
+
+        model.data.timer_exists = false;
+        model.data.timer_active = false;
+        model.data.timer_id = '';
+
+        $.event.trigger({
+            "type": 'gui-timer.deleted.epg',
+            "payload": {
+                "event": model.keyInCache
+            }
+        });
     }
 };
 
@@ -84,7 +98,7 @@ VDRest.Epg.Model.Observer.prototype.handleTimerUpdated = function (e) {
             model.data.timer_active = e.payload.timer.is_active;
             model.data.timer_id = e.payload.timer.id;
 
-            this.timers[e.payload.timer.id] = model.keyInCache;
+            this.registerTimer(model);
 
             $.event.trigger({
                 "type": 'gui-timer.updated.epg',
@@ -110,7 +124,7 @@ VDRest.Epg.Model.Observer.prototype.handleTimerCreated = function (e) {
         model.data.timer_active = e.payload.timer.is_active;
         model.data.timer_id = e.payload.timer.id;
 
-        this.timers[e.payload.timer.id] = model.keyInCache;
+        this.registerTimer(model);
 
         $.event.trigger({
             "type": 'gui-timer.created',
@@ -124,7 +138,7 @@ VDRest.Epg.Model.Observer.prototype.handleTimerCreated = function (e) {
 /**
  * retrieve broadcast from cache
  * @param keyInCache
- * @returns {*}
+ * @returns {VDRest.Epg.Model.Channels.Channel.Broadcast|boolean}
  */
 VDRest.Epg.Model.Observer.prototype.getBroadcast = function (keyInCache) {
 

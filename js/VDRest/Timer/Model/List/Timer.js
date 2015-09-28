@@ -1,6 +1,30 @@
 /**
+ * @typedef {{}} timerData
+ * @property {number} event_id
+ * @property {number} flags
+ * @property {number} index
+ * @property {number} lifetime
+ * @property {number} priority
+ * @property {number} start
+ * @property {number} stop
+ * @property {boolean} is_active
+ * @property {boolean} is_pending
+ * @property {boolean} is_recording
+ * @property {string} aux
+ * @property {string} channel
+ * @property {string} day
+ * @property {string} filename
+ * @property {string} id
+ * @property {string} start_timestamp
+ * @property {string} stop_timestamp
+ * @property {string} weekdays
+ * @property {string} channel_name
+ */
+
+/**
  * Channels resource
  * @constructor
+ * @property {timerData} data
  */
 VDRest.Timer.Model.List.Timer = function () {};
 
@@ -72,7 +96,7 @@ VDRest.Timer.Model.List.Timer.prototype.deleteTimer = function () {
 };
 
 /**
- * handle delete of Timer
+ * handle deletion of a timer
  */
 VDRest.Timer.Model.List.Timer.prototype.handleDelete = function () {
 

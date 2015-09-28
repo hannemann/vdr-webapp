@@ -1,5 +1,7 @@
 /**
  * @namespace
+ * @property {VDRest.App} app
+ * @property {VDRest.Helper} helper
  */
 var VDRest = function () {};
 

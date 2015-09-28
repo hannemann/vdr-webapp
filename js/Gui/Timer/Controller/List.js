@@ -2,6 +2,10 @@
  * @class
  * @constructor
  * @property {Gui.Timer} module
+ * @property {VDRest.Timer.Model.List} dataModel
+ * @property {VDRest.Lib.Object} timerList
+ * @property {Gui.Timer.View.List} view
+ * @property {number|undefined} searchTimerId
  */
 Gui.Timer.Controller.List = function () {};
 
@@ -35,7 +39,7 @@ Gui.Timer.Controller.List.prototype.dispatchView = function () {
 
     this.addObserver();
 
-    if (this.dataModel.getCollection().length > 0) {
+    if (this.dataModel.collectionLoaded) {
 
         this.iterateTimers({
             "iterate": this.dataModel.collectionIterator.bind(this.dataModel),

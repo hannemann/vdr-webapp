@@ -33,11 +33,8 @@ VDRest.Timer.Model.Observer.prototype.addTimer = function (e) {
 
     timer.event_id = e.payload.callerId.split('/')[1];
 
-    if (collection.length > 0) {
-
-        collection.push(this.module.getModel('List.Timer', timer));
-        collection.sort(VDRest.Timer.Model.List.prototype.sortByTime);
-    }
+    collection.push(this.module.getModel('List.Timer', timer));
+    collection.sort(VDRest.Timer.Model.List.prototype.sortByTime);
 };
 
 /**

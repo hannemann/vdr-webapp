@@ -1,6 +1,8 @@
 /**
  * @class Abstract model
  * @constructor
+ * @property {string} keyInCache
+ * @property {{}} data
  */
 VDRest.Abstract.Model = function () {};
 
