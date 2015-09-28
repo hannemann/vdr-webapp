@@ -43,6 +43,12 @@ Gui.EpgSearch.Controller.Search.prototype.dispatchView = function () {
 };
 
 /**
+ * overwrite method of parent class since observers shall not be removed
+ * from epg since its never getting destroyed!!!
+ */
+Gui.EpgSearch.Controller.Search.prototype.removeObserver = function () {};
+
+/**
  * destruct
  */
 Gui.EpgSearch.Controller.Search.prototype.destructView = function () {
