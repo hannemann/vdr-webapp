@@ -196,6 +196,18 @@ Gui.Form.View.Abstract.prototype.getString = function (id, field) {
 
     field.gui.attr('type', 'text');
 
+    if (false === field.autocomplete) {
+        field.gui.attr('autocomplete', 'off');
+    }
+
+    if (false === field.autocorrect) {
+        field.gui.attr('autocorrect', 'off');
+    }
+
+    if (false === field.autocapitalize) {
+        field.gui.attr('autocapitalize', 'off');
+    }
+
     field.dom.append(field.gui);
 };
 

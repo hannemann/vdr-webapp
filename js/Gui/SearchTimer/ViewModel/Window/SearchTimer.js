@@ -443,7 +443,10 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getStringField = function
         "category": category,
         "type": "string",
         "label": label,
-        "value": value
+        "value": value,
+        "autocomplete" : false,
+        "autocorrect" : false,
+        "autocapitalize" : false
     };
 
     if ("undefined" !== typeof depends) {
