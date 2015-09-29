@@ -268,11 +268,13 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
                 this.toggleMinimize();
             }.bind(this));
         }.bind(this), 2000);
+        VDRest.app.getModule('Gui.Window').popRegister();
         this.data.isMinimized = true;
     } else {
         history.pushState(this.historyState, document.title, location.pathname);
         document.body.classList.remove('video-minimized');
         this.data.isMinimized = false;
+        VDRest.app.getModule('Gui.Window').register(this);
     }
 };
 
