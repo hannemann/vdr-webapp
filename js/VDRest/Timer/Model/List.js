@@ -81,6 +81,15 @@ VDRest.Timer.Model.List.prototype.processCollection = function (result) {
 };
 
 /**
+ * unset collection loaded
+ */
+VDRest.Timer.Model.List.prototype.flushCollection = function () {
+
+    this.collectionLoaded = false;
+    VDRest.Abstract.Model.prototype.flushCollection.call(this);
+};
+
+/**
  * sort callback
  * @param {VDRest.Timer.Model.List.Timer} a
  * @param {VDRest.Timer.Model.List.Timer} b
