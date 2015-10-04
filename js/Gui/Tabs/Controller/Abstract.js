@@ -1,6 +1,9 @@
 /**
  * @class
  * @constructor
+ * @property {Gui.Tabs} module
+ * @property {Gui.Tabs.View.Abstract} view
+ * @property {{}} data
  */
 Gui.Tabs.Controller.Abstract = function () {};
 
@@ -35,6 +38,9 @@ Gui.Tabs.Controller.Abstract.prototype.addObserver = function () {
     $document.on("destruct.window-" + this.keyInCache, this.destruct.bind(this));
 
     $document.on('gui.tabs.update-' + this.keyInCache, this.update.bind(this));
+
+    this.orientationHandler = this.handleOrientation.bind(this);
+    $window.on('orientationchange', this.orientationHandler);
 };
 
 /**
@@ -45,6 +51,9 @@ Gui.Tabs.Controller.Abstract.prototype.removeObserver = function () {
     $document.off("destruct.window-" + this.keyInCache, this.destruct.bind(this));
 
     $document.off('gui.tabs.update-' + this.keyInCache, this.update.bind(this));
+
+    $window.off('orientationchange', this.orientationHandler);
+    delete this.orientationHandler;
 };
 
 /**
@@ -68,6 +77,16 @@ Gui.Tabs.Controller.Abstract.prototype.updateCacheKey = function (keyInCache) {
     this.removeObserver();
     this.module.cache.updateKeys(this, keyInCache);
     this.addObserver();
+};
+
+/**
+ * handle orientation change
+ */
+Gui.Tabs.Controller.Abstract.prototype.handleOrientation = function () {
+
+    setTimeout(function () {
+        this.view.setContentHeight();
+    }.bind(this), 200);
 };
 
 /**

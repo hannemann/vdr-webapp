@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {{}} data
  */
 Gui.Tabs.View.Abstract = function () {};
 
@@ -23,6 +24,8 @@ Gui.Tabs.View.Abstract.prototype.init = function () {
     this.tabContents = $('<ul>')
         .addClass('tab-contents')
         .appendTo(this.node);
+
+    this.contents = [];
 };
 
 /**
@@ -37,11 +40,10 @@ Gui.Tabs.View.Abstract.prototype.render = function () {
 
 /**
  * add Tabs to List
- * @var {object} tabConfig
  */
 Gui.Tabs.View.Abstract.prototype.addTabs = function () {
 
-    var i, tab, content, n = 0, tabHeight = 0, contentHeight = 0, clone;
+    var i, tab, content, n = 0;
 
     for (i in this.data.tabs) {
 
@@ -69,31 +71,54 @@ Gui.Tabs.View.Abstract.prototype.addTabs = function () {
 
             }
 
-            clone = content.clone();
-            clone.css({
-                "display": "block",
-                "white-space": "pre-wrap",
-                "position": "absolute",
-                "width": window.innerWidth - 40 + "px",
-                "left": "-99999px"
-            }).appendTo(document.body);
-            tabHeight = clone[0].offsetHeight;
-            clone.remove().css({
-                "display": "",
-                "white-space": "",
-                "position": "",
-                "width": "",
-                "left": ""
-            });
-
-            contentHeight = tabHeight > contentHeight ? tabHeight : contentHeight;
-
             this.tabs.append(tab);
             this.tabContents.append(content);
+            this.contents.push(content);
             n++;
         }
     }
+    this.setContentHeight();
+};
+
+/**
+ * measure contents and apply largest height
+ */
+Gui.Tabs.View.Abstract.prototype.setContentHeight = function () {
+
+    var contentHeight = 0, tabHeight;
+
+    this.contents.forEach(function(content) {
+        tabHeight = this.getTabHeight(content);
+        contentHeight = tabHeight > contentHeight ? tabHeight : contentHeight;
+    }.bind(this));
     this.tabContents.height(contentHeight);
+};
+
+/**
+ * get height of content
+ * @param {jQuery} content
+ * @return {number}
+ */
+Gui.Tabs.View.Abstract.prototype.getTabHeight = function (content) {
+
+    var clone = content.clone(), tabHeight;
+    clone.css({
+        "display": "block",
+        "white-space": "pre-wrap",
+        "position": "absolute",
+        "width": document.body.offsetWidth - 40 + "px",
+        "left": "-99999px"
+    }).appendTo(document.body);
+    tabHeight = clone[0].offsetHeight;
+    clone.remove().css({
+        "display": "",
+        "white-space": "",
+        "position": "",
+        "width": "",
+        "left": ""
+    });
+
+    return tabHeight;
 };
 
 /**
