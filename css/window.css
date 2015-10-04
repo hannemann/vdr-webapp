@@ -28,7 +28,8 @@
     background: #696969;
     z-index: 2;
     overflow: auto;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
+    box-shadow: 0 0 60px 0 rgba(0, 0, 0, .5);
+    border-radius: 3px;
 }
 
 .window-close {
@@ -454,12 +455,14 @@ div.window.confirm li:first-child {
 }
 
 .window-item-menu .button {
-    width: calc(100% - 20px);
+    width: calc(100% - 28px);
     background: none;
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     padding: 10px;
     position: relative;
+    float: none;
+    margin: 0 auto;
 }
 .window-item-menu .button:last-child {
     border-style: none;
@@ -487,6 +490,7 @@ form.window.document-fullsize {
     width: 100%;
     min-height: 100%;
     box-shadow: none;
+    border-radius: 0;
 }
 
 div.window.touchscroll,

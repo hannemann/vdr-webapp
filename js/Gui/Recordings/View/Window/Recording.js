@@ -108,6 +108,8 @@ Gui.Recordings.View.Window.Recording.prototype.addTitle = function () {
  */
 Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
 
+    var wButton;
+
     this.details = $('<ul>');
 
     if (this.hasEventShortText()) {
@@ -130,6 +132,18 @@ Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
 
     if (this.fanart && this.detailsTab.parent('ul').height() < this.detailsTab.height()) {
         this.detailsTab.parent('ul').height(this.detailsTab.height());
+    }
+
+
+    if (VDRest.info.getStreamer()) {
+
+        wButton = $('<dl class="window-button round watch-button symbol-button vdr-web-symbol"></dl>');
+        this.watchButton = $('<dt>').html('C');
+
+        wButton.append(this.watchButton)
+            .append($('<dd>').text(VDRest.app.translate('Watch Recording')));
+
+        wButton.prependTo(this.detailsTab);
     }
 
     return this;
@@ -302,19 +316,6 @@ Gui.Recordings.View.Window.Recording.prototype.getEditConfig = function () {
                 .append($('<dd>').text(VDRest.app.translate('Delete Recording')));
         }
     };
-    if (VDRest.info.getStreamer()) {
-        editConfig.watch = {
-            "type": "button",
-            "dom": function () {
-
-                var dom = $('<dl class="window-button round watch-button symbol-button vdr-web-symbol"></dl>');
-                this.watchButton = $('<dt>').html('C');
-
-                return dom.append(this.watchButton)
-                    .append($('<dd>').text(VDRest.app.translate('Watch Recording')));
-            }
-        };
-    }
     editConfig.editForm = {
         "categories" : {
             "file" : {

@@ -33,16 +33,28 @@
 }
 .recording.list-item .name:after {
     top: -5px;
-    right: 0;
+    right: 12px;
     bottom: auto;
 }
 .recording.list-item .name:before {
-    right: 0;
+    right: 12px;
 }
 .recording.list-item .shortText {
     font-size: .75em;
 }
 
+.window-recording .tab-content.details.current .watch-button {
+    float: right;
+}
+.window-recording .tab-content.details.current .watch-button dt {
+    background: transparent;
+}
+.window-recording .tab-content.details.current .watch-button dt:active {
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.5), 0 0 30px #FFFFFF inset;
+}
+.window-recording .tab-content.details.current .watch-button dd {
+    color: transparent;
+}
 
 @media (min-width: 800px), (min-height: 800px) {
 }
