@@ -98,10 +98,13 @@ Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () 
 /**
  * handle mouseup
  * @param {jQuery.Event} e
+ * @param {boolean} e.cancelable
  */
 Gui.Recordings.Controller.List.Recording.prototype.handleUp = function (e) {
 
-    e.preventDefault();
+    if (e.cancelable) {
+        e.preventDefault();
+    }
 
     if (!this.isMuted) {
 
