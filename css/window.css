@@ -484,8 +484,8 @@ form.window.document-fullsize {
     top: 0;
     left: 0;
     z-index: 0;
-    width: 100vw;
-    min-height: 100vh;
+    width: 100%;
+    min-height: 100%;
     box-shadow: none;
 }
 
@@ -507,20 +507,4 @@ form.window.touchscroll {
     .context-menu div {
         font-size: .75em;
     }
-}
-
-@media (min-width: 1100px), (min-height: 1100px) {
-}
-
-@media (orientation: landscape) {
-    .video-minimized > div.window {
-        min-width: 50%;
-        width: calc(100% - 320px);
-    }
-}
-@media (orientation: portrait) {
-    /*.video-minimized div.window.document-fullsize {*/
-        /*max-height: calc(100vh - 180px);*/
-        /*min-height: 0;*/
-    /*}*/
 }

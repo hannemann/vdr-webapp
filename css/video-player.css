@@ -453,17 +453,18 @@ video::-internal-media-controls-overlay-cast-button {
 }
 
 @media (orientation: portrait) {
-    .video-minimized #viewport {
-        height: calc(100% - 180px - 50px);
-    }
     body.video-minimized {
-        max-height: calc(100vh - 180px);
+        max-height: calc(100% - 180px);
+        height: 66%;
+    }
+    .video-minimized #viewport {
+        height: calc(66%  - 50px);
+        max-height: calc(100% - 180px - 50px);
     }
     .video-minimized .modal-overlay.modal-video {
-        max-height: 50%;
-        height: 180px;
+        min-height: 180px;
         top: auto;
-        min-height: 0;
+        height: 34%;
     }
     .html5-player-controls .video-osd {
         bottom: -40px;
@@ -539,13 +540,14 @@ video::-internal-media-controls-overlay-cast-button {
     }
 }
 @media (orientation: landscape) {
-    .has-video-player.video-minimized #menubar {
-        min-width: calc(50% - 17px);
-        width: calc(100% - 320px - 17px);
-    }
+    body.video-minimized,
     .has-video-player.video-minimized #viewport {
         min-width: 50%;
         width: calc(100% - 320px);
+    }
+    .has-video-player.video-minimized #menubar {
+        min-width: calc(50% - 17px);
+        width: calc(100% - 320px - 17px);
     }
     .has-video-player.video-minimized .modal-overlay.modal-video {
         left: auto;
