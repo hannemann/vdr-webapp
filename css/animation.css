@@ -82,7 +82,7 @@
     -webkit-transform: scale(.5,.5);
 }
 .window.touchscroll.collapse {
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
 }
 
