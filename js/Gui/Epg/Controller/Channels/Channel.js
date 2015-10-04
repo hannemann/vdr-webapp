@@ -204,7 +204,7 @@ Gui.Epg.Controller.Channels.Channel.prototype.startStream = function (channel) {
                 "type" : "window.request",
                 "payload" : {
                     "type": "Player",
-                    "module": VDRest.app.getModule('Gui.Video'),
+                    "module": videoModule,
                     "data" : {
                         "sourceModel" : channel
                     }

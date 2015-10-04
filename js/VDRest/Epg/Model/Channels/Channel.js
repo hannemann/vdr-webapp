@@ -312,7 +312,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function (call
         for (i; i < l; i++) {
             cur = this.collection[i];
 
-            if (cur.getData('start_time') <= now && cur.getData('end_time') >= now) {
+            if (!found && cur.getData('start_time') <= now && cur.getData('end_time') >= now) {
                 found = true;
                 callback(cur);
             }
