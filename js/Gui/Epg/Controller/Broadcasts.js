@@ -2,7 +2,27 @@
  * @class
  * @constructor
  * @property {Gui.Epg.Controller.Broadcasts.List[]} broadcastLists
+ * @property {Gui.Epg.Controller.Channels} channelsController
+ * @property {Gui.Epg.Controller.TimeLine} timeLineController
+ * @property {Gui.Epg.Controller.Epg} epgController
+ * @property {Gui.Epg.Controller.Broadcasts.List.Broadcast} requestedBroadcast
+ * @property {VDRest.Epg.Model.Channels} dataModel
+ * @property {Gui.Epg.View.Broadcasts} view
+ * @property {float} pixelPerSecond
+ * @property {function} handleScrollBroadcasts
+ * @property {function} channelIterator
+ * @property {function} pointerStartHandler
+ * @property {function} pointerMoveHandler
+ * @property {function} pointerEndHandler
+ * @property {function} timerHandler
+ * @property {boolean|undefined} preventClick
+ * @property {string} lastEpg
  * @property {Gui.Epg} module
+ * @property {TouchMove.Scroll} touchScroll
+ * @property {number} currentScrollTime
+ * @property {number} visibleEndTime
+ * @property {number} currentScrollLeft
+ * @property {number} currentScrollTop
  */
 Gui.Epg.Controller.Broadcasts = function () {};
 
@@ -160,6 +180,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleMove = function () {
 /**
  * handle mouseup
  * @param {jQuery.Event} e
+ * @param {boolean} e.cancelable
  */
 Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
 
@@ -209,6 +230,9 @@ Gui.Epg.Controller.Broadcasts.prototype.handleTimer = function (e) {
 /**
  * delegate broadcasts loaded events to according controller
  * @param {jQuery.Event} e
+ * @param {function(function)} e.iterate
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast[]} e.collection
+ * @param {string} e._class
  * @param {Gui.Epg.Controller.Broadcasts.List} e.payload
  */
 Gui.Epg.Controller.Broadcasts.prototype.delegateBroadcastsLoaded = function (e) {
@@ -303,7 +327,7 @@ Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.update = function () {
 
-    if ('now' === this.lastEpg) {
+    if (VDRest.helper.hasConnection() && 'now' === this.lastEpg) {
 
         this.module.store.updateNow();
         this.setScrollData()
@@ -389,25 +413,31 @@ Gui.Epg.Controller.Broadcasts.prototype.setScrollData = function () {
 /**
  * iterate channel list, buffer lists
  * @param collection
+ * @param {function()} collection.iterate
  */
 Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) {
 
-    collection.iterate(function (channelModel) {
-
-        if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
-
-            return true;
-        }
-
-        this.broadcastLists.push(this.module.getController('Broadcasts.List', {
-            "channel_id" : channelModel.data.channel_id,
-            "parent" : this,
-            "dataModel" : channelModel
-        }));
-
-    }.bind(this));
+    collection.iterate(this.processChannel.bind(this));
 
     this.dispatchChannels();
+};
+
+/**
+ * process channel
+ * @param {VDRest.Epg.Model.Channels.Channel} channelModel
+ */
+Gui.Epg.Controller.Broadcasts.prototype.processChannel = function (channelModel) {
+
+    if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
+
+        return true;
+    }
+
+    this.broadcastLists.push(this.module.getController('Broadcasts.List', {
+        "channel_id" : channelModel.data.channel_id,
+        "parent" : this,
+        "dataModel" : channelModel
+    }));
 };
 
 /**
@@ -500,7 +530,7 @@ Gui.Epg.Controller.Broadcasts.prototype.recoverState = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.timeUpdate = function () {
 
-    this.module.getController('TimeLine').update();
+    this.timeLineController.update();
 
     this.broadcastLists.forEach(function (list) {
 

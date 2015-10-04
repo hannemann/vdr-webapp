@@ -43,7 +43,7 @@ VDRest.Abstract.Model.prototype._class = undefined;
 
 /**
  * default callback when collection is loaded
- * @param result {JSON}
+ * @param {?} result
  */
 VDRest.Abstract.Model.prototype.processCollection = function (result) {
 

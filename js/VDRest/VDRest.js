@@ -1,4 +1,8 @@
 /**
+ * @typedef {string} document.visibilityState
+ */
+
+/**
  * @namespace
  * @property {VDRest.App} app
  * @property {VDRest.Helper} helper

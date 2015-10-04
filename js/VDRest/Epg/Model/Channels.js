@@ -1,6 +1,7 @@
 /**
  * @class
- * @property {object} collection
+ * @property {Array.<VDRest.Epg.Model.Channels.Channel>} collection
+ * @property {Array.<VDRest.Epg.Model.Channels.Channel>} currentResult
  * @property {object} data
  * @extends VDRest.Abstract.Model
  */

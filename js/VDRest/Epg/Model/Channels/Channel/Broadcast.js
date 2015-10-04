@@ -1,4 +1,18 @@
 /**
+ * @typedef {{}} resultList
+ * @property {number} count
+ * @property {number} total
+ */
+
+/**
+ * @typedef {{}} broadcastsResult
+ * @augments resultList
+ * @property {number} count
+ * @property {number} total
+ * @property {Array.<broadcastData>} events
+ */
+
+/**
  * @typedef {{}} broadcastData
  * @property {string} channel           channel_name
  * @property {VDRest.Epg.Model.Channels.Channel} channelObj           channel_name

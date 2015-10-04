@@ -1,9 +1,5 @@
-
 /**
- * Channel ViewModel
- * @class
- * @constructor
- * @var {object} data
+ * @typedef {{}} channelData
  * @property {string} channel_id
  * @property {string} group - groupname channel belongs to
  * @property {string} image - url of channel logo
@@ -11,13 +7,18 @@
  * @property {boolean} is_cable
  * @property {boolean} is_sat
  * @property {boolean} is_terr
+ * @property {boolean} is_radio
  * @property {string} name
  * @property {number} number
  * @property {string} stream - filename of stream
  * @property {number} transponder
- *
- * @var {object} events
- * @property {string} collectionloaded
+ */
+
+/**
+ * Channel ViewModel
+ * @class
+ * @constructor
+ * @property {channelData} data
  */
 VDRest.Epg.Model.Channels.Channel = function () {};
 
@@ -72,12 +73,6 @@ VDRest.Epg.Model.Channels.Channel.prototype.mixIntoCollectionItem = 'channelObj'
 /**
  * initialize collection cache
  * do some data transformations
- * @member {object} collection holds collection items VDRest.Epg.ViewModel.Channels.Channel.Broadcast
- * @member {number} data.count number of currently stored broadcast
- * @member {number} lastBroadcastEnd timestamp of the end of the latest broadcast
- * @member {object} events event names
- * @member {string} baseUrl
- * @member {Date} from
  */
 VDRest.Epg.Model.Channels.Channel.prototype.init = function () {
 
@@ -139,7 +134,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getNextBroadcasts = function (to) {
 
 /**
  * mark from timestamp as loaded
- * @param {{events: Array.<broadcastData>, count: number, total:number}} result
+ * @param {broadcastsResult} result
  */
 VDRest.Epg.Model.Channels.Channel.prototype.processCollection = function (result) {
 
