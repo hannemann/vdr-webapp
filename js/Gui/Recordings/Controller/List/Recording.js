@@ -146,6 +146,7 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
 
             this.preventClick = true;
 
+            activeAnimate.endAnimation();
             $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
                 if (!VDRest.helper.canCancelEvent) {
                     this.requestMenuAction(e)

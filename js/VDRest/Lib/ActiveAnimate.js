@@ -133,7 +133,7 @@ ActiveAnimate.prototype.animateClickGradient = function () {
 ActiveAnimate.prototype.initPressGradient = function () {
 
     this.increment = 16;
-    this.step = 1;
+    this.step = 2;
     this.currentAnimation = 'press';
     this.fgOpacity = 0.4;
     this.bgOpacity = 0.2;
@@ -197,6 +197,15 @@ ActiveAnimate.prototype.getGradient = function () {
         'rgba(255,255,255,' + this.fgOpacity.toString() + ') ' + this.increment.toString() + 'px, ' +
         'rgba(255,255,255,' + this.bgOpacity.toString() + ') ' + (this.increment + 1).toString() + 'px' +
         ')';
+};
+
+/**
+ * increase step to fasten animation till end is reached
+ * useful to indicate that timeout for long tap is reached
+ */
+ActiveAnimate.prototype.endAnimation = function () {
+
+    this.step = 10;
 };
 
 /**

@@ -134,6 +134,7 @@ Gui.Timer.Controller.List.Timer.prototype.handleDown = function (e) {
             this.vibrate(100);
             this.preventClick = true;
 
+            activeAnimate.endAnimation();
             $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
                 if (!VDRest.helper.canCancelEvent) {
                     this.requestMenuAction();
