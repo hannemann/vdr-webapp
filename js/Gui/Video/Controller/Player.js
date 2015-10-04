@@ -278,7 +278,9 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         }.bind(this), 2000);
         VDRest.app.getModule('Gui.Window').popRegister();
         this.data.isMinimized = true;
+        VDRest.app.getModule('Gui.Epg').unMute();
     } else {
+        VDRest.app.getModule('Gui.Epg').mute();
         history.pushState(this.historyState, document.title, location.pathname);
         document.body.classList.remove('video-minimized');
         this.data.isMinimized = false;
