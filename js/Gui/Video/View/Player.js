@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {HTMLImageElement} poster
  */
 Gui.Video.View.Player = function () {};
 

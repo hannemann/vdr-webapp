@@ -1,5 +1,6 @@
 /**
  * @constructor
+ * @property {jQuery} node
  */
 Gui.Video.View.Player.Video = function () {};
 

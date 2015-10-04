@@ -1,7 +1,15 @@
 /**
+ * @typedef {{}} videoPlayerData
+ * @property {(VDRest.Epg.Model.Channels.Channel|VDRest.Recordings.Model.List.Recording)} sourceModel
+ */
+
+/**
  * @class
  * @constructor
  * @property {Gui.Video.Controller.Player.Controls} controls
+ * @property {Gui.Video.View.Player} view
+ * @property {Gui.Video.Controller.Player.Video} video
+ * @property {videoPlayerData} data
  */
 Gui.Video.Controller.Player = function () {
 };

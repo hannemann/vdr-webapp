@@ -14,7 +14,7 @@ Gui.Video.View.Player.Controls.Quality.Size.prototype.options =
     ["HD1080", "HD720", "SD", "768x432", "640x360", "480x270", "320x180"];
 
 /**
- * @type {string}
+ * @type {Object.<string, {width: number, height: number}>}
  */
 Gui.Video.View.Player.Controls.Quality.Size.prototype.values = {
     "HD1080" : {

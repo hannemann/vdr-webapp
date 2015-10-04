@@ -1,5 +1,6 @@
 /**
  * @constructor
+ * @property {Gui.Video.View.Player.Video} view
  */
 Gui.Video.Controller.Player.Video = function () {};
 
