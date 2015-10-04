@@ -454,12 +454,10 @@ video::-internal-media-controls-overlay-cast-button {
 
 @media (orientation: portrait) {
     .video-minimized #viewport {
-        min-height: 50%;
         height: calc(100% - 180px - 50px);
     }
-    .video-minimized .modal-overlay {
-        min-height: 50%;
-        height: calc(100% - 180px);
+    body.video-minimized {
+        max-height: calc(100vh - 180px);
     }
     .video-minimized .modal-overlay.modal-video {
         max-height: 50%;
@@ -554,10 +552,6 @@ video::-internal-media-controls-overlay-cast-button {
         max-width: 50%;
         width: 320px;
         min-width: 0;
-    }
-    .video-minimized .modal-overlay {
-        min-width: 50%;
-        width: calc(100% - 320px);
     }
     .video-minimized #viewport .modal-overlay {
         min-width: 0;

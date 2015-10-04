@@ -6,7 +6,7 @@
     left: 0;
     z-index: 2;
 }
-.has-video-player .modal-overlay.dark:not([class~=modal-video]) {
+.has-video-player .modal-overlay:not([class~=modal-video]) {
     z-index: 5;
 }
 #viewport .modal-overlay {
@@ -483,17 +483,16 @@ div.window.document-fullsize,
 form.window.document-fullsize {
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     z-index: 0;
+    width: 100vw;
+    min-height: 100vh;
+    box-shadow: none;
 }
 
 div.window.touchscroll,
 form.window.touchscroll {
     bottom: auto;
     overflow: visible;
-    min-height: calc(100% - 20px);
-    min-height: -webkit-calc(100% - 20px);
 }
 
 .alert-info {
@@ -511,4 +510,17 @@ form.window.touchscroll {
 }
 
 @media (min-width: 1100px), (min-height: 1100px) {
+}
+
+@media (orientation: landscape) {
+    .video-minimized > div.window {
+        min-width: 50%;
+        width: calc(100% - 320px);
+    }
+}
+@media (orientation: portrait) {
+    /*.video-minimized div.window.document-fullsize {*/
+        /*max-height: calc(100vh - 180px);*/
+        /*min-height: 0;*/
+    /*}*/
 }

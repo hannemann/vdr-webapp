@@ -73,11 +73,6 @@ Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
 
     this.modalClassNameShow = 'show-modal';
     this.modalClassNameHide = 'hide-modal';
-
-    if (this.isModalOpaque) {
-        this.modalClassNameShow += '-opaque';
-        this.modalClassNameHide += '-opaque';
-    }
     /**
      * @type {VDRest.Abstract.view|object}
      * @property {jQuery.fn.init} node
@@ -86,11 +81,16 @@ Gui.Window.View.Abstract.prototype.addModalOverlay = function (parentView) {
 
     this.modalOverlay = $('<div class="modal-overlay dark">').appendTo(parentView.node);
 
+
+    if (this.isModalOpaque) {
+        this.modalOverlay.addClass('opaque');
+    }
+
     if (this.isModalTransparent) {
         this.modalOverlay.toggleClass('dark transparent');
     } else {
 
-        $('body').addClass(this.modalClassNameShow);
+        this.modalOverlay[0].classList.add(this.modalClassNameShow);
     }
 
     this.parentView = {
@@ -169,9 +169,6 @@ Gui.Window.View.Abstract.prototype.removeModal = function (e) {
         delete this.removeModalHandler;
         this.modalOverlay.remove();
         delete this.modalOverlay;
-
-        document.body.classList.remove(this.modalClassNameHide);
-        document.body.classList.remove(this.modalClassNameShow);
     }
 };
 
@@ -201,8 +198,8 @@ Gui.Window.View.Abstract.prototype.destruct = function () {
                 VDRest.Abstract.Controller.prototype.animationEndEvents,
                 this.removeModalHandler
             );
-            document.body.classList.add(this.modalClassNameHide);
-            document.body.classList.add(this.modalClassNameShow);
+            this.modalOverlay[0].classList.add(this.modalClassNameHide);
+            this.modalOverlay[0].classList.add(this.modalClassNameShow);
 
         } else {
 

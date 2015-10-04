@@ -28,14 +28,14 @@
 }
 
 /* dark modal overlay */
-.show-modal .modal-overlay.dark {
+.modal-overlay.dark.show-modal:not([class~="opaque"]) {
     animation-duration: .2s;
     animation-name: showModal;
     -webkit-animation-duration: .2s;
     -webkit-animation-name: showModal;
     background: rgba(0,0,0,0.5);
 }
-.hide-modal .modal-overlay.dark {
+.modal-overlay.dark.hide-modal:not([class~="opaque"]) {
     animation-duration: .2s;
     animation-name: hideModal;
     -webkit-animation-duration: .2s;
@@ -43,14 +43,14 @@
     background: rgba(0,0,0,0);
 }
 /* dark modal overlay */
-.show-modal-opaque .modal-overlay.dark {
+.modal-overlay.show-modal.dark.opaque {
     animation-duration: .2s;
     animation-name: showModalOpaque;
     -webkit-animation-duration: .2s;
     -webkit-animation-name: showModalOpaque;
     background: rgba(0,0,0,1);
 }
-.hide-modal-opaque .modal-overlay.dark {
+.modal-overlay.hide-modal.dark.opaque {
     animation-duration: .2s;
     animation-name: hideModalOpaque;
     -webkit-animation-duration: .2s;
