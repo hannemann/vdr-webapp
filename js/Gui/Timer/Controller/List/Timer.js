@@ -61,6 +61,8 @@ Gui.Timer.Controller.List.Timer.prototype.addObserver = function () {
         .on(VDRest.helper.pointerEnd, this.handleUp.bind(this));
 
     $document.on('gui-timer.updated.' + this.keyInCache + '.' + this.eventNameSpace, this.update.bind(this));
+    $document.on('gui-timer.deleted.' + this.keyInCache + '.' + this.eventNameSpace, this.destructView.bind(this));
+    this.view.menuButton.on(VDRest.helper.pointerStart, this.requestMenuAction.bind(this));
 };
 
 /**
@@ -75,6 +77,7 @@ Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
     ].join(' '));
 
     $document.off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
+    this.view.menuButton.off(VDRest.helper.pointerStart);
 };
 
 
@@ -137,6 +140,72 @@ Gui.Timer.Controller.List.Timer.prototype.handleDown = function (e) {
     //        }.bind(this));
     //    }
     //}.bind(this), 1000);
+};
+
+/**
+ * request edit window
+ */
+Gui.Timer.Controller.List.Timer.prototype.requestMenuAction = function (e) {
+
+    var toggleLabel = (this.data.dataModel.data.is_active == 0 ? 'A' : 'Dea') + 'ctivate';
+
+    if (e) {
+        e.stopPropagation();
+    }
+
+    this.preventClick = true;
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "ItemMenu",
+            "data": {
+                "config": {
+                    "header": this.data.dataModel.data.filename.split('~').pop(),
+                    "buttons": {
+                        "toggle": {
+                            "label": VDRest.app.translate(toggleLabel),
+                            "fn": this.toggleActiveAction.bind(this)
+                        },
+                        "delete": {
+                            "label": VDRest.app.translate('Delete'),
+                            "fn": this.deleteAction.bind(this)
+                        }
+                    }
+                }
+            }
+        }
+    })
+};
+
+/**
+ * toggle timer active state
+ */
+Gui.Timer.Controller.List.Timer.prototype.toggleActiveAction = function () {
+
+    this.data.dataModel.data.is_active = !this.data.dataModel.data.is_active;
+
+    VDRest.app.getModule('VDRest.Timer')
+        .getResource('List.Timer')
+        .addOrUpdateTimer(this.getAdapter(), this.keyInCache);
+};
+
+/**
+ * trigger timer delete
+ */
+Gui.Timer.Controller.List.Timer.prototype.deleteAction = function () {
+
+    VDRest.app.getModule('VDRest.Timer')
+        .getResource('List.Timer')
+        .deleteTimer(this.getAdapter());
+};
+
+/**
+ * get api adapter
+ */
+Gui.Timer.Controller.List.Timer.prototype.getAdapter = function () {
+
+    return new VDRest.Api.TimerAdapter(this);
 };
 
 /**

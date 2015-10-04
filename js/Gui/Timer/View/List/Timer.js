@@ -51,7 +51,8 @@ Gui.Timer.View.List.Timer.prototype.decorate = function () {
 
     this.time.text(this.addTime());
 
-    this.addClasses();
+    this.addClasses()
+        .addMenuButton();
 };
 
 /**
@@ -144,6 +145,17 @@ Gui.Timer.View.List.Timer.prototype.addClasses = function () {
     this.node.toggleClass('active', this.getIsActive());
 
     this.node.toggleClass('recording', this.getIsRecording());
+
+    return this;
+};
+
+/**
+ * add menu button
+ */
+Gui.Timer.View.List.Timer.prototype.addMenuButton = function () {
+
+    this.menuButton = $('<div>').html('&vellip;').addClass('listitem-menu-button');
+    this.menuButton.appendTo(this.node);
 
     return this;
 };

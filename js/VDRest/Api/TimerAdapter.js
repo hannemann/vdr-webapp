@@ -1,5 +1,5 @@
 /**
- * @param {VDRest.Epg.Model.Channels.Channel.Broadcast|Gui.Window.Controller.Timer} client
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast|Gui.Timer.Controller.Window.Timer|Gui.Timer.Controller.List.Timer} client
  * @returns {VDRest.Api.TimerAdapter.EpgBroadcast|VDRest.Api.TimerAdapter.Timer}
  * @constructor
  */
@@ -25,6 +25,10 @@ VDRest.Api.TimerAdapter.prototype.getTypeInstance = function () {
     } else if (this.client instanceof Gui.Timer.Controller.Window.Timer) {
 
         type = new VDRest.Api.TimerAdapter.Timer();
+
+    } else if (this.client instanceof Gui.Timer.Controller.List.Timer) {
+
+        type = new VDRest.Api.TimerAdapter.List();
 
     } else if ("undefined" !== typeof this.client.type && this.client.type === 'generic') {
 

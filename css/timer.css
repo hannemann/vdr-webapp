@@ -3,7 +3,11 @@
     text-align: center;
 }
 .timer.list-item .time {
+    margin-bottom: 10px;
+}
+.timer.list-item .time {
     text-align: right;
+    width: calc(100% / 3 - 24px);
 }
 .timer.list-item .path {
     clear: left;
