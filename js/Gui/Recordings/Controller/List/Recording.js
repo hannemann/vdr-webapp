@@ -80,6 +80,7 @@ Gui.Recordings.Controller.List.Recording.prototype.addObserver = function () {
         .on(VDRest.helper.pointerMove, this.handleMove.bind(this))
         .on(VDRest.helper.pointerStart, this.handleDown.bind(this))
     ;
+    this.view.menuButton.on(VDRest.helper.pointerStart, this.requestMenuAction.bind(this));
 };
 
 /**
@@ -91,6 +92,7 @@ Gui.Recordings.Controller.List.Recording.prototype.removeObserver = function () 
         .off(VDRest.helper.pointerEnd)
         .off(VDRest.helper.pointerMove)
         .off(VDRest.helper.pointerStart);
+    this.view.menuButton.off(VDRest.helper.pointerStart);
 };
 
 /**
@@ -209,6 +211,48 @@ Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = functio
             }
         }
     });
+};
+
+/**
+ * request edit window
+ */
+Gui.Recordings.Controller.List.Recording.prototype.requestMenuAction = function (e) {
+
+    if (e) {
+        e.stopPropagation();
+    }
+
+    this.preventClick = true;
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "ItemMenu",
+            "data": {
+                "config": {
+                    "header": this.data.name,
+                    "buttons": {
+                        "delete": {
+                            "label": VDRest.app.translate('Delete'),
+                            "fn": this.deleteAction.bind(this)
+                        },
+                        "watch": {
+                            "label": VDRest.app.translate('Watch'),
+                            "fn": this.startStream.bind(this)
+                        }
+                    }
+                }
+            }
+        }
+    })
+};
+
+/**
+ * update list view
+ */
+Gui.Recordings.Controller.List.Recording.prototype.deleteAction = function () {
+
+    this.dataModel.delete(this.updateAction.bind(this));
 };
 
 /**

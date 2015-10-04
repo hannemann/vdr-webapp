@@ -48,7 +48,8 @@ Gui.Recordings.View.List.Recording.prototype.render = function () {
             .appendTo(this.node);
     }
 
-    this.addClasses();
+    this.addClasses()
+        .addMenuButton();
 
     if (isNaN(this.position)) {
 
@@ -163,6 +164,17 @@ Gui.Recordings.View.List.Recording.prototype.addClasses = function () {
     }
 
     this.node.addClass(classNames.join(' '));
+    return this;
+};
+
+/**
+ * add channels
+ */
+Gui.Recordings.View.List.Recording.prototype.addMenuButton = function () {
+
+    this.menuButton = $('<div>').html('&vellip;').addClass('listitem-menu-button');
+    this.menuButton.appendTo(this.node);
+
     return this;
 };
 
