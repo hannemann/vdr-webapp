@@ -75,6 +75,17 @@ form label.constrained.disabled {
     background-color: rgba(255,255,255,0.5);
     color: black;
 }
+.window-input.select label em.text {
+    display: inline-block;
+    font-style: normal;
+    max-width: calc(100% - 60px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.window-input.select label.selected em.text {
+    color: #000;
+}
 
 .directory-chooser label:before {
     content: 'e';

@@ -75,7 +75,7 @@ Gui.Form.View.Window.Select.prototype.addValues = function () {
  */
 Gui.Form.View.Window.Select.prototype.prepareValue = function (value) {
 
-    var name = this.data.gui.attr('name'),html = '', type;
+    var name = this.data.gui.attr('name'),html = '', type, label;
 
     type = this.data.multiselect ? 'checkbox' : 'radio';
 
@@ -90,10 +90,12 @@ Gui.Form.View.Window.Select.prototype.prepareValue = function (value) {
     }
 
     if ("undefined" === typeof  value.translate || value.translate === true) {
-        html += VDRest.app.translate(value.label);
+        label = VDRest.app.translate(value.label);
     } else {
-        html += value.label;
+        label = value.label;
     }
+
+    html += '<em class="text">' + label + '</em>';
 
     value.dom.html(html);
 
