@@ -79,6 +79,8 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.updateMetrics = function 
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestWindowAction = function () {
 
+    this.module.mute();
+
     $.event.trigger({
         "type" : 'window.request',
         "payload" : {

@@ -191,4 +191,5 @@ Gui.Epg.Controller.Window.Broadcast.prototype.destructView = function () {
     this.view.node.toggleClass('collapse expand');
 
     this.header.text(this.oldHeader);
+    this.module.unMute();
 };
