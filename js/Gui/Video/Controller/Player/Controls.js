@@ -1,6 +1,10 @@
 /**
  * @constructor
  * @property {Gui.Video.Controller.Player} player
+ * @property {Gui.Video.View.Player.Controls} view
+ * @property {(Gui.Video.Controller.Player.Controls.Layer.Video|Gui.Video.Controller.Player.Controls.Layer.Tv|Gui.Video.Controller.Player.Controls.Layer.Cut)} layer
+ * @property {boolean} isHidden
+ * @property {boolean|undefined} omitDestruct
  */
 Gui.Video.Controller.Player.Controls = function () {};
 
@@ -93,6 +97,14 @@ Gui.Video.Controller.Player.Controls.prototype.stopHide = function () {
         clearTimeout(this.controlsTimeout);
         this.controlsTimeout = undefined;
     }
+};
+
+/**
+ * stop hiding controls
+ */
+Gui.Video.Controller.Player.Controls.prototype.allowHide = function () {
+
+    this.omitDestruct = undefined;
 };
 
 /**

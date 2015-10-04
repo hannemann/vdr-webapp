@@ -104,6 +104,7 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeUp = function (e) {
     $document.off(VDRest.helper.pointerEnd, this.handlerUp);
     this.view.toggleVolumeIndicator(false);
     this.view.toggleVolumeSliderActiveState();
+    this.player.controls.allowHide();
 };
 
 /**
