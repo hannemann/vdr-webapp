@@ -21,11 +21,15 @@ Gui.Timer.View.List.Timer.prototype.init = function () {
 
     this.node = $('<div class="timer list-item clearer">');
 
-    this.date = $('<span class="date">').appendTo(this.node);
+    this.titleWrapper = $('<div class="clearer">').appendTo(this.node);
 
-    this.channel = $('<span class="channel">').appendTo(this.node);
+    this.date = $('<span class="date">').appendTo(this.titleWrapper);
 
-    this.time = $('<span class="time">').appendTo(this.node);
+    this.channel = $('<span class="channel">').appendTo(this.titleWrapper);
+
+    this.time = $('<span class="time">').appendTo(this.titleWrapper);
+
+    this.fileWrapper = $('<div>').appendTo(this.node);
 };
 
 /**
@@ -107,7 +111,7 @@ Gui.Timer.View.List.Timer.prototype.addPath = function () {
                 this.path.insertBefore(this.filename);
 
             } else {
-                this.path.appendTo(this.node);
+                this.path.appendTo(this.fileWrapper);
             }
         }
 
@@ -129,7 +133,7 @@ Gui.Timer.View.List.Timer.prototype.addFilename = function () {
 
     if (!this.filename) {
 
-        this.filename = $('<div class="filename">').appendTo(this.node);
+        this.filename = $('<div class="filename">').appendTo(this.fileWrapper);
     }
 
     this.filename.text(this.getFilename().split('~').pop());

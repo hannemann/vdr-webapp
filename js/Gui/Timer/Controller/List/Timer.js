@@ -84,6 +84,7 @@ Gui.Timer.Controller.List.Timer.prototype.removeObserver = function () {
 /**
  * handle mouseup
  * @param {jQuery.Event} e
+ * @param {boolean} e.cancelable
  */
 Gui.Timer.Controller.List.Timer.prototype.handleUp = function (e) {
 
@@ -128,18 +129,18 @@ Gui.Timer.Controller.List.Timer.prototype.handleDown = function (e) {
 
     this.preventClick = undefined;
 
-    //this.clickTimeout = window.setTimeout(function () {
-    //    if (!this.module.isMuted) {
-    //        this.vibrate(100);
-    //        this.preventClick = true;
-    //
-    //        $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
-    //            if (!VDRest.helper.canCancelEvent) {
-    //                this.requestMenuAction();
-    //            }
-    //        }.bind(this));
-    //    }
-    //}.bind(this), 1000);
+    this.clickTimeout = window.setTimeout(function () {
+        if (!this.module.isMuted) {
+            this.vibrate(100);
+            this.preventClick = true;
+
+            $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
+                if (!VDRest.helper.canCancelEvent) {
+                    this.requestMenuAction();
+                }
+            }.bind(this));
+        }
+    }.bind(this), 1000);
 };
 
 /**

@@ -148,7 +148,7 @@ Gui.Recordings.Controller.List.Recording.prototype.handleDown = function (e) {
 
             $document.one(VDRest.helper.isTouchDevice ? 'touchend' : 'mouseup', function () {
                 if (!VDRest.helper.canCancelEvent) {
-                    this.startStream()
+                    this.requestMenuAction(e)
                 }
             }.bind(this));
 
