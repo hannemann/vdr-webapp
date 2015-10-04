@@ -476,6 +476,7 @@ div.window.confirm li:first-child {
 div.window.viewport-fullsize,
 form.window.viewport-fullsize {
     box-shadow: none;
+    border-radius: 0;
     top: 0;
     left: 0;
     right: 0;

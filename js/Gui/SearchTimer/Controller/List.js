@@ -150,6 +150,11 @@ Gui.SearchTimer.Controller.List.prototype.dispatchRecordings = function (e) {
  */
 Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
 
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
+
     $document.one('searchtimersloaded', this.iterateTimers.bind(this));
     $document.on('gui-searchtimer.created', this.dispatchNew.bind(this));
     $document.on('gui-searchtimer.deleted', this.deleteSearchTimer.bind(this));
@@ -160,6 +165,10 @@ Gui.SearchTimer.Controller.List.prototype.addObserver = function () {
  * remove event listeners
  */
 Gui.SearchTimer.Controller.List.prototype.removeObserver = function () {
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
 
     $document.off('searchtimersloaded', this.iterateTimers.bind(this));
     $document.off('gui-searchtimer.created');
