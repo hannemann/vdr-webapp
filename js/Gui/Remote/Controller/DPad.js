@@ -36,6 +36,10 @@ Gui.Remote.Controller.DPad.prototype.dispatchView = function () {
  */
 Gui.Remote.Controller.DPad.prototype.addObserver = function () {
 
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
     this.view.up.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Up'));
     this.view.down.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Down'));
     this.view.left.on('click', this.defaultController.sendKey.bind(this.defaultController, 'Left'));
@@ -59,4 +63,8 @@ Gui.Remote.Controller.DPad.prototype.removeObserver = function () {
     this.view.menu  .off('click');
     this.view.back  .off('click');
     this.view.info  .off('click');
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
 };

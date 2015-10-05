@@ -38,6 +38,12 @@ Gui.Form.Controller.Window.Input.prototype.dispatchView = function () {
 Gui.Form.Controller.Window.Input.prototype.addObserver = function () {
 
 
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this);
+        this.view.modalOverlay.on('touchmove', this.preventReloadHandler);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
+
     if ("number" === this.data.type) {
 
         this.view.body.find('input').on('keydown', function (e) {
@@ -74,6 +80,11 @@ Gui.Form.Controller.Window.Input.prototype.removeObserver = function () {
     this.view.cancel.off('click');
 
     $window.off("resize.input-window");
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+        this.view.modalOverlay.off('touchmove');
+    }
 };
 
 /**

@@ -131,6 +131,11 @@ Gui.Epg.Controller.Channels.prototype.unmute = function (channel) {
  */
 Gui.Epg.Controller.Channels.prototype.addObserver = function () {
 
+    if (VDRest.helper.isTouchDevice) {
+        this.preventReloadHandler = this.preventScrollReload.bind(this);
+        this.view.node.on('touchmove', this.preventReloadHandler);
+    }
+
     $document.one('channelsloaded', this.iterateChannels.bind(this));
     $document.on('epg.channelview', this.handleChannelView.bind(this));
 };
@@ -141,6 +146,10 @@ Gui.Epg.Controller.Channels.prototype.addObserver = function () {
 Gui.Epg.Controller.Channels.prototype.removeObserver = function () {
 
     $document.off('epg.channelview');
+
+    if (VDRest.helper.isTouchDevice) {
+        this.view.node.off('touchmove', this.preventReloadHandler);
+    }
 };
 
 /**
