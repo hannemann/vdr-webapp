@@ -149,6 +149,37 @@ VDRest.Abstract.Controller.prototype.preventScrollReload = function () {
 };
 
 /**
+ * prevent reloading on pull down
+ * @param {HTMLElement} [listeningElement]
+ * @param {HTMLElement} [scrollElement]
+ * @return {VDRest.Abstract.Controller}
+ */
+VDRest.Abstract.Controller.prototype.preventReload = function (listeningElement, scrollElement) {
+
+    var p;
+
+    if (VDRest.helper.isTouchDevice) {
+
+        if (listeningElement && !(listeningElement instanceof HTMLElement)) {
+            throw new TypeError('PreventReload: Listening Element must be an instance of HTMLElement');
+        }
+
+        if (scrollElement && !(scrollElement instanceof HTMLElement)) {
+            throw new TypeError('PreventReload: Listening Element must be an instance of HTMLElement');
+        }
+
+        this.preventReloadListeners = this.preventReloadListeners || [];
+        p = {
+            "element" : listeningElement || this.view.node[0],
+            "handle" : this.preventScrollReload.bind(this, scrollElement)
+        };
+        this.preventReloadListeners.push(p);
+        p.element.addEventListener('touchmove', p.handle);
+    }
+    return this;
+};
+
+/**
  * prevent selection and context menu
  */
 VDRest.Abstract.Controller.prototype.preventLongPress = function () {
@@ -196,6 +227,13 @@ VDRest.Abstract.Controller.prototype.destructView = function () {
     if ("function" === typeof this.removeObserver) {
 
         this.removeObserver();
+    }
+
+    if ("undefined" !== typeof this.preventReloadListeners) {
+        this.preventReloadListeners.forEach(function (p) {
+            p.element.removeEventListener('touchmove', p.handle);
+        });
+        delete this.preventReloadListeners;
     }
 
     this.view.destruct();

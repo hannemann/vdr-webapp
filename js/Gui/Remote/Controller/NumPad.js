@@ -28,7 +28,8 @@ Gui.Remote.Controller.NumPad.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.addObserver();
+    this.preventReload()
+        .addObserver();
 };
 
 /**
@@ -36,10 +37,6 @@ Gui.Remote.Controller.NumPad.prototype.dispatchView = function () {
  */
 Gui.Remote.Controller.NumPad.prototype.addObserver = function () {
 
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
     this.view.one.on('click', this.defaultController.sendKey.bind(this.defaultController, '1'));
     this.view.two.on('click', this.defaultController.sendKey.bind(this.defaultController, '2'));
     this.view.three.on('click', this.defaultController.sendKey.bind(this.defaultController, '3'));
@@ -69,10 +66,6 @@ Gui.Remote.Controller.NumPad.prototype.removeObserver = function () {
     this.view.nine  .off('click');
     this.view.zero  .off('click');
     this.view.txt   .off('click');
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
 };
 
 /**

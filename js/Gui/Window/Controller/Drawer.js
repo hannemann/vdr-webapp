@@ -59,7 +59,9 @@ Gui.Window.Controller.Drawer.prototype.dispatchView = function () {
 
         this.view.modalOverlay[0].classList.add('drawer');
 
-        this.addObserver();
+        this.preventReload()
+            .preventReload(this.view.modalOverlay[0])
+            .addObserver();
 
         this.view.getButtons().each(function (name, config) {
 
@@ -150,11 +152,6 @@ Gui.Window.Controller.Drawer.prototype.addObserver = function () {
     }
 
     this.view.node.on(this.transitionEndEvents, this.animationCallback.bind(this));
-
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
 };
 
 /**
@@ -169,10 +166,6 @@ Gui.Window.Controller.Drawer.prototype.removeObserver = function () {
     this.view.node.off(this.transitionEndEvents);
 
     this.view.node.off('touchmove.drawer touchend');
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };

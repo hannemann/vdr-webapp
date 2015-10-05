@@ -33,7 +33,9 @@ Gui.Window.Controller.ItemMenu.prototype.dispatchView = function () {
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     this.setPosition();
-    this.addObserver();
+    this.preventReload()
+        .preventReload(this.view.modalOverlay[0])
+        .addObserver();
 };
 
 /**
@@ -42,11 +44,6 @@ Gui.Window.Controller.ItemMenu.prototype.dispatchView = function () {
 Gui.Window.Controller.ItemMenu.prototype.addObserver = function () {
 
     var buttons = this.data.config.buttons, i;
-
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this, this.view.body);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
 
     for (i in buttons) {
         if (buttons.hasOwnProperty(i) && "function" === typeof buttons[i].fn) {
@@ -81,10 +78,6 @@ Gui.Window.Controller.ItemMenu.prototype.addObserver = function () {
 Gui.Window.Controller.ItemMenu.prototype.removeObserver = function () {
 
     var buttons = this.data.config.buttons, i;
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
 
     for (i in buttons) {
         if (buttons.hasOwnProperty(i)) {

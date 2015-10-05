@@ -35,7 +35,7 @@ Gui.Remote.Controller.Default.prototype.dispatchView = function () {
     this.dPad.dispatchView();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-
+    this.preventReload();
 };
 
 /**

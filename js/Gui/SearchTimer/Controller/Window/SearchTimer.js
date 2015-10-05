@@ -41,29 +41,13 @@ Gui.SearchTimer.Controller.Window.SearchTimer.prototype.dispatchView = function 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     this.requestSearchForm();
-    this.addObserver();
-};
-
-/**
- * add event listeners
- */
-Gui.SearchTimer.Controller.Window.SearchTimer.prototype.addObserver = function () {
-
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this, this.view.body.find('form'));
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
+    this.preventReload(this.view.node[0], this.view.body.find('form')[0]);
 };
 
 /**
  * remove event listeners
  */
-Gui.SearchTimer.Controller.Window.SearchTimer.prototype.removeObserver = function () {
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
-};
+Gui.SearchTimer.Controller.Window.SearchTimer.prototype.removeObserver = function () {};
 
 
 /**

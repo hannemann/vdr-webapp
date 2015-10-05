@@ -132,7 +132,8 @@ Gui.Timer.Controller.Window.Timer.prototype.dispatchView = function () {
 
         Gui.Window.Controller.ScrollAnimateHeader.prototype.dispatchView.call(this);
 
-        this.addObserver();
+        this.preventReload()
+            .addObserver();
 
         this.timerActiveAction();
     }.bind(this));
@@ -160,11 +161,6 @@ Gui.Timer.Controller.Window.Timer.prototype.addObserver = function () {
 
     $document.on("persisttimerchange-" + this.keyInCache, this.updateTimer.bind(this));
 
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
-
     Gui.Window.Controller.Abstract.prototype.addObserver.call(this);
 };
 
@@ -187,10 +183,6 @@ Gui.Timer.Controller.Window.Timer.prototype.removeObserver = function () {
     $document.off('gui-timer.' + this.keyInCache + '.' + this.eventNameSpace);
 
     $document.off("persisttimerchange-" + this.keyInCache);
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
 
     Gui.Window.Controller.Abstract.prototype.removeObserver.call(this);
 };

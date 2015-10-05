@@ -93,7 +93,9 @@ Gui.Video.Controller.Player.prototype.doDispatch = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
     this.video.dispatchView();
-    this.addObserver();
+    this.preventReload()
+        .preventReload(this.view.modalOverlay[0])
+        .addObserver();
     if (this.data.isVideo) {
         this.fetchPoster(2);
     }
@@ -150,10 +152,6 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
         this.video.hideThrobber();
         this.view.poster.classList.add('hidden');
     }.bind(this);
-
-    this.preventReloadHandler = this.preventScrollReload.bind(this, this.view.body);
-    this.view.node.on('touchmove', this.preventReloadHandler);
-    this.view.modalOverlay.on('touchmove', this.preventReloadHandler);
 };
 
 /**
@@ -164,8 +162,6 @@ Gui.Video.Controller.Player.prototype.removeObserver = function () {
     this.view.node.off('click');
     this.view.poster.onload = undefined;
     this.view.poster.onerror = undefined;
-    this.view.node.off('touchmove', this.preventReloadHandler);
-    this.view.modalOverlay.off('touchmove', this.preventReloadHandler);
 };
 
 /**

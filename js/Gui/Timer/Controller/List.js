@@ -37,7 +37,8 @@ Gui.Timer.Controller.List.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.addObserver();
+    this.preventReload()
+        .addObserver();
 
     if (this.dataModel.collectionLoaded) {
 
@@ -144,10 +145,6 @@ Gui.Timer.Controller.List.prototype.getSearchTimerId = function (timer) {
 Gui.Timer.Controller.List.prototype.addObserver = function () {
 
     $document.one('timersloaded.guitimerlist', this.iterateTimers.bind(this));
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
 };
 
 /**
@@ -157,9 +154,6 @@ Gui.Timer.Controller.List.prototype.addObserver = function () {
 Gui.Timer.Controller.List.prototype.removeObserver = function () {
 
     $document.off('timersloaded.guitimerlist');
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
 
     return this;
 };

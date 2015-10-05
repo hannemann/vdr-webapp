@@ -29,7 +29,9 @@ Gui.Window.Controller.ContextMenu.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    this.addObserver();
+    this.preventReload()
+        .preventReload(this.view.modalOverlay[0])
+        .addObserver();
 };
 
 /**
@@ -46,9 +48,6 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
     if (!VDRest.helper.isTouchDevice) {
         upEvent = 'mouseup';
         downEvent = 'mousedown';
-    } else {
-        this.preventReloadHandler = this.preventScrollReload.bind(this, this.view.body);
-        this.view.node.on('touchmove', this.preventReloadHandler);
     }
 
     for (i in this.data) {
@@ -100,10 +99,6 @@ Gui.Window.Controller.ContextMenu.prototype.removeObserver = function () {
 
     var i,
         config = VDRest.app.getModule('Gui.Config');
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
 
     for (i in this.data) {
 

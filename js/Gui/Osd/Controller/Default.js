@@ -31,7 +31,8 @@ Gui.Osd.Controller.Default.prototype.init = function () {
 Gui.Osd.Controller.Default.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-    this.addObserver();
+    this.preventReload()
+        .addObserver();
     this.dataModel.loadOsd();
     this.remote.dispatch(this.parentView);
     this.scrollAfterLoad = true;
@@ -44,11 +45,6 @@ Gui.Osd.Controller.Default.prototype.dispatchView = function () {
 Gui.Osd.Controller.Default.prototype.addObserver = function () {
 
     var me = this;
-
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
 
     $document.on('osdloaded', this.refreshView.bind(this));
 
@@ -88,10 +84,6 @@ Gui.Osd.Controller.Default.prototype.removeObserver = function () {
 
             item.off('click');
         });
-    }
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
     }
 
     return this;

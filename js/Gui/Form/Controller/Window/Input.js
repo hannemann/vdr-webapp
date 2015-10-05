@@ -28,7 +28,9 @@ Gui.Form.Controller.Window.Input.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    this.addObserver();
+    this.preventReload()
+        .preventReload(this.view.modalOverlay[0])
+        .addObserver();
     this.setPosition();
 };
 
@@ -36,13 +38,6 @@ Gui.Form.Controller.Window.Input.prototype.dispatchView = function () {
  * add event listeners
  */
 Gui.Form.Controller.Window.Input.prototype.addObserver = function () {
-
-
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this);
-        this.view.modalOverlay.on('touchmove', this.preventReloadHandler);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
 
     if ("number" === this.data.type) {
 
@@ -80,11 +75,6 @@ Gui.Form.Controller.Window.Input.prototype.removeObserver = function () {
     this.view.cancel.off('click');
 
     $window.off("resize.input-window");
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-        this.view.modalOverlay.off('touchmove');
-    }
 };
 
 /**

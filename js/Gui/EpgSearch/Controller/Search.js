@@ -40,6 +40,7 @@ Gui.EpgSearch.Controller.Search.prototype.dispatchView = function () {
     this.broadcasts.dispatchView();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+    this.preventReload();
 };
 
 /**

@@ -54,17 +54,13 @@ Gui.Recordings.Controller.List.prototype.dispatchView = function () {
         }.bind(this))
     }
 
-    this.addObserver();
+    this.preventReload()
+        .addObserver();
 
     $.event.trigger('recordingslist.dispatched');
 };
 
 Gui.Recordings.Controller.List.prototype.addObserver = function () {
-
-    if (VDRest.helper.isTouchDevice) {
-        this.preventReloadHandler = this.preventScrollReload.bind(this);
-        this.view.node.on('touchmove', this.preventReloadHandler);
-    }
 
     $window.on("gui-recording.edited-file-loaded." + this._class, this.refresh.bind(this));
     $document.on('recordingsupdatesloaded.' + this._class, this.refresh.bind(this));
@@ -73,10 +69,6 @@ Gui.Recordings.Controller.List.prototype.addObserver = function () {
 };
 
 Gui.Recordings.Controller.List.prototype.removeObserver = function () {
-
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node.off('touchmove', this.preventReloadHandler);
-    }
 
     $window.off("gui-recording.edited-file-loaded." + this._class);
     $document.off('recordingsupdatesloaded.' + this._class);
