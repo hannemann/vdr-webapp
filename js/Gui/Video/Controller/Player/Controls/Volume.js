@@ -43,7 +43,7 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.dispatchView = function ()
  */
 Gui.Video.Controller.Player.Controls.Volume.prototype.addObserver = function () {
 
-    this.view.ctrl.on(VDRest.helper.pointerStart, this.handlerDown);
+    this.view.trigger.on(VDRest.helper.pointerStart, this.handlerDown);
 };
 
 /**
@@ -51,18 +51,23 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.addObserver = function () 
  */
 Gui.Video.Controller.Player.Controls.Volume.prototype.removeObserver = function () {
 
-    this.view.ctrl.off(VDRest.helper.pointerStart);
+    this.view.trigger.off(VDRest.helper.pointerStart);
 };
 
 /**
  * handle start volume change
  * @param {jQuery.Event} e
+ * @param {Event} e.originalEvent
+ * @param {Object.<{pageX: number, pageY: number}>} e.originalEvent.changedTouches
+ * @param {number} e.pageX
+ * @param {number} e.pageY
  */
 Gui.Video.Controller.Player.Controls.Volume.prototype.volumeDown = function (e) {
 
     if (this.player.controls.isHidden) {
         return;
     }
+    this.vibrate();
 
     this.player.controls.layer.hideQualitySelector();
 
@@ -88,7 +93,6 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeDown = function (e) 
 
     this.view.toggleVolumeIndicator(true);
     this.view.toggleVolumeSliderActiveState();
-    this.vibrate();
 };
 
 /**
@@ -110,6 +114,10 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeUp = function (e) {
 /**
  * handle volume change
  * @param {jQuery.Event} e
+ * @param {Event} e.originalEvent
+ * @param {Object.<{pageX: number, pageY: number}>} e.originalEvent.changedTouches
+ * @param {number} e.pageX
+ * @param {number} e.pageY
  */
 Gui.Video.Controller.Player.Controls.Volume.prototype.volumeMove = function (e) {
 

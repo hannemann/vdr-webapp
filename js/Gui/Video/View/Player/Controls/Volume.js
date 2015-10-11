@@ -22,6 +22,7 @@ Gui.Video.View.Player.Controls.Volume.prototype.init = function () {
 
     this.node = $('<div class="volume-wrapper">');
     this.ctrl = $('<div class="slider volume">').appendTo(this.node);
+    this.trigger = $('<div class="slider-trigger">').appendTo(this.node);
     this.volumeSlider = $('<div>').appendTo(this.ctrl);
     this.indicator = $('<div class="vdr-web-symbol info volume-indicator">');
     this.indicator.attr('data-animate', 'opacity fast');

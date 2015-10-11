@@ -39,6 +39,16 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.setSliderWidth = function 
 };
 
 /**
+ * add trigger
+ * @return {Gui.Video.View.Player.Controls.Osd.TimeLine}
+ */
+Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.addTrigger = function () {
+
+    this.trigger = $('<div class="slider-trigger">').appendTo(this.node);
+    return this;
+};
+
+/**
  * add timer
  */
 Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.addProgress = function () {

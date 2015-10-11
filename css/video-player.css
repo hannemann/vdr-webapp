@@ -285,6 +285,12 @@ video::-internal-media-controls-overlay-cast-button {
 .html5-player-controls .video-osd .progress {
     width: auto;
 }
+.html5-player-controls .timeline div.slider-trigger {
+    right: 0;
+    left: 0;
+    top: -20px;
+    bottom: -5px;
+}
 .html5-player-controls .progress .info {
     position: relative;
     width: 25%;
@@ -347,6 +353,17 @@ video::-internal-media-controls-overlay-cast-button {
     border: 5px solid;
     border-color: transparent transparent red;
 }
+.html5-player-controls div.slider-trigger {
+    background: none;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    width: auto;
+    height: auto;
+    z-index: 2;
+    border: none;
+}
 
 .html5-player-controls .volume-wrapper {
     bottom: 102px;
@@ -364,6 +381,10 @@ video::-internal-media-controls-overlay-cast-button {
     height: auto;
     left: 0;
     margin: 0 auto;
+}
+.html5-player-controls .volume-wrapper div.slider-trigger {
+    top: 0;
+    bottom: 0;
 }
 
 .html5-player-controls .volume-indicator {

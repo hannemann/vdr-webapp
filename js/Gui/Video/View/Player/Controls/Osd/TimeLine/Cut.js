@@ -5,7 +5,8 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.Cut.prototype = new Gui.Video.View.P
 Gui.Video.View.Player.Controls.Osd.TimeLine.Cut.prototype.render = function () {
 
     Gui.Video.View.Player.Controls.Osd.TimeLine.Video.prototype.render.call(this);
-    this.addButtons();
+    this.addTrigger()
+        .addButtons();
 };
 
 Gui.Video.View.Player.Controls.Osd.TimeLine.Cut.prototype.addButtons = function () {

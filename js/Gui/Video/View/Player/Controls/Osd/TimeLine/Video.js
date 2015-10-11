@@ -3,6 +3,15 @@ Gui.Video.View.Player.Controls.Osd.TimeLine.Video = function () {};
 Gui.Video.View.Player.Controls.Osd.TimeLine.Video.prototype = new Gui.Video.View.Player.Controls.Osd.TimeLine();
 
 /**
+ * render
+ */
+Gui.Video.View.Player.Controls.Osd.TimeLine.Video.prototype.render = function () {
+
+    this.addTrigger();
+    Gui.Video.View.Player.Controls.Osd.TimeLine.prototype.render.call(this);
+};
+
+/**
  * add timer
  */
 Gui.Video.View.Player.Controls.Osd.TimeLine.Video.prototype.addProgress = function () {

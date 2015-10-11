@@ -10,12 +10,12 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype = new Gui.Vide
 
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.addObserver = function () {
 
-    this.view.node.on(VDRest.helper.pointerStart, this.setTimeDown.bind(this));
+    this.view.trigger.on(VDRest.helper.pointerStart, this.setTimeDown.bind(this));
 };
 
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.removeObserver = function () {
 
-    this.view.node.off(VDRest.helper.pointerStart);
+    this.view.trigger.off(VDRest.helper.pointerStart);
 };
 
 /**
@@ -100,6 +100,9 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.updateRecordin
 /**
  * handle start startTime change
  * @param {jQuery.Event} e
+ * @param {Event} e.originalEvent
+ * @param {Object.<{pageX: number, pageY: number}>} e.originalEvent.changedTouches
+ * @param {number} e.pageX
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeDown = function (e) {
 
@@ -156,10 +159,14 @@ Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeUp = fu
 /**
  * handle move startTime
  * @param {jQuery.Event} e
+ * @param {Event} e.originalEvent
+ * @param {Object.<{pageX: number, pageY: number}>} e.originalEvent.changedTouches
+ * @param {number} e.pageX
  */
 Gui.Video.Controller.Player.Controls.Osd.TimeLine.Video.prototype.setTimeMove = function (e) {
 
     var newPos;
+
 
     e.stopPropagation();
     e.preventDefault();
