@@ -107,7 +107,6 @@ video::-internal-media-controls-overlay-cast-button {
 }
 .html5-player-controls .timeline-control {
     font-size: 14px;
-    padding: 0 6px;
     margin: 0 2px;
     position: relative;
     display: inline-block;
@@ -115,7 +114,7 @@ video::-internal-media-controls-overlay-cast-button {
     -moz-user-select: none;     /* Firefox all */
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;
-    min-width: 10px;
+    min-width: 22px;
     background: rgba(0,0,0,0.01);
 }
 .html5-player-controls .mark-controls:first-child .timeline-control:nth-child(2),
