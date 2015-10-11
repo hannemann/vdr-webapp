@@ -122,8 +122,9 @@ VDRest.Abstract.Controller.prototype.vibrate = function (sequence) {
 VDRest.Abstract.Controller.prototype.preventScrollReload = function () {
 
     var args = Array.prototype.slice.apply(arguments),
-        event = undefined,
-        node = undefined;
+        node = undefined, shouldStopPropagation = false;
+    /** @type {Event|undefined} */
+    var event = undefined;
 
     args.forEach(function (arg) {
         if (arg instanceof Event) {
@@ -134,17 +135,22 @@ VDRest.Abstract.Controller.prototype.preventScrollReload = function () {
             event = arg.originalEvent;
         } else if (arg instanceof jQuery) {
             node = arg[0];
+        } else if ("boolean" === typeof arg) {
+            shouldStopPropagation = arg;
         }
     });
 
     node = node || this.view.node[0];
 
     if (
-        event && node &&
-        0 === node.scrollTop &&
+        event && event.cancelable && node && 0 === node.scrollTop &&
         event.changedTouches[0].pageY > VDRest.helper.pointerStartPosition.y
     ) {
         event.preventDefault();
+    }
+
+    if (event && shouldStopPropagation) {
+        event.stopPropagation()
     }
 };
 
@@ -152,9 +158,10 @@ VDRest.Abstract.Controller.prototype.preventScrollReload = function () {
  * prevent reloading on pull down
  * @param {HTMLElement} [listeningElement]
  * @param {HTMLElement} [scrollElement]
+ * @param {boolean} [shouldStopPropagation]
  * @return {VDRest.Abstract.Controller}
  */
-VDRest.Abstract.Controller.prototype.preventReload = function (listeningElement, scrollElement) {
+VDRest.Abstract.Controller.prototype.preventReload = function (listeningElement, scrollElement, shouldStopPropagation) {
 
     var p;
 
@@ -171,7 +178,7 @@ VDRest.Abstract.Controller.prototype.preventReload = function (listeningElement,
         this.preventReloadListeners = this.preventReloadListeners || [];
         p = {
             "element" : listeningElement || this.view.node[0],
-            "handle" : this.preventScrollReload.bind(this, scrollElement)
+            "handle" : this.preventScrollReload.bind(this, scrollElement, !!shouldStopPropagation)
         };
         this.preventReloadListeners.push(p);
         p.element.addEventListener('touchmove', p.handle);

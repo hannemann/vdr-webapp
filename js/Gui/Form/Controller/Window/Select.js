@@ -32,6 +32,9 @@ Gui.Form.Controller.Window.Select.prototype.dispatchView = function () {
 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
-    this.addObserver();
+    this.preventReload(this.view.node[0], this.view.node[0], true)
+        .preventReload(this.view.valuesWrapper[0], this.view.valuesWrapper[0], true)
+        .preventReload(this.view.modalOverlay[0])
+        .addObserver();
     this.setPosition();
 };
