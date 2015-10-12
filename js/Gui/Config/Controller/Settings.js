@@ -32,6 +32,11 @@ Gui.Config.Controller.Settings.prototype.init = function () {
         me.persist();
     }
 };
+Gui.Config.Controller.Settings.prototype.dispatchView = function () {
+
+    Gui.Form.Controller.Abstract.prototype.dispatchView.call(this);
+    this.preventReload();
+};
 
 /**
  * persist settings

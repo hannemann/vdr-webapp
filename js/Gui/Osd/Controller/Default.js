@@ -31,7 +31,8 @@ Gui.Osd.Controller.Default.prototype.init = function () {
 Gui.Osd.Controller.Default.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
-    this.preventReload()
+    this.preventReload(this.view.node[0], this.view.node[0], true)
+        .preventReload(this.view.osdWrapper[0], this.view.osdWrapper[0], true)
         .addObserver();
     this.dataModel.loadOsd();
     this.remote.dispatch(this.parentView);
