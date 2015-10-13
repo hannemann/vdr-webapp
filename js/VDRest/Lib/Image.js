@@ -108,6 +108,16 @@ VDRest.Lib.Image.prototype.applyTransparencyGradient = function (img, src, alpha
         this.width = Math.round(this.height * (this.naturalWidth / this.naturalHeight));
         ca.width = columns = this.width;
         ca.height = rows = this.height;
+
+        if (ca.width <= 0) {
+
+            this.onload = null;
+            this.src = ca.toDataURL();
+            this.classList.remove('hidden-for-processing');
+
+            return;
+        }
+
         // draw the image into the canvas
         ctx.drawImage(this, 0, 0, ca.width, ca.height);
         // get the image data object

@@ -327,7 +327,7 @@ Gui.Epg.Controller.Broadcasts.prototype.stopUpdateInterval = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.update = function () {
 
-    if (VDRest.helper.hasConnection() && 'now' === this.lastEpg) {
+    if (VDRest.helper.hasConnection() && 'now' === this.lastEpg && !this.epgController.isChannelView) {
 
         this.module.store.updateNow();
         this.setScrollData()
