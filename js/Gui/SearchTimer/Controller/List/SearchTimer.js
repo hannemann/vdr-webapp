@@ -273,26 +273,20 @@ Gui.SearchTimer.Controller.List.SearchTimer.prototype.performSearchAction = func
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.showTimersAction = function () {
 
     var module = VDRest.app.getModule('Gui.Timer'),
-        controller,
-        state = this.module.getView('List').node[0].scrollTop,
-        callback = function () {
-            module.destruct();
-            this.module.dispatch();
-            this.module.getView('List').node[0].scrollTop = state;
-        }.bind(this);
+        controller = module.getController('List');
 
     module.flush();
-    controller = module.getController('List');
 
     VDRest.app.pushHistoryState(
         this.module.name + '-ShowTimer' + this.data.id,
-        callback
+        function () {
+            controller.applySearchTimerFilter(this.data.id).destructView();
+            module.destruct.bind(module);
+        }.bind(this)
     );
 
     controller.applySearchTimerFilter(this.data.id)
         .dispatchView();
-
-    this.module.destruct();
 };
 
 Gui.SearchTimer.Controller.List.SearchTimer.prototype.showRecordingssAction = function () {

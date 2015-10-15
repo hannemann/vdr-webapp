@@ -19,6 +19,7 @@ Gui.SearchTimer.View.List.prototype.init = function () {
  */
 Gui.SearchTimer.View.List.prototype.render = function () {
 
+    this.node.removeClass('collapse');
     this.node.addClass('window collapsed viewport-fullsize');
 
     VDRest.Abstract.View.prototype.render.call(this);

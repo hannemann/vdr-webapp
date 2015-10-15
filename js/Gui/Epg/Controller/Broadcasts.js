@@ -151,9 +151,10 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
 
-    var broadcast = this.getBroadcastFromEvent(e);
+    var broadcast = this.getBroadcastFromEvent(e),
+        menuRequest = this.getMenuButtonWasClicked(e);
 
-    if (!broadcast) {
+    if (!broadcast && !menuRequest) {
         return;
     }
 
@@ -162,6 +163,20 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
     activeAnimate.applyAnimation(e, broadcast);
 
     this.preventClick = undefined;
+
+    this.clickTimeout = window.setTimeout(function () {
+        if (!this.module.isMuted) {
+            this.vibrate(100);
+            this.preventClick = true;
+
+            activeAnimate.endAnimation();
+            $document.one(VDRest.helper.pointerEnd, function () {
+                if (!VDRest.helper.canCancelEvent) {
+                    this.requestedBroadcast.requestMenuAction(e);
+                }
+            }.bind(this));
+        }
+    }.bind(this), 1000);
 };
 
 /**
@@ -198,7 +213,12 @@ Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
                 window.clearTimeout(this.clickTimeout);
             }
             if (!VDRest.helper.canCancelEvent && "undefined" !== typeof this.requestedBroadcast) {
-                this.requestedBroadcast.requestWindowAction();
+
+                if (this.getMenuButtonWasClicked(e)) {
+                    this.requestedBroadcast.requestMenuAction(e);
+                } else {
+                    this.requestedBroadcast.requestWindowAction();
+                }
             }
             this.requestedBroadcast = undefined;
         }
@@ -258,6 +278,17 @@ Gui.Epg.Controller.Broadcasts.prototype.getBroadcastFromEvent = function (e) {
     }
 
     return broadcast;
+};
+
+/**
+ * check if menu button of event was clicked
+ * @param {Event} e
+ * @param {HTMLElement} e.target
+ * @return {boolean}
+ */
+Gui.Epg.Controller.Broadcasts.prototype.getMenuButtonWasClicked = function (e) {
+
+    return e.target.classList.contains('listitem-menu-button');
 };
 
 /**

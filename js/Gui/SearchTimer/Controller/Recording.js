@@ -34,6 +34,8 @@ Gui.SearchTimer.Controller.Recording.prototype.init = function () {
         "view": this.view,
         "resource": this.data.dataModel
     });
+
+    this.winModule = VDRest.app.getModule('Gui.Recordings');
 };
 
 /**

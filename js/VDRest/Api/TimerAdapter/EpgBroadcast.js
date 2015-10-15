@@ -16,7 +16,7 @@ VDRest.Api.TimerAdapter.EpgBroadcast.prototype.setData = function (client) {
 
     this.timer = {
         "id" : client.data.timer_id,
-        "is_active" : !client.data.timer_id,
+        "is_active" : !client.data.timer_id ? true : client.data.timer_active,
         "channel" : client.data.channel
     };
     this.broadcast = client.data;

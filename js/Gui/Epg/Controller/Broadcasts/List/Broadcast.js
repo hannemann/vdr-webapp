@@ -1,6 +1,9 @@
 /**
  * @class
  * @constructor
+ * @property {{}} data
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast} data.dataModel
+ * @property {Gui.Epg.View.Broadcasts.List.Broadcast} view
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast = function () {};
 
@@ -89,6 +92,93 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestWindowAction = fun
             "data" : this.data
         }
     })
+};
+
+/**
+ * request menu
+ * @param {Event} e
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestMenuAction = function (e) {
+
+    var tExists = this.data.dataModel.data.timer_exists,
+        tActive = this.data.dataModel.data.timer_active,
+        buttons = {};
+
+    buttons.set= {
+        "label" : VDRest.app.translate((tExists ? 'Delete' : 'Add') + ' Timer'),
+        "fn" : tExists ? this.deleteTimer.bind(this) : this.addTimer.bind(this)
+    };
+
+    if (tExists) {
+        buttons.toggle = {
+            "label": VDRest.app.translate((tActive ? 'Dea' : 'A') + 'ctivate Timer'),
+            "fn": this.toggleTimer.bind(this)
+        };
+    }
+
+    if (e) {
+        e.stopPropagation();
+    }
+
+    $.event.trigger({
+        "type": "window.request",
+        "payload": {
+            "type": "ItemMenu",
+            "data": {
+                "config": {
+                    "header": this.data.dataModel.data.title,
+                    "buttons": buttons
+                }
+            }
+        }
+    })
+};
+
+/**
+ * retrieve timer adapter
+ * @return {VDRest.Api.TimerAdapter}
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.getTimerAdapter = function () {
+
+    return new VDRest.Api.TimerAdapter(
+        VDRest.app.getModule('VDRest.Epg').getModel(
+            'Channels.Channel.Broadcast',
+            this.keyInCache
+        )
+    );
+};
+
+/**
+ * add timer
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.addTimer = function () {
+
+    VDRest.app.getModule('VDRest.Timer').getResource('List.Timer')
+        .addOrUpdateTimer(this.getTimerAdapter(), this.keyInCache);
+};
+
+/**
+ * delete timer
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.deleteTimer = function () {
+
+    VDRest.app.getModule('VDRest.Timer').getResource('List.Timer')
+        .deleteTimer(this.getTimerAdapter(), this.keyInCache);
+};
+
+/**
+ * toggle timer active state
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.toggleTimer = function () {
+
+    this.data.dataModel.data.timer_active = !this.data.dataModel.data.timer_active;
+
+    VDRest.app.getModule('VDRest.Timer')
+        .getResource('List.Timer')
+        .addOrUpdateTimer(
+            new VDRest.Api.TimerAdapter(this.data.dataModel),
+            this.data.dataModel.data.timer_id
+        );
 };
 
 /**

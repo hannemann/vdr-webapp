@@ -105,20 +105,13 @@ Gui.SearchTimer.Controller.List.prototype.dispatchNew = function (e) {
  */
 Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
 
-    var controller = this.module.getController('Search', {"omitForm" : true}),
-        state = this.module.getView('List').node[0].scrollTop,
-        callback = function () {
-            controller.destructView();
-            this.module.dispatch();
-            this.module.getView('List').node[0].scrollTop = state;
-        }.bind(this);
+    var controller = this.module.getController('Search', {"omitForm" : true});
 
     VDRest.app.pushHistoryState(
         this.module.name + '-' + controller.eventPrefix,
-        callback
+        controller.destructView.bind(controller)
     );
 
-    this.module.destruct();
     controller.dispatchView();
     controller.broadcasts.initResults(e);
 };
@@ -128,20 +121,13 @@ Gui.SearchTimer.Controller.List.prototype.dispatchSearchResult = function (e) {
  */
 Gui.SearchTimer.Controller.List.prototype.dispatchRecordings = function (e) {
 
-    var controller = this.module.getController('Recordings'),
-        state = this.module.getView('List').node[0].scrollTop,
-        callback = function () {
-            controller.destructView();
-            this.module.dispatch();
-            this.module.getView('List').node[0].scrollTop = state;
-        }.bind(this);
+    var controller = this.module.getController('Recordings');
 
     VDRest.app.pushHistoryState(
         this.module.name + '-' + controller.eventPrefix,
-        callback
+        controller.destructView.bind(controller)
     );
 
-    this.module.destruct();
     controller.dispatchView();
     controller.initResults(e);
 };

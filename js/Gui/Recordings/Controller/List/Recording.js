@@ -194,6 +194,8 @@ Gui.Recordings.Controller.List.Recording.prototype.startStream = function () {
  */
 Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = function (e) {
 
+    var module = this.winModule || this.module;
+
     this.vibrate();
     e.preventDefault();
     e.stopPropagation();
@@ -207,7 +209,7 @@ Gui.Recordings.Controller.List.Recording.prototype.requestWindowAction = functio
         "payload" : {
             "hashSuffix": '~' + this.keyInCache.toCacheKey(),
             "type" : "Window.Recording",
-            "module" : this.module,
+            "module" : module,
             "data" : {
                 "node" : this.view,
                 "id": this.keyInCache.toCacheKey(),

@@ -165,9 +165,17 @@ Gui.Timer.Controller.List.prototype.removeObserver = function () {
 Gui.Timer.Controller.List.prototype.destroyTimers = function () {
 
     this.timerList.each(function () {
-
-        arguments[1].destructView();
-    });
+        if (
+            arguments[1].view && arguments[1].view.isRendered &&
+            (
+                "undefined" === typeof this.searchTimerId ||
+                (!isNaN(this.searchTimerId) && arguments[1].dataModel.isCreatedBySearchTimer(this.searchTimerId))
+            )
+        ) {
+            arguments[1].destructView();
+        }
+    }.bind(this));
+    this.searchTimerId = undefined;
 
     return this;
 };

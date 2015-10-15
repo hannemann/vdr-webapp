@@ -89,24 +89,26 @@ VDRest.Epg.Model.Observer.prototype.handleTimerUpdated = function (e) {
 
     if (this.timers[e.payload.callerId]) {
 
-        model = this.getBroadcast(this.timers[e.payload.callerId]);
+        this.timers[e.payload.callerId].forEach(function (broadcastId) {
 
-        delete this.timers[e.payload.callerId];
+            model = this.getBroadcast(broadcastId);
 
-        if (model) {
+            if (model) {
 
-            model.data.timer_active = e.payload.timer.is_active;
-            model.data.timer_id = e.payload.timer.id;
+                model.data.timer_active = e.payload.timer.is_active;
+                model.data.timer_id = e.payload.timer.id;
 
-            this.registerTimer(model);
+                this.registerTimer(model);
 
-            $.event.trigger({
-                "type": 'gui-timer.updated.epg',
-                "payload": {
-                    "event": model.keyInCache
-                }
-            });
-        }
+                $.event.trigger({
+                    "type": 'gui-timer.updated.epg',
+                    "payload": {
+                        "event": model.keyInCache
+                    }
+                });
+            }
+
+        }.bind(this));
     }
 };
 

@@ -151,7 +151,9 @@ Gui.Recordings.Controller.Window.Recording.prototype.updateAction = function () 
     this.header.text(this.data.recording.dataModel.data.name.split('~').pop());
     this.view.update();
 
-    this.module.getController('List').refresh();
+    if ('Gui.Recordings' === VDRest.app.getCurrent()) {
+        this.module.getController('List').refresh();
+    }
 
     $.event.trigger({
         "type": "transparentMenubar",
@@ -177,7 +179,17 @@ Gui.Recordings.Controller.Window.Recording.prototype.deleteRecordingAction = fun
  */
 Gui.Recordings.Controller.Window.Recording.prototype.afterDeleteAction = function () {
 
-    this.module.getController('List').refresh();
+    var current = VDRest.app.getCurrent();
+
+    if ('Gui.Recordings' === current) {
+        this.module.getController('List').refresh();
+    }
+
+    if ('Gui.SearchTimer' === current) {
+        VDRest.app.getModule(current)
+            .getController('Recordings')
+            .removeRecording(this.data.recording.data.file_name);
+    }
 
     history.back();
 };

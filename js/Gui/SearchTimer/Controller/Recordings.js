@@ -62,6 +62,16 @@ Gui.SearchTimer.Controller.Recordings.prototype.initResults = function (resultCo
     }.bind(this));
 };
 
+Gui.SearchTimer.Controller.Recordings.prototype.removeRecording = function (fileName) {
+
+    this.recordingsList.forEach(function (recording, index) {
+        if (fileName === recording.data.file_name) {
+            recording.destructView();
+            this.recordingsList.splice(index, 1);
+        }
+    }.bind(this));
+};
+
 /**
  * destruct view
  */

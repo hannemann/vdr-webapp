@@ -81,7 +81,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.update = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.decorate = function () {
 
-    this.setWidth().addTitle().addClasses().addChannelViewInfo();
+    this.setWidth().addTitle().addMenuButton().addClasses().addChannelViewInfo();
 };
 
 /**
@@ -221,8 +221,18 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
         .html(this.getDescription())
         .appendTo(this.channelView);
 
-
     this.channelView.appendTo(this.info);
+
+    return this;
+};
+
+/**
+ * add menu button
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addMenuButton = function () {
+
+    this.menuButton = $('<div>').html('&vellip;').addClass('listitem-menu-button visible-channel-view');
+    this.menuButton.appendTo(this.node);
 
     return this;
 };

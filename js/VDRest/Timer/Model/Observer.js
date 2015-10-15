@@ -47,18 +47,21 @@ VDRest.Timer.Model.Observer.prototype.updateTimer = function (e) {
 
     model = this.getTimer(e.payload.callerId);
 
-    model.data = timer;
+    if (model) {
 
-    delete this.module.cache.store.Model['List.Timer'][model.keyInCache];
+        model.data = timer;
 
-    model.keyInCache = timer.id;
+        delete this.module.cache.store.Model['List.Timer'][model.keyInCache];
 
-    this.module.cache.store.Model['List.Timer'][model.keyInCache] = model;
+        model.keyInCache = timer.id;
 
-    $.event.trigger({
-        "type" : 'gui-timer.updated.' + e.payload.callerId,
-        "payload" : model
-    });
+        this.module.cache.store.Model['List.Timer'][model.keyInCache] = model;
+
+        $.event.trigger({
+            "type": 'gui-timer.updated.' + e.payload.callerId,
+            "payload": model
+        });
+    }
 };
 
 /**

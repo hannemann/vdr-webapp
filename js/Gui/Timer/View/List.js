@@ -24,6 +24,7 @@ Gui.Timer.View.List.prototype.render = function () {
 
     if (!this.isRendered) {
 
+        this.node.removeClass('collapse');
         this.node.addClass('window collapsed viewport-fullsize');
         VDRest.Abstract.View.prototype.render.call(this);
         this.node.toggleClass('collapsed expand');
