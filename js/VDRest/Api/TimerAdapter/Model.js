@@ -15,6 +15,7 @@ VDRest.Api.TimerAdapter.Model.prototype = new VDRest.Api.TimerAdapter.Abstract()
 VDRest.Api.TimerAdapter.Model.prototype.setData = function (client) {
 
     this.timer = client.data.timer.data;
+    delete client.data.timer;
     this.broadcast = client.data;
 
     return this;
