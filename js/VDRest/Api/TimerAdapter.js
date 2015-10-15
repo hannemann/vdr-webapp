@@ -20,7 +20,14 @@ VDRest.Api.TimerAdapter.prototype.getTypeInstance = function () {
 
     if (this.client instanceof VDRest.Epg.Model.Channels.Channel.Broadcast) {
 
-        type = new VDRest.Api.TimerAdapter.EpgBroadcast();
+        if (this.client.data.timer instanceof VDRest.Timer.Model.List.Timer) {
+
+            type = new VDRest.Api.TimerAdapter.Model();
+
+        } else {
+
+            type = new VDRest.Api.TimerAdapter.EpgBroadcast();
+        }
 
     } else if (this.client instanceof Gui.Timer.Controller.Window.Timer) {
 
@@ -29,6 +36,10 @@ VDRest.Api.TimerAdapter.prototype.getTypeInstance = function () {
     } else if (this.client instanceof Gui.Timer.Controller.List.Timer) {
 
         type = new VDRest.Api.TimerAdapter.List();
+
+    } else if (this.client instanceof VDRest.Timer.Model.List.Timer) {
+
+        type = new VDRest.Api.TimerAdapter.Model();
 
     } else if ("undefined" !== typeof this.client.type && this.client.type === 'generic') {
 

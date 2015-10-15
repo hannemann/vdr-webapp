@@ -3,6 +3,7 @@
  * @constructor
  * @property {{}} data
  * @property {VDRest.Epg.Model.Channels.Channel.Broadcast} data.dataModel
+ * @property {VDRest.Timer.Model.Model.List.Timer} data.dataModel.data.timer
  * @property {Gui.Epg.View.Broadcasts.List.Broadcast} view
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast = function () {};
@@ -171,14 +172,21 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.deleteTimer = function ()
  */
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.toggleTimer = function () {
 
-    this.data.dataModel.data.timer_active = !this.data.dataModel.data.timer_active;
-
     VDRest.app.getModule('VDRest.Timer')
-        .getResource('List.Timer')
-        .addOrUpdateTimer(
-            new VDRest.Api.TimerAdapter(this.data.dataModel),
-            this.data.dataModel.data.timer_id
-        );
+        .loadModel('List.Timer', this.data.dataModel.data.timer_id, function (timer) {
+
+            timer.data.is_active = !timer.data.is_active;
+            this.data.dataModel.data.timer_active = timer.data.is_active;
+            this.data.dataModel.data.timer = timer;
+
+            VDRest.app.getModule('VDRest.Timer')
+                .getResource('List.Timer')
+                .addOrUpdateTimer(
+                    new VDRest.Api.TimerAdapter(this.data.dataModel),
+                    this.data.dataModel.data.timer_id
+                );
+
+        }.bind(this));
 };
 
 /**
