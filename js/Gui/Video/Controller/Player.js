@@ -413,7 +413,9 @@ Gui.Video.Controller.Player.prototype.getStreamUrl = function (streamdevParams, 
  */
 Gui.Video.Controller.Player.prototype.pausePlayback = function () {
 
-    this.controls.stopHide();
+    if (this.controls) {
+        this.controls.stopHide();
+    }
 
     if (this.data.isVideo) {
 
@@ -459,21 +461,30 @@ Gui.Video.Controller.Player.prototype.stopPlayback = function (e) {
 
 /**
  * change video source
- * @param {VDRest.Epg.Model.Channels.Channel|Gui.Window.Controller.Recording|jQuery.Event} e
+ * @param {VDRest.Epg.Model.Channels.Channel|VDRest.Recordings.Model.List.Recording|jQuery.Event} e
  */
 Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
 
     var channels, getter, nextChannel,
         callback = function () {
             var newTriggerPlayState = 'off';
+
+            if (this.controls) {
+                this.controls.destructView(false);
+            }
+            this.dispatchControls();
             this.controls.layer.osd.update();
             if (this.data.isTv) {
                 if (this.data.sourceModel.getData('channel_id') == this.oldChannelId && this.isPlaying) {
                     newTriggerPlayState = 'on';
                 }
-                this.controls.layer.triggerPlay.view.setState(newTriggerPlayState);
+                if (this.controls) {
+                    this.controls.layer.triggerPlay.view.setState(newTriggerPlayState);
+                }
             } else {
-                this.controls.layer.osd.timeLine.updateRecordingEndTime(false);
+                if (this.controls) {
+                    this.controls.layer.osd.timeLine.updateRecordingEndTime(false);
+                }
                 this.fetchPoster(2);
             }
         }.bind(this);
@@ -481,16 +492,18 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
     if (e instanceof jQuery.Event) {
         e.preventDefault();
         e.stopPropagation();
-        this.controls.stopHide();
+        if (this.controls) {
+            this.controls.stopHide();
+        }
+    }
+
+    if (this.data.sourceModel == e) {
+        return;
     }
 
     if ("undefined" !== typeof this.updateBroadcastTimeout) {
         clearTimeout(this.updateBroadcastTimeout);
         this.updateBroadcastTimeout = undefined;
-    }
-
-    if (this.data.sourceModel == e) {
-        return;
     }
 
     if (e instanceof jQuery.Event) {
