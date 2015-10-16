@@ -1,15 +1,25 @@
 /**
  * @typedef {{}} videoPlayerData
  * @property {(VDRest.Epg.Model.Channels.Channel|VDRest.Recordings.Model.List.Recording)} sourceModel
+ * @property {boolean} isMinimized
+ * @property {boolean} isTv
+ * @property {boolean} isVideo
+ * @property {Date} startDate
+ * @property {number} startTime
+ * @property {number} progress
  */
 
 /**
  * @class
  * @constructor
+ * @property {Gui.Video} module
  * @property {Gui.Video.Controller.Player.Controls} controls
  * @property {Gui.Video.View.Player} view
  * @property {Gui.Video.Controller.Player.Video} video
  * @property {videoPlayerData} data
+ * @property {boolean} spooling
+ * @property {string} eventPrefix
+ * @property {string} mode
  */
 Gui.Video.Controller.Player = function () {
 };
@@ -111,7 +121,7 @@ Gui.Video.Controller.Player.prototype.dispatchControls = function () {
     if (!this.controls) {
         this.controls = this.module.getController('Player.Controls', {"parent": this});
         this.controls.dispatchView();
-        if (this.controlsInitiallyDispatched) {
+        if (this.controlsInitiallyDispatched && this.isPlaying) {
             this.controls.deferHide();
         }
     }
@@ -267,17 +277,15 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
 
     this.vibrate();
 
+    if (this.controls) {
+        this.controls.destructView();
+    }
     if (!this.data.isMinimized) {
         this.cancelFullscreen();
         this.historyState = history.state;
         VDRest.app.setNoHistoryActionFlag();
         history.back();
         document.body.classList.add('video-minimized');
-        setTimeout(function () {
-            this.view.node.one('click', function () {
-                this.toggleMinimize();
-            }.bind(this));
-        }.bind(this), 2000);
         VDRest.app.getModule('Gui.Window').popRegister();
         this.data.isMinimized = true;
         VDRest.app.getModule('Gui.Epg').unMute();
@@ -288,6 +296,9 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         this.data.isMinimized = false;
         VDRest.app.getModule('Gui.Window').register(this);
     }
+    setTimeout(function () {
+        this.dispatchControls();
+    }.bind(this), 100);
 };
 
 /**
@@ -456,7 +467,12 @@ Gui.Video.Controller.Player.prototype.stopPlayback = function (e) {
 
     e.stopPropagation();
 
-    history.back();
+    if (this.data.isMinimized) {
+        this.destructView();
+        document.body.classList.remove('video-minimized');
+    } else {
+        history.back();
+    }
 };
 
 /**

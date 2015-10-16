@@ -50,15 +50,13 @@ Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
 
     var type;
 
-    if (this.player.data.isTv) {
+    if (this.player.data.isMinimized) {
+        type = 'Minimized';
+    } else if (this.player.data.isTv) {
         type = 'Tv';
-    }
-
-    if (this.player.data.isVideo) {
+    } else if (this.player.data.isVideo) {
         type = 'Video';
-    }
-
-    if (this.player.mode == 'cut') {
+    } else if (this.player.mode == 'cut') {
         type = 'Cut';
         this.view.node.addClass('cut');
     }

@@ -462,22 +462,18 @@ video::-internal-media-controls-overlay-cast-button {
     bottom: 0;
     text-align: center;
 }
-.video-minimized .html5-player-controls {
-    top: auto;
-    height: 60px;
-}
 .video-minimized .html5-player video {
     max-width: 320px;
     max-height: 180px;
     height: 100%;
 }
-.video-minimized .html5-player-controls > div {
-    display: none;
-}
 .video-minimized .html5-player-controls .video-osd {
     display: block;
     width: auto;
     bottom: 0;
+}
+.video-minimized .html5-player-controls .minimize {
+    left: 118px;
 }
 
 @media (orientation: portrait) {
@@ -498,14 +494,18 @@ video::-internal-media-controls-overlay-cast-button {
         bottom: -40px;
     }
 
+    /*body:not([class~="video-minimized"]) .html5-player-controls .stop,*/
+    /*body:not([class~="video-minimized"]) .html5-player-controls .play,*/
     .html5-player-controls .stop,
     .html5-player-controls .play,
     .html5-player-controls .toggle-fullScreen,
     .html5-player-controls .toggle-quality,
+    /*body:not([class~="video-minimized"]) .html5-player-controls .minimize,*/
     .html5-player-controls .minimize,
     .html5-player-controls .move-mark-backward,
     .html5-player-controls.cut .cut,
-    .html5-player-controls.cut .watch {
+    .html5-player-controls.cut .watch,
+    .video-minimized .html5-player-controls .volume-wrapper {
         top: -54px;
     }
     .html5-player-controls .channel-up,
@@ -559,12 +559,27 @@ video::-internal-media-controls-overlay-cast-button {
     .html5-player-controls .volume-wrapper {
         bottom: 10px;
     }
+    .video-minimized .html5-player-controls .volume-wrapper {
+        bottom: 84px;
+    }
     .html5-player-controls .volume-indicator,
     .html5-player-controls .quality-select {
         bottom: 60px;
     }
     .html5-player-controls .video-osd {
         width: calc(100% - 84px);
+    }
+
+    .video-minimized .html5-player-controls.show:before {
+        content: '.';
+        color: transparent;
+        display: block;
+        margin-top: -64px;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: rgba(0,0,0,0.5);
+        border-top: 1px solid black;
     }
 }
 @media (orientation: landscape) {
@@ -598,5 +613,8 @@ video::-internal-media-controls-overlay-cast-button {
         margin: auto 0;
         bottom: 0;
         top: 0;
+    }
+    .video-minimized .html5-player-controls .volume-wrapper {
+        top: 64px;
     }
 }

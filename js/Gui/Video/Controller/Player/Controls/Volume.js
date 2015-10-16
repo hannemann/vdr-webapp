@@ -1,5 +1,6 @@
 /**
  * @constructor
+ * @property {Gui.Video.Controller.Player} player
  */
 Gui.Video.Controller.Player.Controls.Volume = function () {};
 
@@ -69,7 +70,9 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeDown = function (e) 
     }
     this.vibrate();
 
-    this.player.controls.layer.hideQualitySelector();
+    if ("function" === typeof this.player.controls.layer.hideQualitySelector) {
+        this.player.controls.layer.hideQualitySelector();
+    }
 
     e.stopPropagation();
     e.preventDefault();

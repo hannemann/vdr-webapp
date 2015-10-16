@@ -60,8 +60,8 @@ Gui.Video.Controller.Player.Controls.Trigger.Abstract.prototype.removeObserver =
  */
 Gui.Video.Controller.Player.Controls.Trigger.Abstract.prototype.handler = function (e) {
 
-    this.data.handler(e);
     this.view.toggleState();
+    this.data.handler(e);
 };
 
 /**
