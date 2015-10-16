@@ -1,6 +1,15 @@
 /**
  * @class
  * @constructor
+ * @property {{}} data
+ * @property {Gui.Recordings.Controller.List.Directory} data.parent
+ * @property {string} data.file_name
+ * @property {string} data.name
+ * @property {number} data.start_time
+ * @property {VDRest.Recordings.Model.List.Recording} dataModel
+ * @property {Gui.Recordings.View.List.Recording} view
+ * @property {boolean|undefined} isMuted
+ * @property {boolean|undefined} preventClick
  */
 Gui.Recordings.Controller.List.Recording = function () {};
 
@@ -258,7 +267,25 @@ Gui.Recordings.Controller.List.Recording.prototype.requestMenuAction = function 
  */
 Gui.Recordings.Controller.List.Recording.prototype.deleteAction = function () {
 
-    this.dataModel.delete(this.updateAction.bind(this));
+    this.dataModel.delete(this.afterDeleteAction.bind(this));
+};
+
+/**
+ * handle after delete
+ */
+Gui.Recordings.Controller.List.Recording.prototype.afterDeleteAction = function () {
+
+    var current = VDRest.app.getCurrent();
+
+    if ('Gui.Recordings' === current) {
+        this.module.getController('List').refresh();
+    }
+
+    if ('Gui.SearchTimer' === current) {
+        VDRest.app.getModule(current)
+            .getController('Recordings')
+            .removeRecording(this.data.file_name);
+    }
 };
 
 /**
