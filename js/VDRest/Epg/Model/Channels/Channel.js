@@ -15,10 +15,19 @@
  */
 
 /**
- * Channel ViewModel
+ * Channel Model
  * @class
  * @constructor
  * @property {channelData} data
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} collection
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} currentResult
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]|undefined} preprocessedCollection
+ * @property {string} baseUrl
+ * @property {Object.<string, Object.<string, string>>} events
+ * @property {Object.<number, boolean>} loadedNextFrom holds timestamps that have already been requested
+ * @property {number|undefined} loadNextFrom
+ * @property {VDRest.Epg} module
+ * @property {function} currentBroadcastHandler
  */
 VDRest.Epg.Model.Channels.Channel = function () {};
 
@@ -179,7 +188,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getByTime = function (from, to) {
         + VDRest.Epg.Model.Channels.Channel.Broadcast.Resource.prototype.defaultTimeSpan
     );
 
-    // search in collection for broadcasts that math from and to arguments
+    // search in collection for broadcasts that match from and to arguments
     for (i;i<l;i++) {
 
         broadcast = this.collection[i];
@@ -290,7 +299,7 @@ VDRest.Epg.Model.Channels.Channel.prototype.getStreamUrl = function (streamdevPa
  */
 VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function (callback) {
 
-    var i = 0, l = this.collection.length, cur,
+    var l = this.collection.length,
         d=new Date(),
         now = d.getTime()/1000,
         end;
@@ -302,27 +311,40 @@ VDRest.Epg.Model.Channels.Channel.prototype.getCurrentBroadcast = function (call
         end = new Date(Date.now() + 3600 * 6 * 1000);
     }
 
-    $window.one('broadcastsloaded', function (e) {
+    this.currentBroadcastHandler = this.handleCurrentBroadcastResponse.bind(this, callback);
 
-        var found = false;
-        if (e.payload !== this.getData('channel_id')) {
-            return;
-        }
-        l = this.collection.length;
-        for (i; i < l; i++) {
-            cur = this.collection[i];
-
-            if (!found && cur.getData('start_time') <= now && cur.getData('end_time') >= now) {
-                found = true;
-                callback(cur);
-            }
-        }
-        if (!found) {
-            callback(false);
-        }
-    }.bind(this));
+    $window.on('broadcastsloaded', this.currentBroadcastHandler);
 
     this.getByTime(d, end);
+};
+
+/**
+ * callback for getCurrentBroadcast listener
+ * @param {function} callback
+ * @param {jQuery.Event} e
+ * @param {string} e.payload
+ */
+VDRest.Epg.Model.Channels.Channel.prototype.handleCurrentBroadcastResponse = function (callback, e) {
+
+    var found = false, i = 0, l = this.collection.length, cur, now = Date.now()/1000;
+
+    if (e.payload !== this.getData('channel_id')) {
+        return;
+    }
+
+    for (i; i < l; i++) {
+        cur = this.collection[i];
+
+        if (!found && cur.getData('start_time') <= now && cur.getData('end_time') >= now) {
+            found = true;
+            callback(cur);
+            $window.off('broadcastsloaded', this.currentBroadcastHandler);
+            break;
+        }
+    }
+    if (!found) {
+        callback(false);
+    }
 };
 
 /**
