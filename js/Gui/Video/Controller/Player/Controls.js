@@ -39,7 +39,9 @@ Gui.Video.Controller.Player.Controls.prototype.dispatchView = function () {
 
     this.getLayer();
     this.layer.dispatchView();
-    this.addObserver();
+    this.view.node.one(this.transitionEndEvents, function () {
+        this.addObserver();
+    }.bind(this));
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 };
 
@@ -71,7 +73,7 @@ Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
  */
 Gui.Video.Controller.Player.Controls.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.destructView.bind(this, true));
+    this.view.node.one('click', this.destructView.bind(this, true));
 };
 
 /**
@@ -118,7 +120,6 @@ Gui.Video.Controller.Player.Controls.prototype.destructView = function (transiti
         this.omitDestruct = undefined;
         return;
     }
-    this.view.node.off('click');
 
     if (transition) {
         this.view.node.one(this.transitionEndEvents, this.doDestruct.bind(this));
@@ -137,6 +138,7 @@ Gui.Video.Controller.Player.Controls.prototype.doDestruct = function () {
     this.layer.destructView();
     VDRest.Abstract.Controller.prototype.destructView.call(this);
     delete this.player.controls;
+    this.player.addControlsObserver();
 
     if (VDRest.config.getItem('supportChromecast') && this.player.isPlaying) {
         setTimeout(function () {

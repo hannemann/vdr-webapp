@@ -4,7 +4,7 @@
  * @property {boolean} isMinimized
  * @property {boolean} isTv
  * @property {boolean} isVideo
- * @property {Date} startDate
+ * @property {number} startDate
  * @property {number} startTime
  * @property {number} progress
  */
@@ -133,7 +133,7 @@ Gui.Video.Controller.Player.prototype.dispatchControls = function () {
  */
 Gui.Video.Controller.Player.prototype.addObserver = function () {
 
-    this.view.node.on('click', this.dispatchControls.bind(this));
+    this.addControlsObserver();
 
     if (!this.noTimeUpdateWorkaround && this.data.isVideo) {
         this.video.addTimeUpdateObserver(function (e) {
@@ -164,14 +164,19 @@ Gui.Video.Controller.Player.prototype.addObserver = function () {
     }.bind(this);
 };
 
+Gui.Video.Controller.Player.prototype.addControlsObserver = function () {
+
+    this.view.node.one('click', this.dispatchControls.bind(this));
+};
+
 /**
  * remove event listeners
  */
 Gui.Video.Controller.Player.prototype.removeObserver = function () {
 
     this.view.node.off('click');
-    this.view.poster.onload = undefined;
-    this.view.poster.onerror = undefined;
+    this.view.poster.onload = null;
+    this.view.poster.onerror = null;
 };
 
 /**
