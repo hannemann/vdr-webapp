@@ -15,7 +15,8 @@ Gui.EpgSearch.Controller.Search.prototype = new Gui.Epg.Controller.Broadcasts();
 Gui.EpgSearch.Controller.Search.prototype.init = function () {
 
     this.form = this.module.getController('Search.Form', {
-        "parent" : this
+        "parent" : this,
+        "query" : this.data.query
     });
 
     this.broadcasts = this.module.getController('Broadcasts', {
@@ -34,7 +35,7 @@ Gui.EpgSearch.Controller.Search.prototype.init = function () {
 /**
  * dispatch
  */
-Gui.EpgSearch.Controller.Search.prototype.dispatchView = function () {
+Gui.EpgSearch.Controller.Search.prototype.dispatchView = function (search) {
 
     this.form.dispatchView();
     this.broadcasts.dispatchView();

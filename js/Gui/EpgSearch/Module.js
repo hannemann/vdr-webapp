@@ -42,9 +42,9 @@ Gui.EpgSearch.prototype.headline = 'EPG Search';
 /**
  * dispatch default view
  */
-Gui.EpgSearch.prototype.dispatch = function () {
+Gui.EpgSearch.prototype.dispatch = function (search) {
 
-    this.getController('Search').dispatchView();
+    this.getController('Search', {"query":search}).dispatchView(search);
 };
 
 /**

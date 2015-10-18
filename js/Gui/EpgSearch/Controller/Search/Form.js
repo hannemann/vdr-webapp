@@ -19,6 +19,7 @@ Gui.EpgSearch.Controller.Search.Form.prototype.init = function () {
     VDRest.app.getModule('Gui.SearchTimer').getViewModel('Window.SearchTimer', {
         "id" : -1,
         "view" : this.view,
+        "search" : this.data.query,
         "resource": VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id" : -1})
     });
 };

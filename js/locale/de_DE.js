@@ -41,6 +41,7 @@ VDRest.app.de_DE = {
     "New" : "Neu",
     "Recordings" : "Aufnahmen",
     "Channelview" : "Kanal-Ansicht",
+    "Search similar" : "Suche ähnliche",
     "Channels" : "Kanäle",
     "EPG view" : "EPG-Ansicht",
     "Refresh" : "Aktualisieren",

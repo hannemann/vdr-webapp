@@ -117,6 +117,13 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestMenuAction = funct
         };
     }
 
+    if ('Gui.Epg' === VDRest.app.getCurrent()) {
+        buttons.search = {
+            "label": VDRest.app.translate('Search similar'),
+            "fn": this.performSearch.bind(this)
+        };
+    }
+
     if (e) {
         e.stopPropagation();
     }
@@ -133,6 +140,14 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestMenuAction = funct
             }
         }
     })
+};
+
+/**
+ * perform epg search with similar title
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.performSearch = function () {
+
+    VDRest.app.dispatch('Gui.EpgSearch', this.data.dataModel.data.title);
 };
 
 /**

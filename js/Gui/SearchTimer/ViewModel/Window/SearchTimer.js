@@ -151,10 +151,11 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setCommonFields = functio
         },
         dl_depends = {
             "use_date_limit" : true
-        };
+        },
+        search = this.data.search || this.data.resource.data.search;
 
     this.searchFormFields.search = this.getStringField(
-        "search", "Query", this.data.resource.data.search
+        "search", "Query", search
     );
     if (this.withAdvanced) {
         this.searchFormFields.advanced = {
