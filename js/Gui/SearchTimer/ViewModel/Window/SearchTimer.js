@@ -1411,39 +1411,37 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelGroupFieldValue
 };
 
 /**
- * retrieve channelgroups
+ * retrieve dateLimit field values
  * @return {{}}
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDateLimitFieldValues = function () {
 
-    var todayLimit = new Date(
-            (Date.now() - (Date.now() % 86400000))
-            + new Date().getTimezoneOffset() * 60 * 1000 + 86400000
-        ).getTime() / 1000
-        , values = {
+    var t = new Date(),
+        s = new Date(t.getFullYear().toString() + '-' + (t.getMonth() + 1).toString() + '-' + t.getDate().toString()),
+        values = {
             "today": {
                 "label": 'Today only',
-                "value": todayLimit,
+                "value": s.getTime() / 1000,
                 "selected": true
-            },
-            "days_1": {
-                "label": 'Until tomorrow',
-                "value": todayLimit,
-                "selected": false
             }
-        }, days = 14, i = 2, d;
+        }, days = 14, i = 2;
 
+    s.setDate(s.getDate() + 1);
+    values.days_1 = {
+        "label": 'Until tomorrow',
+        "value": s.getTime() / 1000,
+        "selected": false
+    };
 
     for (i;i<=days;i++) {
-        d = new Date(todayLimit * 1000 + i * 86400000);
+        s.setDate(s.getDate() + 1);
         values['days_' + i.toString()] = {
-            "label": d.format('epgSearchDateLimit_' + VDRest.app.language),
-            "value": todayLimit + i * 86400,
+            "label": s.format('epgSearchDateLimit_' + VDRest.app.language),
+            "value": s.getTime() / 1000,
             "selected": false,
             "translate": false
         }
     }
 
     return values;
-
 };
