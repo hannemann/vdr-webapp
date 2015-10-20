@@ -36,3 +36,7 @@
     top: 0;
     background: #696969;
 }
+
+.window-input.epg-search-date-limit.select label em.text {
+    white-space: pre;
+}

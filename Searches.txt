@@ -1,0 +1,12 @@
+Kategorie: Information.*((top|tages|)tipp|\*{4,})
+Kategorie: Spielfilm.*((top|tages|)tipp|\*{4,})
+Kategorie: Serie.*((top|tages|)tipp|\*{4,})
+Kategorie: Show.*((top|tages|)tipp|\*{4,})
+Kategorie: Sport.*((top|tages|)tipp|\*{4,})
+
+
+Kategorie: (Information|Spielfilm|Serie|Show|Sport).*((top|tages|)tipp|\*{4,})
+Modus: Regex
+Suche in: Beschreibung
+Verwende Kanalgruppe: Overview
+Datum bis: nur heute
