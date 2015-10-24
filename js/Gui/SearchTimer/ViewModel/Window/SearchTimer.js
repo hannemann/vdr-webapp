@@ -1416,15 +1416,17 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getChannelGroupFieldValue
  */
 Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDateLimitFieldValues = function () {
 
-    var t = new Date(),
-        s = new Date(t.getFullYear().toString() + '-' + (t.getMonth() + 1).toString() + '-' + t.getDate().toString()),
+    var t = new Date(), s,
         values = {
             "today": {
                 "label": 'Today only',
-                "value": s.getTime() / 1000,
                 "selected": true
             }
         }, days = 14, i = 2;
+
+    s = new Date(t.getFullYear().toString() + '-' + (t.getMonth() + 1).toString() + '-' + t.getDate().toString());
+    s.setDate(s.getDate() + 1);
+    values.today.value = s.getTime() / 1000;
 
     s.setDate(s.getDate() + 1);
     values.days_1 = {
