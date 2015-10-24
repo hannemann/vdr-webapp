@@ -7,7 +7,7 @@ dateFormat.masks.shortTime_de_DE            = "HH:MM";
 dateFormat.masks.mediumTime_de_DE           = "HH:MM:ss";
 dateFormat.masks.longTime_de_DE             = "HH:MM:ss";
 dateFormat.masks.monthDate_de_DE            = "ddd dd mmm";
-dateFormat.masks.epgSearchDateLimit_de_DE   = "ddd\t dd mmm";
+dateFormat.masks.epgSearchDateLimit_de_DE   = "ddd\tdd mmm";
 
 // Internationalization strings
 dateFormat.i18n_de_DE = {

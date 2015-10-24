@@ -6,7 +6,7 @@ dateFormat.masks.fullDate_en_US             = "dddd, mmmm d, yyyy";
 dateFormat.masks.shortTime_en_US            = "h:MM TT";
 dateFormat.masks.mediumTime_en_US           = "h:MM:ss TT";
 dateFormat.masks.longTime_en_US             = "h:MM:ss TT Z";
-dateFormat.masks.epgSearchDateLimit_en_US   = '<i>ddd</i> mmm dd';
+dateFormat.masks.epgSearchDateLimit_en_US   = "ddd\tmmm dd";
 
 // Internationalization strings
 dateFormat.i18n_en_US = {
