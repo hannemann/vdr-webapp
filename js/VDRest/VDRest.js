@@ -6,6 +6,7 @@
  * @namespace
  * @property {VDRest.App} app
  * @property {VDRest.Helper} helper
+ * @property {VDRest.Lib.Config} config
  */
 var VDRest = function () {};
 

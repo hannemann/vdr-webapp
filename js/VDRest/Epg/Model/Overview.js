@@ -3,6 +3,12 @@
  * @constructor
  * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} collection
  * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} currentResult
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} movies
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} shows
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} sports
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} series
+ * @property {VDRest.Epg.Model.Channels.Channel.Broadcast[]} info
+ * @property {Object.<string, string>} events
  */
 VDRest.Epg.Model.Overview = function () {};
 
@@ -24,55 +30,100 @@ VDRest.Epg.Model.Overview.prototype.collectionItemModel = 'Channels.Channel.Broa
 VDRest.Epg.Model.Overview.prototype.resultCollection = 'events';
 
 /**
- * init collection
+ * initialize
  */
 VDRest.Epg.Model.Overview.prototype.init = function () {
 
     this.collection = [];
     this.currentResult = [];
 
+    this.movieDescriptor  = 'Kategorie: Spielfilm';
+    this.showDescriptor   = 'Kategorie: Show';
+    this.infoDescriptor   = 'Kategorie: Information';
+    this.seriesDescriptor = 'Kategorie: Serie';
+    this.sportsDescriptor = 'Kategorie: Sport';
+
     this.events = {
-        "collectionloaded" : 'overviewloaded'
+        "collectionloaded" : 'overviewloaded',
+        "collectionsorted" : "overviewsorted"
     };
 };
 
 /**
+ * load overview
  * @param {number} [date_limit]
  */
 VDRest.Epg.Model.Overview.prototype.load = function (date_limit) {
 
-    var searchParams = {
-            "search" : this.getSearchRegex(),
-            "mode" : 4,
-            "use_title" : false,
-            "use_subtitle" : false,
-            "use_description" : true
-        },
-        channelGroup = this.getChannelGroup(),
-        resource = this.getResource(),
-        search = VDRest.SearchTimer.Model.List.SearchTimer.prototype.getInitData(), i;
+    var resource = this.getResource(),
+        options = this.getSearchOptions();
 
-    if (channelGroup.length > 0) {
-        searchParams.use_channel = 2;
-        searchParams.channels = channelGroup
+    if (!options) {
+        return;
     }
 
     date_limit = date_limit || this.getTodayDateLimit();
     this.flushCollection();
     resource.urls.search = resource.baseSearchUrl + date_limit.toString();
 
-    for (i in searchParams) {
-        if (searchParams.hasOwnProperty(i) && search.hasOwnProperty(i)) {
-            search[i] = searchParams[i];
-        }
-    }
-
     resource.load({
         "url" : "search",
         "method" : "POST",
-        "data" : search,
+        "data" : this.getSearchOptions(),
         "callback" : this.processCollection.bind(this)
     });
+};
+
+/**
+ * @param {Object} result
+ */
+VDRest.Epg.Model.Overview.prototype.processCollection = function (result) {
+
+    VDRest.Abstract.Model.prototype.processCollection.call(this, result);
+
+    this.movies = [];
+    this.shows = [];
+    this.sports = [];
+    this.series = [];
+    this.info = [];
+
+    this.collection.forEach(this.sortBroadcast.bind(this));
+};
+
+/**
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast} broadcast
+ */
+VDRest.Epg.Model.Overview.prototype.sortBroadcast = function (broadcast) {
+
+    if (broadcast.data.description.indexOf(this.movieDescriptor) > -1) {
+        this.movies.push(broadcast);
+    }
+    if (broadcast.data.description.indexOf(this.infoDescriptor) > -1) {
+        this.info.push(broadcast);
+    }
+    if (broadcast.data.description.indexOf(this.seriesDescriptor) > -1) {
+        this.series.push(broadcast);
+    }
+    if (broadcast.data.description.indexOf(this.showDescriptor) > -1) {
+        this.shows.push(broadcast);
+    }
+    if (broadcast.data.description.indexOf(this.sportsDescriptor) > -1) {
+        this.sports.push(broadcast);
+    }
+};
+/**
+ * retrieve search options object
+ * @return {searchTimerData|boolean}
+ */
+VDRest.Epg.Model.Overview.prototype.getSearchOptions = function () {
+
+    /** @type {VDRest.Epg.Model.Overview.Template} */
+    var model = this.module.getModel('Overview.Template');
+
+    if (model.hasTemplate) {
+        return JSON.parse(model.getData('search'));
+    }
+    return false;
 };
 
 /**
@@ -85,6 +136,7 @@ VDRest.Epg.Model.Overview.prototype.getResource = function () {
 };
 
 /**
+ * retrieve timestamp of tomorrow 00:00
  * @return {number}
  */
 VDRest.Epg.Model.Overview.prototype.getTodayDateLimit = function () {
@@ -94,20 +146,4 @@ VDRest.Epg.Model.Overview.prototype.getTodayDateLimit = function () {
 
     s.setDate(s.getDate() + 1);
     return s.getTime() / 1000;
-};
-
-/**
- * @return {string}
- */
-VDRest.Epg.Model.Overview.prototype.getSearchRegex = function () {
-
-    return "Kategorie: (Information|Spielfilm|Serie|Show|Sport).*((top|tages|)tipp|\\*{4,})";
-};
-
-/**
- * @return {string}
- */
-VDRest.Epg.Model.Overview.prototype.getChannelGroup = function () {
-
-    return "Overview";
 };

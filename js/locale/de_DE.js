@@ -58,6 +58,7 @@ VDRest.app.de_DE = {
     "2 Hours":"2 Stunden",
     "4 Hours":"4 Stunden",
     "8 Hours":"8 Stunden",
+    "Save as Overview Template" : "Als Vorlage für Überblick speichern",
     "Watch":"Ansehen",
     "The search returned no results." : "Die Suche war erfolglos.",
     "%d events found." : "%d Sendungen gefunden.",
