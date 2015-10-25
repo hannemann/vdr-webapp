@@ -23,9 +23,7 @@ Gui.EpgSearch.Controller.Search.prototype.init = function () {
         "parent" : this
     });
 
-    this.view = this.module.getView('Search', {
-        "form" : this.form
-    });
+    this.view = this.module.getView('Search');
 
     this.view.setParentView(
         VDRest.app.getModule('Gui.Viewport').getView('Default')
@@ -33,15 +31,43 @@ Gui.EpgSearch.Controller.Search.prototype.init = function () {
 };
 
 /**
+ * reinitialize form with resource data
+ * @param {VDRest.SearchTimer.Model.List.SearchTimer} resource
+ */
+Gui.EpgSearch.Controller.Search.prototype.reInitForm = function (resource) {
+
+    this.destroyContent();
+
+    this.form = this.module.getController('Search.Form', {
+        "parent" : this,
+        "resource" : resource
+    });
+
+    this.broadcasts = this.module.getController('Broadcasts', {
+        "parent" : this
+    });
+
+    this.dispatchContent();
+};
+
+/**
  * dispatch
  */
-Gui.EpgSearch.Controller.Search.prototype.dispatchView = function (search) {
+Gui.EpgSearch.Controller.Search.prototype.dispatchView = function () {
 
-    this.form.dispatchView();
-    this.broadcasts.dispatchView();
+    this.dispatchContent();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.preventReload();
+};
+
+/**
+ * dispatch content
+ */
+Gui.EpgSearch.Controller.Search.prototype.dispatchContent = function () {
+
+    this.form.dispatchView();
+    this.broadcasts.dispatchView();
 };
 
 /**
@@ -52,6 +78,18 @@ Gui.EpgSearch.Controller.Search.prototype.dispatchView = function (search) {
  * broadcastsloaded event will never trigger otherwise!!!!!!!!!!!!!!!!!!!
  */
 Gui.EpgSearch.Controller.Search.prototype.removeObserver = function () {};
+
+/**
+ * destroy contents
+ */
+Gui.EpgSearch.Controller.Search.prototype.destroyContent = function () {
+
+    this.form.destructView();
+    this.broadcasts.destructView();
+
+    this.module.cache.invalidateClasses('Search.Form');
+    this.module.cache.invalidateClasses('Broadcasts');
+};
 
 /**
  * destruct

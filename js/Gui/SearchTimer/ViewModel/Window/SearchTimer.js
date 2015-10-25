@@ -162,7 +162,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setCommonFields = functio
             "type": "boolean",
             "category": "search",
             "label": VDRest.app.translate("Advanced"),
-            "checked": false,
+            "checked": this.data.resource.data.advanced || false,
             "accordionIndicator" : true
         };
         depends = {"advanced" : true};
@@ -236,10 +236,11 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setCommonFields = functio
     if (this.hasDateLimit) {
 
         this.searchFormFields.use_date_limit = this.getBooleanField(
-            "parameter", 'Use date limit', false, depends, true
+            "parameter", 'Use date limit', "undefined" !== typeof this.data.resource.data.dateLimit, depends, true
         );
         if (this.withAdvanced) {
             dl_depends.advanced = true;
+            dl_depends.use_date_limit = true;
         }
         this.searchFormFields.dateLimit = this.getEnumField(
             "parameter", 'Date limit', this.getDateLimitFieldValues(), dl_depends, false, 'epg-search-date-limit'
@@ -981,7 +982,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getBlacklistSelectorField
 
     if (this.withAdvanced) {
         depends.advanced = true;
-    };
+    }
 
     collection.forEach(function (b) {
         var search = b.getData('search'),
@@ -1420,7 +1421,9 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDateLimitFieldValues =
         values = {
             "today": {
                 "label": 'Today only',
-                "selected": true
+                "selected": "undefined" === typeof this.data.resource.data.dateLimit
+                    || this.data.resource.data.dateLimit === 0,
+                "plusDays" : 0
             }
         }, days = 14, i = 2;
 
@@ -1432,16 +1435,18 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDateLimitFieldValues =
     values.days_1 = {
         "label": 'Until tomorrow',
         "value": s.getTime() / 1000,
-        "selected": false
+        "selected": this.data.resource.data.dateLimit === 1,
+        "plusDays" : 1
     };
 
     for (i;i<=days;i++) {
         s.setDate(s.getDate() + 1);
         values['days_' + i.toString()] = {
-            "label": s.format('epgSearchDateLimit_' + VDRest.app.language),
+            "label": s.format('epgSearchDateLimit_' + VDRest.app.language) + ' ' + VDRest.app.translate('(plus %d days)', i),
             "value": s.getTime() / 1000,
-            "selected": false,
-            "translate": false
+            "selected": this.data.resource.data.dateLimit === i,
+            "translate": false,
+            "plusDays" : i
         }
     }
 

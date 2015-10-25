@@ -268,6 +268,10 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.copyFromForm = function (fie
                         n[i] = new Date(v[2], parseInt(v[1]) - 1, v[0]).getTime() / 1000;
                         break;
 
+                    case 'dateLimit':
+                        n[i] = v.plusDays;
+                        break;
+
                     default:
                         if ("number" === fields[i].type) {
                             v = isNaN(v) ? 0 : v;

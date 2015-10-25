@@ -20,12 +20,12 @@ Gui.EpgSearch.Controller.Search.Form.prototype.init = function () {
         "id" : -1,
         "view" : this.view,
         "search" : this.data.query,
-        "resource": VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id" : -1})
+        "resource": this.data.resource || VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id" : -1})
     });
 };
 
 /**
- * initialize list
+ * dispatch
  */
 Gui.EpgSearch.Controller.Search.Form.prototype.dispatchView = function () {
 

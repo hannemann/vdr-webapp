@@ -55,6 +55,17 @@ Gui.EpgSearch.prototype.contextMenu = {
 
             this.saveOverviewTemplate();
         }
+    },
+    "edit_overview": {
+        "labels": {
+            "on": VDRest.app.translate("Edit Overview Template")
+        },
+        "state": "on",
+        "scope": 'Gui.EpgSearch',
+        "fn": function () {
+
+            this.loadOverviewTemplate();
+        }
     }
 };
 
@@ -63,7 +74,7 @@ Gui.EpgSearch.prototype.contextMenu = {
  */
 Gui.EpgSearch.prototype.dispatch = function (search) {
 
-    this.getController('Search', {"query":search}).dispatchView(search);
+    this.getController('Search', {"query":search}).dispatchView();
 };
 
 /**
@@ -73,6 +84,15 @@ Gui.EpgSearch.prototype.destruct = function () {
 
     this.getController('Search').destructView(true);
     this.cache.flush();
+    this.deleteSearchTimerModel();
+};
+
+/**
+ * delete dummy instance of searchTimerModel
+ */
+Gui.EpgSearch.prototype.deleteSearchTimerModel = function () {
+
+    delete VDRest.app.getModule('VDRest.SearchTimer').cache.store.Model['List.SearchTimer'][-1];
 };
 
 /**
@@ -85,6 +105,24 @@ Gui.EpgSearch.prototype.saveOverviewTemplate = function () {
         template = model.copyFromForm(fields);
 
     VDRest.app.getModule('VDRest.Epg').getModel('Overview.Template').save(template);
+};
+
+/**
+ * load overview template
+ */
+Gui.EpgSearch.prototype.loadOverviewTemplate = function () {
+
+    var model, data;
+    this.deleteSearchTimerModel();
+
+    model = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer',{"id" : -1});
+
+    data = VDRest.app.getModule('VDRest.Epg').getModel('Overview.Template').getTemplate();
+    data.advanced = true;
+
+    model.data = data;
+
+    this.getController('Search').reInitForm(model);
 };
 
 /**

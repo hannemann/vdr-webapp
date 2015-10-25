@@ -49,7 +49,9 @@ VDRest.Epg.Model.Overview.Template.prototype.init = function () {
 VDRest.Epg.Model.Overview.Template.prototype.save = function (template) {
 
     template.id = -1;
-    this.storage.setItem(this.storageName, JSON.stringify(template));
+    template = JSON.stringify(template);
+    this.storage.setItem(this.storageName, template);
+    this.setData('search', template);
 };
 
 /**

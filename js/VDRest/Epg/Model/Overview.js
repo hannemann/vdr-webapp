@@ -51,20 +51,19 @@ VDRest.Epg.Model.Overview.prototype.init = function () {
 
 /**
  * load overview
- * @param {number} [date_limit]
  */
-VDRest.Epg.Model.Overview.prototype.load = function (date_limit) {
+VDRest.Epg.Model.Overview.prototype.load = function () {
 
     var resource = this.getResource(),
-        options = this.getSearchOptions();
+        options = this.getSearchOptions(),
+        dateLimit = this.getDateLimit(options.dateLimit);
 
     if (!options) {
         return;
     }
 
-    date_limit = date_limit || this.getTodayDateLimit();
     this.flushCollection();
-    resource.urls.search = resource.baseSearchUrl + date_limit.toString();
+    resource.urls.search = resource.baseSearchUrl + dateLimit.toString();
 
     resource.load({
         "url" : "search",
@@ -139,11 +138,13 @@ VDRest.Epg.Model.Overview.prototype.getResource = function () {
  * retrieve timestamp of tomorrow 00:00
  * @return {number}
  */
-VDRest.Epg.Model.Overview.prototype.getTodayDateLimit = function () {
+VDRest.Epg.Model.Overview.prototype.getDateLimit = function (plusDays) {
 
     var t = new Date(),
         s = new Date(t.getFullYear().toString() + '-' + (t.getMonth() + 1).toString() + '-' + t.getDate().toString());
 
-    s.setDate(s.getDate() + 1);
+    plusDays = plusDays || 0;
+
+    s.setDate(s.getDate() + 1 + plusDays);
     return s.getTime() / 1000;
 };
