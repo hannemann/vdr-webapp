@@ -16,6 +16,7 @@ Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.render = function () {
 
     VDRest.Abstract.View.prototype.render.call(this);
 
+    this.addImage();
     this.addChannel();
 };
 
@@ -26,6 +27,14 @@ Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.render = function () {
 Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.setWidth = function () {
 
     return this;
+};
+
+/**
+ * @returns {number}
+ */
+Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.getWidth = function () {
+
+    return window.innerWidth;
 };
 
 /**

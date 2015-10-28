@@ -329,9 +329,12 @@ div#time-line .ql.hour {
 #broadcasts .broadcasts-list .broadcast .visible-channel-view * {
     height: auto;
 }
+.channel-view #broadcasts .broadcast,
 .epg-search-view .broadcast {
     position: relative;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid darkgrey;
+}
+.epg-search-view .broadcast {
     margin: 10px;
 }
 
@@ -356,23 +359,21 @@ div#time-line .ql.hour {
     display: none;
 }
 .channel-view #broadcasts .broadcast {
-    position: relative;
     width: 100% !important;
     left: 0 !important;
     height: auto !important;
     background: #696969;
     display: block !important;
     font-size: inherit;
-    border-bottom: 1px solid white;
-
+    padding-bottom: 4px;
 }
 .epg-search-view .broadcast div.broadcast-image,
 .channel-view #broadcasts .broadcasts-list .broadcast div.broadcast-image {
-    width: 15%;
+    width: calc(25% - 10px);
     float: left;
     height: auto;
     position: static;
-    margin: 10px;
+    margin: 6px 10px 0 0;
 }
 .epg-search-view .broadcast div.broadcast-image img,
 .channel-view #broadcasts .broadcasts-list .broadcast div.broadcast-image img {
@@ -387,13 +388,22 @@ div#time-line .ql.hour {
     overflow: hidden;
     position: static;
 }
+#broadcasts .broadcast div.visible-channel-view {
+    padding: 0;
+}
+#broadcasts .broadcast div.visible-channel-view > div {
+    padding-left: 0;
+    padding-bottom: 0;
+}
 .epg-search-view .broadcast .title,
 .channel-view #broadcasts .broadcast .title {
     font-size: 1em;
+    padding: 0;
 }
-.epg-search-view .broadcast.has-image .title span,
-.channel-view #broadcasts .broadcasts-list .broadcast.has-image .title span {
+.epg-search-view .broadcast .title span,
+.channel-view #broadcasts .broadcasts-list .broadcast .title span {
     background: none;
+    text-shadow: 1px 1px #333333;
 }
 .epg-search-view .broadcast .visible-channel-view *,
 .channel-view #broadcasts .broadcast .visible-channel-view * {
@@ -405,10 +415,26 @@ div#time-line .ql.hour {
 
 .epg-search-view .has-image *:after,
 .epg-search-view .has-image *:before,
-.channel-view .has-image *:after,
-.channel-view .has-image *:before {
+#epg.channel-view .has-image *:after,
+#epg.channel-view .has-image *:before {
     background: rgba(94, 94, 94, 0.54);
     border-radius: 5px;
+    bottom: auto;
+    right: 36px;
+    text-shadow: 1px 1px 0 rgb(58, 58, 58);
+    background: none;
+    top: 33px;
+    font-size: 12px;
+}
+.epg-search-view .tip:before,
+.epg-search-view .top-tip:before,
+.epg-search-view .tip-of-the-day:before,
+#epg.channel-view .tip:before,
+#epg.channel-view .top-tip:before,
+#epg.channel-view .tip-of-the-day:before {
+    right: 14px;
+    font-size: 20px;
+    top: 26px;
 }
 
 .epg-search-view .broadcast .visible-channel-view .description,
