@@ -43,9 +43,36 @@ Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.getWidth = function () {
  */
 Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.addChannel = function () {
 
+    var channelView;
+
     if (!this.channel) {
-        this.channel = $('<span class="channel">')
-            .text(this.getChannelName())
-            .appendTo(this.channelView);
+
+        channelView = VDRest.app.getModule('Gui.Epg').getView('Channels.Channel', this.getChannel());
+
+        if (channelView.hasImage()) {
+
+            this.channel = $('<div>').addClass('channel-logo');
+
+            if (VDRest.config.getItem('indicateChannelHD') && this.getChannelName().match(/HD$/)) {
+                this.channel.get(0).dataset['hd'] = "true";
+            }
+
+            $('<img>')
+                .attr(
+                'src', channelView.getImage()
+            ).appendTo(this.channel);
+
+            if ("undefined" !== typeof this.channelViewImage) {
+                this.channel.insertAfter(this.channelViewImage);
+            } else {
+                this.channel.prependTo(this.channelView);
+            }
+
+        } else {
+
+            this.channel = $('<span class="channel">')
+                .text(this.getChannelName())
+                .appendTo(this.channelView);
+        }
     }
 };

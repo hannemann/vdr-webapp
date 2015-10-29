@@ -187,7 +187,8 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
 
         img = $('<img>').attr('src', src);
 
-        $('<div class="visible-channel-view broadcast-image">').append(img).insertAfter(this.title);
+        this.channelViewImage = $('<div class="visible-channel-view broadcast-image">')
+            .append(img).insertAfter(this.title);
     }
 
 
