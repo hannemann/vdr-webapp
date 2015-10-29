@@ -405,12 +405,13 @@ div#time-line .ql.hour {
     right: 0;
     margin: auto;
 }
-.epg-search-view .broadcast div.channel-logo {
+.epg-search-view .broadcast div.content div.channel-logo {
     width: 28px;
     height: 28px;
     background: rgba(255, 255, 255, 0.5);
     float: left;
     margin: 6px 7px 0 0;
+    padding: 0;
     position: relative;
     z-index: 0;
 }
