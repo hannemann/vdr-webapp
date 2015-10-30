@@ -180,7 +180,7 @@ VDRest.App.prototype.replaceHistoryState = function (state) {
  */
 VDRest.App.prototype.getHistoryState = function () {
 
-    this.historyId = history.state.historyId + 1;
+    this.historyId = history.state ? history.state.historyId + 1 : 1;
 
     return {
         "module": this.getCurrent(),
