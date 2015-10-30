@@ -373,7 +373,7 @@ div#time-line .ql.hour {
 }
 .epg-search-view .broadcast div.broadcast-image,
 .channel-view #broadcasts .broadcasts-list .broadcast div.broadcast-image {
-    width: calc(25% - 10px);
+    width: calc(33% - 10px);
     float: left;
     height: auto;
     position: relative;
@@ -505,6 +505,15 @@ form.window.select.epg-search-date-limit label i {
     display: inline-block;
     width: 28px;
     font-style: normal;
+}
+
+@media (orientation: landscape) {
+
+    .epg-search-view .broadcast div.broadcast-image,
+    .channel-view #broadcasts .broadcasts-list .broadcast div.broadcast-image {
+        width: calc(19.5% - 10px);
+    }
+
 }
 
 @media (min-width: 800px), (min-height: 800px) {

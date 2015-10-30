@@ -166,10 +166,15 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTitle = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
 
-    var img,
-        src = this.getEpisodeImage(100) || this.getFanart(100) || this.getEpgImage();
+    var img, src, width;
 
-    if (src) {
+    width = window.matchMedia('(orientation: landscape)').matches
+            ? parseInt(window.innerWidth / 100 * 19.5 - 10, 10)
+            : parseInt(window.innerWidth / 100 * 33 - 10, 10);
+
+    src = this.getEpisodeImage(width) || this.getFanart(width) || this.getEpgImage();
+
+    if (src && "undefined" === typeof this.channelViewImage) {
 
         if (this.imageInEpgView && this.getWidth() >= 45 * 60 * VDRest.config.getItem('pixelPerSecond')) {
             img = new Image();
