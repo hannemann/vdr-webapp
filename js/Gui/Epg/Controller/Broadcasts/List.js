@@ -94,7 +94,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
     var from = this.broadcasts.length > 0
             ? this.broadcasts[this.broadcasts.length - 1].data.dataModel.data.end_date
             : new Date(this.fromTime),
-        minTimeSpan = 3600000,
+        minTimeSpan = this.isChannelView ? 21600000 : 3600000,
         timeSpanAdd = this.broadcastsController.getAvailableTimeSpan('milliseconds') * this.overflowCount,
         to = new Date(
             from.getTime()
