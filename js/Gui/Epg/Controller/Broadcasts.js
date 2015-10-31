@@ -91,6 +91,8 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchView = function () {
  */
 Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
 
+    var wheelEvent;
+
     this.channelIterator = this.iterateChannels.bind(this);
     $document.one('channelsloaded', this.channelIterator);
 
@@ -113,6 +115,12 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
         this.view.wrapper.get(0).onscroll = this.handleScroll.bind(this);
     }
 
+    if (!VDRest.helper.isTouchDevice) {
+        wheelEvent = 'onwheel' in document.documentElement ? 'wheel' : 'mousewheel';
+        this.wheelHandler = this.handleWheel.bind(this);
+        this.view.wrapper.on(wheelEvent, this.wheelHandler);
+    }
+
     if ('now' === this.lastEpg) {
         $document.on(VDRest.helper.pointerStart + '.broadcasts', this.toggleUpdate.bind(this));
         $document.on('visibilitychange.broadcasts', this.toggleUpdate.bind(this, true));
@@ -123,6 +131,8 @@ Gui.Epg.Controller.Broadcasts.prototype.addObserver = function () {
  * remove event listeners
  */
 Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
+
+    var wheelEvent;
 
     $document.off('channelsloaded', this.channelIterator);
 
@@ -138,6 +148,11 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
 
     if (!VDRest.helper.touchMoveCapable) {
         $(this.view.wrapper).off('scroll', this.handleScroll);
+    }
+
+    if (!VDRest.helper.isTouchDevice) {
+        wheelEvent = 'onwheel' in document.documentElement ? 'wheel' : 'mousewheel';
+        this.view.wrapper.off(wheelEvent, this.wheelHandler);
     }
 
     if ('now' === this.lastEpg) {
@@ -267,6 +282,28 @@ Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
             }
             this.requestedBroadcast = undefined;
         }
+    }
+};
+
+/**
+ * handle wheel events
+ * @param {jQuery.Event} e
+ */
+Gui.Epg.Controller.Broadcasts.prototype.handleWheel = function (e) {
+
+    var wrapper, event, step;
+
+    if ("undefined" !== typeof this.view.wrapper) {
+        event = e.originalEvent;
+        wrapper = this.view.wrapper.get(0);
+
+        step = {
+            "x" : VDRest.helper.isFirefox ? event.deltaX * 15 : event.deltaX,
+            "y" : VDRest.helper.isFirefox ? event.deltaY * 15 : event.deltaY
+        };
+
+        wrapper.scrollLeft = wrapper.scrollLeft + step.x;
+        wrapper.scrollTop = wrapper.scrollTop + step.y;
     }
 };
 

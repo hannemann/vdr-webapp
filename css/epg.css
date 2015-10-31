@@ -43,7 +43,7 @@
     top: 21px;
     left: 40px;
     height: calc(100% - 21px);
-    overflow: auto;
+    overflow: hidden;
 }
 #broadcasts-wrapper.move {
     cursor: move;
@@ -59,7 +59,7 @@
 }
 
 .is-firefox #broadcasts-wrapper {
-    overflow: auto;
+    /*overflow: auto;*/
 }
 #broadcasts {
     position: relative;
