@@ -48,6 +48,12 @@
 #broadcasts-wrapper.move {
     cursor: move;
 }
+#broadcasts-wrapper.move * {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
+}
 .is-touch #broadcasts-wrapper {
     overflow: hidden;
 }

@@ -153,7 +153,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
 
     var broadcast = this.getBroadcastFromEvent(e),
         menuRequest = this.getMenuButtonWasClicked(e),
-        wrapper = this.view.wrapper.get(0);
+        wrapper;
 
     if (!broadcast && !menuRequest) {
         return;
@@ -165,7 +165,8 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
 
     this.preventClick = undefined;
 
-    if (!VDRest.helper.isTouchDevice) {
+    if (!VDRest.helper.isTouchDevice && "undefined" !== typeof this.view.wrapper) {
+        wrapper = this.view.wrapper.get(0);
         this.canMove = true;
         wrapper.classList.add('move');
         this.currentMouse = {
@@ -180,6 +181,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
             this.canMove = false;
             wrapper.classList.remove('move');
         }.bind(this));
+
     }
 
     this.clickTimeout = window.setTimeout(function () {
@@ -202,7 +204,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
  */
 Gui.Epg.Controller.Broadcasts.prototype.handleMove = function (e) {
 
-    var delta, wrapper = this.view.wrapper.get(0);
+    var delta, wrapper;
 
     this.preventClick = true;
 
@@ -211,6 +213,7 @@ Gui.Epg.Controller.Broadcasts.prototype.handleMove = function (e) {
     }
 
     if (this.canMove) {
+        wrapper = this.view.wrapper.get(0);
         delta = {
             "x" : this.currentMouse.x - e.clientX,
             "y" : this.currentMouse.y - e.clientY
