@@ -1,11 +1,14 @@
 /**
  * @typedef {{}} TouchMove.Options
- * @var {HTMLElement} wrapper
- * @var {HTMLElement} slider
- * @var {String[]} [allowedOrientations]
- * @var {String[]} [allowedDirections]
- * @var {String} [sliderClassName]
- * @var {{x: Number, y: Number, [easing]: String, [threshold]: Number}} grid
+ * @property {HTMLElement} wrapper
+ * @property {HTMLElement} slider
+ * @property {String[]} [allowedOrientations]
+ * @property {String[]} [allowedDirections]
+ * @property {String} [sliderClassName]
+ * @property {{x: Number, y: Number, [easing]: String, [threshold]: Number}} grid
+ * @property {function} onmove
+ * @property {boolean} hasScrollBars
+ * @property {touchMoveScrollBarOptions} scrollBarOptions
  */
 
 /**
@@ -73,8 +76,48 @@ TouchMove.prototype.initElements = function (options) {
         options.onmove
     );
     this.tiles = new TouchMove.Tiles(this.slider);
+    if (options.hasScrollBars) {
+        this.initScrollBars(options);
+    }
 
     return this;
+};
+
+/**
+ * initialize scroll bars
+ * @param {TouchMove.Options} options
+ */
+TouchMove.prototype.initScrollBars = function (options) {
+
+    var originalCallback = this.slider.onmove,
+        scrollBarOptions = {
+            "parent" : this.wrapper,
+            "scrollElement" : this.slider.elem,
+            "isTouchMove" : true
+        }, i;
+
+    this.scrollBars = {};
+
+    if ("undefined" !== typeof options.scrollBarOptions) {
+        for (i in options.scrollBarOptions) {
+            if (options.scrollBarOptions.hasOwnProperty(i)) {
+                scrollBarOptions[i] = options.scrollBarOptions[i];
+            }
+        }
+    }
+
+    this.allowedDirections.forEach(function (dir) {
+        scrollBarOptions.direction = dir;
+        this.scrollBars[dir] = new TouchMove.ScrollBar(scrollBarOptions);
+    }.bind(this));
+
+    this.slider.onmove = function (e) {
+        this.allowedDirections.forEach(function (dir) {
+            this.scrollBars[dir].onscroll(e);
+        }.bind(this));
+
+        originalCallback(e);
+    }.bind(this);
 };
 
 /**

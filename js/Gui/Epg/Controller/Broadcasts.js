@@ -55,9 +55,28 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     if (VDRest.helper.touchMoveCapable) {
         this.touchScroll = new TouchMove.Scroll({
             "wrapper" : this.view.wrapper[0],
-            "onmove" : this.handleScroll.bind(this)
+            "onmove" : this.handleScroll.bind(this),
+            "hasScrollBars" : true,
+            "scrollBarOptions" : {
+                "className" : "epg-scrollbar"
+            }
         })
     }
+    //else {
+    //    this.scrollBars = {
+    //        "x" : new TouchMove.ScrollBar({
+    //            "parent" : this.view.wrapper[0],
+    //            "scrollElement" : this.view.node.get(0),
+    //            "className" : "epg-scrollbar",
+    //            "direction" : "x"
+    //        }),
+    //        "y" : new TouchMove.ScrollBar({
+    //            "parent" : this.view.wrapper[0],
+    //            "scrollElement" : this.view.node.get(0),
+    //            "className" : "epg-scrollbar"
+    //        })
+    //    }
+    //}
 
     this.addObserver();
 };
@@ -243,6 +262,10 @@ Gui.Epg.Controller.Broadcasts.prototype.handleMove = function (e) {
         wrapper.scrollLeft = this.currentScroll.x = this.currentScroll.x + delta.x;
         wrapper.scrollTop = this.currentScroll.y = this.currentScroll.y + delta.y;
     }
+
+    if ("undefined" !== typeof this.scrollBars) {
+        this.updateScrollBars();
+    }
 };
 
 
@@ -304,6 +327,20 @@ Gui.Epg.Controller.Broadcasts.prototype.handleWheel = function (e) {
 
         wrapper.scrollLeft = wrapper.scrollLeft + step.x;
         wrapper.scrollTop = wrapper.scrollTop + step.y;
+    }
+};
+
+Gui.Epg.Controller.Broadcasts.prototype.updateScrollBars = function () {
+
+    var i, wrapper = this.view.wrapper.get(0);
+
+    for (i in this.scrollBars) {
+        if (this.scrollBars.hasOwnProperty(i)) {
+            this.scrollBars[i].onscroll({
+                "x": wrapper.scrollLeft,
+                "y": wrapper.scrollTop
+            });
+        }
     }
 };
 

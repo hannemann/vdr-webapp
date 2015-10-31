@@ -1,0 +1,40 @@
+
+.touchmove-scrollbar {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    left: auto;
+    margin: auto;
+    width: 3px;
+    transition-property: opacity;
+    transition-duration: 0ms;
+    transition-timing-function: linear;
+    opacity: 1;
+}
+.touchmove-scrollbar.horizontal {
+    left: 2px;
+    top: auto;
+    width: auto;
+    height: 3px;
+}
+.touchmove-scrollbar div {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: 0;
+    min-height: 20px;
+    background: rgb(74, 74, 74);
+}
+.touchmove-scrollbar.horizontal div {
+    bottom: 0;
+    right: auto;
+    min-width: 20px;
+    min-height: 0;
+}
+.touchmove-scrollbar.hidden {
+    background: cyan;
+    /*opacity: 0;*/
+    transition-duration: 500ms;
+}
