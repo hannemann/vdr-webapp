@@ -34,7 +34,6 @@
     min-height: 0;
 }
 .touchmove-scrollbar.hidden {
-    background: cyan;
-    /*opacity: 0;*/
+    opacity: 0;
     transition-duration: 500ms;
 }
