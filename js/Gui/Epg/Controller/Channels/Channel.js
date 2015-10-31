@@ -71,19 +71,11 @@ Gui.Epg.Controller.Channels.Channel.prototype.unmute = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
 
-    if (VDRest.helper.isTouchDevice) {
-        this.view.node
-            .on('touchend', this.handleUp.bind(this))
-            .on('touchstart', this.handleDown.bind(this))
-            .on('touchmove', this.preventAll.bind(this))
-        ;
-    } else {
-        this.view.node
-            .on('mouseup', this.handleUp.bind(this))
-            .on('mousedown', this.handleDown.bind(this))
-            .on('mousemove', this.preventAll.bind(this))
-        ;
-    }
+    this.view.node
+        .on(VDRest.helper.pointerEnd, this.handleUp.bind(this))
+        .on(VDRest.helper.pointerStart, this.handleDown.bind(this))
+        .on(VDRest.helper.pointerMove, this.preventAll.bind(this))
+    ;
 };
 
 /**
@@ -91,7 +83,11 @@ Gui.Epg.Controller.Channels.Channel.prototype.addObserver = function () {
  */
 Gui.Epg.Controller.Channels.Channel.prototype.removeObserver = function () {
 
-    this.view.node.off('touchend touchstart mouseup mousedown mousemove touchmove');
+    this.view.node.off([
+        VDRest.helper.pointerEnd,
+        VDRest.helper.pointerStart,
+        VDRest.helper.pointerMove
+    ].join(' '));
 };
 
 /**

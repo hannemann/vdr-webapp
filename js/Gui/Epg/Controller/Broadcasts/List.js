@@ -101,7 +101,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.getBroadcasts = function () {
             + (timeSpanAdd < minTimeSpan ? minTimeSpan : timeSpanAdd)
         );
 
-    if (VDRest.config.getItem('loadAllChannelsInitially') || this.isInView()) {
+    if (VDRest.config.getItem('loadAllChannelsInitially') || this.isInView() || this.isChannelView) {
         this.getStoreModel().getNextBroadcasts(to);
     }
 };
