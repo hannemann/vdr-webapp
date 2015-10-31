@@ -152,7 +152,8 @@ Gui.Epg.Controller.Broadcasts.prototype.removeObserver = function () {
 Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
 
     var broadcast = this.getBroadcastFromEvent(e),
-        menuRequest = this.getMenuButtonWasClicked(e);
+        menuRequest = this.getMenuButtonWasClicked(e),
+        wrapper = this.view.wrapper.get(0);
 
     if (!broadcast && !menuRequest) {
         return;
@@ -163,6 +164,23 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
     activeAnimate.applyAnimation(e, broadcast);
 
     this.preventClick = undefined;
+
+    if (!VDRest.helper.isTouchDevice) {
+        this.canMove = true;
+        wrapper.classList.add('move');
+        this.currentMouse = {
+            "x" : e.clientX,
+            "y" : e.clientY
+        };
+        this.currentScroll = {
+            "x" : wrapper.scrollLeft,
+            "y" : wrapper.scrollTop
+        };
+        this.view.wrapper.one('mouseleave', function () {
+            this.canMove = false;
+            wrapper.classList.remove('move');
+        }.bind(this));
+    }
 
     this.clickTimeout = window.setTimeout(function () {
         if (!this.module.isMuted) {
@@ -182,12 +200,30 @@ Gui.Epg.Controller.Broadcasts.prototype.handleDown = function (e) {
 /**
  * prevent click on move
  */
-Gui.Epg.Controller.Broadcasts.prototype.handleMove = function () {
+Gui.Epg.Controller.Broadcasts.prototype.handleMove = function (e) {
+
+    var delta, wrapper = this.view.wrapper.get(0);
 
     this.preventClick = true;
 
     if ("undefined" !== typeof this.clickTimeout) {
         window.clearTimeout(this.clickTimeout);
+    }
+
+    if (this.canMove) {
+        delta = {
+            "x" : this.currentMouse.x - e.clientX,
+            "y" : this.currentMouse.y - e.clientY
+        };
+
+        this.currentMouse.x = e.clientX;
+        this.currentMouse.y = e.clientY;
+
+        delta.x = this.currentScroll.x + delta.x > 0 ? delta.x : 0;
+        delta.y = this.currentScroll.y + delta.y > 0 ? delta.y : 0;
+
+        wrapper.scrollLeft = this.currentScroll.x = this.currentScroll.x + delta.x;
+        wrapper.scrollTop = this.currentScroll.y = this.currentScroll.y + delta.y;
     }
 };
 
@@ -201,6 +237,12 @@ Gui.Epg.Controller.Broadcasts.prototype.handleUp = function (e) {
 
     if (e.cancelable) {
         e.preventDefault();
+    }
+
+    if (this.canMove) {
+        this.canMove = false;
+        this.view.wrapper.get(0).classList.remove('move');
+        this.view.wrapper.off('mouseleave');
     }
 
     if (!this.module.isMuted) {

@@ -45,6 +45,9 @@
     height: calc(100% - 21px);
     overflow: auto;
 }
+#broadcasts-wrapper.move {
+    cursor: move;
+}
 .is-touch #broadcasts-wrapper {
     overflow: hidden;
 }

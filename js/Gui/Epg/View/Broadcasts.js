@@ -1,6 +1,8 @@
 /**
  * @class
  * @constructor
+ * @property {jQuery} node
+ * @property {jQuery} wrapper
  */
 Gui.Epg.View.Broadcasts = function () {};
 
