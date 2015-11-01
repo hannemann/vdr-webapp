@@ -443,7 +443,7 @@ Gui.Epg.Controller.Broadcasts.prototype.startUpdateInterval = function () {
 
         this.updateTimeout = setTimeout(function () {
             this.update();
-            //this.updateInterval = setInterval(this.update.bind(this), 500);
+            this.updateInterval = setInterval(this.update.bind(this), 500);
         }.bind(this), 10000);
     } else {
 

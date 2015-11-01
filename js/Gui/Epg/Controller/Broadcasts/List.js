@@ -455,13 +455,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () 
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function () {
 
-    var toDelete = [];
+    var toDelete = [],
+        timeThreshold = (this.epgController.metrics.viewPort.width / this.pixelPerSecond) * this.overflowCount;
 
     this.fromTime = this.module.getFromDate().getTime();
 
     this.broadcasts.forEach(function (broadcast) {
 
-        if (broadcast.getData('dataModel').getData('end_time') < this.fromTime / 1000) {
+        if (broadcast.getData('dataModel').getData('end_time') < (this.fromTime / 1000 - timeThreshold)) {
             toDelete.push(broadcast);
         }
 
@@ -472,8 +473,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function
         this.module.cache.flushByClassKey(broadcast.keyInCache);
         this.module.store.cache.flushByClassKey(broadcast.keyInCache);
         this.broadcasts.shift();
-        this.module.store.cache.store.Model['Channels.Channel'][broadcast.data.channel].cleanCollection();
     }.bind(this));
+
+    this.module.store.cache.store.Model['Channels.Channel'][this.data.channel_id].cleanCollection(timeThreshold * 1000);
 
     this.broadcasts.forEach(function (broadcast, index) {
 
