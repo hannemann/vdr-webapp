@@ -167,6 +167,12 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
 
         if (dataModel.data.end_date <= this.module.getFromDate()) return;
 
+        if (
+            this.module.cache.store.Controller['Broadcasts.List.Broadcast'] &&
+            this.module.cache.store
+                .Controller['Broadcasts.List.Broadcast'][dataModel.data.channel + '/' + dataModel.data.id]
+        ) return;
+
         newBroadcasts.push(this.module.getController('Broadcasts.List.Broadcast', {
             'channel' : dataModel.data.channel,
             'id' : dataModel.data.id,
@@ -180,6 +186,9 @@ Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (colle
         var i= 0, l;
 
         this.broadcasts = this.broadcasts.concat(newBroadcasts);
+        this.broadcasts.sort(this.sortBroadcasts);
+
+        this.updateViewData().sortNodes();
 
         if (this.isChannelView) {
 
@@ -322,6 +331,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.toggleBroadcastsVisibility = functi
         visibleEndTime = this.broadcastsController.visibleEndTime + timeThreshold,
         broadcast, start, end;
 
+    currentScrollTime = Math.max(currentScrollTime, this.module.getFromDate().getTime() / 1000);
+
     if (l > 0) {
 
         if (this.firstVisibleNode) {
@@ -455,14 +466,33 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () 
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function () {
 
-    var toDelete = [],
-        timeThreshold = (this.epgController.metrics.viewPort.width / this.pixelPerSecond) * this.overflowCount;
+    this.deleteOutdated()
+        .updateViewData()
+        .sortNodes();
+
+    if (0 === this.broadcasts.length) {
+        this.hasInitialBroadcasts = undefined;
+    }
+
+    if (this.isScrolledIntoInView()) {
+        this.updateList();
+        this.toggleBroadcastsVisibility();
+    }
+};
+
+/**
+ * delete outdated events
+ * @return {Gui.Epg.Controller.Broadcasts.List}
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.deleteOutdated = function () {
+
+    var toDelete = [];
 
     this.fromTime = this.module.getFromDate().getTime();
 
     this.broadcasts.forEach(function (broadcast) {
 
-        if (broadcast.getData('dataModel').getData('end_time') < (this.fromTime / 1000 - timeThreshold)) {
+        if (broadcast.getData('dataModel').getData('end_time') < (this.fromTime / 1000)) {
             toDelete.push(broadcast);
         }
 
@@ -475,28 +505,68 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateBroadcastsPosition = function
         this.broadcasts.shift();
     }.bind(this));
 
-    this.module.store.cache.store.Model['Channels.Channel'][this.data.channel_id].cleanCollection(timeThreshold * 1000);
+    this.module.store.cache.store.Model['Channels.Channel'][this.data.channel_id].cleanCollection();
+
+    return this;
+};
+
+/**
+ * update position data, update metrics
+ * @return {Gui.Epg.Controller.Broadcasts.List}
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.updateViewData = function () {
 
     this.broadcasts.forEach(function (broadcast, index) {
 
         broadcast.data.position = index;
         broadcast.view.data.position = index;
+        broadcast.view.node.get(0).dataset['pos'] = index;
         broadcast.updateMetrics();
-
-        //if (this.isScrolledIntoInView()) {
-        //    broadcast.view.update();
-        //}
 
     }.bind(this));
 
-    if (0 === this.broadcasts.length) {
-        this.hasInitialBroadcasts = undefined;
-    }
+    return this;
+};
 
-    if (this.isScrolledIntoInView()) {
-        this.updateList();
-        this.toggleBroadcastsVisibility();
-    }
+/**
+ * sort child nodes by pos attribute
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.sortNodes = function () {
+
+    Array.prototype.slice.apply(
+        this.view.node.get(0).childNodes
+    ).sort(this.nodeSort).forEach(function (node) {
+            this.view.node.get(0).appendChild(node);
+        }.bind(this)
+    );
+};
+
+/**
+ * sort view nodes by pos attribute
+ * @param {HTMLDivElement} a
+ * @param {HTMLDivElement} b
+ * @return {number}
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.nodeSort = function (a, b) {
+
+    var va = parseInt(a.dataset['pos'], 10),
+        vb = parseInt(b.dataset['pos'], 10);
+
+    return va == vb ? 0 : (va > vb ? 1 : -1);
+};
+
+/**
+ * sort broadcasts by end date
+ * @param {Gui.Epg.Controller.Broadcasts.List.Broadcast} a
+ * @param {Gui.Epg.Controller.Broadcasts.List.Broadcast} b
+ * @return {number}
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.sortBroadcasts = function (a, b) {
+
+    var va = a.data.dataModel.data.end_date,
+        vb = b.data.dataModel.data.end_date;
+
+    return va == vb ? 0 : (va > vb ? 1 : -1);
 };
 
 /**
