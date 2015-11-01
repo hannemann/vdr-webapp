@@ -221,6 +221,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "defaultSorting"        :   "dateDesc",
     "videoQualitySize"      :   "320x180",
     "videoQualityBitrate"   :   "512K",
+    "videoMinimizedLandscape" : "left",
     "hapticFeedback"        :   "true",
     "favourites"            :   "",
     "osdDelay"              :   100,
@@ -523,39 +524,6 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "number",
         "label" : "StreamDev port"
     },
-    "favourites" : {
-        "depends" : "streamdevActive",
-        "category" : "streaming",
-        "type" : "channel",
-        "multiselect" : true,
-        "label" : "Favourites",
-        "selected": function () {
-
-            try {
-                return JSON.parse(VDRest.config.getItem('favourites'));
-            } catch (e) {
-                return [];
-            }
-
-        }
-    },
-    "useHtmlPlayer"    :   {
-        "depends" : "streamdevActive",
-        "category" : "streaming",
-        "type" : "boolean",
-        "label" : "Use HTML5 Video Player",
-        "info" : "An extended externremux.sh is needed"
-    },
-    "supportChromecast":   {
-        "depends" : {
-            "streamdevActive": true,
-            "useHtmlPlayer": [1, 2]
-        },
-        "category" : "streaming",
-        "type" : "boolean",
-        "label" : "Support Chromecast",
-        "info" : "Shows the Chromecast button when controls hide"
-    },
     "streamdevParams"  :   {
         "depends" : "streamdevActive",
         "category" : "streaming",
@@ -579,8 +547,64 @@ VDRest.Lib.Config.prototype.fields = {
             }
         }
     },
-    "streamDownload" : {
+    "favourites" : {
         "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "channel",
+        "multiselect" : true,
+        "label" : "Favourites",
+        "selected": function () {
+
+            try {
+                return JSON.parse(VDRest.config.getItem('favourites'));
+            } catch (e) {
+                return [];
+            }
+
+        }
+    },
+    "useHtmlPlayer"    :   {
+        "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Use HTML5 Video Player",
+        "info" : "An extended externremux.sh is needed"
+    },
+    "videoMinimizedLandscape" : {
+        "category" : "streaming",
+        "depends" : {
+            "streamdevActive": true,
+            "useHtmlPlayer": true
+        },
+        "type" : "enum",
+        "dataType" : "string",
+        "label" : "Minimized Position (Landscape)",
+        "values" : {
+            "left" : {
+                "label" : "Left",
+                "value" : "left"
+            },
+            "right" : {
+                "label" : "Right",
+                "value" : "right"
+            }
+        }
+    },
+    "supportChromecast":   {
+        "depends" : {
+            "streamdevActive": true,
+            "useHtmlPlayer": true
+        },
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Support Chromecast",
+        "info" : "Shows the Chromecast button when controls hide"
+    },
+    "streamDownload" : {
+        "depends" : {
+            "streamdevActive": true,
+            "useHtmlPlayer": true
+        },
         "category" : "streaming",
         "type" : "boolean",
         "label" : "Download",

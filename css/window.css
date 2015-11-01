@@ -513,3 +513,18 @@ form.window.touchscroll {
         font-size: .75em;
     }
 }
+@media (orientation: portrait) {
+    body.video-minimized .context-menu {
+        top: calc(34% + 50px)
+    }
+}
+@media (orientation: landscape) {
+    body.video-minimized.video-minimized-right .context-menu {
+        right: calc(50% + 10px);
+    }
+}
+@media (orientation: portrait) and (max-height: 530px) {
+    body.video-minimized .context-menu {
+        top: calc(180px + 50px); /* videoplayer min-height + menubar height */
+    }
+}

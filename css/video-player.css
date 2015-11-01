@@ -480,33 +480,40 @@ video::-internal-media-controls-overlay-cast-button {
     body.video-minimized {
         max-height: calc(100% - 180px);
         height: 66%;
+        bottom: 0;
+        top: auto;
     }
+    .video-minimized #menubar,
     .video-minimized #viewport {
-        height: calc(66%  - 50px);
-        max-height: calc(100% - 180px - 50px);
+        position: absolute;
     }
     .video-minimized .modal-overlay.modal-video {
         min-height: 180px;
-        top: auto;
+        top: 0;
         height: 34%;
     }
     .html5-player-controls .video-osd {
         bottom: -40px;
     }
+    .video-minimized .html5-player-controls .video-osd {
+        bottom: -60px;
+    }
 
-    /*body:not([class~="video-minimized"]) .html5-player-controls .stop,*/
-    /*body:not([class~="video-minimized"]) .html5-player-controls .play,*/
     .html5-player-controls .stop,
     .html5-player-controls .play,
     .html5-player-controls .toggle-fullScreen,
     .html5-player-controls .toggle-quality,
-    /*body:not([class~="video-minimized"]) .html5-player-controls .minimize,*/
     .html5-player-controls .minimize,
     .html5-player-controls .move-mark-backward,
     .html5-player-controls.cut .cut,
-    .html5-player-controls.cut .watch,
-    .video-minimized .html5-player-controls .volume-wrapper {
+    .html5-player-controls.cut .watch {
         top: -54px;
+    }
+    .video-minimized .html5-player-controls .stop,
+    .video-minimized .html5-player-controls .play,
+    .video-minimized .html5-player-controls .minimize,
+    .video-minimized .html5-player-controls .volume-wrapper {
+        top: 10px;
     }
     .html5-player-controls .channel-up,
     .html5-player-controls .channel-down,
@@ -560,7 +567,7 @@ video::-internal-media-controls-overlay-cast-button {
         bottom: 10px;
     }
     .video-minimized .html5-player-controls .volume-wrapper {
-        bottom: 84px;
+        bottom: 34px;
     }
     .html5-player-controls .volume-indicator,
     .html5-player-controls .quality-select {
@@ -574,12 +581,13 @@ video::-internal-media-controls-overlay-cast-button {
         content: '.';
         color: transparent;
         display: block;
-        margin-top: -64px;
+        bottom: -65px;
+        position: absolute;
         left: 0;
         right: 0;
         height: 64px;
         background: rgba(0,0,0,0.5);
-        border-top: 1px solid black;
+        border-bottom: 1px solid black;
     }
 }
 @media (orientation: landscape) {
@@ -587,16 +595,33 @@ video::-internal-media-controls-overlay-cast-button {
     .has-video-player.video-minimized #viewport {
         min-width: 50%;
         width: calc(100% - 320px);
+        left: auto;
+        right: 0;
+    }
+    body.video-minimized.video-minimized-right,
+    .has-video-player.video-minimized.video-minimized-right #viewport {
+        right: auto;
+        left: 0;
     }
     .has-video-player.video-minimized #menubar {
         min-width: calc(50% - 17px);
         width: calc(100% - 320px - 17px);
+        left: auto;
+        right: 0;
+    }
+    .has-video-player.video-minimized.video-minimized-right #menubar {
+        right: auto;
+        left: 0;
     }
     .has-video-player.video-minimized .modal-overlay.modal-video {
-        left: auto;
+        right: auto;
         max-width: 50%;
         width: 320px;
         min-width: 0;
+    }
+    .has-video-player.video-minimized.video-minimized-right .modal-overlay.modal-video {
+        left: auto;
+        right: 0;
     }
     .video-minimized #viewport .modal-overlay {
         min-width: 0;

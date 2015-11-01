@@ -291,6 +291,9 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         VDRest.app.setNoHistoryActionFlag();
         history.back();
         document.body.classList.add('video-minimized');
+        if ("right" === VDRest.config.getItem('videoMinimizedLandscape')) {
+            document.body.classList.add('video-minimized-right');
+        }
         VDRest.app.getModule('Gui.Window').popRegister();
         this.data.isMinimized = true;
         VDRest.app.getModule('Gui.Epg').unMute();
@@ -298,6 +301,7 @@ Gui.Video.Controller.Player.prototype.toggleMinimize = function (e) {
         VDRest.app.getModule('Gui.Epg').mute();
         history.pushState(this.historyState, document.title, location.pathname);
         document.body.classList.remove('video-minimized');
+        document.body.classList.remove('video-minimized-right');
         this.data.isMinimized = false;
         VDRest.app.getModule('Gui.Window').register(this);
     }

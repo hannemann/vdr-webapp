@@ -70,7 +70,7 @@ Gui.Epg.View.Channels.Channel.prototype.scrollIntoView = function () {
 
     var p = this.node.parent(), o, scroll;
 
-    o = this.node.offset().left + p.get(0).scrollLeft;
+    o = this.node.offset().left - document.body.getBoundingClientRect().left + p.get(0).scrollLeft;
 
     scroll = o - parseInt(p.width() / 2, 10) + parseInt(this.node.width() / 2, 10);
     p.animate({
