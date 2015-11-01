@@ -65,7 +65,6 @@ Gui.Video.Controller.Player.Controls.Layer.Watch.prototype.dispatchView = functi
  */
 Gui.Video.Controller.Player.Controls.Layer.Watch.prototype.toggleQualitySelector = function () {
 
-    this.data.parent.omitDestruct = true;
     if (!this.qualitySelector) {
         this.showQualitySelector();
     } else {
@@ -78,6 +77,7 @@ Gui.Video.Controller.Player.Controls.Layer.Watch.prototype.toggleQualitySelector
  */
 Gui.Video.Controller.Player.Controls.Layer.Watch.prototype.showQualitySelector = function () {
 
+    this.data.parent.omitDestruct = true;
     this.qualitySelector = this.module.getController('Player.Controls.Quality', {"parent" : this.data.parent});
     this.qualitySelector.dispatchView();
 };
@@ -90,6 +90,10 @@ Gui.Video.Controller.Player.Controls.Layer.Watch.prototype.hideQualitySelector =
     if (this.qualitySelector) {
         this.qualitySelector.destructView();
         delete this.qualitySelector;
+        this.data.parent.omitDestruct = false;
+        setTimeout(function () {
+            this.data.parent.addObserver();
+        }.bind(this), 100);
     }
 };
 
