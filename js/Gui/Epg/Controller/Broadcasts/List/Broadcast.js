@@ -105,7 +105,7 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestMenuAction = funct
         tActive = this.data.dataModel.data.timer_active,
         buttons = {};
 
-    buttons.set= {
+    buttons.set = {
         "label" : VDRest.app.translate((tExists ? 'Delete' : 'Add') + ' Timer'),
         "fn" : tExists ? this.deleteTimer.bind(this) : this.addTimer.bind(this)
     };
@@ -115,6 +115,11 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestMenuAction = funct
             "label": VDRest.app.translate((tActive ? 'Dea' : 'A') + 'ctivate Timer'),
             "fn": this.toggleTimer.bind(this)
         };
+
+        buttons.editTimer = {
+            "label" : VDRest.app.translate("Edit Timer"),
+            "fn" : this.editTimer.bind(this)
+        };
     }
 
     if ('Gui.Epg' === VDRest.app.getCurrent()) {
@@ -123,6 +128,11 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestMenuAction = funct
             "fn": this.performSearch.bind(this)
         };
     }
+
+    buttons.imdb = {
+        "label" : VDRest.app.translate("Search IMDB"),
+        "fn" : this.performImdbSearch.bind(this)
+    };
 
     if (e) {
         e.stopPropagation();
@@ -148,6 +158,14 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.requestMenuAction = funct
 Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.performSearch = function () {
 
     VDRest.app.dispatch('Gui.EpgSearch', this.data.dataModel.data.title);
+};
+
+/**
+ * perform imdb search with similar title
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.performImdbSearch = function () {
+
+    window.open("http://www.imdb.com/find?s=tt&q="+encodeURIComponent(this.view.getTitle()));
 };
 
 /**
@@ -202,6 +220,31 @@ Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.toggleTimer = function ()
                 );
 
         }.bind(this));
+};
+
+/**
+ * edit timer
+ */
+Gui.Epg.Controller.Broadcasts.List.Broadcast.prototype.editTimer = function () {
+
+    VDRest.app.getModule('VDRest.Timer').loadModel(
+        'List.Timer',
+        this.data.dataModel.data.timer_id,
+        function (timer) {
+            $.event.trigger({
+                "type": "window.request",
+                "payload": {
+                    "type": "Window.Timer",
+                    "module" : VDRest.app.getModule('Gui.Timer'),
+                    "data": {
+                        "id": timer.data.id,
+                        "resource": timer,
+                        "activeTab": 'edit',
+                        "dontDeleteListItem": true
+                    }
+                }
+            });
+        });
 };
 
 /**
