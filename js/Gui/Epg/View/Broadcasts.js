@@ -46,10 +46,10 @@ Gui.Epg.View.Broadcasts.prototype.updateIndicator = function () {
         width;
 
     if (timeDiff > 0) {
-        this.timeIndicator.show();
+        this.timeIndicator.addClass('show');
         width = Math.round(timeDiff / 1000 * VDRest.config.getItem('pixelPerSecond')) - 1;
     } else {
-        this.timeIndicator.hide();
+        this.timeIndicator.removeClass('show');
     }
 
 

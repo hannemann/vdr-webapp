@@ -72,6 +72,8 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.update = function () {
     if (this.needsUpdate) {
         this.setWidth();
         this.node.attr('data-pos', this.data.position);
+        this.addTimeLine()
+            .setTimeLineWidth();
     }
     this.needsUpdate = false;
 };
@@ -81,7 +83,13 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.update = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.decorate = function () {
 
-    this.setWidth().addTitle().addMenuButton().addClasses().addChannelViewInfo();
+    this.setWidth()
+        .addTitle()
+        .addMenuButton()
+        .addClasses()
+        .addChannelViewInfo()
+        .addTimeLine()
+        .setTimeLineWidth();
 };
 
 /**
@@ -206,6 +214,8 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function () {
 
+    var startDate = new Date(this.getStartTime() * 1000);
+
     this.channelView = $('<div class="visible-channel-view">');
 
     if (this.hasShortText()) {
@@ -217,8 +227,11 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
 
     $('<span class="time">')
         .text(
-            this.helper().getDateTimeString(new Date(this.getStartTime() * 1000))
-            + ' (' + this.helper().getDurationAsString(this.getDuration()) + ')'
+            [
+                startDate.format('ddd'),
+                this.helper().getDateTimeString(startDate),
+                '(' + this.helper().getDurationAsString(this.getDuration()) + ')'
+            ].join(' ')
         )
         .appendTo(this.channelView);
 
@@ -230,6 +243,58 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
     this.channelView.appendTo(this.info);
 
     return this;
+};
+
+/**
+ * compose time line
+ * @return {Gui.Epg.View.Broadcasts.List.Broadcast}
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTimeLine = function () {
+
+    var d = new Date();
+
+    if ("undefined" === typeof this.timeLine && this.getStartDate() < d) {
+
+        this.timeLineWrapper = $('<div class="visible-channel-view timeline">');
+
+        $('<div>').text(this.getStartDate().format('HH:MM')).appendTo(this.timeLineWrapper);
+
+        this.timeLine = $('<div>');
+        this.timeLine.append($('<div>')).appendTo(this.timeLineWrapper);
+
+        $('<div>').text(this.getEndDate().format('HH:MM')).appendTo(this.timeLineWrapper);
+
+        this.timeLineWrapper.appendTo(this.node);
+    }
+
+    return this;
+};
+
+/**
+ * apply width
+ * @return {Gui.Epg.View.Broadcasts.List.Broadcast}
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.setTimeLineWidth = function () {
+
+    if ("undefined" !== typeof this.timeLine) {
+
+        this.timeLine[0].childNodes[0].style.width = this.getTimeLinePercentage() + '%';
+    }
+    return this;
+};
+
+/**
+ * calculate width of time line
+ * @return {number}
+ */
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.getTimeLinePercentage = function () {
+
+    var d = Date.now(),
+        start = this.getStartTime() * 1000,
+        end = this.getEndTime() * 1000,
+        p = 100 * (d - start) / (end - start);
+
+    return p < 0 ? 0 : p > 100 ? 100 : p;
 };
 
 /**
