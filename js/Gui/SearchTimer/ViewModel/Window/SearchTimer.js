@@ -236,7 +236,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.setCommonFields = functio
     if (this.hasDateLimit) {
 
         this.searchFormFields.use_date_limit = this.getBooleanField(
-            "parameter", 'Use date limit', "undefined" !== typeof this.data.resource.data.dateLimit, depends, true
+            "parameter", 'Use date limit', this.data.resource.data.use_date_limit, depends, true
         );
         if (this.withAdvanced) {
             dl_depends.advanced = true;

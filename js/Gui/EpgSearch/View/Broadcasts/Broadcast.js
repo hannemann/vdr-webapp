@@ -49,7 +49,7 @@ Gui.EpgSearch.View.Broadcasts.Broadcast.prototype.addChannel = function () {
 
         channelView = VDRest.app.getModule('Gui.Epg').getView('Channels.Channel', this.getChannel());
 
-        if (channelView.hasImage()) {
+        if ("function" === typeof channelView.hasImage && channelView.hasImage()) {
 
             this.channel = $('<div>').addClass('channel-logo');
 

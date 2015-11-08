@@ -1,0 +1,1 @@
+VDRest.Epg.Model.Search.Templates.Template = function () {};

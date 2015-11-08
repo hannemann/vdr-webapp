@@ -59,7 +59,7 @@ VDRest.app.de_DE = {
     "4 Hours":"4 Stunden",
     "8 Hours":"8 Stunden",
     "Save as Overview Template" : "Als Vorlage für Überblick speichern",
-    "Edit Overview Template" : "Vorlage für Überblick speichern bearbeiten",
+    "Edit Overview Template" : "Vorlage für Überblick bearbeiten",
     "(plus %d days)" : "(plus %d Tage)",
     "Watch":"Ansehen",
     "The search returned no results." : "Die Suche war erfolglos.",

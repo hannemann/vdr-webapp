@@ -167,6 +167,15 @@ Gui.SearchTimer.prototype.destruct = function () {
 
     this.getController('List').destructView(true);
     this.cache.flush();
+    this.deleteSearchTimerDummy();
+};
+
+/**
+ * delete dummy instance of searchTimerModel
+ */
+Gui.SearchTimer.prototype.deleteSearchTimerDummy = function () {
+
+    delete this.store.cache.store.Model['List.SearchTimer'][-1];
 };
 
 /**
