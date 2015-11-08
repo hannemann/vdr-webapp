@@ -89,6 +89,7 @@ Gui.EpgSearch.Controller.Search.prototype.destroyContent = function () {
 
     this.module.cache.invalidateClasses('Search.Form');
     this.module.cache.invalidateClasses('Broadcasts');
+    this.module.cache.invalidateClasses('Broadcasts.Broadcast');
 };
 
 /**
