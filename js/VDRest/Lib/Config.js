@@ -598,7 +598,7 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "boolean",
         "label" : "Support Chromecast",
-        "info" : "Shows the Chromecast button when controls hide"
+        "info" : "Shows the Chromecast button when controls hide. Does not work with self-signed certificates."
     },
     "streamDownload" : {
         "depends" : {

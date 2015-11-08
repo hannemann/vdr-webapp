@@ -141,6 +141,8 @@ VDRest.app.de_DE = {
     "Exact" : "Exakt",
     "Fuzzy" : "Unscharf",
     "Show radio channels" : "Zeige Radio Kanäle",
+    "Support Chromecast":"Chromecast Unterstützung",
+    "Shows the Chromecast button when controls hide. Does not work with self-signed certificates.":"Zeigt den Chromecast Button an wenn die Kontrollen ausblenden. Funktioniert nicht mit selbst signierten Zertifikaten.",
     "Channel" : "Kanal",
     "Sunday" : "Sonntag",
     "Monday" : "Montag",
