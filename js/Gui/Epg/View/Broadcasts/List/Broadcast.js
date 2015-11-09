@@ -126,10 +126,6 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
         this.handleIsRecording(true);
     }
 
-    if (this.hasImages()) {
-        classNames.push('has-image');
-    }
-
     if (rating) {
 
         this.info.addClass('rating-' + rating);
@@ -193,6 +189,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
             try {
                 $('<div class="visible-epg-view broadcast-image">').append(img).prependTo(this.node);
                 VDRest.image.applyTransparencyGradient(img, src, 40, 10, this.keyInCache);
+                this.node.addClass('has-epg-view-image');
             } catch (e) {
                 VDRest.helper.log('Error resizing image', this, src);
             }
@@ -202,6 +199,8 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
 
         this.channelViewImage = $('<div class="visible-channel-view broadcast-image">')
             .append(img).insertAfter(this.title);
+
+        this.node.addClass('has-image');
     }
 
 

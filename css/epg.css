@@ -23,10 +23,8 @@
     width: 39px;
     height: 39px;
     border-bottom: 1px solid black;
+    background: white no-repeat center center;
     background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: white;
     color: #696969;
     font-size: .65em;
     position: relative;
@@ -101,14 +99,13 @@
 #broadcasts .broadcasts-list.invisible .broadcast {
     display: none !important;
 }
-#broadcasts .broadcasts-list .broadcast.has-image .title span {
-    /*background: rgba(0, 0, 0, 0.19);*/
+#broadcasts .broadcasts-list .broadcast .title span {
     border-radius: 5px;
     display: inline-block;
-    background-image: linear-gradient(135deg, dimgrey 15%, rgba(64, 64, 64, 0.5) 85%);
-    background-repeat: no-repeat;
-    background-position: -4px -4px;
     padding-right: 4px;
+}
+#broadcasts .broadcasts-list .broadcast.has-epg-view-image .title span {
+    background: linear-gradient(135deg, dimgrey 15%, rgba(64, 64, 64, 0.5) 85%) no-repeat -4px -4px;
 }
 #broadcasts .broadcasts-list .broadcast div {
     height: calc(100% - 4px);
@@ -132,19 +129,14 @@
 #broadcasts .broadcasts-list .broadcast div.broadcast-image,
 #broadcasts .broadcasts-list .broadcast div.broadcast-image img {
     height: 100%;
-}
-#broadcasts .broadcasts-list .broadcast div.broadcast-image img {
-    float: right;
-}
-#broadcasts .broadcasts-list .broadcast div {
-    /*text-shadow: 2px 2px 5px rgba(0, 0, 0, 1);*/
+    width: auto;
+    right: 0;
+    left: auto;
 }
 .epg-search-view  .broadcast.timer-exists div.content,
 #broadcasts .broadcasts-list .broadcast.timer-exists div.content {
-    background: linear-gradient(135deg, #404040 30%, #939393 70%);
+    background: linear-gradient(135deg, #404040 30%, #939393 70%) no-repeat right bottom;
     background-size: 5px 5px;
-    background-repeat: no-repeat;
-    background-position: right bottom;
 }
 #broadcasts .broadcasts-list .broadcast.timer-active div.content {
     background-image: linear-gradient(135deg, #404040 30%, #930000 70%);
@@ -280,9 +272,7 @@ div#time-line .ql.hour {
 
 .window.broadcast.timer-exists .window-body.has-tabs .tabs {
     background-size: 40px 40px;
-    background-image: linear-gradient(225deg, #545454 30%, transparent 50%);
-    background-repeat: no-repeat;
-    background-position: 100% 0;
+    background: linear-gradient(225deg, #545454 30%, transparent 50%) no-repeat 100% 0;
 }
 .window.broadcast.timer-exists.timer-active .window-body.has-tabs .tabs {
     background-image: linear-gradient(225deg, rgb(115, 0, 0) 30%, transparent 50%);
