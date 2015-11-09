@@ -150,11 +150,34 @@
     background-image: linear-gradient(135deg, #404040 30%, #930000 70%);
     background-size: 5px 5px;
 }
+
+
+
+.epg-search-view  .broadcast.timer-exists div.content,
+.channel-view #broadcasts .broadcasts-list .broadcast.timer-exists div.content,
 .epg-search-view  .broadcast.timer-active div.content,
 .channel-view #broadcasts .broadcasts-list .broadcast.timer-active div.content {
-    background-image: linear-gradient(135deg, #696969 30%, #930000 70%);
-    background-size: 5px 5px;
+    background: none;
 }
+.epg-search-view  .broadcast.timer-exists div.content:before,
+.channel-view #broadcasts .broadcasts-list .broadcast.timer-exists div.content:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20px;
+    width: 20px;
+    display: block;
+    background-image: linear-gradient(225deg, #404040 0%, transparent 60%);
+    text-shadow: none;
+    border-radius: 0;
+}
+.epg-search-view  .broadcast.timer-active div.content:before,
+.channel-view #broadcasts .broadcasts-list .broadcast.timer-active div.content:before {
+    background-image: linear-gradient(225deg, #930000 0%, transparent 60%);
+}
+
+
 #broadcasts .broadcasts-list .broadcast:active {
     /*background: rgb(168, 168, 168);*/
 }
@@ -317,6 +340,10 @@ div#time-line .ql.hour {
 .epg-search-results-header {
     padding: 0 5px;
 }
+.epg-search-no-results,
+.epg-search-results-header {
+    border-bottom: 1px solid #888888;
+}
 .epg-search-buttons .button-confirm {
     background: rgb(39, 97, 181);
     border: 1px outset rgba(99, 138, 195, 1);
@@ -381,7 +408,7 @@ div#time-line .ql.hour {
 .channel-view #broadcasts .broadcast,
 .epg-search-view .broadcast {
     position: relative;
-    border-bottom: 1px solid darkgrey;
+    border-bottom: 1px solid #888888;
 }
 
 .epg-search-view .visible-channel-view,
