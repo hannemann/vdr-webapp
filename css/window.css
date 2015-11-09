@@ -141,7 +141,7 @@
 
 .document-fullsize .window-header.has-fanart ul.bottom {
     top: auto;
-    bottom: 12px;
+    bottom: 6px;
     position: absolute;
 }
 .window-header.has-fanart .fanart {
@@ -194,6 +194,9 @@
 
 .window.image-expanded .window-header-details {
     width: calc(100% - 20px);
+}
+ul.window-header-components {
+    margin-top: 8px;
 }
 .window-header-components li {
     margin-left: 5px;
