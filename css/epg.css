@@ -74,6 +74,7 @@
     background: rgba(99, 138, 195, 0.15);
     border-right: 1px solid rgba(255, 0, 0, 0.5);
     z-index: 1;
+    display: none;
 }
 #epg-time-indicator.show {
     display: block;
