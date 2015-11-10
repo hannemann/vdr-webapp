@@ -135,7 +135,7 @@ Gui.Recordings.View.Window.Recording.prototype.addDetails = function () {
     }
 
 
-    if (VDRest.info.getStreamer()) {
+    if (VDRest.info.getStreamer() && !this.watchButton) {
 
         wButton = $('<dl class="window-button round watch-button symbol-button vdr-web-symbol"></dl>');
         this.watchButton = $('<dt>').html('C');
