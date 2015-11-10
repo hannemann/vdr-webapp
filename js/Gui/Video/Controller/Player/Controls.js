@@ -58,7 +58,9 @@ Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
         type = 'Tv';
     } else if (this.player.data.isVideo) {
         type = 'Video';
-    } else if (this.player.mode == 'cut') {
+    }
+
+    if (this.player.mode == 'cut') {
         type = 'Cut';
         this.view.node.addClass('cut');
     }
