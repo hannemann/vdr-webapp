@@ -28,6 +28,54 @@ Gui.Config.prototype.name = 'Config';
 Gui.Config.prototype.headline = 'Configuration';
 
 /**
+ * context menu definition
+ * @type {{}}
+ */
+Gui.Config.prototype.contextMenu = {
+
+    "export" : {
+        "labels" : {
+            "off" : VDRest.app.translate("Export")
+        },
+        "state" : "off",
+        "scope" : 'Gui.Config',
+        "fn" : function () {
+
+            var element = document.createElement('a'),
+                data = {}, i;
+            for (i in localStorage) {
+                if (localStorage.hasOwnProperty(i)) {
+                    data[i] = localStorage[i];
+                }
+            }
+            element.setAttribute(
+                'href',
+                'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data))
+            );
+            element.setAttribute(
+                'download',
+                'vdr-web-client-settings' + VDRest.config.getItem('recordingsSyncId') + '.json'
+            );
+            element.focus();
+            element.click();
+        }
+    },
+    "import" : {
+        "labels" : {
+            "off" : VDRest.app.translate("Import")
+        },
+        "state" : "off",
+        "dispatchEvent" : {
+            "type" : MouseEvent,
+            "event" : "click",
+            "target" : {
+                "selector" : "#import-settings-file"
+            }
+        }
+    }
+};
+
+/**
  * add render event
  */
 Gui.Config.prototype.init = function () {

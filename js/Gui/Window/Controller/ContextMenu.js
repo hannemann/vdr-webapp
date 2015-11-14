@@ -59,7 +59,7 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
             //}
 
             this.data[i].button
-                .on(upEvent, this.handleUp.bind(this, this.data[i].fn, VDRest.app.getModule(this.data[i].scope)))
+                .on(upEvent, this.handleUp.bind(this, this.data[i]))
                 .on(downEvent, this.handleDown.bind(this, this.data[i].button[0]))
             ;
         }
@@ -68,16 +68,16 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
     if (VDRest.app.startModule === VDRest.app.getCurrent()) {
 
         configButton
-            .on(upEvent, this.handleUp.bind(this, this.configAction, this))
+            .on(upEvent, this.handleUp.bind(this, {"fn":this.configAction, "scope":"Gui.Window"}))
             .on(downEvent, this.handleDown.bind(this, configButton[0]))
         ;
     }
 
     reloadButton
-        .on(upEvent, this.handleUp.bind(this, this.reloadAction, this))
+        .on(upEvent, this.handleUp.bind(this, {"fn":this.reloadAction, "scope":"Gui.Window"}))
         .on(downEvent, this.handleDown.bind(this, reloadButton[0]));
     resizeButton
-        .on(upEvent, this.handleUp.bind(this, this.resizeAction, this))
+        .on(upEvent, this.handleUp.bind(this, {"fn":this.resizeAction, "scope":"Gui.Window"}))
         .on(downEvent, this.handleDown.bind(this, resizeButton[0]));
 
     //this.view.node.find('.fullscreen-button')
@@ -125,7 +125,9 @@ Gui.Window.Controller.ContextMenu.prototype.removeObserver = function () {
 /**
  * call method defined as callback
  */
-Gui.Window.Controller.ContextMenu.prototype.handleUp = function (callback, scope) {
+Gui.Window.Controller.ContextMenu.prototype.handleUp = function (data) {
+
+    var scope = this, callback, eventTarget, evt;
 
     if (VDRest.helper.canCancelEvent) {
         return;
@@ -135,12 +137,31 @@ Gui.Window.Controller.ContextMenu.prototype.handleUp = function (callback, scope
 
     this.skipBack = true;
 
+    if (data.scope) {
+        scope = VDRest.app.getModule(data.scope);
+    }
+
+    if (data.fn) {
+        callback = data.fn;
+    }
+
+    if (data.dispatchEvent) {
+
+        if (data.dispatchEvent.target.selector) {
+            eventTarget = document.querySelector(data.dispatchEvent.target.selector);
+        }
+        evt = new data.dispatchEvent.type(data.dispatchEvent.event);
+        eventTarget.dispatchEvent(evt);
+    }
+
     history.back();
 
-    $document.one(this.animationEndEvents, function () {
+    if (callback && scope) {
+        $document.one(this.animationEndEvents, function () {
 
-        callback.call(scope);
-    });
+                callback.call(scope);
+        });
+    }
 };
 
 /**
@@ -173,10 +194,10 @@ Gui.Window.Controller.ContextMenu.prototype.resizeAction = function () {
     window.resizeTo(window.innerWidth, height);
 };
 
-Gui.Window.Controller.ContextMenu.prototype.handleFullscreen = function () {
-
-    this[VDRest.helper.getIsFullscreen() ? 'cancelFullscreen' : 'requestFullscreen']();
-};
+//Gui.Window.Controller.ContextMenu.prototype.handleFullscreen = function () {
+//
+//    this[VDRest.helper.getIsFullscreen() ? 'cancelFullscreen' : 'requestFullscreen']();
+//};
 
 /**
  * hides status bar and dims buttons
