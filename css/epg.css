@@ -524,6 +524,8 @@ div#time-line .ql.hour {
 .channel-view #broadcasts .broadcasts-list .broadcast .title span {
     background: none;
     text-shadow: 1px 1px #333333;
+    font-family: Source Sans ProBold, sans-serif;
+    color: #e0e0e0;
 }
 .epg-search-view .broadcast .visible-channel-view *,
 .channel-view #broadcasts .broadcast .visible-channel-view * {
