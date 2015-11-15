@@ -35,6 +35,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.epgController = this.module.getController('Epg');
     this.broadcastsController = this.epgController.getBroadcasts();
     this.broadcasts = [];
+    this.dateSeparators = [];
     this.view = this.module.getView('Broadcasts.List', {
         "channel_id" : this.data.channel_id
     });
@@ -44,9 +45,14 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     });
     this.scrollLeft = 0;
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
-    this.fromTime = this.module.getFromDate().getTime();
+    this.fromDate = this.module.getFromDate();
+    this.fromTime = this.fromDate.getTime();
     this.initial = true;
     this.overflowCount = 1;
+
+    this.setCurrentHour(this.fromDate);
+    this.currentPosition = 0;
+    this.newBroadcasts = [];
 
     this.addObserver();
 };
@@ -57,6 +63,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
 Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+    this.addDateSeparator();
 
     if (this.dataModel.getCollection().length > 0) {
 
@@ -155,62 +163,140 @@ Gui.Epg.Controller.Broadcasts.List.prototype.detachChannelView = function () {
 /**
  * iterate loaded broadcasts
  * @param {jQuery.Event} collection
- * @param {function(function)} collection.iterate
+ * @param {function(function, function)} collection.iterate
  * @param {VDRest.Epg.Model.Channels.Channel.Broadcast[]} collection.collection
  * @param {string} collection._class
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.iterateBroadcasts = function (collection) {
 
-    var isInView = this.isInView(), newBroadcasts = [];
+    var isInView = this.isInView();
 
-    collection.iterate(function (dataModel) {
-
-        if (dataModel.data.end_date <= this.module.getFromDate()) return;
-
-        if (
-            this.module.cache.store.Controller['Broadcasts.List.Broadcast'] &&
-            this.module.cache.store
-                .Controller['Broadcasts.List.Broadcast'][dataModel.data.channel + '/' + dataModel.data.id]
-        ) return;
-
-        newBroadcasts.push(this.module.getController('Broadcasts.List.Broadcast', {
-            'channel' : dataModel.data.channel,
-            'id' : dataModel.data.id,
-            "parent" : this,
-            "dataModel": dataModel,
-            "position": this.broadcasts.length + newBroadcasts.length
-        }));
-
-    }.bind(this), function () {
-
-        var i= 0, l;
-
-        this.broadcasts = this.broadcasts.concat(newBroadcasts);
-        this.broadcasts.sort(this.sortBroadcasts);
-
-        this.updateViewData().sortNodes();
-
-        if (this.isChannelView) {
-
-            l = newBroadcasts.length;
-
-            for (i;i<l;i++) {
-                newBroadcasts[i].dispatchView();
-            }
-            this.isLoading = false;
-        }
-
-    }.bind(this));
+    collection.iterate(
+        this.addBroadcasts.bind(this),
+        this.addBroadcastsReady.bind(this)
+    );
 
     this.hasInitialBroadcasts = this.broadcasts.length > 0;
 
-    newBroadcasts = [];
+    this.newBroadcasts = [];
     // runs in endless loop if previous collection had items but current not
     // trigger update ONLY if collection.length is not 0!!!
     if (collection.collection.length > 0 && isInView && !this.isChannelView) {
 
         this.updateList();
     }
+};
+
+/**
+ * collection iterator callback
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast} dataModel
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.addBroadcasts = function (dataModel) {
+
+    var dataModelHours;
+
+    if (this.isValidBroadcast(dataModel))  {
+
+        dataModelHours = new Date(
+            dataModel.data.start_date.getFullYear(),
+            dataModel.data.start_date.getMonth(),
+            dataModel.data.start_date.getDate(),
+            dataModel.data.start_date.getHours(), 0, 0
+        );
+
+        if (dataModelHours > this.currentHour.getHours()) {
+            this.setCurrentHour(dataModel.data.start_date);
+            this.addDateSeparator();
+        }
+
+        this.addBroadcast(dataModel);
+    }
+};
+
+/**
+ * test if broadcast is valid
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast} dataModel
+ * @return {boolean}
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.isValidBroadcast = function (dataModel) {
+
+    return dataModel.data.end_date > this.fromDate
+            && !(
+                    this.module.cache.store.Controller['Broadcasts.List.Broadcast'] &&
+                    this.module.cache.store
+                        .Controller['Broadcasts.List.Broadcast'][dataModel.data.channel + '/' + dataModel.data.id]
+            )
+};
+
+/**
+ * handle iteration of broadcast ready
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.addBroadcastsReady = function () {
+
+    var i = 0, l;
+
+    this.broadcasts = this.broadcasts.concat(this.newBroadcasts);
+    this.broadcasts.sort(this.sortBroadcasts);
+
+    if (this.isChannelView) {
+
+        l = this.newBroadcasts.length;
+
+        for (i;i<l;i++) {
+            this.newBroadcasts[i].dispatchView();
+        }
+        this.isLoading = false;
+    }
+
+    this.updateViewData().sortNodes();
+};
+
+/**
+ * add broadcast
+ * @param {VDRest.Epg.Model.Channels.Channel.Broadcast} dataModel
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.addBroadcast = function (dataModel) {
+
+    this.newBroadcasts.push(this.module.getController('Broadcasts.List.Broadcast', {
+        'channel' : dataModel.data.channel,
+        'id' : dataModel.data.id,
+        "parent" : this,
+        "dataModel": dataModel,
+        "position": this.currentPosition++
+    }));
+    this.newBroadcasts[this.newBroadcasts.length - 1].dispatchView();
+};
+
+/**
+ * add date separator
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.addDateSeparator = function () {
+
+    this.dateSeparators.push(this.module.getController('Broadcasts.List.DateSeparator', {
+        "timestamp" : this.currentHour.getTime(),
+        "channel_id" : this.data.channel_id,
+        "parent" : this,
+        "date" : this.currentHour,
+        "position" : this.currentPosition++
+    }));
+    this.dateSeparators[this.dateSeparators.length - 1].dispatchView();
+};
+
+/**
+ * set current hour
+ * @param {Date} date
+ * @returns {Gui.Epg.Controller.Broadcasts.List}
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.setCurrentHour = function (date) {
+
+    this.currentHour = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(), 0, 0
+    );
+
+    return this;
 };
 
 /**
@@ -259,13 +345,13 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
     var i = 0,
         l = this.broadcasts.length,
         metrics,
-        vOffset,
-        threshold;
+        vOffset/*,
+        threshold*/;
 
     if (l > 0) {
 
         metrics = this.epgController.getMetrics();
-        threshold = this.epgController.metrics.viewPort.width * this.overflowCount;
+        //threshold = this.epgController.metrics.viewPort.width * this.overflowCount;
         vOffset = {
             "left" : -this.broadcastsController.currentScrollLeft + this.broadcastsController.view.left
         };
@@ -275,12 +361,12 @@ Gui.Epg.Controller.Broadcasts.List.prototype.updateList = function () {
             this.broadcasts[i].view.update();
 
             // dispatch broadcast if its not but should be
-            if (!this.broadcasts[i].view.isRendered
-                && (this.broadcasts[i].view.getLeft() + vOffset.left - threshold < metrics.win.width || this.isChannelView)
-            ) {
-
-                this.broadcasts[i].dispatchView();
-            }
+            //if (!this.broadcasts[i].view.isRendered
+            //    && (this.broadcasts[i].view.getLeft() + vOffset.left - threshold < metrics.win.width || this.isChannelView)
+            //) {
+            //
+            //    this.broadcasts[i].dispatchView();
+            //}
         }
 
         if (!this.isChannelView) {
@@ -516,16 +602,69 @@ Gui.Epg.Controller.Broadcasts.List.prototype.deleteOutdated = function () {
  */
 Gui.Epg.Controller.Broadcasts.List.prototype.updateViewData = function () {
 
-    this.broadcasts.forEach(function (broadcast, index) {
+    var tmp = this.broadcasts.concat(this.dateSeparators), pos = 0;
 
-        broadcast.data.position = index;
-        broadcast.view.data.position = index;
-        broadcast.view.node.get(0).dataset['pos'] = index;
-        broadcast.updateMetrics();
+    tmp.sort(this.sortChildren.bind(this));
+
+    tmp.forEach(function (controller) {
+
+        controller.data.position = pos;
+        controller.view.data.position = pos;
+        controller.view.node.get(0).dataset['pos'] = pos;
+
+        if (controller instanceof Gui.Epg.Controller.Broadcasts.List.Broadcast) {
+            controller.updateMetrics();
+        }
+        pos++;
 
     }.bind(this));
 
     return this;
+};
+
+/**
+ * sort children by date
+ * if date equals, dateSeparator is smaller then Broadcast
+ * @param {Gui.Epg.Controller.Broadcasts.List.Broadcast|Gui.Epg.Controller.Broadcasts.List.DateSeparator} a
+ * @param {Gui.Epg.Controller.Broadcasts.List.Broadcast|Gui.Epg.Controller.Broadcasts.List.DateSeparator} b
+ */
+Gui.Epg.Controller.Broadcasts.List.prototype.sortChildren = function (a, b) {
+
+    var va, vb;
+
+    if (a instanceof Gui.Epg.Controller.Broadcasts.List.DateSeparator) {
+        va = a.data.date;
+    } else {
+        va = a.data.dataModel.data.start_date;
+        if (va < this.fromDate) {
+            va = this.fromDate;
+        }
+    }
+
+    if (b instanceof Gui.Epg.Controller.Broadcasts.List.DateSeparator) {
+        vb = b.data.date;
+    } else {
+        vb = b.data.dataModel.data.start_date;
+        if (vb < this.fromDate) {
+            vb = this.fromDate;
+        }
+    }
+
+    if (
+        (
+            a instanceof Gui.Epg.Controller.Broadcasts.List.DateSeparator
+            || b instanceof Gui.Epg.Controller.Broadcasts.List.DateSeparator
+        ) && va.getTime() == vb.getTime()
+    ) {
+        if (a instanceof Gui.Epg.Controller.Broadcasts.List.DateSeparator) {
+            return -1;
+        }
+        if (b instanceof Gui.Epg.Controller.Broadcasts.List.DateSeparator) {
+            return 1;
+        }
+    }
+
+    return va == vb ? 0 : (va > vb ? 1 : -1);
 };
 
 /**

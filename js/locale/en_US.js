@@ -7,6 +7,7 @@ dateFormat.masks.shortTime_en_US            = "h:MM TT";
 dateFormat.masks.mediumTime_en_US           = "h:MM:ss TT";
 dateFormat.masks.longTime_en_US             = "h:MM:ss TT Z";
 dateFormat.masks.epgSearchDateLimit_en_US   = "ddd\tmmm dd";
+dateFormat.masks.epgDate_en_US              = "ddd dd mmm HH:MM";
 
 // Internationalization strings
 dateFormat.i18n_en_US = {

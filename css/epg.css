@@ -87,6 +87,9 @@
     position: relative;
     z-index: 0;
 }
+#broadcasts .broadcasts-list .date-separator {
+    display: none;
+}
 #broadcasts .broadcasts-list .broadcast {
     position: absolute;
     top: 0;
@@ -400,6 +403,15 @@ div#time-line .ql.hour {
 .epg-search-view .broadcast {
     position: relative;
     border-bottom: 1px solid #888888;
+}
+
+.channel-view #broadcasts .broadcasts-list .date-separator {
+    display: block;
+    padding: 4px 10px;
+    background: #5D5D5D;
+    color: #DADADA;
+    font-size: 12px;
+    border-bottom: 1px solid #888;
 }
 
 .epg-search-view .visible-channel-view,
