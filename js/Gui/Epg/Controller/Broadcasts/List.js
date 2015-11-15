@@ -64,8 +64,6 @@ Gui.Epg.Controller.Broadcasts.List.prototype.dispatchView = function () {
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 
-    this.addDateSeparator();
-
     if (this.dataModel.getCollection().length > 0) {
 
         this.iterateBroadcasts({

@@ -529,6 +529,12 @@ div#time-line .ql.hour {
 .channel-view #broadcasts .broadcast .visible-channel-view * {
     font-size: .75em;
 }
+.epg-search-view .broadcast span.time span,
+.channel-view #broadcasts .broadcast span.time span {
+    font-size: 1em;
+    font-family: Source Sans ProBold, sans-serif;
+    color: #E0E0E0;
+}
 .epg-search-view .broadcast .visible-channel-view .channel {
     margin-left: 1em;
 }

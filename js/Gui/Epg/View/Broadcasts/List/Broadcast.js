@@ -225,10 +225,9 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
     }
 
     $('<span class="time">')
-        .text(
+        .html(
             [
-                startDate.format('ddd'),
-                this.helper().getDateTimeString(startDate),
+                startDate.format('ddd dd mmm') + '&nbsp;<span>' + startDate.format('HH:MM') + '</span>',
                 '(' + this.helper().getDurationAsString(this.getDuration()) + ')'
             ].join(' ')
         )
