@@ -3,6 +3,16 @@
  * @constructor
  * @property {VDRest.Lib.Cache} cache
  * @property {VDRest.Epg} store
+ * @property {function} Model
+ * @property {function} View
+ * @property {function} ViewModel
+ * @property {function} Controller
+ * @property {function} Helper
+ * @property {function} Controller.Window
+ * @property {function} View.Window
+ * @property {function} ViewModel.Window
+ * @property {function} Helper.Window
+ * @property {VDRest.Lib.Cache} cache
  */
 Gui.Epg = function () {};
 

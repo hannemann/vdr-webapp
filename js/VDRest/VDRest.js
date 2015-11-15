@@ -7,16 +7,26 @@
  * @property {VDRest.App} app
  * @property {VDRest.Helper} helper
  * @property {VDRest.Lib.Config} config
+ * @property {function} Lib
+ * @property {function} Abstract
+ * @property {function} Api
  */
 var VDRest = function () {};
 
 /**
  * @namespace
+ * @property {VDRest.Lib.Object) Controller
+ * @property {VDRest.Lib.Object) Model
+ * @property {VDRest.Lib.Object) Helper
+ * @property {VDRest.Lib.Object) Module
+ * @property {VDRest.Lib.Object) View
+ * @property {VDRest.Lib.Object) ViewModel
  */
 VDRest.Abstract = function () {};
 
 /**
  * @namespace
+ * @property {VDRest.Lib.Cache) Cache
  */
 VDRest.Lib = function () {};
 

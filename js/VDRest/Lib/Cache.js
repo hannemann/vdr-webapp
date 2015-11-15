@@ -1,10 +1,19 @@
 /**
+ * @typedef {{}} cacheStoreItem
+ * @property {Object} Window
+ */
+/**
+ * @typedef {{}} cacheStore
+ * @property {Object} Model
+ * @property {cacheStoreItem} View
+ * @property {cacheStoreItem} ViewModel
+ * @property {cacheStoreItem} Controller
+ * @property {cacheStoreItem} Helper
+ */
+/**
  * @class
  * @constructor
- * @var {object} store
- * @property {object} controllers
- * @property {object} models
- * @property {object} views
+ * @property {cacheStore} store
  */
 VDRest.Lib.Cache = function () {
 

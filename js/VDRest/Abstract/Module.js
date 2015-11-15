@@ -1,5 +1,15 @@
 /**
  * @constructor
+ * @property {function} Model
+ * @property {function} View
+ * @property {function} ViewModel
+ * @property {function} Controller
+ * @property {function} Helper
+ * @property {function} Controller.Window
+ * @property {function} View.Window
+ * @property {function} ViewModel.Window
+ * @property {function} Helper.Window
+ * @property {VDRest.Lib.Cache} cache
  */
 VDRest.Abstract.Module = function () {};
 
@@ -94,7 +104,7 @@ VDRest.Abstract.Module.prototype.loadModel = function (type, cacheKey, callback)
  *
  * @param path
  * @param cacheKey
- * @returns {string}
+ * @returns {{}}
  */
 VDRest.Abstract.Module.prototype.getResourceInitData = function (path, cacheKey) {
 
@@ -242,6 +252,7 @@ VDRest.Abstract.Module.prototype.getAndInitialize = function (classType, type, d
  * @param {string} type                     ViewModel, View, Controller
  * @param {string} _class                   classpath
  * @param {(object|string|number)} [data]   data object or identifier
+ * @param {string} [data.cacheKey]   data object or identifier
  * @return {*}
  */
 VDRest.Abstract.Module.prototype.getClass = function (type, _class, data) {

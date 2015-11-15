@@ -1,6 +1,6 @@
 /**
  * @constructor
- * @member {object} data
+ * @property {object} data
  */
 VDRest.Lib.Object = function () {};
 
@@ -44,7 +44,7 @@ VDRest.Lib.Object.prototype.initData = function (data) {
 
 /**
  * get initialized instance
- * @param [data]
+ * @param {{}} [data]
  * @returns {VDRest.Lib.Object}
  */
 VDRest.Lib.Object.prototype.getInstance = function (data) {
@@ -56,8 +56,8 @@ VDRest.Lib.Object.prototype.getInstance = function (data) {
 
 /**
  * retrieve option
- * @param [option] {String}
- * @param [defaultValue] {*}
+ * @param {String} [option]
+ * @param {*} [defaultValue]
  * @return {*}
  */
 VDRest.Lib.Object.prototype.getData = function (option, defaultValue) {

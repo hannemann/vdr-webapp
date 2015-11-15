@@ -1,5 +1,6 @@
 /**
  * @namespace
+ * @property {Gui.Epg} Epg
  */
 var Gui = function () {};
 
