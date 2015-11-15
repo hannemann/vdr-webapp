@@ -2,6 +2,8 @@
  * EPG Module
  * @constructor
  * @property {VDRest.Lib.Cache} cache
+ * @property {Date} now       Date Object of now
+ * @property {Date} prime     Date Object of prime time 20:15 today or tomorrow
  */
 VDRest.Epg = function () {};
 
@@ -11,12 +13,13 @@ VDRest.Epg = function () {};
  */
 VDRest.Epg.prototype = new VDRest.Abstract.Module();
 
+/**
+ * @type {number}
+ */
 VDRest.Epg.prototype.nowOffset = 1000 * 60 * 30;
 
 /**
  * initialize module
- * @member {Date} now       Date Object of now
- * @member {Date} prime     Date Object of prime time 20:15 today or tomorrow
  */
 VDRest.Epg.prototype.init = function () {
 

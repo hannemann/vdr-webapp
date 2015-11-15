@@ -50,7 +50,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.initial = true;
     this.overflowCount = 1;
 
-    this.setCurrentHour(this.fromDate);
+    this.setCurrentHour(new Date(1970, 0, 0));
     this.currentPosition = 0;
     this.newBroadcasts = [];
 
@@ -202,7 +202,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.addBroadcasts = function (dataModel
             dataModel.data.start_date.getHours(), 0, 0
         );
 
-        if (dataModelHours > this.currentHour.getHours()) {
+        if (dataModelHours.getTime() > this.currentHour.getTime()) {
             this.setCurrentHour(dataModel.data.start_date);
             this.addDateSeparator();
         }
@@ -589,9 +589,34 @@ Gui.Epg.Controller.Broadcasts.List.prototype.deleteOutdated = function () {
         this.broadcasts.shift();
     }.bind(this));
 
+    this.deleteDateSeparators();
+
     this.module.store.cache.store.Model['Channels.Channel'][this.data.channel_id].cleanCollection();
 
     return this;
+};
+
+Gui.Epg.Controller.Broadcasts.List.prototype.deleteDateSeparators = function () {
+
+    var firstDate;
+
+    if (this.broadcasts.length > 0) {
+
+        firstDate = this.broadcasts[0].data.dataModel.data.start_date;
+        firstDate = new Date(
+            firstDate.getFullYear(),
+            firstDate.getMonth(),
+            firstDate.getDate(),
+            firstDate.getHours(), 0, 0
+        );
+        this.dateSeparators.forEach(function (separator) {
+
+            if (separator.data.date.getTime() < firstDate.getTime()) {
+                separator.destructView();
+            }
+
+        }.bind(this));
+    }
 };
 
 /**
@@ -634,18 +659,18 @@ Gui.Epg.Controller.Broadcasts.List.prototype.sortChildren = function (a, b) {
         va = a.data.date;
     } else {
         va = a.data.dataModel.data.start_date;
-        if (va < this.fromDate) {
-            va = this.fromDate;
-        }
+        //if (va.getTime() < this.broadcasts[0].data.dataModel.data.start_date.getTime()) {
+        //    va = this.broadcasts[0].data.dataModel.data.start_date;
+        //}
     }
 
     if (b instanceof Gui.Epg.Controller.Broadcasts.List.DateSeparator) {
         vb = b.data.date;
     } else {
         vb = b.data.dataModel.data.start_date;
-        if (vb < this.fromDate) {
-            vb = this.fromDate;
-        }
+        //if (vb.getTime() < this.broadcasts[0].data.dataModel.data.start_date.getTime()) {
+        //    vb = this.broadcasts[0].data.dataModel.data.start_date;
+        //}
     }
 
     if (
