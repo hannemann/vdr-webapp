@@ -405,7 +405,8 @@ div#time-line .ql.hour {
     border-bottom: 1px solid #888888;
 }
 
-.channel-view #broadcasts .broadcasts-list .date-separator {
+.channel-view #broadcasts .broadcasts-list .date-separator,
+.epg-search-view .date-separator {
     display: block;
     padding: 4px 10px;
     background: #5D5D5D;

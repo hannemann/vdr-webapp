@@ -21,8 +21,10 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.itemController = 'Broadcasts.Broad
 Gui.EpgSearch.Controller.Broadcasts.prototype.init = function () {
 
     this.broadcastList = [];
+    this.dateSeparators = [];
 
     this.view = this.module.getView('Broadcasts');
+    this.setCurrentHour(new Date(1970, 0, 0));
 };
 
 /**
@@ -90,15 +92,35 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.initResults = function (resultColl
         this.broadcastList[i].destructView();
     }
 
+    for (i = 0;i<this.dateSeparators.length;i++) {
+
+        this.dateSeparators[i].destructView();
+    }
+
     this.view.removeHeader();
 
     this.broadcastList = [];
+    this.dateSeparators = [];
 
     if (resultCollection.collection.length > 0) {
 
         this.view.header(resultCollection.collection.length);
 
         resultCollection.iterate(function (dataModel) {
+
+            var dataModelHours;
+
+            dataModelHours = new Date(
+                dataModel.data.start_date.getFullYear(),
+                dataModel.data.start_date.getMonth(),
+                dataModel.data.start_date.getDate(),
+                dataModel.data.start_date.getHours(), 0, 0
+            );
+
+            if (dataModelHours.getTime() > this.currentHour.getTime()) {
+                this.setCurrentHour(dataModel.data.start_date);
+                this.addDateSeparator();
+            }
 
             this.broadcastList.push(this.module.getController(this.itemController, {
                 'channel': dataModel.data.channel,
@@ -113,6 +135,38 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.initResults = function (resultColl
 
         this.view.showNoResults();
     }
+};
+
+/**
+ * add date separator
+ */
+Gui.EpgSearch.Controller.Broadcasts.prototype.addDateSeparator = function () {
+
+    this.dateSeparators.push(this.module.getController('Broadcasts.DateSeparator', {
+        "timestamp" : this.currentHour.getTime(),
+        "channel_id" : this.data.channel_id,
+        "parent" : this,
+        "date" : this.currentHour,
+        "position" : this.currentPosition++
+    }));
+    this.dateSeparators[this.dateSeparators.length - 1].dispatchView();
+};
+
+/**
+ * set current hour
+ * @param {Date} date
+ * @returns {Gui.EpgSearch.Controller.Broadcasts}
+ */
+Gui.EpgSearch.Controller.Broadcasts.prototype.setCurrentHour = function (date) {
+
+    this.currentHour = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(), 0, 0
+    );
+
+    return this;
 };
 
 /**
@@ -143,5 +197,10 @@ Gui.EpgSearch.Controller.Broadcasts.prototype.destructView = function () {
     for (i;i<l;i++) {
 
         this.broadcastList[i].destructView();
+    }
+
+    for (i = 0;i<this.dateSeparators.length;i++) {
+
+        this.dateSeparators[i].destructView();
     }
 };
