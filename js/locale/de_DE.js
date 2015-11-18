@@ -47,6 +47,8 @@ VDRest.app.de_DE = {
     "EPG view" : "EPG-Ansicht",
     "Refresh" : "Aktualisieren",
     "Set Time" : "Zeit eingeben",
+    "Adjust volume" : "Lautstärke",
+    "adjust volume to x percent" : "Lautstärke auf x Prozent einstellen",
     "Now" : "Jetzt",
     "Next" : "Nächstes",
     "Go!" : "Los!",

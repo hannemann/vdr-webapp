@@ -206,6 +206,7 @@ VDRest.Lib.Config.prototype.defaults = {
     "streamdevParams"       :   "EXT",
     "streamdevContainer"    :   "mkv",
     "streamDownload"        :   "false",
+    "streamAudioGain"       : 100,
     "theme"                 :   "default",
     "autoVps"               :   "false",
     "language"              :   function () {
@@ -546,6 +547,13 @@ VDRest.Lib.Config.prototype.fields = {
                 "value" : "webm"
             }
         }
+    },
+    "streamAudioGain"  :   {
+        "depends" : "streamdevActive",
+        "category" : "streaming",
+        "type" : "number",
+        "label" : "Adjust volume",
+        "info" : "adjust volume to x percent"
     },
     "favourites" : {
         "depends" : "streamdevActive",

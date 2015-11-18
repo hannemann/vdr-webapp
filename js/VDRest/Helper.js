@@ -375,6 +375,7 @@ VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
     var streamdevParams = [], url, port = VDRest.config.getItem('streamdevPort');
 
     streamdevParams.push(VDRest.config.getItem('streamdevParams'));
+    streamdevParams.push('AGAIN=' + (parseInt(VDRest.config.getItem('streamAudioGain'), 10)/100).toString());
 
     if (extraParams) {
         streamdevParams = streamdevParams.concat(extraParams);

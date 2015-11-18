@@ -31,7 +31,7 @@ declare -A HEADER=()
 # AC     audio codec
 # ABR    audio bitrate (kbit)
 # AOPTS  custom audio options
-#
+# AGAIN  adjust volume
 
 
 function log {
@@ -59,12 +59,12 @@ function error
 #
 ###
 PROG=$(which ffmpeg)
-[ "${PROG}" != "" ] && [ -x ${PROG} ] || PROG='/opt/ffmpeg/bin/ffmpeg'
-[ "${PROG}" != "" ] && [ -x ${PROG} ] || PROG=$(which avconv)
+[ -x ${PROG} ] || PROG='/opt/ffmpeg/bin/ffmpeg'
+[ -x ${PROG} ] || PROG=$(which avconv)
 
-if [ "${PROG}" != "" ] && [ ! -x ${PROG} ]; then
-        error 'No ffmpeg binary found'
-        exit 1;
+if [ ! -x ${PROG} ]; then
+	error 'No ffmpeg binary found'
+	exit 1;
 fi
 
 getParentPid () { ps -p $1 -o ppid=; }
@@ -92,7 +92,14 @@ echo $HTTP_USER_AGENT | grep CrKey > /dev/null && CHROMECAST=1 || CHROMECAST=0
 
 echo ${PATH_INFO##*\/} | grep '.rec' > /dev/null && RECORDING=1 || RECORDING=0
 
+log "User Agent: $HTTP_USER_AGENT"
+
+echo $HTTP_USER_AGENT | grep Android > /dev/null && ANDROID=1 || ANDROID=0
+echo $HTTP_USER_AGENT | grep -i stagefright > /dev/null && STAGEFRIGHT=1 || STAGEFRIGHT=0
+
 log "Is Chromecast: $CHROMECAST"
+log "Is Android: $ANDROID"
+log "Is Stagefright: $STAGEFRIGHT"
 
 function sendHeaders {
 
@@ -214,6 +221,9 @@ function setFilter {
 
 
 	fi
+
+	FILTER=${FILTER}" -vol "$(echo "(${AGAIN}*256+0.5)/1" | bc)
+
 	#Läuft nicht mit VLC
 	#VSIZE="scale=trunc(oh*a/2)*2:$HEIGHT"
 	#VSIZE="scale=-1:$HEIGHT"
@@ -479,6 +489,7 @@ FPS=${REMUX_PARAM_FPS:-$FPS}
 AUDIO_STREAM=${REMUX_PARAM_ASTR:-$AUDIO_STREAM}
 AUDIO_CHANNELS=${REMUX_PARAM_ACHAN:-$AUDIO_CHANNELS}
 DEINTERLACE=${REMUX_PARAM_DLACE:-$DEINTERLACE}
+AGAIN=${REMUX_PARAM_AGAIN:-1}
 
 if [ "$REMUX_PARAM_PROG" = "cat"  ]; then
 	remux_cat
@@ -500,6 +511,8 @@ else
 		remux_chromecast
 	elif [ "$TYPE" = "webm" ]; then
 		TYPE=stream
+		setDeinterlace
+		setFilter
 		setHeaders
 		setContentLength
 		containerWebm
@@ -507,6 +520,7 @@ else
 		remux_vpx
 	elif [ "$TYPE" = "mkv" ]; then
 		TYPE=stream
+		setDeinterlace
 		setHeaders
 		setContentLength
 		containerMatroska
@@ -520,6 +534,7 @@ else
 		remux_mp4
 	elif [ "$TYPE" = "flv"  ]; then
 		TYPE=stream
+		setDeinterlace
 		setHeaders
 		containerFlv
 		audioLame
@@ -528,12 +543,20 @@ else
 		captureFrame
 	else 
 		TYPE=stream
+		setDeinterlace
 		setHeaders
 		containerMpegTs
 		audioLame
 		remux_x264
 	fi
-	startStream
+#	if [ ${ANDROID} -gt 0 ]; then
+#		sendHeaders
+#		if [ ${STAGEFRIGHT} -gt 0 ]; then
+#			startStream
+#		fi
+#	else
+		startStream
+#	fi
 fi
 
 set -o monitor
