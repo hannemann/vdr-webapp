@@ -598,14 +598,15 @@ Gui.Video.Controller.Player.prototype.startCutting = function () {
         if (this.controls) {
             this.controls.destructView();
             delete this.controls;
-            this.mode = 'cut';
-            this.dispatchControls();
-            this.controls.stopHide();
-            this.video.hideThrobber();
         }
+        this.mode = 'cut';
+        this.dispatchControls();
+        this.controls.stopHide();
+        this.video.hideThrobber();
     }.bind(this));
 
     if (!this.cutRequest) {
+        this.controls.omitDestruct = true;
         this.video.showThrobber();
         this.cutRequest = true;
         this.data.sourceModel.getCuttingMarks();
