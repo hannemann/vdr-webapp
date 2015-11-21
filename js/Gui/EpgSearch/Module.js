@@ -1,6 +1,7 @@
 /**
  * Epg Module
  * @constructor
+ * @property {string} templateName
  */
 Gui.EpgSearch = function () {};
 
@@ -110,6 +111,7 @@ Gui.EpgSearch.prototype.contextMenu = {
  */
 Gui.EpgSearch.prototype.dispatch = function (search) {
 
+    this.templateName = '';
     this.getController('Search', {"query":search}).dispatchView();
 };
 
@@ -142,7 +144,7 @@ Gui.EpgSearch.prototype.saveAsTemplate = function () {
         data = {
             "type": "string",
             "dom": $('<label class="clearer text">'),
-            "value" : template.search
+            "value" : this.templateName || template.search
         };
 
     $('<span>').text(VDRest.app.translate('Enter name')).appendTo(data.dom);
@@ -203,10 +205,11 @@ Gui.EpgSearch.prototype.loadTemplate = function (e) {
 
     var model, data;
     this.deleteSearchTimerDummy();
+    this.templateName = e.target.value;
 
     model = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer',{"id" : -1});
 
-    data = VDRest.app.getModule('VDRest.Epg').getModel('Search.Templates').getTemplate(e.target.value);
+    data = VDRest.app.getModule('VDRest.Epg').getModel('Search.Templates').getTemplate(this.templateName);
     if (data) {
         model.data = data;
         this.getController('Search').reInitForm(model);
