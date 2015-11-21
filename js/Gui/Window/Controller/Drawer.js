@@ -59,8 +59,7 @@ Gui.Window.Controller.Drawer.prototype.dispatchView = function () {
 
         this.view.modalOverlay[0].classList.add('drawer');
 
-        this.preventReload()
-            .preventReload(this.view.modalOverlay[0])
+        this.preventReload(this.view.body[0], this.view.body[0])
             .addObserver();
 
         this.view.getButtons().each(function (name, config) {

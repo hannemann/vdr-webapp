@@ -34,7 +34,6 @@ Gui.Form.Controller.Window.Select.prototype.dispatchView = function () {
 
     this.preventReload(this.view.node[0], this.view.node[0], true)
         .preventReload(this.view.valuesWrapper[0], this.view.valuesWrapper[0], true)
-        .preventReload(this.view.modalOverlay[0])
         .addObserver();
     this.setPosition();
 };

@@ -5,6 +5,7 @@
     bottom: 0;
     left: 0;
     z-index: 2;
+    touch-action: none;
 }
 .has-video-player .modal-overlay:not([class~=modal-video]) {
     z-index: 5;

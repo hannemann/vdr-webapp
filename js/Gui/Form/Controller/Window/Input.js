@@ -29,7 +29,6 @@ Gui.Form.Controller.Window.Input.prototype.dispatchView = function () {
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     this.preventReload()
-        .preventReload(this.view.modalOverlay[0])
         .addObserver();
     this.setPosition();
 };

@@ -104,7 +104,6 @@ Gui.Video.Controller.Player.prototype.doDispatch = function () {
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
     this.video.dispatchView();
     this.preventReload()
-        .preventReload(this.view.modalOverlay[0])
         .addObserver();
     if (this.data.isVideo) {
         this.fetchPoster(2);

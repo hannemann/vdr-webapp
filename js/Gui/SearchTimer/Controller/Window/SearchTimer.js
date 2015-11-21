@@ -41,8 +41,7 @@ Gui.SearchTimer.Controller.Window.SearchTimer.prototype.dispatchView = function 
     Gui.Window.Controller.Abstract.prototype.dispatchView.call(this);
 
     this.requestSearchForm();
-    this.preventReload(this.view.node[0], this.view.body.find('form')[0])
-        .preventReload(this.view.modalOverlay[0], this.view.body.find('form')[0]);
+    this.preventReload(this.view.node[0], this.view.body.find('form')[0]);
 };
 
 /**

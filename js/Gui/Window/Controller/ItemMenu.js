@@ -1,7 +1,7 @@
 /**
  * @class
  * @constructor
- * @var {object} data
+ * @property {object} data
  */
 Gui.Window.Controller.ItemMenu = function () {
 };
@@ -34,7 +34,6 @@ Gui.Window.Controller.ItemMenu.prototype.dispatchView = function () {
 
     this.setPosition();
     this.preventReload()
-        .preventReload(this.view.modalOverlay[0])
         .addObserver();
 };
 
