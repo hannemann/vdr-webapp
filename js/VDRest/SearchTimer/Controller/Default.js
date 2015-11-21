@@ -9,5 +9,5 @@ VDRest.SearchTimer.Controller.Default.prototype.init = function () {
     this.module.getModel('ExtEPGInfoList').initList();
     this.module.getModel('Blacklists').initList();
     this.module.getModel('RecordingDirs').initList();
-    this.module.getModel('List').initList();
+    //this.module.getModel('List').initList();
 };
