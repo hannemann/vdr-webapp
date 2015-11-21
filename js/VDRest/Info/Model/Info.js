@@ -76,10 +76,10 @@ VDRest.Info.Model.Info.prototype.minRemuxRecordingsVersnum = 601;
 /**
  * initialize info
  */
-VDRest.Info.Model.Info.prototype.init = function () {
-
-      this.load();
-};
+//VDRest.Info.Model.Info.prototype.init = function () {
+//
+//      this.load();
+//};
 
 /**
  * @returns {boolean}

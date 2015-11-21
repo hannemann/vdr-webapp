@@ -92,7 +92,7 @@ VDRest.Epg.prototype.updateNow = function () {
 VDRest.Epg.prototype.initLate = function () {
 
     this.getModel('Observer');
-    this.getModel('Channels').initChannels();
+    //this.getModel('Channels').initChannels(); // done by gui epg controller...
     // Not needed yet
     //this.getModel('ContentDescriptors').initContentDescriptors();
 };
