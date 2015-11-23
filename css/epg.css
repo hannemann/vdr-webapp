@@ -542,7 +542,7 @@ div#time-line .ql.hour {
 }
 .epg-search-view .broadcast .time-info,
 .channel-view #broadcasts .broadcast .time-info {
-    margin-top: 2px;
+    margin-top: 6px;
 }
 .epg-search-view .broadcast span.time,
 .channel-view #broadcasts .broadcast span.time {
@@ -578,7 +578,7 @@ div#time-line .ql.hour {
     border: 1px solid rgba(255,255,255,0.3);
     text-align: center;
     width: 5em;
-    bottom: 4px;
+    bottom: 2px;
     border-radius: 8px;
     left: 2em;
 }
