@@ -88,6 +88,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.decorate = function () {
         .addMenuButton()
         .addClasses()
         .addChannelViewInfo()
+        .addTimeInfo()
         .addTimeLine()
         .setTimeLineWidth();
 };
@@ -126,23 +127,26 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
         this.handleIsRecording(true);
     }
 
-    if (rating) {
+    if (rating && rating > 0) {
 
         this.info.addClass('rating-' + rating);
     }
 
     if (this.getTip()) {
 
+        this.info.addClass('is-tip');
         this.info.addClass('tip');
     }
 
     if (this.getTopTip()) {
 
+        this.info.addClass('is-tip');
         this.info.addClass('top-tip');
     }
 
     if (this.getTipOfTheDay()) {
 
+        this.info.addClass('is-tip');
         this.info.addClass('tip-of-the-day');
     }
 
@@ -213,24 +217,16 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
  */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function () {
 
-    var startDate = new Date(this.getStartTime() * 1000);
+    var shortText = '(' + this.helper().getDurationAsString(this.getDuration()) + ')';
 
-    this.channelView = $('<div class="visible-channel-view">');
+    this.channelView = $('<div class="visible-channel-view channel-view-info">');
 
     if (this.hasShortText()) {
-
-        $('<div class="short-text italic">')
-            .text(this.getShortText())
-            .appendTo(this.channelView);
+        shortText = this.getShortText() + ' ' + shortText;
     }
 
-    $('<span class="time">')
-        .html(
-            [
-                startDate.format('ddd dd mmm') + '&nbsp;<span>' + startDate.format('HH:MM') + '</span>',
-                '(' + this.helper().getDurationAsString(this.getDuration()) + ')'
-            ].join(' ')
-        )
+    $('<div class="short-text italic">')
+        .text(shortText)
         .appendTo(this.channelView);
 
     $('<div>')
@@ -239,6 +235,22 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
         .appendTo(this.channelView);
 
     this.channelView.appendTo(this.info);
+
+    return this;
+};
+
+Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTimeInfo = function () {
+
+    var startDate = new Date(this.getStartTime() * 1000);
+
+    this.timeInfo = $('<div class="visible-channel-view time-info">');
+
+
+    $('<span class="time">')
+        .html('<span>' + startDate.format('HH:MM') + '</span>')
+        .appendTo(this.timeInfo);
+
+    this.timeInfo.appendTo(this.info);
 
     return this;
 };

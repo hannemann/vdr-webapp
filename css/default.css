@@ -131,70 +131,78 @@ ul {
 }
 
 .top-tipp:after,
-.rating-1:after,
-.rating-2:after,
-.rating-3:after,
-.rating-4:after,
-.rating-5:after {
+.broadcast .content[class*="rating-"]:after,
+.broadcast .content[class*="rating-"] .time-info:after {
     position: absolute;
     bottom: 0;
     right: 20px;
     color: #ffaf17;
     font-family: VDR-web, sans-serif;
 }
-.epg-search-view .rating-1:after,
-.epg-search-view .rating-2:after,
-.epg-search-view .rating-3:after,
-.epg-search-view .rating-4:after,
-.epg-search-view .rating-5:after {
+.channel-view .content[class*="rating-"]:after,
+.epg-search-view .content[class*="rating-"]:after {
     right: 35px;
+    content: '';
 }
 
-.rating-1:after {
+.rating-1:after,
+.epg-search-view .content.rating-1 .time-info:after,
+.channel-view .content.rating-1 .time-info:after {
     content: '★';
 }
-
-.rating-2:after {
+.rating-2:after,
+.epg-search-view .content.rating-2 .time-info:after,
+.channel-view .content.rating-2 .time-info:after {
     content: '★★';
 }
-
-.rating-3:after {
+.rating-3:after,
+.epg-search-view .content.rating-3 .time-info:after,
+.channel-view .content.rating-3 .time-info:after {
     content: '★★★';
 }
-
-.rating-4:after {
+.rating-4:after,
+.epg-search-view .content.rating-4 .time-info:after,
+.channel-view .content.rating-4 .time-info:after {
     content: '★★★★';
 }
-
-.rating-5:after {
+.rating-5:after,
+.epg-search-view .content.rating-5 .time-info:after,
+.channel-view .content.rating-5 .time-info:after {
     content: '★★★★★';
 }
 
-.tip:before,
-.top-tip:before,
-.tip-of-the-day:before,
+.is-tip:before,
 .is-new:before,
-.edited:before {
+.edited:before,
+.broadcast .time-info:before {
     position: absolute;
     bottom: 0;
     right: 5px;
     color: white;
     font-family: VDR-web, sans-serif;
 }
+.epg-search-view .is-tip:before,
+.channel-view .is-tip:before {
+    content: '';
+}
 .edited:before {
     content: 'Z';
 }
-.tip:before,
-.top-tip:before,
-.tip-of-the-day:before {
+.is-tip:before,
+.epg-search-view .is-tip .time-info:before,
+.channel-view .is-tip .time-info:before {
     content: 'Y';
     color: green;
     font-family: VDR-web, sans-serif;
 }
-.top-tip:before {
+.top-tip:before,
+.epg-search-view .top-tip .time-info:before,
+.channel-view .top-tip .time-info:before {
     color: blue;
 }
-.tip-of-the-day:before {
+.tip-of-the-day:before,
+.epg-search-view .tip-of-the-day .time-info:before,
+.channel-view .tip-of-the-day .time-info:before {
     color: red;
 }
 .is-new:before {
@@ -208,9 +216,6 @@ ul {
 }
 .top-tip.is-new.edited:before {
     content: 'Y Z K';
-}
-.epg-search-view .top-tip:before {
-    right: 20px;
 }
 
 
