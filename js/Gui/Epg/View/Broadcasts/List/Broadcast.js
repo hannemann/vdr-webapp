@@ -114,6 +114,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.setWidth = function () {
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
 
     var classNames = ['clearer'], rating = this.getRating();
+    this.isTip = this.getTip() || this.getTopTip() || this.getTipOfTheDay();
 
     if (this.getTimerExists()) {
         this.handleTimerExists(true);
@@ -132,22 +133,27 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addClasses = function () {
         this.info.addClass('rating-' + rating);
     }
 
-    if (this.getTip()) {
+    if (this.isTip) {
 
         this.info.addClass('is-tip');
+    }
+
+    if (this.getTip()) {
+
         this.info.addClass('tip');
+        this.tip = 'tip';
     }
 
     if (this.getTopTip()) {
 
-        this.info.addClass('is-tip');
         this.info.addClass('top-tip');
+        this.tip = 'top-tip';
     }
 
     if (this.getTipOfTheDay()) {
 
-        this.info.addClass('is-tip');
         this.info.addClass('tip-of-the-day');
+        this.tip = 'tip-of-the-day';
     }
 
     this.node.addClass(classNames.join(' '));
@@ -239,12 +245,31 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addChannelViewInfo = function (
     return this;
 };
 
+/**
+ * add ratings and time-info to channel view
+ * @return {Gui.Epg.View.Broadcasts.List.Broadcast}
+ */
 Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addTimeInfo = function () {
 
-    var startDate = new Date(this.getStartTime() * 1000);
+    var startDate = new Date(this.getStartTime() * 1000),
+        rating = this.getRating(),
+        tip = $('<span class="tip">'),
+        ratingSpan = $('<span class="rating">');
 
     this.timeInfo = $('<div class="visible-channel-view time-info">');
 
+    tip.addClass(this.tip).appendTo(this.timeInfo);
+    this.timeInfo.append(ratingSpan);
+
+    if (this.isTip) {
+        tip.text('Y');
+    }
+
+    if (rating && rating > 0) {
+        ratingSpan.html(
+            '<span>' + new Array(rating+1).join('*') + '</span><span>' + new Array(5-rating+1).join('*') + '</span>'
+        );
+    }
 
     $('<span class="time">')
         .html('<span>' + startDate.format('HH:MM') + '</span>')

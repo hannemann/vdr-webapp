@@ -131,78 +131,63 @@ ul {
 }
 
 .top-tipp:after,
-.broadcast .content[class*="rating-"]:after,
-.broadcast .content[class*="rating-"] .time-info:after {
+.broadcast .content[class*="rating-"]:after {
     position: absolute;
     bottom: 0;
     right: 20px;
     color: #ffaf17;
     font-family: VDR-web, sans-serif;
 }
+span.rating span:first-child {
+    color: #ffaf17;
+}
 .channel-view .content[class*="rating-"]:after,
-.epg-search-view .content[class*="rating-"]:after {
-    right: 35px;
+.epg-search-view .content[class*="rating-"]:after,
+.channel-view .content[class*="rating-"]:before,
+.epg-search-view .content[class*="rating-"]:before {
     content: '';
 }
 
-.rating-1:after,
-.epg-search-view .content.rating-1 .time-info:after,
-.channel-view .content.rating-1 .time-info:after {
+.rating-1:after {
     content: '★';
 }
-.rating-2:after,
-.epg-search-view .content.rating-2 .time-info:after,
-.channel-view .content.rating-2 .time-info:after {
+.rating-2:after {
     content: '★★';
 }
-.rating-3:after,
-.epg-search-view .content.rating-3 .time-info:after,
-.channel-view .content.rating-3 .time-info:after {
+.rating-3:after {
     content: '★★★';
 }
-.rating-4:after,
-.epg-search-view .content.rating-4 .time-info:after,
-.channel-view .content.rating-4 .time-info:after {
+.rating-4:after {
     content: '★★★★';
 }
-.rating-5:after,
-.epg-search-view .content.rating-5 .time-info:after,
-.channel-view .content.rating-5 .time-info:after {
+.rating-5:after {
     content: '★★★★★';
 }
 
 .is-tip:before,
 .is-new:before,
-.edited:before,
-.broadcast .time-info:before {
+.edited:before {
     position: absolute;
     bottom: 0;
     right: 5px;
     color: white;
     font-family: VDR-web, sans-serif;
 }
-.epg-search-view .is-tip:before,
-.channel-view .is-tip:before {
-    content: '';
-}
 .edited:before {
     content: 'Z';
 }
 .is-tip:before,
-.epg-search-view .is-tip .time-info:before,
-.channel-view .is-tip .time-info:before {
+.broadcast .content span.tip {
     content: 'Y';
     color: green;
     font-family: VDR-web, sans-serif;
 }
 .top-tip:before,
-.epg-search-view .top-tip .time-info:before,
-.channel-view .top-tip .time-info:before {
+.broadcast .content span.top-tip {
     color: blue;
 }
 .tip-of-the-day:before,
-.epg-search-view .tip-of-the-day .time-info:before,
-.channel-view .tip-of-the-day .time-info:before {
+.broadcast .content span.tip-of-the-day {
     color: red;
 }
 .is-new:before {
