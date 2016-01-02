@@ -48,7 +48,9 @@
 .timer.list-item .filename {
     margin-top: 5px;
     clear: left;
-    font-size: 16px;
+    font-family: Source Sans ProBold, sans-serif;
+    color: #e0e0e0;
+    text-shadow: 1px 1px #333333;
 }
 .timer-exists .record-button dt {
     background: #FF0000;
