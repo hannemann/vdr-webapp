@@ -19,17 +19,51 @@
 .recording.list-item span {
     border: none;
 }
-.recording.list-item .time {
-    text-align: center;
+.recording.list-item .date {
+    clear: left;
 }
-.recording.list-item .duration {
-    text-align: right;
+.recording.list-item .recordings-image {
+    width: calc(33% - 10px);
+    width: -webkit-calc(33% - 10px);
+    float: left;
+    height: auto;
+    position: relative;
+    margin: 6px 10px 0 0;
+    background: black;
+    border-radius: 2px;
+}
+.recording.list-item .recordings-image:before {
+    content: '.';
+    position: relative;
+    padding: 74.9% 0 0;
+    display: block;
+    font-size: 0;
+    line-height: 0;
+    text-shadow: none;
+    background: none;
+    border-radius: 0;
+}
+.recording.list-item .recordings-image img {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+.recording.list-item .path {
+    font-size: .75em;
+    width: calc(100% - 14px);
 }
 .recording.list-item .name {
-    border-bottom: 1px solid rgb(155,155,155);
-    clear:both;
-    padding-bottom: 10px;
-    position: relative;
+    text-shadow: 1px 1px 0 rgb(58, 58, 58);
+    font-family: Source Sans ProBold, sans-serif;
+    clear: left;
+    color: #e0e0e0;
+    width: calc(100% - 14px);
+    width: -webkit-calc(100% - 14px);
 }
 .recording.list-item .name:after {
     top: -5px;
@@ -39,8 +73,53 @@
 .recording.list-item .name:before {
     right: 12px;
 }
-.recording.list-item .shortText {
+.recording.list-item .content {
+    overflow: hidden;
     font-size: .75em;
+    padding-top: 3px;
+}
+.recording.list-item .description {
+    padding-top: 2px;
+    line-height: 1.25em;
+    height: calc(1.25em * 4);
+    height: -webkit-calc(1.25em * 4);
+}
+
+.recording.list-item .quick-info {
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    clear: both;
+    text-shadow: 1px 1px #333333;
+    font-size: 1.25em;
+}
+.recording.list-item .quick-info > span {
+    text-align: center;
+    float: none;
+    width: auto;
+}
+.recording.list-item .quick-info span.symbols span {
+    font-family: VDR-web, sans-serif;
+    width: auto;
+    padding-right: 4px;
+}
+.recording.list-item .quick-info > span:first-child {
+    text-align: left;
+}
+.recording.list-item .quick-info > span:last-child {
+    text-align: right;
+}
+.recording.list-item .quick-info .rating span {
+    width: auto;
+    font-size: 1.25em;
+    float: none;
+    display: inline-block;
+    height: .75em;
+}
+
+.recording.list-item span.date-time {
+    font-size: .65em;
+    line-height: 2em;
 }
 
 .window-recording .tab-content.details.current .watch-button {
@@ -60,4 +139,10 @@
 }
 
 @media (min-width: 1100px), (min-height: 1100px) {
+}
+@media (orientation: landscape) {
+    .recording.list-item .recordings-image {
+        width: calc(19.5% - 10px);
+        width: -webkit-calc(19.5% - 10px);
+    }
 }

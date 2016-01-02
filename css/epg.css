@@ -613,7 +613,9 @@ div#time-line .ql.hour {
 
 .epg-search-view .broadcast .visible-channel-view .description,
 .channel-view #broadcasts .broadcast .visible-channel-view .description {
-    height: calc(.75em * 5);
+    line-height: 1.25em;
+    height: calc(1.25em * 4);
+    height: -webkit-calc(1.25em * 4);
     overflow: hidden;
 }
 #broadcasts .broadcasts-list .broadcast.first-visible,

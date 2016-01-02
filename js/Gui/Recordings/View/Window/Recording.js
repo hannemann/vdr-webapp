@@ -161,7 +161,11 @@ Gui.Recordings.View.Window.Recording.prototype.addFanart = function () {
 
         if (media.series_id) {
 
-            if (media.fanarts && media.fanarts[0] && media.fanarts[0].path) {
+            if (media.episode_image) {
+
+                this.fanart = this.scraperImageUrl + 'width/' + width + '/' + media.episode_image;
+
+            } else if (media.fanarts && media.fanarts[0] && media.fanarts[0].path) {
 
                 this.fanart = this.scraperImageUrl + 'width/' + width + '/' + media.fanarts[0].path;
             }

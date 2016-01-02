@@ -164,43 +164,19 @@ span.rating span:first-child {
     content: '★★★★★';
 }
 
-.is-tip:before,
-.is-new:before,
-.edited:before {
-    position: absolute;
-    bottom: 0;
-    right: 5px;
-    color: white;
-    font-family: VDR-web, sans-serif;
-}
-.edited:before {
-    content: 'Z';
-}
-.is-tip:before,
-.broadcast .content span.tip {
+.broadcast .content span.tip,
+.recording span.tip {
     content: 'Y';
     color: green;
     font-family: VDR-web, sans-serif;
 }
-.top-tip:before,
-.broadcast .content span.top-tip {
+.broadcast .content span.top-tip,
+.recording span.top-tip {
     color: blue;
 }
-.tip-of-the-day:before,
-.broadcast .content span.tip-of-the-day {
+.broadcast .content span.tip-of-the-day,
+.recording span.tip-of-the-day {
     color: red;
-}
-.is-new:before {
-    content: 'K';
-}
-.top-tip.is-new:before {
-    content: 'Y K';
-}
-.top-tip.edited:before {
-    content: 'Y Z';
-}
-.top-tip.is-new.edited:before {
-    content: 'Y Z K';
 }
 
 
