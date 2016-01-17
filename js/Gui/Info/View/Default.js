@@ -117,6 +117,7 @@ Gui.Info.View.Default.prototype.setDevices = function () {
  * @param {infoDevice} device
  */
 Gui.Info.View.Default.prototype.addDevice = function (device) {
+
     var d = $('<div class="vdr-device accordion-content">');
 
     $('<div class="accordion-header">').text(VDRest.app.translate('Device %d - %s', device.number, device.name)).appendTo(this.devices);
@@ -151,16 +152,35 @@ Gui.Info.View.Default.prototype.addDevice = function (device) {
             device.live ? VDRest.app.translate('Yes') : VDRest.app.translate('No'))
     ).appendTo(d);
 
-    $('<div>').text(
+    $('<div class="signal-indicator">').text(
         VDRest.app.translate(
             'Signal strength: %d',
             device.signal_strength)
-    ).appendTo(d);
+        )
+        .append(
+            $('<div>').addClass('indicator').css({
+                'width' : device.signal_strength + '%',
+                'background-size' : (100 * (100 / device.signal_strength)).toString() + '%'
+            }).text(
+                VDRest.app.translate(
+                    'Signal strength: %d',
+                    device.signal_strength)
+            )
+        ).appendTo(d);
 
-    $('<div>').text(
+    $('<div class="signal-indicator">').text(
         VDRest.app.translate(
             'Signal quality: %d',
             device.signal_quality)
+    ).append(
+        $('<div>').addClass('indicator').css({
+            'width' : device.signal_quality + '%',
+            'background-size' : (100 * (100 / device.signal_quality)).toString() + '%'
+        }).text(
+            VDRest.app.translate(
+                'Signal quality: %d',
+                device.signal_quality)
+        )
     ).appendTo(d);
 
     $('<div>').text(

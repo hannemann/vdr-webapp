@@ -28,6 +28,12 @@ Gui.Info.Controller.Default.prototype.init = function () {
  */
 Gui.Info.Controller.Default.prototype.dispatchView = function () {
 
+    var info = VDRest.app.getModule('VDRest.Info');
+    this.defaultUpdateSpeed = info.interval;
+
+    info.interval = 2000;
+    info.toggleInfoUpdate();
+
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.preventReload()
         .addObserver();
@@ -54,14 +60,20 @@ Gui.Info.Controller.Default.prototype.removeObserver = function () {
  */
 Gui.Info.Controller.Default.prototype.update = function () {
 
-    console.log(new Date(this.data.dataModel.getData('time') * 1000));
+    var scrollState = this.view.node[0].scrollTop;
     this.view.setItems();
+    this.view.node[0].scrollTop = scrollState;
 };
 
 /**
  * destroy
  */
 Gui.Info.Controller.Default.prototype.destructView = function () {
+
+    var info = VDRest.app.getModule('VDRest.Info');
+
+    info.interval = this.defaultUpdateSpeed;
+    info.toggleInfoUpdate();
 
     this.view.node.one(this.animationEndEvents, function () {
 

@@ -17,6 +17,12 @@ VDRest.Info.prototype = new VDRest.Abstract.Module();
 VDRest.Info.prototype.name = 'Info';
 
 /**
+ * interval in ms
+ * @type {number}
+ */
+VDRest.Info.prototype.interval = 60000;
+
+/**
  * initialize module
  */
 VDRest.Info.prototype.init = function () {
@@ -37,6 +43,9 @@ VDRest.Info.prototype.init = function () {
     $document.on('visibilitychange', this.toggleInfoUpdate.bind(this));
 };
 
+/**
+ * toggle
+ */
 VDRest.Info.prototype.toggleInfoUpdate = function () {
 
     if ('visible' === document.visibilityState) {
@@ -47,13 +56,20 @@ VDRest.Info.prototype.toggleInfoUpdate = function () {
     }
 };
 
+/**
+ * start interval
+ */
 VDRest.Info.prototype.startInfoInterval = function () {
 
     this.updateInfoInterval = setInterval(function () {
         $.event.trigger('updateinfo');
-    }, 60000);
+    }, this.interval);
 };
 
+/**
+ * stop interval
+ * @return {VDRest.Info}
+ */
 VDRest.Info.prototype.stopInfoInterval = function () {
 
     clearInterval(this.updateInfoInterval);

@@ -30,3 +30,22 @@
     font-weight: bold;
     text-align: right;
 }
+
+#viewport #info .signal-indicator,
+#viewport #info .signal-indicator div {
+    position: relative;
+    z-index: 0;
+}
+#viewport #info .signal-indicator div {
+    z-index: 1;
+}
+#viewport #info .signal-indicator div.indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, red 0%, yellow 50%, green 100%) no-repeat;
+    z-index: 0;
+    color: black;
+    overflow: hidden;
+}
