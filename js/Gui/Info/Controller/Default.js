@@ -15,6 +15,7 @@ Gui.Info.Controller.Default.prototype = new VDRest.Abstract.Controller();
 Gui.Info.Controller.Default.prototype.init = function () {
 
     this.data.dataModel = this.module.store.getModel('Info');
+    this.defaultUpdateSpeed = this.data.dataModel.module.interval;
 
     this.view = this.module.getView('Default', this.data);
 
@@ -27,12 +28,6 @@ Gui.Info.Controller.Default.prototype.init = function () {
  * dispatch
  */
 Gui.Info.Controller.Default.prototype.dispatchView = function () {
-
-    var info = VDRest.app.getModule('VDRest.Info');
-    this.defaultUpdateSpeed = info.interval;
-
-    info.interval = 2000;
-    info.toggleInfoUpdate();
 
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
     this.preventReload()
@@ -70,10 +65,8 @@ Gui.Info.Controller.Default.prototype.update = function () {
  */
 Gui.Info.Controller.Default.prototype.destructView = function () {
 
-    var info = VDRest.app.getModule('VDRest.Info');
-
-    info.interval = this.defaultUpdateSpeed;
-    info.toggleInfoUpdate();
+    this.data.dataModel.module.interval = this.defaultUpdateSpeed;
+    this.data.dataModel.module.toggleInfoUpdate();
 
     this.view.node.one(this.animationEndEvents, function () {
 

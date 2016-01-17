@@ -19,7 +19,10 @@ Gui.Info.View.Default.prototype.init = function () {
     this.time = $('<div class="vdr-time info-item">');
     this.diskUsage = $('<div class="vdr-diskusage info-item">');
     this.plugins = $('<div class="vdr-plugins info-item">');
+    this.speedSelect = $('<div class="vdr-plugins info-item speed-select">');
     this.devices = $('<div class="vdr-devices info-item">');
+
+    this.formKey = Date.now();
 };
 
 /**
@@ -29,9 +32,11 @@ Gui.Info.View.Default.prototype.render = function () {
 
     this.time.appendTo(this.node);
     this.diskUsage.appendTo(this.node);
+    this.speedSelect.appendTo(this.node);
     this.devices.appendTo(this.node);
     this.plugins.appendTo(this.node);
     VDRest.Abstract.View.prototype.render.call(this);
+    this.addSpeedSelect();
     this.setItems();
     this.node.toggleClass('collapsed expand');
 };
@@ -112,13 +117,72 @@ Gui.Info.View.Default.prototype.setDevices = function () {
     return this;
 };
 
+Gui.Info.View.Default.prototype.addSpeedSelect = function () {
+
+    $.event.trigger({
+        "type" : "form.request",
+        "config" : {
+            "parentView" : {
+                "node" : this.speedSelect
+            },
+            "cacheKey" : 'timestamp',
+            "keyInCache" : this.formKey,
+            "timestamp": this.formKey,
+            "catConfig" : {
+                "speed" : {
+                    "label" : VDRest.app.translate("Signal monitor update speed")
+                }
+            },
+            "fields" : {
+                "speed" : {
+                    "type" : "enum",
+                    "dataType" : 'number',
+                    "label" : VDRest.app.translate("Setting"),
+                    "category" : "speed",
+                    "values" : {
+                        "veryFast" : {
+                            "label" : VDRest.app.translate('Very fast: 0.5s'),
+                            "value" : 500
+                        },
+                        "fast" : {
+                            "label" : VDRest.app.translate('Fast: 2s'),
+                            "value" : 2000
+                        },
+                        "medium" : {
+                            "label" : VDRest.app.translate('Medium: 10s'),
+                            "value" : 10000
+                        },
+                        "slow" : {
+                            "label" : VDRest.app.translate('Slow: 30s'),
+                            "value" : 30000
+                        },
+                        "normal" : {
+                            "label" : VDRest.app.translate('Normal: 60s'),
+                            "value" : 60000,
+                            "selected" : true
+                        }
+                    }
+                }
+            },
+            "changed": function (result) {
+
+                this.data.dataModel.module.interval = result.speed.selected;
+                this.data.dataModel.module.toggleInfoUpdate();
+
+            }.bind(this)
+        }
+    });
+
+    return this;
+};
+
 /**
  * add device to accordion
  * @param {infoDevice} device
  */
 Gui.Info.View.Default.prototype.addDevice = function (device) {
 
-    var d = $('<div class="vdr-device accordion-content">');
+    var d = $('<div class="vdr-device accordion-content clearer">');
 
     $('<div class="accordion-header">').text(VDRest.app.translate('Device %d - %s', device.number, device.name)).appendTo(this.devices);
 
@@ -152,44 +216,6 @@ Gui.Info.View.Default.prototype.addDevice = function (device) {
             device.live ? VDRest.app.translate('Yes') : VDRest.app.translate('No'))
     ).appendTo(d);
 
-    $('<div class="signal-indicator">').text(
-        VDRest.app.translate(
-            'Signal strength: %d',
-            device.signal_strength)
-        )
-        .append(
-            $('<div>').addClass('indicator').css({
-                'width' : device.signal_strength + '%',
-                'background-size' : (100 * (100 / device.signal_strength)).toString() + '%'
-            }).text(
-                VDRest.app.translate(
-                    'Signal strength: %d',
-                    device.signal_strength)
-            )
-        ).appendTo(d);
-
-    $('<div class="signal-indicator">').text(
-        VDRest.app.translate(
-            'Signal quality: %d',
-            device.signal_quality)
-    ).append(
-        $('<div>').addClass('indicator').css({
-            'width' : device.signal_quality + '%',
-            'background-size' : (100 * (100 / device.signal_quality)).toString() + '%'
-        }).text(
-            VDRest.app.translate(
-                'Signal quality: %d',
-                device.signal_quality)
-        )
-    ).appendTo(d);
-
-    $('<div>').text(
-        VDRest.app.translate(
-            'Channel: %d. %s - %s',
-            device.channel_nr,
-            device.channel_name,
-            device.channel_id)
-    ).appendTo(d);
     $('<div>').text(
         VDRest.app.translate(
             'Hardware: adapter: %s, frontend: %s',
@@ -197,6 +223,111 @@ Gui.Info.View.Default.prototype.addDevice = function (device) {
             device.frontend
         )
     ).appendTo(d);
+
+    $('<div>').text(
+        VDRest.app.translate(
+            'Channel: %d. %s',
+            device.channel_nr,
+            device.channel_name,
+            device.channel_id)
+    ).appendTo(d);
+
+    $('<div>').text(
+        VDRest.app.translate(
+            'Channel-ID: %s', device.channel_id)
+    ).appendTo(d);
+
+    $('<pre class="signal-indicator">').text(
+        VDRest.app.translate(
+            "Signal strength:%3d",
+            device.signal_strength
+        )
+    ).append(
+        $('<pre>').addClass('indicator').css({
+            'width' : device.signal_strength + '%',
+            'background-size' : (100 * (100 / device.signal_strength)).toString() + '%'
+        }).text(
+            VDRest.app.translate(
+                "Signal strength:%3d",
+                device.signal_strength
+            )
+        )
+    ).appendTo(d);
+
+    $('<pre class="signal-indicator">').text(
+        VDRest.app.translate(
+            "Signal quality:\t%3d",
+            device.signal_quality
+        )
+    ).append(
+        $('<pre>').addClass('indicator').css({
+            'width' : device.signal_quality + '%',
+            'background-size' : (100 * (100 / device.signal_quality)).toString() + '%'
+        }).text(
+            VDRest.app.translate(
+                "Signal quality:\t%3d",
+                device.signal_quality
+            )
+        )
+    ).appendTo(d);
+
+    $('<pre class="femon-data">').text(
+        VDRest.app.translate(
+            'STR: #%04x (%6.2f%%)',
+            device.str,
+            100 * device.str / 65535
+        )
+    ).appendTo(d);
+
+    $('<pre class="femon-data">').text(
+        VDRest.app.translate(
+            'BER: %08d',
+            device.ber
+        )
+    ).appendTo(d);
+
+    $('<pre class="femon-data">').text(
+        VDRest.app.translate(
+            'SNR: #%04x (%6.2f%%)',
+            device.snr,
+            100 * device.snr / 65535
+        )
+    ).appendTo(d);
+
+    $('<pre class="femon-data">').text(
+        VDRest.app.translate(
+            'UNC: %08d',
+            device.unc
+        )
+    ).appendTo(d);
+
+    var status = '';
+
+    device.status.split(':').forEach(function (s, i) {
+        status += '<span class="' + ('-' === s ? 'false' : 'true') + '">';
+        switch (i) {
+            case 0:
+                status += 'LOCKED';
+                break;
+            case 1:
+                status += 'SIGNAL';
+                break;
+            case 2:
+                status += 'CARRIER';
+                break;
+            case 3:
+                status += 'VITERBI';
+                break;
+            case 4:
+                status += 'SYNC';
+                break;
+            default:
+                break;
+        }
+        status += '</span>';
+    });
+
+    $('<div class="femon-data status">').append(status).appendTo(d);
 
     d.appendTo(this.devices);
 };
@@ -228,6 +359,8 @@ Gui.Info.View.Default.prototype.destruct = function () {
         this.dAccordion.destruct();
         delete this.dAccordion;
     }
+
+    $.event.trigger("destruct.form-" + this.formKey);
 
     VDRest.Abstract.View.prototype.destruct.call(this);
 };

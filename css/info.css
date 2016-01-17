@@ -31,15 +31,27 @@
     text-align: right;
 }
 
+.vdr-device > * {
+    margin: 2px 0;
+}
+.vdr-device div,
+.vdr-device pre {
+    font-family: monospace;
+    font-size: .75em;
+}
+#viewport #info .signal-indicator {
+    margin-bottom: 2px;
+}
 #viewport #info .signal-indicator,
-#viewport #info .signal-indicator div {
+#viewport #info .signal-indicator pre {
     position: relative;
     z-index: 0;
 }
-#viewport #info .signal-indicator div {
+#viewport #info .signal-indicator pre {
     z-index: 1;
+    font-size: 1em;
 }
-#viewport #info .signal-indicator div.indicator {
+#viewport #info .signal-indicator pre.indicator {
     position: absolute;
     top: 0;
     left: 0;
@@ -48,4 +60,29 @@
     z-index: 0;
     color: black;
     overflow: hidden;
+}
+#viewport #info .femon-data {
+    float: left;
+    width: 50%;
+    font-family: monospace;
+    font-size: .75em;
+}
+#viewport #info .femon-data.status {
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    margin: 2px 0;
+}
+#viewport #info .femon-data.status span {
+    border: 2px solid #FFE400;
+    color: #FFE400;
+    padding: 2px 0;
+    font-family: monospace;
+    font-weight: bold;
+    width: 18%;
+    text-align: center;
+}
+#viewport #info .femon-data.status span.false {
+    border: 1px solid red;
+    color: red;
 }

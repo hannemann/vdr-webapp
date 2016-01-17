@@ -82,8 +82,8 @@ VDRest.app.de_DE = {
     "Has CI: %s" : "CI vorhanden: %s",
     "Has decoder: %s" : "Decoder vorhanden: %s",
     "Currently viewed: %s" : "In Benutzung: %s",
-    "Signal strength: %d" : "Signal Stärke: %d",
-    "Signal quality: %d" : "Signal Qualität: %s",
+    "Signal strength:%3d" : "Signal Stärke:\t%3d",
+    "Signal quality:\t%3d" : "Signal Qualität:%3d",
     "Channel: %d. %s - %s" : "Kanal: %d. %s - %s",
     "Minimized Position (Landscape)" : "Position wenn Minimiert (Querformat)",
     "Left" : "Links",
@@ -276,5 +276,12 @@ VDRest.app.de_DE = {
     "Show first time installation guide": "Zeige Installationsanleitung",
     "not recommended if epg grabbers are in use": "nicht empfohlen wenn EPG grabber verwendet werden",
     "Load events for all channels on startup": "Sendungen für alle Kanäle beim starten laden",
-    "Window 16/9": "Fenster 16/9"
+    "Window 16/9": "Fenster 16/9",
+    "Signal monitor:" : "Signal Monitor:",
+    "Signal monitor update speed" : "Signal Monitor Update Geschwindigkeit",
+    "Setting" : "Einstellung",
+    "Very fast: 0.5s" : "Sehr schnell: 0,5s",
+    "Fast: 2s" : "Schnell: 2s",
+    "Medium: 10s" : "Mittel: 10s",
+    "Slow: 30s" : "Langsam: 30s"
 };

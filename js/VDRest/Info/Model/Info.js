@@ -37,6 +37,11 @@
  * @property {boolean} primary
  * @property {number} signal_quality
  * @property {number} signal_strength
+ * @property {number} snr
+ * @property {number} str
+ * @property {number} ber
+ * @property {number} unc
+ * @property {string} status
  * @property {string} type
  */
 
