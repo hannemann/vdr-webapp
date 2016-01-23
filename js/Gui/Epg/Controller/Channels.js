@@ -1,6 +1,7 @@
 /**
  * @class
  * @constructor
+ * @property {string} currentGroup
  */
 Gui.Epg.Controller.Channels = function () {};
 
@@ -23,6 +24,8 @@ Gui.Epg.Controller.Channels.prototype.init = function () {
     this.node = this.view.node.get(0);
     this.view.setParentView(this.data.parent.view);
     this.channelsList = [];
+    this.groups = [];
+    this.channelsCSS = new VDRest.Lib.StyleSheet();
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels');
 };
 
@@ -31,7 +34,11 @@ Gui.Epg.Controller.Channels.prototype.init = function () {
  */
 Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 
+    this.broadcastsController = this.module.getController('Broadcasts');
+
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
+
+    this.showGroup();
 
     this.preventReload()
         .addObserver();
@@ -42,7 +49,7 @@ Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
         });
     }
 
-    this.broadcastsWrapper = this.module.getController('Broadcasts').view.wrapper.get(0);
+    this.broadcastsWrapper = this.broadcastsController.view.wrapper.get(0);
 };
 
 /**
@@ -53,6 +60,13 @@ Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
 Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
 
     var i = 0, l = this.channelsList.length;
+
+    if ("undefined" !== typeof this.broadcastsController.touchScroll) {
+        setTimeout(function () {
+            this.broadcastsController.touchScroll.enableScrollBars();
+        }.bind(this), 200);
+        this.broadcastsController.touchScroll.disableScrollBars();
+    }
 
     if (e.payload instanceof Gui.Epg.Controller.Channels.Channel) {
 
@@ -152,6 +166,8 @@ Gui.Epg.Controller.Channels.prototype.iterateChannels = function (collection) {
 
     collection.iterate(function (channelModel) {
 
+        var group = channelModel.getData('group');
+
         if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
 
             return true;
@@ -162,6 +178,14 @@ Gui.Epg.Controller.Channels.prototype.iterateChannels = function (collection) {
             "parent" : this,
             "dataModel" : channelModel
         }));
+
+        if (this.groups.indexOf(group) < 0) {
+            this.groups.push(group);
+            this.channelsCSS.addRule(
+                '#epg[data-show-group="' + group + '"]:not(.channel-view) .channel[data-channel-group="' + group + '"]',
+                'display: block'
+            );
+        }
 
     }.bind(this));
 
@@ -194,6 +218,43 @@ Gui.Epg.Controller.Channels.prototype.handleScroll = function (e) {
         e.jsStyle = e.jsStyle || TouchMove.Helper.getTransformVendorPrefix(this.node).jsStyle;
         this.node.style[e.jsStyle] = "translateY(" + scroll + "px)";
     }
+};
+
+/**
+ * show channel group
+ * @param {string} [group]
+ */
+Gui.Epg.Controller.Channels.prototype.showGroup = function (group) {
+
+    var headline = VDRest.app.translate(this.module.headline),
+        height, fullHeight;
+
+    if (this.groups.indexOf(group) < 0) {
+        group = 'all';
+    } else {
+        headline += ' - ' + group;
+    }
+
+    this.currentGroup = group;
+
+    VDRest.app.getModule('Gui.Menubar')
+        .getView('Default')
+        .setTitle(headline);
+
+    this.broadcastsController.view.unsetWrapperHeight();
+    fullHeight = this.broadcastsController.view.wrapper.height();
+    this.broadcastsController.view.setWrapperHeight('auto');
+
+    this.module.getView('Epg').node[0].dataset['showGroup'] = group;
+
+    height = this.broadcastsController.view.wrapper.height();
+
+    if (height < fullHeight) {
+        this.broadcastsController.view.setWrapperHeight(height);
+    } else {
+        this.broadcastsController.view.unsetWrapperHeight();
+    }
+
 };
 
 /**

@@ -85,6 +85,7 @@ VDRest.app.de_DE = {
     "Signal strength:%3d" : "Signal Stärke:\t%3d",
     "Signal quality:\t%3d" : "Signal Qualität:%3d",
     "Channel: %d. %s - %s" : "Kanal: %d. %s - %s",
+    "Channelgroup" : "Kanalgruppe",
     "Minimized Position (Landscape)" : "Position wenn Minimiert (Querformat)",
     "Left" : "Links",
     "Right" : "Rechts",

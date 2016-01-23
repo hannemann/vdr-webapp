@@ -3,6 +3,8 @@
  * @constructor
  * @property {Gui.Epg.Controller.Broadcasts.List.Broadcast[]} broadcasts
  * @property {Gui.Epg} module
+ * @property {Gui.Epg.Controller.Broadcasts} broadcastsController
+ * @property {VDRest.Epg.Model.Channels.Channel} dataModel
  */
 Gui.Epg.Controller.Broadcasts.List = function () {};
 
@@ -37,7 +39,8 @@ Gui.Epg.Controller.Broadcasts.List.prototype.init = function () {
     this.broadcasts = [];
     this.dateSeparators = [];
     this.view = this.module.getView('Broadcasts.List', {
-        "channel_id" : this.data.channel_id
+        "channel_id" : this.data.channel_id,
+        "group" : this.data.dataModel.data.group
     });
     this.view.setParentView(this.data.parent.view);
     this.dataModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel', {
@@ -528,11 +531,17 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () 
         metrics = this.epgController.metrics,
         threshold = metrics.win.height * this.overflowCount,
         scrollTop = this.broadcastsController.currentScrollTop,
-        isInView;
+        isInView,
+        currentGroup = this.broadcastsController.channelsController.currentGroup;
 
-    if (!this.lastOffset || offset.top <= this.lastOffset.top) {
+    if (currentGroup !== 'all' && currentGroup !== this.dataModel.data.group) {
+
+        return false;
+
+    } else if (!this.lastOffset || offset.top <= this.lastOffset.top) {
 
         isInView = bottom + threshold / 2 >= scrollTop && bottom < scrollTop + metrics.win.height + threshold;
+
     } else {
 
         isInView = bottom + threshold >= scrollTop && bottom < scrollTop + metrics.win.height + threshold / 2;

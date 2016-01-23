@@ -116,6 +116,17 @@ Gui.Epg.prototype.contextMenu = {
         }
     },
 
+    "Channel-Group" : {
+        "labels" : {
+            "on" : VDRest.app.translate("Channelgroup")
+        },
+        "state" : "on",
+        "scope" : 'Gui.Epg',
+        "fn" : function () {
+            this.getController('Epg').selectGroup();
+        }
+    },
+
     "CustomTime" : {
         "labels" : {
             "on" : VDRest.app.translate("Set Time")

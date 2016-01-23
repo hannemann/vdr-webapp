@@ -25,7 +25,7 @@
  * @var {object} metrics
  * @property {object} win
  * @property {object} viewPort
- * @property {object} broadcasts
+ * @property {Gui.Epg.Controller.Broadcasts} broadcasts
  */
 Gui.Epg.Controller.Epg = function () {};
 
@@ -263,6 +263,65 @@ Gui.Epg.Controller.Epg.prototype.handleOrientationChange = function () {
             this.recover();
         }.bind(this), 500);
     }
+};
+
+/**
+ * select channel group
+ */
+Gui.Epg.Controller.Epg.prototype.selectGroup = function () {
+
+    var data = {
+        "type": "enum",
+        "dom": $('<label class="clearer text">'),
+        "label" : "Channelgroup",
+        "values": {
+            "all" : {
+                "label" : 'All',
+                "value" : 'all'
+            }
+        }
+    };
+
+    data.gui = $('<input type="text" name="channelgroup">')
+        .appendTo(data.dom);
+    data.gui.val(data.value);
+
+    data.gui.on('change', this.showGroup.bind(this));
+
+    this.channels.groups.forEach(function (group) {
+        data.values[group] = {
+            "label" : group,
+            "value" : group
+        }
+    });
+
+    data.values[this.channels.currentGroup].selected = true;
+
+    $.event.trigger({
+        "type" : "window.request",
+        "payload" : {
+            "module" : VDRest.app.getModule('Gui.Form'),
+            "type": "Window.Select",
+            "data" : data
+        }
+    });
+
+};
+
+/**
+ * @param {jQuery.Event} e
+ */
+Gui.Epg.Controller.Epg.prototype.showGroup = function (e) {
+
+    if ("undefined" !== typeof this.broadcasts.touchScroll) {
+        setTimeout(function () {
+            this.broadcasts.touchScroll.enableScrollBars();
+        }.bind(this), 200);
+        this.broadcasts.touchScroll.disableScrollBars();
+    }
+    this.broadcasts.scrollTop();
+    this.channels.showGroup(e.target.value);
+    this.broadcasts.updateOffsets();
 };
 
 /**

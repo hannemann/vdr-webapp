@@ -95,13 +95,17 @@ Gui.Menubar.View.Default.prototype.addSettingsButton = function () {
 };
 
 /**
- * @param {jQuery.Event} e
+ * @param {jQuery.Event|string} e
  * @param {Object.<string>} e.payload
  * @returns {Gui.Menubar.View.Default}
  */
 Gui.Menubar.View.Default.prototype.setTitle = function (e) {
 
-    if (e instanceof jQuery.Event && e.payload && e.payload.headline) {
+    if ('string' === typeof e) {
+
+        this.getHeader().text(e);
+
+    } else if (e instanceof jQuery.Event && e.payload && e.payload.headline) {
 
         this.getHeader().text(VDRest.app.translate(e.payload.headline));
     }

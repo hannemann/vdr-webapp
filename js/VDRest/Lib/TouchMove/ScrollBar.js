@@ -161,6 +161,10 @@ TouchMove.ScrollBar.prototype.onscroll = function (e) {
         clearTimeout(this.hideTimeout);
     }
 
+    if (!this.canScroll()) {
+        return this;
+    }
+
     this.wrapper.classList.remove('hidden');
 
     this.setPosition(e);
@@ -193,4 +197,40 @@ TouchMove.ScrollBar.prototype.setPosition = function (e) {
     }
 
     return this;
+};
+
+/**
+ * determine if scroll bar is applicable
+ * @return {boolean}
+ */
+TouchMove.ScrollBar.prototype.canScroll = function () {
+
+    if (this.disabled) {
+        return false;
+    }
+
+    if (this.horizontal) {
+
+        return this.parent.clientWidth < this.scrollElement.offsetWidth;
+
+    } else {
+
+        return this.parent.clientHeight < this.scrollElement.offsetHeight;
+    }
+};
+
+/**
+ * disable
+ */
+TouchMove.ScrollBar.prototype.disable = function () {
+
+    this.disabled = true;
+};
+
+/**
+ * enable
+ */
+TouchMove.ScrollBar.prototype.enable = function () {
+
+    this.disabled = false;
 };

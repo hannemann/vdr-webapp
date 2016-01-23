@@ -33,8 +33,6 @@ Gui.Epg.View.Broadcasts.prototype.render = function () {
     this.wrapper.appendTo(this.parentView.node);
     this.left = this.wrapper[0].offsetLeft;
     this.updateIndicator();
-
-
 };
 
 /**
@@ -52,6 +50,26 @@ Gui.Epg.View.Broadcasts.prototype.updateIndicator = function () {
         this.timeIndicator.removeClass('show');
     }
 
-
     this.timeIndicator.width(width);
+};
+
+/**
+ * set wrapper height
+ * @param height
+ * @returns {Gui.Epg.View.Broadcasts}
+ */
+Gui.Epg.View.Broadcasts.prototype.setWrapperHeight = function (height) {
+
+    this.wrapper.height(height);
+    return this;
+};
+
+/**
+ * unset wrapper height
+ * @returns {Gui.Epg.View.Broadcasts}
+ */
+Gui.Epg.View.Broadcasts.prototype.unsetWrapperHeight = function () {
+
+    this.wrapper[0].style.height = '';
+    return this;
 };

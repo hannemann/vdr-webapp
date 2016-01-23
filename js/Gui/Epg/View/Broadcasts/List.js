@@ -29,9 +29,11 @@ Gui.Epg.View.Broadcasts.List.prototype.render = function () {
 
     VDRest.Abstract.View.prototype.render.call(this);
 
-    this.offsetTop = this.node[0].offsetTop;
+    this.setOffset();
     this.height = this.node[0].offsetHeight;
     this.left = this.node[0].offsetLeft;
+
+    this.node.attr("data-channel-group", this.getData('group'));
 };
 
 /**
@@ -39,5 +41,13 @@ Gui.Epg.View.Broadcasts.List.prototype.render = function () {
  */
 Gui.Epg.View.Broadcasts.List.prototype.setIsVisible = function (visible) {
 
-        this.node.toggleClass('invisible', !visible);
+    this.node.toggleClass('invisible', !visible);
+};
+
+/**
+ * set list visibility
+ */
+Gui.Epg.View.Broadcasts.List.prototype.setOffset = function () {
+
+    this.offsetTop = this.node[0].offsetTop;
 };

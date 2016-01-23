@@ -121,6 +121,26 @@ TouchMove.prototype.initScrollBars = function (options) {
 };
 
 /**
+ * disable scroll-bars
+ */
+TouchMove.prototype.disableScrollBars = function () {
+
+    this.allowedDirections.forEach(function (dir) {
+        this.scrollBars[dir].disable();
+    }.bind(this));
+};
+
+/**
+ * disable scroll-bars
+ */
+TouchMove.prototype.enableScrollBars = function () {
+
+    this.allowedDirections.forEach(function (dir) {
+        this.scrollBars[dir].enable();
+    }.bind(this));
+};
+
+/**
  * init event names
  * @returns {TouchMove}
  */

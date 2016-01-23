@@ -23,6 +23,8 @@
  * @property {number} visibleEndTime
  * @property {number} currentScrollLeft
  * @property {number} currentScrollTop
+ * @property {string[]} groups
+ * @property {VDRest.Lib.StyleSheet} channelsCSS
  */
 Gui.Epg.Controller.Broadcasts = function () {};
 
@@ -51,6 +53,8 @@ Gui.Epg.Controller.Broadcasts.prototype.init = function () {
     this.pixelPerSecond = VDRest.config.getItem('pixelPerSecond');
     this.handleScrollBroadcasts = this.fnHandleScrollBroadcasts.bind(this);
     this.lastEpg = VDRest.config.getItem('lastEpg');
+    this.groups = [];
+    this.channelsCSS = new VDRest.Lib.StyleSheet();
 
     if (VDRest.helper.touchMoveCapable) {
         this.touchScroll = new TouchMove.Scroll({
@@ -578,6 +582,8 @@ Gui.Epg.Controller.Broadcasts.prototype.iterateChannels = function (collection) 
  */
 Gui.Epg.Controller.Broadcasts.prototype.processChannel = function (channelModel) {
 
+    var group = channelModel.getData('group');
+
     if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
 
         return true;
@@ -588,6 +594,14 @@ Gui.Epg.Controller.Broadcasts.prototype.processChannel = function (channelModel)
         "parent" : this,
         "dataModel" : channelModel
     }));
+
+    if (this.groups.indexOf(group) < 0) {
+        this.groups.push(group);
+        this.channelsCSS.addRule(
+            '#epg[data-show-group="' + group + '"] .broadcasts-list[data-channel-group="' + group + '"]',
+            'display: block'
+        );
+    }
 };
 
 /**
@@ -685,6 +699,15 @@ Gui.Epg.Controller.Broadcasts.prototype.timeUpdate = function () {
     this.broadcastLists.forEach(function (list) {
 
         list.updateBroadcastsPosition();
+    }.bind(this));
+};
+
+Gui.Epg.Controller.Broadcasts.prototype.updateOffsets = function () {
+
+
+    this.broadcastLists.forEach(function (list) {
+
+        list.view.setOffset();
     }.bind(this));
 };
 
