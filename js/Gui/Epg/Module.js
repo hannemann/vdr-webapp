@@ -122,12 +122,13 @@ Gui.Epg.prototype.contextMenu = {
         }
     },
 
-    "Channel-Group" : {
+    "ChannelGroup" : {
         "labels" : {
             "on" : VDRest.app.translate("Channelgroup")
         },
         "state" : "on",
         "scope" : 'Gui.Epg',
+        "hidden" : false,
         "fn" : function () {
             this.getController('Epg').selectGroup();
         }
@@ -189,7 +190,9 @@ Gui.Epg.prototype.dispatch = function () {
 
     this.store = VDRest.app.getModule('VDRest.Epg');
     this.getController('Epg').dispatchView();
-    this.addFilterButton();
+    if ("undefined" === typeof this.filterButton) {
+        this.addFilterButton();
+    }
 };
 
 /**
@@ -291,7 +294,7 @@ Gui.Epg.prototype.unMute = function () {
 
     VDRest.Abstract.Module.prototype.unMute.call(this);
     this.getController('Epg').recover();
-    //this.addFilterButton();
+    this.addFilterButton();
 };
 
 /**
@@ -300,9 +303,12 @@ Gui.Epg.prototype.unMute = function () {
 Gui.Epg.prototype.mute = function () {
 
     VDRest.Abstract.Module.prototype.mute.call(this);
-    this.getMenubar().removeButton(this.filterButton);
+    this.removeFilterButton();
 };
 
+/**
+ * add filter button
+ */
 Gui.Epg.prototype.addFilterButton = function () {
 
     this.filterButton = this.getMenubar().addButton(
@@ -311,6 +317,14 @@ Gui.Epg.prototype.addFilterButton = function () {
             this.getController('Epg').selectGroup();
         }.bind(this)
     );
+};
+
+/**
+ * remove filter button
+ */
+Gui.Epg.prototype.removeFilterButton = function () {
+
+    this.getMenubar().removeButton(this.filterButton);
 };
 
 /**
@@ -333,17 +347,21 @@ Gui.Epg.prototype.toggleChannelView = function (channel) {
     ) {
 
         this.contextMenu.Channelview.state = "on";
+        this.contextMenu.ChannelGroup.hidden = true;
         $.event.trigger({
             "type": "epg.channelview",
             "payload": channel
         });
+        this.removeFilterButton();
     } else {
 
         this.contextMenu.Channelview.state = "off";
+        this.contextMenu.ChannelGroup.hidden = false;
         $.event.trigger({
             "type": "epg.channelview",
             "payload": false
         });
+        this.addFilterButton();
     }
 };
 

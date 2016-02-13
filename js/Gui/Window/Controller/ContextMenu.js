@@ -57,10 +57,12 @@ Gui.Window.Controller.ContextMenu.prototype.addObserver = function () {
             //    this.data[i].highlight.call(VDRest.app.getModule(this.data[i].scope), this.data[i]);
             //}
 
-            this.data[i].button
-                .on(upEvent, this.handleUp.bind(this, this.data[i]))
-                .on(downEvent, this.handleDown.bind(this, this.data[i].button[0]))
-            ;
+            if (!this.data[i].hidden) {
+                this.data[i].button
+                    .on(upEvent, this.handleUp.bind(this, this.data[i]))
+                    .on(downEvent, this.handleDown.bind(this, this.data[i].button[0]))
+                ;
+            }
         }
     }
 
@@ -103,7 +105,9 @@ Gui.Window.Controller.ContextMenu.prototype.removeObserver = function () {
 
         if (this.data.hasOwnProperty(i) && i !== 'isDispatched') {
 
-            this.data[i].button.off('mousedown mouseup touchstart touchend')
+            if (!this.data[i].hidden) {
+                this.data[i].button.off('mousedown mouseup touchstart touchend')
+            }
         }
     }
 

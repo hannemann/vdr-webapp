@@ -55,13 +55,16 @@ Gui.Window.View.ContextMenu.prototype.addButtons = function () {
 
         if (this.data.hasOwnProperty(i) && i !== 'isDispatched') {
 
-            label = this.data[i].labels[this.data[i].state];
+            if (!this.data[i].hidden) {
 
-            this.data[i].button = $('<div class="menu-button">').html(VDRest.app.translate(label))
-                .appendTo(this.node);
+                label = this.data[i].labels[this.data[i].state];
 
-            if ('function' === typeof this.data[i].highlight) {
-                this.data[i].highlight.call(VDRest.app.getModule(this.data[i].scope), this.data[i]);
+                this.data[i].button = $('<div class="menu-button">').html(VDRest.app.translate(label))
+                    .appendTo(this.node);
+
+                if ('function' === typeof this.data[i].highlight) {
+                    this.data[i].highlight.call(VDRest.app.getModule(this.data[i].scope), this.data[i]);
+                }
             }
         }
     }
