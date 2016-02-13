@@ -59,8 +59,6 @@ Gui.Epg.Controller.Channels.prototype.dispatchView = function () {
  */
 Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
 
-    var i = 0, l = this.channelsList.length;
-
     if ("undefined" !== typeof this.broadcastsController.touchScroll) {
         setTimeout(function () {
             this.broadcastsController.touchScroll.enableScrollBars();
