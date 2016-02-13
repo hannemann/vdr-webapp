@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'vdr-web-symbols';
-  src: url('../font/vdr-web-symbols.eot?77054857');
-  src: url('../font/vdr-web-symbols.eot?77054857#iefix') format('embedded-opentype'),
-       url('../font/vdr-web-symbols.woff?77054857') format('woff'),
-       url('../font/vdr-web-symbols.ttf?77054857') format('truetype'),
-       url('../font/vdr-web-symbols.svg?77054857#vdr-web-symbols') format('svg');
+  src: url('../font/vdr-web-symbols.eot?14555481');
+  src: url('../font/vdr-web-symbols.eot?14555481#iefix') format('embedded-opentype'),
+       url('../font/vdr-web-symbols.woff?14555481') format('woff'),
+       url('../font/vdr-web-symbols.ttf?14555481') format('truetype'),
+       url('../font/vdr-web-symbols.svg?14555481#vdr-web-symbols') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'vdr-web-symbols';
-    src: url('../font/vdr-web-symbols.svg?77054857#vdr-web-symbols') format('svg');
+    src: url('../font/vdr-web-symbols.svg?14555481#vdr-web-symbols') format('svg');
   }
 }
 */
@@ -91,3 +91,4 @@
 .icon-sort-alt-up:before { content: '\6b'; } /* 'k' */
 .icon-video-alt:before { content: '\6c'; } /* 'l' */
 .icon-eye:before { content: '\e800'; } /* '' */
+.icon-filter:before { content: '\e801'; } /* '' */

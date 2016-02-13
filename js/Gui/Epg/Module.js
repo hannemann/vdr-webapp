@@ -52,6 +52,12 @@ Gui.Epg.prototype.startPage = true;
 Gui.Epg.prototype.headline = 'EPG';
 
 /**
+ * headline in menu bar
+ * @type {string}
+ */
+Gui.Epg.prototype.filterButtonSymbol = '';
+
+/**
  * context menu definition
  * @type {{}}
  */
@@ -183,6 +189,7 @@ Gui.Epg.prototype.dispatch = function () {
 
     this.store = VDRest.app.getModule('VDRest.Epg');
     this.getController('Epg').dispatchView();
+    this.addFilterButton();
 };
 
 /**
@@ -284,6 +291,35 @@ Gui.Epg.prototype.unMute = function () {
 
     VDRest.Abstract.Module.prototype.unMute.call(this);
     this.getController('Epg').recover();
+    //this.addFilterButton();
+};
+
+/**
+ * unset muted flag
+ */
+Gui.Epg.prototype.mute = function () {
+
+    VDRest.Abstract.Module.prototype.mute.call(this);
+    this.getMenubar().removeButton(this.filterButton);
+};
+
+Gui.Epg.prototype.addFilterButton = function () {
+
+    this.filterButton = this.getMenubar().addButton(
+        this.filterButtonSymbol,
+        function () {
+            this.getController('Epg').selectGroup();
+        }.bind(this)
+    );
+};
+
+/**
+ * retrieve menu bar controller
+ * @return {Gui.Menubar.Controller.Default}
+ */
+Gui.Epg.prototype.getMenubar = function () {
+
+    return VDRest.app.getModule('Gui.Menubar').getController('Default');
 };
 
 /**
