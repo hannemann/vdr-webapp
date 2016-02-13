@@ -157,32 +157,38 @@ Gui.Epg.Controller.Channels.prototype.removeObserver = function () {
  */
 Gui.Epg.Controller.Channels.prototype.iterateChannels = function (collection) {
 
-    collection.iterate(function (channelModel) {
-
-        var group = channelModel.getData('group');
-
-        if (!VDRest.config.getItem('showRadio') && channelModel.data.is_radio && channelModel.data.is_radio === true) {
-
-            return true;
-        }
-
-        this.channelsList.push(this.module.getController('Channels.Channel', {
-            "channel_id" : channelModel.data.channel_id,
-            "parent" : this,
-            "dataModel" : channelModel
-        }));
-
-        if (this.groups.indexOf(group) < 0) {
-            this.groups.push(group);
-            this.channelsCSS.addRule(
-                '#epg[data-show-group="' + group + '"]:not(.channel-view) .channel[data-channel-group="' + group + '"]',
-                'display: block'
-            );
-        }
-
-    }.bind(this));
+    collection.iterate(this.initChannel.bind(this));
 
     this.dispatchChannels();
+};
+
+/**
+ *
+ * @param {VDRest.Epg.Model.Channels.Channel} channel
+ * @return {boolean}
+ */
+Gui.Epg.Controller.Channels.prototype.initChannel = function (channel) {
+
+    var group = channel.getData('group');
+
+    if (!VDRest.config.getItem('showRadio') && channel.data.is_radio && channel.data.is_radio === true) {
+
+        return true;
+    }
+
+    this.channelsList.push(this.module.getController('Channels.Channel', {
+        "channel_id" : channel.data.channel_id,
+        "parent" : this,
+        "dataModel" : channel
+    }));
+
+    if (this.groups.indexOf(group) < 0) {
+        this.groups.push(group);
+        this.channelsCSS.addRule(
+            '#epg[data-show-group="' + group + '"]:not(.channel-view) .channel[data-channel-group="' + group + '"]',
+            'display: block'
+        );
+    }
 };
 
 /**
