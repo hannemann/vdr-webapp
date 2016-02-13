@@ -314,7 +314,9 @@ Gui.Epg.prototype.addFilterButton = function () {
     this.filterButton = this.getMenubar().addButton(
         this.filterButtonSymbol,
         function () {
-            this.getController('Epg').selectGroup();
+            var epgController = this.getController('Epg');
+            epgController.vibrate();
+            epgController.selectGroup();
         }.bind(this)
     );
 };
