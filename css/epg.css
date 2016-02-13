@@ -444,10 +444,10 @@ div#time-line .ql.hour {
 .channel-view #broadcasts {
     width: 100% !important;
 }
-.channel-view #broadcasts .broadcasts-list.active {
+#epg.channel-view #broadcasts .broadcasts-list.active {
     display: block;
 }
-.channel-view #broadcasts .broadcasts-list {
+#epg.channel-view #broadcasts .broadcasts-list {
     width: 100% !important;
     height: auto;
     display: none;
