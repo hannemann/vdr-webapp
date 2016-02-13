@@ -95,6 +95,17 @@ Gui.Menubar.View.Default.prototype.addSettingsButton = function () {
 };
 
 /**
+ * add button
+ * @param {string} symbol
+ * @returns {jQuery}
+ */
+Gui.Menubar.View.Default.prototype.addButton = function (symbol) {
+
+    return $('<div class="menubar-button">').html(symbol)
+        .insertAfter(this.titleWrapper);
+};
+
+/**
  * @param {jQuery.Event|string} e
  * @param {Object.<string>} e.payload
  * @returns {Gui.Menubar.View.Default}

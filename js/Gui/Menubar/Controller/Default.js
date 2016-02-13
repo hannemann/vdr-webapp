@@ -397,6 +397,27 @@ Gui.Menubar.Controller.Default.prototype.recoverState = function (state) {
 };
 
 /**
+ * add button
+ * @param {string} symbol
+ * @param {function} toggle
+ * @returns {jQuery}
+ */
+Gui.Menubar.Controller.Default.prototype.addButton = function (symbol, toggle) {
+
+    return this.view.addButton(symbol).on(VDRest.helper.pointerEnd, toggle);
+
+};
+
+/**
+ * add button
+ * @param {jQuery} button
+ */
+Gui.Menubar.Controller.Default.prototype.removeButton = function (button) {
+
+    button.off(VDRest.helper.pointerEnd).remove()
+};
+
+/**
  * @param {boolean} i
  */
 Gui.Menubar.Controller.Default.prototype.setHasProblem = function (i) {
