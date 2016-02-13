@@ -500,6 +500,10 @@ Gui.Window.Controller.Drawer.prototype.handleFavClick = function (e) {
         }.bind(this));
         this.stateChangedHandler(e);
     }
+
+    document.oncontextmenu = function () {
+        return true
+    };
 };
 
 /**
@@ -509,6 +513,10 @@ Gui.Window.Controller.Drawer.prototype.handleFavDown = function (e) {
 
     this.preventClick = undefined;
     this.vibrate();
+
+    document.oncontextmenu = function () {
+        return false
+    };
 
     if (VDRest.info.getStreamer()) {
         this.channelClickTimeout = window.setTimeout(function () {
