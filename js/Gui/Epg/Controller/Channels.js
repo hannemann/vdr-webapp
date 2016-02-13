@@ -78,10 +78,8 @@ Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
 
         this.channelView = e.payload.view;
 
-        for (i; i < l; i++) {
+        Gui.Epg.Controller.Broadcasts.List.prototype.isChannelView = true;
 
-            this.module.getController('Broadcasts.List', this.channelsList[i].keyInCache).isChannelView = true;
-        }
         this.module.getController('Broadcasts.List', this.channelView.keyInCache).attachChannelView();
 
         this.channelView.setIsActive();
@@ -91,10 +89,7 @@ Gui.Epg.Controller.Channels.prototype.handleChannelView = function (e) {
         this.channelView.unsetIsActive();
         this.module.getController('Broadcasts.List', this.channelView.keyInCache).detachChannelView();
 
-        for (i; i < l; i++) {
-
-            this.module.getController('Broadcasts.List', this.channelsList[i].keyInCache).isChannelView = false;
-        }
+        Gui.Epg.Controller.Broadcasts.List.prototype.isChannelView = false;
 
         this.channelView = false;
         this.handleScroll();
