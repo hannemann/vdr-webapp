@@ -1427,7 +1427,7 @@ Gui.SearchTimer.ViewModel.Window.SearchTimer.prototype.getDateLimitFieldValues =
             }
         }, days = 14, i = 2;
 
-    s = new Date(t.getFullYear().toString() + '-' + (t.getMonth() + 1).toString() + '-' + t.getDate().toString());
+    s = new Date(t.getFullYear().toString() + '-' + (t.getMonth() + 1).toString() + '-' + t.getDate().toString() + ' 06:00');
     s.setDate(s.getDate() + 1);
     values.today.value = s.getTime() / 1000;
 
