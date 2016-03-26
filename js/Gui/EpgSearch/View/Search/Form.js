@@ -78,14 +78,16 @@ Gui.EpgSearch.View.Search.Form.prototype.requestForm = function () {
                 if ('' !== fields.search.getValue()) {
 
                     model = VDRest.app.getModule('VDRest.SearchTimer').getModel('List.SearchTimer', {"id" : -1});
+                    model.setData('is_epg_search', true);
 
-                    if (fields.use_date_limit.getValue()) {
+                    if (fields.use_date_limit.getValue() && !fields.dateLimit.disabled) {
                         dateLimit = fields.dateLimit.getValue().value;
                     }
 
                     VDRest.app.getModule('VDRest.Epg').getModel('Search').send(
                         model.copyFromForm(fields), dateLimit
                     );
+                    VDRest.app.getModule('VDRest.SearchTimer').cache.invalidateAllTypes(model);
                 }
 
             }.bind(this)

@@ -192,7 +192,7 @@ VDRest.SearchTimer.Model.List.SearchTimer.prototype.copyFromForm = function (fie
     }
 
     for (i in fields) {
-        if (fields.hasOwnProperty(i)) {
+        if (fields.hasOwnProperty(i) && !(this.getData('is_epg_search') && fields[i].disabled)) {
 
             if (i.indexOf('ext_epg_info') == 0) {
                 n.ext_epg_info.push(

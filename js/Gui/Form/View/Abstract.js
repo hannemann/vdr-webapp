@@ -536,7 +536,7 @@ Gui.Form.View.Abstract.prototype.setSelectedChannels = function (field, selected
 
     var i;
 
-    if ("undefined" !== typeof selected) {
+    if (selected && "undefined" !== typeof selected) {
         if ("function" === typeof selected) {
             selected = selected();
         } else if ("string" === typeof selected.forEach) {

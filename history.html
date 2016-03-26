@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color: Blue</title>
+</head>
+<body>
+
+<h3>Default</h3>
+<div class="color">Blue</div>
+<div class="size">XL</div>
+<div class="price">100,- €</div>
+
+<button class="br">Go Red!</button>
+<button class="bg">Go Green!</button>
+<button class="bb">Go Blue!</button>
+
+<script type="text/javascript">
+
+    /**
+     * @see https://developer.mozilla.org/de/docs/Web/Guide/DOM/Manipulating_the_browser_history
+     *
+     * @see means: POINT YOUR BROWSER TO IT AND RTFM!!!
+     */
+
+    /**
+     * MDN: The state object can be anything that can be serialized
+     * @typedef {{}} stateObject
+     */
+
+    /**
+     * @typedef {Event} PopStateEvent
+     * @property {stateObject} state
+     */
+
+    var /** @type {HTMLDivElement} */
+        c = document.querySelector('.color'),
+        /** @type {HTMLDivElement} */
+        s = document.querySelector('.size'),
+        /** @type {HTMLDivElement} */
+        p = document.querySelector('.price'),
+        /** @type {HTMLHeadingElement} */
+        h = document.querySelector('h3'),
+        /** @type {HTMLButtonElement} */
+        br = document.querySelector('button.br'),
+        /** @type {HTMLButtonElement} */
+        bg = document.querySelector('button.bg'),
+        /** @type {HTMLButtonElement} */
+        bb = document.querySelector('button.bb'),
+        /** @type {stateObject} */
+        state,
+        /** @type function */
+        currentListener;
+
+    /**
+     * retrieve state object
+     * @returns {stateObject}
+     */
+    getState = function () {
+        return {
+            "color"     : c.innerText,
+            "size"      : s.innerText,
+            "price"     : p.innerText,
+            "title"     : document.title,
+            "header"    : h.innerText
+        };
+    };
+
+
+    /**
+     * a method go back in history
+     * boring!
+     */
+    goBack = function () {
+        history.back();
+    };
+
+    /**
+     * a method to perform some changes
+     * not that boring
+     */
+    goRed = function () {
+
+        var state;
+
+        // perform some page changes, nothing spectacular
+        c.innerText = "Red";
+        s.innerText = 'S';
+        p.innerText = '120,- €';
+        document.title = 'Color: Red';
+        h.innerText = 'Red? Expensive!';
+
+        //
+        // here is the interesting stuff
+        //
+        state = getState();
+        state.myButton = 'br';
+        handleButtons(state);
+        history.pushState(state, document.title, 'history-red.html'); // <-- Browser changes url without loading!
+    };
+
+    /**
+     * a method to perform some changes
+     * not that boring
+     */
+    goGreen = function () {
+
+        var state;
+
+        c.innerText = "Green";
+        s.innerText = 'M';
+        p.innerText = '110,- €';
+        document.title = 'Color: Green';
+        h.innerText = 'Green? Pay more!';
+
+        state = getState();
+        state.myButton = 'bg';
+        handleButtons(state);
+        history.pushState(state, document.title, 'history-green.html');
+    };
+
+    /**
+     * a method to perform some changes
+     * not that boring
+     */
+    goBlue = function () {
+
+        var state;
+
+        c.innerText = "Blue";
+        s.innerText = 'XL';
+        p.innerText = '100,- €';
+        h.innerText = 'Blue is cheapest';
+        document.title = 'Color: Blue';
+
+        state = getState();
+        state.myButton = 'bb';
+        handleButtons(state);
+        history.pushState(state, document.title, 'history.html');
+    };
+
+    /**
+     * handle pop state event.
+     * if state is property of event change nodes accordingly
+     * @param {PopStateEvent} e
+     */
+    handlePopState = function (e) {
+
+        if (e.state) {
+
+            // nothing interesting happening here...
+            // just resetting all the nodes...
+            c.innerText = e.state.color;
+            s.innerText = e.state.size;
+            p.innerText = e.state.price;
+            h.innerText = e.state.header;
+            document.title = e.state.title;
+            handleButtons(e.state);
+        }
+    };
+
+    /**
+     * handle buttons disabled status depending on history state
+     */
+    handleButtons = function (state) {
+
+        Array.prototype.slice.apply(document.querySelectorAll('button')).forEach(function (button) {
+
+            button.disabled = button.classList.contains(state.myButton);
+
+        });
+    };
+
+    /**
+     * add event listeners
+     */
+    window.addEventListener('popstate', handlePopState);
+    br.addEventListener('click', goRed);
+    bg.addEventListener('click', goGreen);
+    bb.addEventListener('click', goBlue);
+
+    /**
+     * save state after initial loading
+     * we have to replace the current state object initially. other wise you retrieve null if you hit back
+     * the second argument is currently ignored...
+     * the third one is the path to the document...
+     */
+    state = getState();
+    state.myButton = 'bb';
+    handleButtons(state);
+    history.replaceState(state, document.title, location.pathname);
+
+</script>
+
+</body>
+</html>
