@@ -629,7 +629,7 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "boolean",
         "label" : "Use Content-Length Workaround",
-        "info": "Enable on mobile Chrome only. Chrome sends several requests to streamdev hence the server transcodes multiple streams. With this option enabled externremux tries to detect if a HTTP_ALLOW_CROSS_DOMAIN_REDIRECT header is set to false. If condition is met it sets a two bytes content length forcing the browser to abort unnecessary requests. Tested with Chrome 49 Android Marshmallow"
+        "info": "Enable on mobile Chrome only. Chrome sends several requests to streamdev hence the server transcodes multiple streams. With this option enabled externremux tries to detect if a HTTP_ALLOW_CROSS_DOMAIN_REDIRECT header is set to 'false'. If condition is met it sets a two bytes content length header forcing the browser to abort unnecessary requests. Tested with Chrome 49 Android Marshmallow"
     },
     "useGPUEncoder" : {
         "depends" : {
@@ -647,7 +647,7 @@ VDRest.Lib.Config.prototype.fields = {
         "category" : "streaming",
         "type" : "string",
         "label" : "Path to transcoder",
-        "info" : "(e.g. /home/vdruser/bin/ffmpeg)"
+        "info" : "(Full path e.g. /home/vdruser/bin/ffmpeg)"
     },
     "firstTime": {
         "category": "misc",

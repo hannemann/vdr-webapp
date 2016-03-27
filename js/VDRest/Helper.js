@@ -382,7 +382,7 @@ VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
     }
 
     if (VDRest.config.getItem('transcoderPath')) {
-        streamdevParams.push('PROG=' + encodeURIComponent(VDRest.config.getItem('transcoderPath')));
+        streamdevParams.push('PROG=' + VDRest.config.getItem('transcoderPath').replace(/\//g, '~'));
     }
 
     if (VDRest.config.getItem('useContentLengthWorkaround')) {
