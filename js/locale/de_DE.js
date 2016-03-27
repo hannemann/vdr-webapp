@@ -253,6 +253,8 @@ VDRest.app.de_DE = {
     "An extended externremux.sh is needed" : "Es wird eine erweiterte externremux.sh benötigt",
     "Loads data synchronized to not burn slow CPU\'s" : "Daten synchron laden, um langsamere CPU\'s zu schonen",
     "Load synced (deprecated)": "Synchrones Laden (veraltet)",
+    "Use Content-Length Workaround" : "Content-Length Workaround verwenden",
+    "Use GPU for transcoding" : "GPU zum transkodieren verwenden",
     "Date &#8595;" : "Datum &#8595;",
     "Date &#8593;" : "Datum &#8593;",
     "Newest first" : "Neueste zuerst",
