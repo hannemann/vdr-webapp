@@ -8,13 +8,16 @@
 QUALITY="DSL1000"
 TYPE=mpeg
 CHANNELS=2
-DEBUG=0
+DEBUG=${REMUX_PARAM_DEBUG:-0}
 RAND=${RANDOM:-$$}
 PID=$$
 FIFO=/tmp/externremux-${PID}
 FPS=25
 AUDIO_STREAM=0
 AUDIO_CHANNELS=2
+NVENC=0
+AGAIN=1
+CLW=0
 declare -A HEADER=()
 ###
 ### GENERAL CONFIG END
@@ -32,6 +35,9 @@ declare -A HEADER=()
 # ABR    audio bitrate (kbit)
 # AOPTS  custom audio options
 # AGAIN  adjust volume
+# CLW	 use Content-Length workaround (only for chrome on android. prevents multiple encoding due to multiple requests)
+# NVENC  use nvenc_h264 encoder
+# DEBUG	 turn on debugmode
 
 
 function log {
@@ -61,6 +67,7 @@ function error
 PROG=$(which ffmpeg)
 [ -x ${PROG} ] || PROG='/opt/ffmpeg/bin/ffmpeg'
 [ -x ${PROG} ] || PROG=$(which avconv)
+#[ $NVENC -eq 1 ] && PROG='/home/hannemann/bin/ffmpeg'
 
 if [ ! -x ${PROG} ]; then
 	error 'No ffmpeg binary found'
@@ -72,6 +79,7 @@ getChildPids () { ps --ppid $1 -o pid=; }
 getRequestId () { echo $(echo $QUERY_STRING | egrep --color=none -o "d=[0-9]+" | cut -d'=' -f2);  }
 
 
+log "HTTP_ALLOW_CROSS_DOMAIN_REDIRECT $HTTP_ALLOW_CROSS_DOMAIN_REDIRECT"
 log "Remote: $REMOTE_ADDR"
 log "Rand: $RAND"
 log "PID: $PID"
@@ -148,6 +156,7 @@ function startPipe {
 	COMMAND=${COMMAND}" pipe:1"
 	if [ "$DEBUG" = 1 ]; then
 		trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1; rm '$ENV'" EXIT HUP INT TERM ABRT PIPE CHLD
+		COMMAND=${COMMAND}" 2>> /tmp/ffmpeg.log"
 	else
 		trap "trap '' EXIT HUP INT TERM ABRT PIPE CHLD; kill -INT 0; sleep 1" EXIT HUP INT TERM ABRT PIPE CHLD
 	fi
@@ -187,7 +196,7 @@ function audioVorbis {
 function audioAac {
 
 	log "Set audio codec aac"
-	AUDIO="aac -q 500 -ac $AUDIO_CHANNELS -strict -2"
+	AUDIO="aac -q:a 500 -ac $AUDIO_CHANNELS -strict -2"
 #	AUDIO="libfdk_aac -vbr 5 -channels 6"
 #	AUDIO="libopus -vbr on -compression_level 10"
 #	AUDIO="libvorbis -b:a ${ABR} -ar 76800 -ac 6 -async 50"
@@ -241,8 +250,8 @@ function setHeaders {
 	FILENAME="foo.webm"
 	FILENAME=${REMUX_PARAM_FILENAME:-$FILENAME}
 
-	HEADER[connection]="Connection: keep-alive"
-	HEADER[duration]="X-Content-Duration: $DURATION"
+#	HEADER[connection]="Connection: keep-alive"
+#	HEADER[duration]="X-Content-Duration: $DURATION"
 	HEADER[disposition]="Content-Disposition: attachment; filename=\"$FILENAME\""
 	HEADER[description]="Content-Description: File Transfer"
 	HEADER[expires]="Expires: 0"
@@ -253,8 +262,11 @@ function setHeaders {
 }
 
 function setContentLength {
+
+	CL=20000000000
 	log "Setting length header"
-	HEADER[contentlength]="Content-Length: 20000000000"
+	[ ${CLW} -eq 1 ] && [ -z $HTTP_ALLOW_CROSS_DOMAIN_REDIRECT ] && CL=2
+	HEADER[contentlength]="Content-Length: ${CL}"
 }
 
 function containerMatroska {
@@ -323,8 +335,15 @@ function pipe_previewfile {
 ###
 function remux_x264 {
 
-	log "set video codec x264, container mpegts"
-	VENC="-c:v libx264 -preset veryfast -b:v ${VBR} -bufsize 128K"
+	BUFSIZE=$((${VBR:0:-1} * 2))
+
+	log "set video codec x264, container mkv"
+	if [ ${NVENC} -eq 1 ]; then
+		VENC="-c:v nvenc_h264 -preset slow"
+	else
+		VENC="-c:v libx264 -preset veryfast"
+	fi
+	VENC="${VENC} -b:v ${VBR} -bufsize ${BUFSIZE}K -tune zerolatency -movflags +faststart"
 	AENC="-c:a ${AUDIO}"
 	MAP="-map 0:v -map 0:a:$AUDIO_STREAM"
 	COMMAND=${PROG}" -i ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
@@ -337,9 +356,15 @@ function remux_x264 {
 function remux_chromecast {
 	
 	log "set video codec x264, container matroska"
-	MAP="-map 0:v -map 0:a"
-	VENC="-vcodec libx264 -preset veryfast -b:v ${VBR} -bufsize 1024K"
-	AENC="-acodec ${AUDIO}"
+	MAP="-map 0:v -map 0:a:$AUDIO_STREAM"
+	#VENC="-vcodec libx264 -preset veryfast -b:v ${VBR} -bufsize 1024K"
+	if [ ${NVENC} -eq 1 ]; then
+		VENC="-c:v nvenc_h264 -preset slow"
+	else
+		VENC="-c:v libx264 -preset veryfast"
+	fi
+	VENC="${VENC} -b:v ${VBR} -bufsize ${BUFSIZE}K -tune zerolatency -movflags +faststart"
+	AENC="-c:a ${AUDIO}"
 	COMMAND=${PROG}" -f mpegts -i ${MAP} ${FILTER} ${FPS:+-r $FPS} ${VENC} ${AENC} ${CONTAINER}"
 	STREAMTYPE=fifo
 }
@@ -489,7 +514,17 @@ FPS=${REMUX_PARAM_FPS:-$FPS}
 AUDIO_STREAM=${REMUX_PARAM_ASTR:-$AUDIO_STREAM}
 AUDIO_CHANNELS=${REMUX_PARAM_ACHAN:-$AUDIO_CHANNELS}
 DEINTERLACE=${REMUX_PARAM_DLACE:-$DEINTERLACE}
-AGAIN=${REMUX_PARAM_AGAIN:-1}
+AGAIN=${REMUX_PARAM_AGAIN:-$AGAIN}
+CLW=${REMUX_PARAM_CLW:-$CLW}
+NVENC=${REMUX_PARAM_NVENC:-$NVENC}
+PROG=${REMUX_PARAM_PROG:-$PROG}
+
+PROG=${PROG//\%2F/\/}
+PROG=${PROG//\%2f/\/}
+
+CLW=${REMUX_PARAM_CLW:-0}
+
+log "using $PROG"
 
 if [ "$REMUX_PARAM_PROG" = "cat"  ]; then
 	remux_cat
