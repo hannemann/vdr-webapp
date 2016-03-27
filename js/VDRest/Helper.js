@@ -377,6 +377,22 @@ VDRest.Helper.prototype.getBaseStreamUrl = function (extraParams) {
     streamdevParams.push(VDRest.config.getItem('streamdevParams'));
     streamdevParams.push('AGAIN=' + (parseInt(VDRest.config.getItem('streamAudioGain'), 10)/100).toString());
 
+    if (VDRest.config.getItem('useGPUEncoder')) {
+        streamdevParams.push('NVENC=1');
+    }
+
+    if (VDRest.config.getItem('transcoderPath')) {
+        streamdevParams.push('PROG=' + encodeURIComponent(VDRest.config.getItem('transcoderPath')));
+    }
+
+    if (VDRest.config.getItem('useContentLengthWorkaround')) {
+        streamdevParams.push('CLW=1');
+    }
+
+    if (VDRest.config.getItem('debug')) {
+        streamdevParams.push('DEBUG=1');
+    }
+
     if (extraParams) {
         streamdevParams = streamdevParams.concat(extraParams);
     }

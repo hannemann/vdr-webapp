@@ -206,7 +206,10 @@ VDRest.Lib.Config.prototype.defaults = {
     "streamdevParams"       :   "EXT",
     "streamdevContainer"    :   "mkv",
     "streamDownload"        :   "false",
-    "streamAudioGain"       : 100,
+    "streamAudioGain"       :   100,
+    "useContentLengthWorkaround" : false,
+    "useGPUEncoder"         :   false,
+    "transcoderPath"        :   '',
     "theme"                 :   "default",
     "autoVps"               :   "false",
     "language"              :   function () {
@@ -617,6 +620,34 @@ VDRest.Lib.Config.prototype.fields = {
         "type" : "boolean",
         "label" : "Download",
         "info": "Enable download of transcoded Recordings. Does work on Android powered devices if you delegate the download to Firefox for Android. Downloads will be transcoded using libx264 with current quality settings and aac. Container is Matroska."
+    },
+    "useContentLengthWorkaround" : {
+        "depends" : {
+            "streamdevActive": true,
+            "useHtmlPlayer": true
+        },
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Use Content-Length Workaround",
+        "info": "Enable on mobile Chrome only. Chrome sends several requests to streamdev hence the server transcodes multiple streams. With this option enabled externremux tries to detect if a HTTP_ALLOW_CROSS_DOMAIN_REDIRECT header is set to false. If condition is met it sets a two bytes content length forcing the browser to abort unnecessary requests. Tested with Chrome 49 Android Marshmallow"
+    },
+    "useGPUEncoder" : {
+        "depends" : {
+            "streamdevActive": true
+        },
+        "category" : "streaming",
+        "type" : "boolean",
+        "label" : "Use GPU for transcoding",
+        "info": "Works with Kepler GPU's. You have to compile ffmpeg mith option --enable-nvenc to make this work"
+    },
+    "transcoderPath"    :   {
+        "depends" : {
+            "streamdevActive": true
+        },
+        "category" : "streaming",
+        "type" : "string",
+        "label" : "Path to transcoder",
+        "info" : "(e.g. /home/vdruser/bin/ffmpeg)"
     },
     "firstTime": {
         "category": "misc",

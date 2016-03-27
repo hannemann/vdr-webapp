@@ -284,5 +284,9 @@ VDRest.app.de_DE = {
     "Very fast: 0.5s" : "Sehr schnell: 0,5s",
     "Fast: 2s" : "Schnell: 2s",
     "Medium: 10s" : "Mittel: 10s",
-    "Slow: 30s" : "Langsam: 30s"
+    "Slow: 30s" : "Langsam: 30s",
+    "Enable on mobile Chrome only. Chrome sends several requests to streamdev hence the server transcodes multiple streams. With this option enabled externremux tries to detect if a HTTP_ALLOW_CROSS_DOMAIN_REDIRECT header is set to 'false'. If condition is met it sets a two bytes content length header forcing the browser to abort unnecessary requests. Tested with Chrome 49 Android Marshmallow" : "Nur mit Chrome Mobile verwenden. Chrome sendet mehrere Requests an streamdev. Daher transkodiert der Server mehrere Streams gleichzeitig. Wenn diese Option aktiviert ist versucht externremux zu ermitteln, ob ein HTTP_ALLOW_CROSS_DOMAIN_REDIRECT Header auf 'false' gesetzt ist. Ist das der Fall wird ein zwei Bytes Content-Length Header gesendet, der den Browser veranlasst die unnötigen Requests abzubrechen. Getestet mit Chrome 49 auf Android Marshmallow",
+    "Works with Kepler GPU's. You have to compile ffmpeg mith option --enable-nvenc to make this work" : "Funktioniert mit Kepler GPU's. Du musst ffmpeg mit der Option --enable-nvenc kompilieren",
+    "Path to transcoder" : "Pfad zum Transcoder",
+    "(e.g. /home/vdruser/bin/ffmpeg)" : "(z.B. /home/vdruser/bin/ffmpeg)"
 };
