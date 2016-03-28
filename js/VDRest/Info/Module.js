@@ -33,7 +33,9 @@ VDRest.Info.prototype.init = function () {
 
     $document.on('updateinfo', function () {
 
-        me.getModel('Info').load();
+        if (VDRest.config.getItem('host')) {
+            me.getModel('Info').load();
+        }
     });
 
     if ('visible' === document.visibilityState) {
