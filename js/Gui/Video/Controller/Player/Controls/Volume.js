@@ -78,7 +78,6 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeDown = function (e) 
     e.preventDefault();
     $document.one(VDRest.helper.pointerEnd, this.handlerUp);
 
-    this.player.controls.stopHide();
     if ('touchstart' === e.type) {
         this.volumeSlidePos = e.originalEvent.changedTouches[0].pageY;
     } else {
@@ -111,7 +110,7 @@ Gui.Video.Controller.Player.Controls.Volume.prototype.volumeUp = function (e) {
     $document.off(VDRest.helper.pointerEnd, this.handlerUp);
     this.view.toggleVolumeIndicator(false);
     this.view.toggleVolumeSliderActiveState();
-    this.player.controls.allowHide();
+    this.player.hideControls();
 };
 
 /**

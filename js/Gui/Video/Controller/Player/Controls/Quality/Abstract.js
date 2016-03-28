@@ -66,7 +66,6 @@ Gui.Video.Controller.Player.Controls.Quality.Abstract.prototype.qualitySelectDow
 
     e.preventDefault();
     e.stopPropagation();
-    this.controls.stopHide();
 
     if (this.player.isPlaying) {
         this.player.pausePlayback();

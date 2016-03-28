@@ -131,6 +131,21 @@ Gui.Video.Controller.Player.prototype.dispatchControls = function () {
 };
 
 /**
+ * hide controls
+ */
+Gui.Video.Controller.Player.prototype.hideControls = function (instant) {
+
+    if (this.controls && this.controlsInitiallyDispatched && this.isPlaying) {
+
+        if (instant) {
+            this.controls.destructView(true);
+        } else {
+            this.controls.deferHide();
+        }
+    }
+};
+
+/**
  * add event listeners
  */
 Gui.Video.Controller.Player.prototype.addObserver = function () {
@@ -250,7 +265,7 @@ Gui.Video.Controller.Player.prototype.startDownload = function (e) {
     e.stopPropagation();
 
     location.href = src;
-
+    this.hideControls();
 };
 
 /**
@@ -353,7 +368,6 @@ Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
         if (this.oldChannelId && this.oldChannelId !== this.data.sourceModel.getData('channel_id')) {
             this.oldChannelId = undefined;
             this.pausePlayback();
-            this.controls.allowHide();
         }
     }
 
@@ -376,6 +390,10 @@ Gui.Video.Controller.Player.prototype.startPlayback = function () {
     this.view.poster.classList.add('hidden');
 
     this.video.play(this.getStreamUrl());
+
+    this.oldChannelId = undefined;
+
+    this.hideControls(true);
 
     this.video.addPlayObserver(function () {
 
@@ -496,11 +514,6 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
     var channels, getter, nextChannel,
         callback = function () {
             var newTriggerPlayState = 'off';
-
-            if (this.controls) {
-                this.controls.destructView(false);
-            }
-            this.dispatchControls();
             this.controls.layer.osd.update();
             if (this.data.isTv) {
                 if (this.data.sourceModel.getData('channel_id') == this.oldChannelId && this.isPlaying) {
@@ -515,14 +528,12 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
                 }
                 this.fetchPoster(2);
             }
+            this.hideControls();
         }.bind(this);
 
     if (e instanceof jQuery.Event) {
         e.preventDefault();
         e.stopPropagation();
-        if (this.controls) {
-            this.controls.stopHide();
-        }
     }
 
     if (this.data.sourceModel == e) {
@@ -676,6 +687,8 @@ Gui.Video.Controller.Player.prototype.toggleFullScreen = function (e) {
     this.vibrate();
 
     this[this.isFullScreen() ? 'cancelFullscreen' : 'requestFullscreen']();
+
+    this.hideControls(true);
 };
 
 /**

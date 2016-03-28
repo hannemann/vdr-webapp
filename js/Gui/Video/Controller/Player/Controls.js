@@ -39,9 +39,6 @@ Gui.Video.Controller.Player.Controls.prototype.dispatchView = function () {
 
     this.getLayer();
     this.layer.dispatchView();
-    this.view.node.one(this.transitionEndEvents, function () {
-        this.addObserver();
-    }.bind(this));
     VDRest.Abstract.Controller.prototype.dispatchView.call(this);
 };
 
@@ -71,19 +68,11 @@ Gui.Video.Controller.Player.Controls.prototype.getLayer = function () {
 };
 
 /**
- * add event listeners
- */
-Gui.Video.Controller.Player.Controls.prototype.addObserver = function () {
-
-    this.view.node.one('click', this.destructView.bind(this, true));
-};
-
-/**
  * defer hiding controls
  */
 Gui.Video.Controller.Player.Controls.prototype.deferHide = function () {
 
-    this.omitDestruct = undefined;
+    this.stopHide();
     this.controlsTimeout = setTimeout(function () {
         this.destructView(true);
     }.bind(this), 5000);
@@ -94,19 +83,10 @@ Gui.Video.Controller.Player.Controls.prototype.deferHide = function () {
  */
 Gui.Video.Controller.Player.Controls.prototype.stopHide = function () {
 
-    this.omitDestruct = true;
     if ("undefined" !== typeof this.controlsTimeout) {
         clearTimeout(this.controlsTimeout);
         this.controlsTimeout = undefined;
     }
-};
-
-/**
- * stop hiding controls
- */
-Gui.Video.Controller.Player.Controls.prototype.allowHide = function () {
-
-    this.omitDestruct = undefined;
 };
 
 /**
@@ -115,11 +95,6 @@ Gui.Video.Controller.Player.Controls.prototype.allowHide = function () {
 Gui.Video.Controller.Player.Controls.prototype.destructView = function (transition) {
 
     if (this.player.mode === 'cut') {
-        return;
-    }
-
-    if (this.omitDestruct) {
-        this.omitDestruct = undefined;
         return;
     }
 
