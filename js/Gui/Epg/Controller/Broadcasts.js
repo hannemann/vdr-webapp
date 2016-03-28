@@ -609,7 +609,7 @@ Gui.Epg.Controller.Broadcasts.prototype.processChannel = function (channelModel)
  */
 Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 
-    var i= 0, l=this.broadcastLists.length, me = this;
+    var i= 0, l=this.broadcastLists.length;
 
     for (i;i<l;i++) {
 
