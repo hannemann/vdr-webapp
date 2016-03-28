@@ -611,24 +611,9 @@ Gui.Epg.Controller.Broadcasts.prototype.dispatchChannels = function () {
 
     var i= 0, l=this.broadcastLists.length, me = this;
 
-    if (VDRest.config.getItem('useSlowServerStrategy')) {
+    for (i;i<l;i++) {
 
-        $document.one('broadcastsloaded', function () {
-
-            for (i;i<l;i++) {
-
-                me.broadcastLists[i].dispatchView();
-            }
-        });
-
-        this.module.store.getModel('Broadcasts').initBroadcasts();
-
-    } else {
-
-        for (i;i<l;i++) {
-
-            this.broadcastLists[i].dispatchView();
-        }
+        this.broadcastLists[i].dispatchView();
     }
 };
 
