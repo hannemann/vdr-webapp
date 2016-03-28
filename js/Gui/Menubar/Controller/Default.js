@@ -250,7 +250,7 @@ Gui.Menubar.Controller.Default.prototype.onIconClick = function (e) {
 
     e.stopPropagation();
 
-    if (!this.deferIconClick) {
+    if (!this.deferIconClick && VDRest.app.checkConfig()) {
 
         if ("undefined" !== typeof this.initial) {
 

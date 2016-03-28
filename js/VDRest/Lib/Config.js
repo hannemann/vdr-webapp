@@ -271,7 +271,7 @@ VDRest.Lib.Config.prototype.categories = {
  * @type {Object}
  */
 VDRest.Lib.Config.prototype.fields = {
-    "start"             :   {
+    /*"start"             :   {
         "category" : "gui",
         "info" : "Needs reload of app",
         "type" : "enum",
@@ -279,7 +279,7 @@ VDRest.Lib.Config.prototype.fields = {
         "label" : "Startpage",
         /**
          * @returns {{}}
-         */
+         * /
         "values" : function () {
 
             var i, modules = VDRest.app.modules,
@@ -312,7 +312,7 @@ VDRest.Lib.Config.prototype.fields = {
 
             return pages;
         }
-    },/*
+    },
     "theme"          :   {
         "category" : "gui",
         "type" : "enum",

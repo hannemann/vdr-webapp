@@ -325,7 +325,7 @@ VDRest.App.prototype.dispatch = function (moduleName, callback) {
 		this.modules[moduleName].dispatch(callback);
 		this.current = moduleName;
 
-        if (this.startup) {
+        if (this.startup || !this.checkConfig()) {
 
             history.replaceState({
                     "module": moduleName,
