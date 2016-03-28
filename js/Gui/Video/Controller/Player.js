@@ -758,7 +758,7 @@ Gui.Video.Controller.Player.prototype.destructView = function () {
     this.video.destructView();
     delete this.video;
     this.module.unsetVideoPlayer();
-    if (this.isTv) {
+    if (this.data.isTv) {
         VDRest.app.getModule('Gui.Epg').unMute();
     }
     Gui.Window.Controller.Abstract.prototype.destructView.call(this);
