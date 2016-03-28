@@ -195,8 +195,10 @@ function audioVorbis {
 ###
 function audioAac {
 
+	ABR=$((${AUDIO_CHANNELS} * 64))
+
 	log "Set audio codec aac"
-	AUDIO="aac -q:a 500 -ac $AUDIO_CHANNELS -strict -2"
+	AUDIO="aac -b:a ${ABR}k -ac $AUDIO_CHANNELS -strict -2"
 #	AUDIO="libfdk_aac -vbr 5 -channels 6"
 #	AUDIO="libopus -vbr on -compression_level 10"
 #	AUDIO="libvorbis -b:a ${ABR} -ar 76800 -ac 6 -async 50"
@@ -231,7 +233,7 @@ function setFilter {
 
 	fi
 
-	FILTER=${FILTER}" -vol "$(echo "(${AGAIN}*256+0.5)/1" | bc)
+	FILTER=${FILTER}" -af \"volume=${AGAIN}\""
 
 	#Läuft nicht mit VLC
 	#VSIZE="scale=trunc(oh*a/2)*2:$HEIGHT"
