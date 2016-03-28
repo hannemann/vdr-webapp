@@ -311,14 +311,17 @@ Gui.Epg.prototype.mute = function () {
  */
 Gui.Epg.prototype.addFilterButton = function () {
 
-    this.filterButton = this.getMenubar().addButton(
-        this.filterButtonSymbol,
-        function () {
-            var epgController = this.getController('Epg');
-            epgController.vibrate();
-            epgController.selectGroup();
-        }.bind(this)
-    );
+    if (!this.hasFilterButton) {
+        this.filterButton = this.getMenubar().addButton(
+            this.filterButtonSymbol,
+            function () {
+                var epgController = this.getController('Epg');
+                epgController.vibrate();
+                epgController.selectGroup();
+            }.bind(this)
+        );
+    }
+    this.hasFilterButton = true;
 };
 
 /**
@@ -327,6 +330,7 @@ Gui.Epg.prototype.addFilterButton = function () {
 Gui.Epg.prototype.removeFilterButton = function () {
 
     this.getMenubar().removeButton(this.filterButton);
+    this.hasFilterButton = false;
 };
 
 /**
