@@ -118,6 +118,9 @@ Gui.Video.Controller.Player.prototype.doDispatch = function () {
 Gui.Video.Controller.Player.prototype.dispatchControls = function () {
 
     if (!this.controls) {
+        if (this.oldChannelId) {
+            this.resumeOldChannel();
+        }
         this.controls = this.module.getController('Player.Controls', {"parent": this});
         this.controls.dispatchView();
         if (this.controlsInitiallyDispatched && this.isPlaying) {
@@ -350,6 +353,7 @@ Gui.Video.Controller.Player.prototype.togglePlayback = function (e) {
         if (this.oldChannelId && this.oldChannelId !== this.data.sourceModel.getData('channel_id')) {
             this.oldChannelId = undefined;
             this.pausePlayback();
+            this.controls.allowHide();
         }
     }
 
@@ -577,6 +581,29 @@ Gui.Video.Controller.Player.prototype.changeSrc = function (e) {
             }
         }.bind(this), true);
         callback();
+    }
+};
+
+/**
+ * resume old channel in case of one hits channel buttons without starting playback
+ */
+Gui.Video.Controller.Player.prototype.resumeOldChannel = function () {
+
+    if (this.oldChannelId) {
+        this.data.sourceModel = VDRest.app.getModule('VDRest.Epg').getModel('Channels.Channel' ,{
+            "channel_id" : this.oldChannelId
+        });
+
+        this.oldChannelId = undefined;
+
+        this.data.sourceModel.getCurrentBroadcast(function (broadcast) {
+            if (broadcast) {
+                this.setData('current_broadcast', broadcast);
+                this.setIsTv();
+                this.data.startTime = parseInt(Date.now() / 1000, 10) - broadcast.getData('start_time');
+                this.view.setData('startTime', this.data.startTime);
+            }
+        }.bind(this));
     }
 };
 
