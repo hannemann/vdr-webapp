@@ -1,5 +1,5 @@
 
-body.has-menubar {
+body.has-menubar:not([class*="has-video-player"]) {
     background-color: rgba(99, 138, 195, 1);
 }
 
