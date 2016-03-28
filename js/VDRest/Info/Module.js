@@ -33,7 +33,7 @@ VDRest.Info.prototype.init = function () {
 
     $document.on('updateinfo', function () {
 
-        if (VDRest.config.getItem('host')) {
+        if (VDRest.app.checkConfig()) {
             me.getModel('Info').load();
         }
     });
