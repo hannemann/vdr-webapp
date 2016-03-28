@@ -10,14 +10,6 @@ video::-internal-media-controls-overlay-cast-button {
     background: black !important;
 }
 
-.html5-player,
-.html5-player .html5-player-controls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 0;
-}
 .html5-player * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -31,14 +23,17 @@ video::-internal-media-controls-overlay-cast-button {
     right: 0;
 }
 .html5-player video {
-    position: relative;
     z-index: 0;
     width: 100%;
+    align-self: center;
 }
 .html5-player{
-    margin-top: -25%;
-    top: 50%;
-    bottom: auto;
+    flex: 0 0 100%;
+    align-self: center;
+    height: calc(100vw / 16 * 9);
+    position: relative;
+    display: flex;
+    align-content: center;
 }
 .html5-player .poster {
     position: absolute;
@@ -453,7 +448,7 @@ video::-internal-media-controls-overlay-cast-button {
     line-height: 24px;
 }
 .modal-overlay.modal-video {
-    z-index: 3;
+    display: flex;
 }
 
 .video-minimized .html5-player {
@@ -461,11 +456,6 @@ video::-internal-media-controls-overlay-cast-button {
     top: 0;
     bottom: 0;
     text-align: center;
-}
-.video-minimized .html5-player video {
-    max-width: 320px;
-    max-height: 180px;
-    height: 100%;
 }
 .video-minimized .html5-player-controls .video-osd {
     display: block;
@@ -626,11 +616,6 @@ video::-internal-media-controls-overlay-cast-button {
     .video-minimized #viewport .modal-overlay {
         min-width: 0;
         width: auto;
-    }
-    .html5-player {
-        margin: auto 0;
-        top: 0;
-        bottom: 0;
     }
     .html5-player video {
         position: absolute;
