@@ -52,9 +52,14 @@ Gui.Form.Controller.Window.Input.prototype.addObserver = function () {
 
     this.view.node.on('submit', this.okAction.bind(this));
 
-    this.view.ok.on('click', this.okAction.bind(this));
 
-    this.view.cancel.on('click', this.cancel.bind(this));
+
+    if ("undefined" === typeof this.data.hasButtons || true === this.data.hasButtons) {
+
+        this.view.ok.on('click', this.okAction.bind(this));
+
+        this.view.cancel.on('click', this.cancel.bind(this));
+    }
 
     $window.on("resize.input-window", this.setPosition.bind(this));
 };
@@ -69,9 +74,12 @@ Gui.Form.Controller.Window.Input.prototype.removeObserver = function () {
         this.view.body.find('input').off('keydown');
     }
 
-    this.view.ok.off('click');
+    if ("undefined" === typeof this.data.hasButtons || true === this.data.hasButtons) {
+        
+        this.view.ok.off('click');
 
-    this.view.cancel.off('click');
+        this.view.cancel.off('click');
+    }
 
     $window.off("resize.input-window");
 };

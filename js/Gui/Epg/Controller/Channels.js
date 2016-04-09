@@ -229,7 +229,7 @@ Gui.Epg.Controller.Channels.prototype.showGroup = function (group) {
         height, fullHeight;
 
     if (this.groups.indexOf(group) < 0) {
-        group = 'all';
+        group = 'All';
     } else {
         headline += ' - ' + group;
     }

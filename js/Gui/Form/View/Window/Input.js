@@ -77,6 +77,10 @@ Gui.Form.View.Window.Input.prototype.addInput = function () {
  */
 Gui.Form.View.Window.Input.prototype.addButtons = function () {
 
+    if ("undefined" !== typeof this.data.hasButtons && false === this.data.hasButtons) {
+        return this;
+    }
+
     this.cancel = $('<div class="button button-cancel">').text(VDRest.app.translate('Cancel')).appendTo(this.node);
 
     this.ok = $('<div class="button button-confirm">').text('OK').appendTo(this.node);

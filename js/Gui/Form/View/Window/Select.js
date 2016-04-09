@@ -122,14 +122,6 @@ Gui.Form.View.Window.Select.prototype.prepareValue = function (value) {
         value.gui.attr('disabled', true);
         value.dom.addClass('disabled');
     }
-
-    value.gui.on('change', function () {
-        if ("radio" === type) {
-            value.dom.parent('.wrapper').find('label').removeClass('selected');
-        }
-        VDRest.Abstract.Controller.prototype.vibrate();
-        value.dom.toggleClass('selected', this.checked === true);
-    });
 };
 
 /**

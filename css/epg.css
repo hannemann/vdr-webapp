@@ -36,13 +36,13 @@
     box-shadow: 0 0 40px 0 blue;
 }
 
-#epg[data-show-group="all"] .channel,
-#epg[data-show-group="all"] .broadcasts-list {
+#epg[data-show-group="All"] .channel,
+#epg[data-show-group="All"] .broadcasts-list {
     display: block;
 }
 
-#epg:not([data-show-group="all"]) .channel,
-#epg:not([data-show-group="all"]) .broadcasts-list {
+#epg:not([data-show-group="All"]) .channel,
+#epg:not([data-show-group="All"]) .broadcasts-list {
     display: none;
 }
 

@@ -274,10 +274,11 @@ Gui.Epg.Controller.Epg.prototype.selectGroup = function () {
         "type": "enum",
         "dom": $('<label class="clearer text">'),
         "label" : "Channelgroup",
+        "hasButtons" : false,
         "values": {
-            "all" : {
+            "All" : {
                 "label" : 'All',
-                "value" : 'all'
+                "value" : 'All'
             }
         }
     };

@@ -534,7 +534,7 @@ Gui.Epg.Controller.Broadcasts.List.prototype.isScrolledIntoInView = function () 
         isInView,
         currentGroup = this.broadcastsController.channelsController.currentGroup;
 
-    if (currentGroup !== 'all' && currentGroup !== this.dataModel.data.group) {
+    if (currentGroup !== 'All' && currentGroup !== this.dataModel.data.group) {
 
         return false;
 
