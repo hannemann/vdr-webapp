@@ -98,6 +98,8 @@ Gui.Recordings.Controller.List.prototype.refresh = function () {
     var directories = VDRest.app.getModule('Gui.Window').windows,
         scrollStates = [];
 
+    VDRest.app.getModule('Gui.Menubar').getController('Default').showThrobber();
+
     directories.forEach(function (controller) {
 
         if (controller instanceof Gui.Recordings.Controller.Window.Directory) {
@@ -120,7 +122,7 @@ Gui.Recordings.Controller.List.prototype.refresh = function () {
     this.module.cache.invalidateClasses('List.Directory');
     this.module.cache.invalidateClasses('List.Recording');
 
-    $window.one("gui-recordings.root.ready", function () {
+    $window.one("gui-recordings.root.directories.ready", function () {
         directories.forEach(function (controller) {
 
             if (controller instanceof Gui.Recordings.Controller.Window.Directory) {
@@ -141,6 +143,8 @@ Gui.Recordings.Controller.List.prototype.refresh = function () {
                 o.controller.view.body[0].scrollTop = o.state;
             }
         });
+
+        VDRest.app.getModule('Gui.Menubar').getController('Default').hideThrobber();
 
     }.bind(this));
 

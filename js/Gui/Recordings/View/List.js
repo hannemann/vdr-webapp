@@ -94,6 +94,9 @@ Gui.Recordings.View.List.prototype.renderDirectories = function () {
 
         if (index >= length) {
             clearInterval(interval);
+            $.event.trigger({
+                "type": "gui-recordings.root.directories.ready"
+            });
             this.renderFiles();
         }
 
@@ -124,9 +127,6 @@ Gui.Recordings.View.List.prototype.renderFiles = function () {
 
         if (index >= length) {
             clearInterval(interval);
-            $.event.trigger({
-                "type": "gui-recordings.root.ready"
-            });
         }
 
     }.bind(this), 10);
