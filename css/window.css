@@ -95,7 +95,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-size: 100% 100%;
+    background-size: contain;
 }
 
 .window-header.has-fanart h2,
