@@ -192,9 +192,7 @@ Gui.Epg.View.Broadcasts.List.Broadcast.prototype.addImage = function () {
 
         if (this.imageInEpgView && this.getWidth() >= 45 * 60 * VDRest.config.getItem('pixelPerSecond')) {
             img = new Image();
-            if (location.host != VDRest.config.getItem('host')) {
-                img.crossOrigin = '';
-            }
+            img.crossOrigin = '';
             img.height = this.node.height();
             try {
                 $('<div class="visible-epg-view broadcast-image">').append(img).prependTo(this.node);
