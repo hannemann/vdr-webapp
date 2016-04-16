@@ -67,7 +67,6 @@ function error
 PROG=$(which ffmpeg)
 [ -x ${PROG} ] || PROG='/opt/ffmpeg/bin/ffmpeg'
 [ -x ${PROG} ] || PROG=$(which avconv)
-#[ $NVENC -eq 1 ] && PROG='/home/hannemann/bin/ffmpeg'
 
 if [ ! -x ${PROG} ]; then
 	error 'No ffmpeg binary found'
@@ -199,9 +198,6 @@ function audioAac {
 
 	log "Set audio codec aac"
 	AUDIO="aac -b:a ${ABR}k -ac $AUDIO_CHANNELS -strict -2"
-#	AUDIO="libfdk_aac -vbr 5 -channels 6"
-#	AUDIO="libopus -vbr on -compression_level 10"
-#	AUDIO="libvorbis -b:a ${ABR} -ar 76800 -ac 6 -async 50"
 }
 
 ###
@@ -222,25 +218,20 @@ function setFilter {
 
 	if ( [ "$WIDTH" != "" ] && [ "$HEIGHT" != "" ] ) || [ "$DEINTERLACE" != "" ]; then
 
+		FILTER="-filter:v "
 		if [ "$WIDTH" != "" ] && [ "$HEIGHT" != "" ]; then
 
-			FILTER="-filter:v "
 			FILTER=${FILTER}" \"scale=sar*iw*min($WIDTH/iw\,$HEIGHT/ih):ih*min($WIDTH/iw\,$HEIGHT/ih), pad=$WIDTH:$HEIGHT:($WIDTH-iw*min($WIDTH/iw\,$HEIGHT/ih))/2:($HEIGHT-ih*min($WIDTH/iw\,$HEIGHT/ih))/2"
 			FILTER=${FILTER}${YADIF}
-			FILTER=${FILTER}'"'
 		fi
-
-
+		FILTER=${FILTER}'"'
 	fi
+}
+
+function setAudioGain {
 
 	FILTER=${FILTER}" -af \"volume=${AGAIN}\""
 
-	#Läuft nicht mit VLC
-	#VSIZE="scale=trunc(oh*a/2)*2:$HEIGHT"
-	#VSIZE="scale=-1:$HEIGHT"
-
-	#FILTER="-filter:v \"${VSIZE}, yadif\" -filter:a \"volume=1\""
-	#FILTER="-filter:v \"${VSIZE} yadif\""
 }
 
 function setHeaders {
@@ -548,7 +539,6 @@ else
 	elif [ "$TYPE" = "webm" ]; then
 		TYPE=stream
 		setDeinterlace
-		setFilter
 		setHeaders
 		setContentLength
 		containerWebm
@@ -561,6 +551,7 @@ else
 		setContentLength
 		containerMatroska
 		audioAac
+		setAudioGain
 		remux_x264
 	elif [ "$TYPE" = "mp4"  ]; then
 		TYPE=stream
